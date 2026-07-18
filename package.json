@@ -1,0 +1,31 @@
+{
+  "name": "codex-2040",
+  "private": true,
+  "version": "0.1.0",
+  "description": "An educational AI governance simulation about access, safety, trust, and healthy competition.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b --noEmit && vite build",
+    "test": "vitest run",
+    "check": "npm run test && npm run build"
+  },
+  "dependencies": {
+    "d3-geo": "3.1.1",
+    "lucide-react": "1.25.0",
+    "react": "19.2.7",
+    "react-dom": "19.2.7",
+    "topojson-client": "3.1.0",
+    "world-atlas": "2.0.2"
+  },
+  "devDependencies": {
+    "@types/d3-geo": "3.1.0",
+    "@types/react": "19.2.17",
+    "@types/react-dom": "19.2.3",
+    "@types/topojson-client": "3.1.5",
+    "@vitejs/plugin-react": "6.0.3",
+    "typescript": "5.9.3",
+    "vite": "8.1.5",
+    "vitest": "4.1.10"
+  }
+}

@@ -15,11 +15,9 @@ dist-ssr
 vite.config.js
 vite.config.d.ts
 
-# Local Codex GM bridge runtime (keep directory markers only)
-gm-bridge/inbox/*.json
-gm-bridge/inbox/*.tmp
-gm-bridge/processed/*.json
-gm-bridge/processed/*.tmp
+# Local Codex GM bridge runtime
+gm-bridge/runs/
+gm-bridge/quarantine/
 events/*.json
 events/*.tmp
 

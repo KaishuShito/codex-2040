@@ -12,6 +12,7 @@ This prompt mirrors `src/gm.ts` / `GM_CONSTANTS`. If a value changes, update bot
 
 ```json
 {
+  "runId": "run-12345678-1234-4123-8123-123456789abc",
   "date": "2028-04-10",
   "A_world": 0.22,
   "S_c": 0.31,
@@ -26,7 +27,7 @@ This prompt mirrors `src/gm.ts` / `GM_CONSTANTS`. If a value changes, update bot
 }
 ```
 
-`date` は表示用メタデータです。イベントの効果は、日付まで待たず、エンジンがファイルを正常に受信した時点で適用します。
+`runId` はこのBrowser runtimeに固定された配送先です。snapshot、heartbeat、actionで同じ値を使い、返す全イベントにもそのままコピーします。イベントの `id` と混同しません。`date` は表示用メタデータです。イベントの効果は、日付まで待たず、エンジンがファイルを正常に受信した時点で適用します。
 
 ## 二つの実行経路
 
@@ -55,7 +56,8 @@ This prompt mirrors `src/gm.ts` / `GM_CONSTANTS`. If a value changes, update bot
 | flavor | 0..120 Unicode characters, single line, max 1 sentence |
 | region ID | 1..32 characters, `[A-Za-z0-9_-]`, or `global` |
 | TTL | integer 1..30 days |
-| event directory | `events` |
+| bridge protocol/header | `2` / `x-codex2040-gm-bridge: 2` |
+| event directory | `gm-bridge/runs/<runId>/events` |
 | final file | `evt-<uuid>.json` |
 | temporary suffix | `.tmp` |
 | application timing | on receipt |
@@ -82,6 +84,7 @@ Allowed targets: `codex`, `rivalAnthro`, `rivalGoo`, `rivalQi`.
 
 ```json
 {
+  "runId": "run-12345678-1234-4123-8123-123456789abc",
   "id": "evt-12345678-1234-4123-8123-123456789abc",
   "date": "2028-04-10",
   "type": "news",
@@ -99,18 +102,20 @@ Allowed targets: `codex`, `rivalAnthro`, `rivalGoo`, `rivalQi`.
 }
 ```
 
-`id` は `evt-` + RFC 4122 UUID形式にします。`date` はスナップショット時点の表示ラベルであり、適用予約には使いません。イベントタイプに `milestone` はありません。マイルストーンと主要分岐は決定論的イベントデッキが所有します。
+`runId` は消費したturnから完全一致でコピーします。`id` はそれとは独立した `evt-` + RFC 4122 UUID形式にします。`date` はスナップショット時点の表示ラベルであり、適用予約には使いません。イベントタイプに `milestone` はありません。マイルストーンと主要分岐は決定論的イベントデッキが所有します。
 
 ## 1イベント=1ファイルのatomic書込
 
-複数イベントを単一JSONや追記ファイルへ書かないでください。各イベントについて必ず次の順序を守ります。
+まず `GET /__codex2040/gm/turns?runId=<runId>&limit=3`（header `x-codex2040-gm-bridge: 2`）でturnを消費します。正常に返ったturnは同runの `processed/turns/` へatomic移動済みです。inboxを直接読んで放置しません。
 
-1. 最終ファイルと同じ `events/` ディレクトリに `events/.evt-<uuid>.json.tmp` を作る。
+複数イベントを単一JSONや追記ファイルへ書かないでください。推奨経路は、イベントオブジェクト1件を `POST /__codex2040/gm/events`（JSON content type、同header）へ送ることです。bridgeが検証とatomic書込を行います。ファイルへ直接書く場合だけ、各イベントについて次の順序を守ります。
+
+1. 最終ファイルと同じ `gm-bridge/runs/<runId>/events/` ディレクトリに `.evt-<uuid>.json.tmp` を作る。
 2. そのファイルへJSONオブジェクト1件だけを書き、closeする（利用可能ならflush/fsyncする）。
-3. 同一ディレクトリ内で `events/evt-<uuid>.json` へatomic renameする。
+3. 同一ディレクトリ内で `evt-<uuid>.json` へatomic renameする。
 4. 1サイクル最大3ファイルまでとする。
 
-エンジンは完成した `.json` だけを走査します。途中切断されたJSONは例外にせず無視し、次回走査で再試行します。
+エンジンは現在runの完成した `.json` だけを走査します。途中切断されたJSONは例外にせず無視し、次回走査で再試行します。runIdなしの旧イベントと別runのイベントは配送せずquarantineへ移します。
 
 ## 安全境界
 
@@ -126,10 +131,11 @@ Allowed targets: `codex`, `rivalAnthro`, `rivalGoo`, `rivalQi`.
 
 入力「世界中の学校で無料利用できる教育モード」には、ローカル効果の後から、次の2件を別ファイルで返します。便益だけで終わらせず、児童データの同意、保存期間、監査可能性という統治課題も提示します。
 
-`events/evt-00000000-0000-4000-8000-000000000201.json`:
+`gm-bridge/runs/<runId>/events/evt-00000000-0000-4000-8000-000000000201.json`:
 
 ```json
 {
+  "runId": "run-12345678-1234-4123-8123-123456789abc",
   "id": "evt-00000000-0000-4000-8000-000000000201",
   "date": "2028-04-10",
   "type": "feature_result",
@@ -147,10 +153,11 @@ Allowed targets: `codex`, `rivalAnthro`, `rivalGoo`, `rivalQi`.
 }
 ```
 
-`events/evt-00000000-0000-4000-8000-000000000202.json`:
+`gm-bridge/runs/<runId>/events/evt-00000000-0000-4000-8000-000000000202.json`:
 
 ```json
 {
+  "runId": "run-12345678-1234-4123-8123-123456789abc",
   "id": "evt-00000000-0000-4000-8000-000000000202",
   "date": "2028-04-10",
   "type": "news",

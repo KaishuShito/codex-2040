@@ -49,12 +49,43 @@ The integrated browser experience includes:
 
 ### Local file-bridge flow
 
-1. A player action is applied locally first, so gameplay never waits for a GM.
-2. The browser POSTs the action plus an allow-listed state snapshot to `/__codex2040/gm/turns`. It POSTs a heartbeat to the same endpoint every 60 seconds.
-3. Vite's local bridge validates the turn and atomically writes `gm-bridge/inbox/turn-*.json`.
-4. A producer may consume that inbox and atomically write one `events/evt-<uuid>.json` file per proposed event.
-5. The browser polls `/__codex2040/gm/events` every 2.5 seconds. The bridge validates complete files, leaves partial or invalid files for retry, and moves delivered files to `gm-bridge/processed/`.
-6. The browser validates the returned cycle again, then the deterministic engine clamps and applies it.
+1. Each browser runtime creates a distinct `run-<uuid>` when it mounts. Switching between Demo and Normal starts a new run. The run ID is copied onto every snapshot, heartbeat, action, and live GM event; it is separate from the event's `evt-<uuid>` ID.
+2. A player action is applied locally first, so gameplay never waits for a GM. The browser POSTs the action plus an allow-listed state snapshot to `/__codex2040/gm/turns`; it also sends an initial snapshot and a heartbeat every 60 seconds.
+3. Vite validates the nested run IDs and atomically writes `gm-bridge/runs/<runId>/inbox/turn-*.json`. Each run has independent capacity and retention.
+4. A producer consumes turns through `GET /__codex2040/gm/turns?runId=<runId>&limit=3`. Consumed files are atomically moved to that run's `processed/turns/` archive before the response is returned.
+5. The producer POSTs one validated, run-bound event at a time to `/__codex2040/gm/events`. The bridge atomically writes it under that run's `events/` directory.
+6. The browser polls `/__codex2040/gm/events?runId=<runId>` every 2.5 seconds. Only an exact run match can be delivered; complete legacy or mismatched events are quarantined, partial JSON remains for retry, and delivered files move to that run's `processed/events/`.
+7. The browser validates the returned cycle and run ID again, then the deterministic engine clamps and applies it.
+
+Redundant snapshots and heartbeats are compacted per run at the inbox cap, while actions are preserved until the 15-minute TTL. TTL removals are recoverable under `processed/expired-turns/`. Protocol-v1 root `events/*.json` and `gm-bridge/inbox/turn-*.json` files are never delivered; the bridge moves them to `gm-bridge/quarantine/legacy-events/` and `legacy-turns/`.
+
+### GM producer protocol v2
+
+Find the active run after the browser has mounted:
+
+```bash
+find gm-bridge/runs -mindepth 1 -maxdepth 1 -type d -print
+```
+
+Consume up to three turns. This is the supported acknowledgement step; do not read and leave files in `inbox/`:
+
+```bash
+curl -sS \
+  -H 'x-codex2040-gm-bridge: 2' \
+  'http://127.0.0.1:5173/__codex2040/gm/turns?runId=run-REPLACE_WITH_UUID&limit=3'
+```
+
+Copy the exact `runId` from the consumed turn into every event. Generate a new, independent `evt-<uuid>` for `id`, save one event object in a temporary file, then submit it:
+
+```bash
+curl -sS -X POST \
+  -H 'content-type: application/json' \
+  -H 'x-codex2040-gm-bridge: 2' \
+  --data-binary @/tmp/codex-2040-event.json \
+  'http://127.0.0.1:5173/__codex2040/gm/events'
+```
+
+Protocol v1 producers must migrate: add `runId`, use header value `2`, consume turns through the GET endpoint, and submit events through the POST endpoint. Direct root `events/` writes are legacy input and are quarantined.
 
 The repository does **not** automate or invoke an external Codex/LLM producer. Running the app creates the local transport, but it does not generate external model responses by itself. If the bridge is unavailable, the 60-second watchdog can apply a bounded scripted event; the automatic demo also uses authored cues so it remains presentation-safe without a producer.
 
@@ -89,7 +120,7 @@ npm test
 npm run build
 ```
 
-The current integrated snapshot passes all 44 tests across five files and the production build.
+The current integrated snapshot passes all 55 tests across five files and the production build.
 
 ## Automatic 60-Second Demo
 

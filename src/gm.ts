@@ -7,6 +7,7 @@
  */
 
 export const GM_CONSTANTS = {
+  runDirectory: 'gm-bridge/runs',
   eventDirectory: 'events',
   eventFilePrefix: 'evt-',
   eventFileSuffix: '.json',
@@ -34,6 +35,13 @@ export const GM_CONSTANTS = {
   dateSemantics: 'display-only',
 } as const
 
+export const GM_RUN_ID_PATTERN = /^run-[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/iu
+
+export type GmRunId = `run-${string}`
+
+export const isGmRunId = (value: unknown): value is GmRunId =>
+  typeof value === 'string' && GM_RUN_ID_PATTERN.test(value)
+
 export type GmEventType = (typeof GM_CONSTANTS.eventTypes)[number]
 export type GmTarget = (typeof GM_CONSTANTS.targets)[number]
 export type GmEffectKey = keyof typeof GM_CONSTANTS.effectBounds
@@ -47,6 +55,8 @@ export type GmEffect = {
 }
 
 export type GmEvent = {
+  /** Present on live bridge events; authored fallback events remain run-agnostic. */
+  runId?: GmRunId
   id: string
   /** Display metadata only. Events are always applied when the engine receives them. */
   date: string
@@ -59,6 +69,7 @@ export type GmEvent = {
 }
 
 export type GmSnapshot = {
+  runId: GmRunId
   date: string
   A_world: number
   S_c: number
@@ -156,11 +167,14 @@ const isAllowedValue = <T extends string>(value: unknown, allowed: readonly T[])
 export const parseGmEvent = (
   raw: string | unknown,
   validRegionIds?: readonly string[],
+  expectedRunId?: GmRunId,
 ): GmEvent | null => {
   const candidate = parseUnknownJson(raw)
   if (!isRecord(candidate) || !isRecord(candidate.effect)) return null
 
-  const { id, date, type, headline, region, effect, flavor, ttl_days: ttlDays } = candidate
+  const { runId, id, date, type, headline, region, effect, flavor, ttl_days: ttlDays } = candidate
+  if (runId !== undefined && !isGmRunId(runId)) return null
+  if (expectedRunId !== undefined && runId !== expectedRunId) return null
   if (typeof id !== 'string' || !UUID_EVENT_ID.test(id)) return null
   if (typeof date !== 'string' || !isValidDisplayDate(date)) return null
   if (!isAllowedValue(type, GM_CONSTANTS.eventTypes)) return null
@@ -182,6 +196,7 @@ export const parseGmEvent = (
   if (typeof ttlDays !== 'number' || !Number.isFinite(ttlDays)) return null
 
   return {
+    ...(runId === undefined ? {} : { runId }),
     id,
     date, // Kept for display only; never consulted for scheduling.
     type,
@@ -220,13 +235,14 @@ export const parseGmEvent = (
 export const parseGmEventCycle = (
   rawEventFiles: readonly (string | unknown)[],
   validRegionIds?: readonly string[],
+  expectedRunId?: GmRunId,
 ): GmEvent[] => {
   const events: GmEvent[] = []
   let usersDeltaTotal = 0
 
   for (const raw of rawEventFiles) {
     if (events.length >= GM_CONSTANTS.maxEventsPerCycle) break
-    const event = parseGmEvent(raw, validRegionIds)
+    const event = parseGmEvent(raw, validRegionIds, expectedRunId)
     if (!event) continue
     const remainingPositive = GM_CONSTANTS.maxTotalUsersDeltaPctPerCycle - usersDeltaTotal
     const remainingNegative = -GM_CONSTANTS.maxTotalUsersDeltaPctPerCycle - usersDeltaTotal
@@ -255,11 +271,11 @@ export type AtomicEventWritePlan = {
  * available, then atomically rename it to `finalPath`.
  */
 export const createAtomicEventWritePlan = (
-  event: GmEvent,
-  eventDirectory = GM_CONSTANTS.eventDirectory,
+  event: GmEvent & { runId: GmRunId },
+  eventDirectory = `${GM_CONSTANTS.runDirectory}/${event.runId}/${GM_CONSTANTS.eventDirectory}`,
 ): AtomicEventWritePlan => {
-  const parsed = parseGmEvent(event)
-  if (!parsed) throw new Error('Cannot serialize an invalid GM event')
+  const parsed = parseGmEvent(event, undefined, event.runId)
+  if (!parsed) throw new Error('Cannot serialize an invalid run-bound GM event')
   const separator = eventDirectory.endsWith('/') ? '' : '/'
   const fileName = `${parsed.id}${GM_CONSTANTS.eventFileSuffix}`
   return {
@@ -272,6 +288,7 @@ export const createAtomicEventWritePlan = (
 export type ImmediateActionKind = 'feature' | 'community_event' | 'choice_2029' | 'choice_2035'
 
 export type ImmediateAction = {
+  runId: GmRunId
   id: string
   kind: ImmediateActionKind
   input: string

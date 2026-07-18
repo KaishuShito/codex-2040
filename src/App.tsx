@@ -53,10 +53,17 @@ import {
   filterPlayerInput,
   GM_CONSTANTS,
   type GmEvent,
+  type GmRunId,
   type GmSnapshot,
   type ImmediateAction,
 } from './gm'
-import { pollGmEvents, postGmAction, postGmHeartbeat } from './gmBridgeClient'
+import {
+  createGmRunId,
+  pollGmEvents,
+  postGmAction,
+  postGmHeartbeat,
+  postGmSnapshot,
+} from './gmBridgeClient'
 import { AI_2040_URL, getDecisionMilestones, type SourceLabel } from './scenario'
 import WorldMap, { type WorldMapMarker, type WorldMapRegionIntensity } from './components/WorldMap'
 import UpgradeOverlay, {
@@ -198,13 +205,18 @@ const initialGame = (demoMode: boolean): GameState => ({
   speed: demoMode ? 8 : 5,
 })
 
-const createBridgeSnapshot = (state: GameState, playerInbox: readonly string[] = []): GmSnapshot => {
+const createBridgeSnapshot = (
+  runId: GmRunId,
+  state: GameState,
+  playerInbox: readonly string[] = [],
+): GmSnapshot => {
   const current = metrics(state)
   const topRegions = [...state.regions]
     .sort((left, right) => right.users / right.population - left.users / left.population)
     .slice(0, 4)
     .map((region) => region.id)
   return {
+    runId,
     date: dateLabel(state.day),
     A_world: current.worldAdoption,
     S_c: current.codexShare,
@@ -303,6 +315,7 @@ function SourceBadge({ source }: { source: SourceLabel }) {
 }
 
 export default function App() {
+  const [gmRunId, setGmRunId] = useState(createGmRunId)
   const [demoMode, setDemoMode] = useState(true)
   const [state, setState] = useState<GameState>(() => initialGame(true))
   const [paused, setPaused] = useState(false)
@@ -328,6 +341,7 @@ export default function App() {
   const heartbeatInFlightRef = useRef(false)
   const pollInFlightRef = useRef(false)
   const lastValidGmEventAtRef = useRef<number | null>(null)
+  const announcedGmRunsRef = useRef(new Set<GmRunId>())
 
   const m = useMemo(() => metrics(state), [state])
   const score = useMemo(() => scoreState(state), [state])
@@ -368,6 +382,13 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    if (!announcedGmRunsRef.current.has(gmRunId)) {
+      announcedGmRunsRef.current.add(gmRunId)
+      void postGmSnapshot(createBridgeSnapshot(gmRunId, stateRef.current))
+    }
+  }, [gmRunId])
+
+  useEffect(() => {
     let active = true
     const checkHeartbeat = async () => {
       const now = Date.now()
@@ -375,7 +396,7 @@ export default function App() {
       if (now < gmRuntimeRef.current.nextHeartbeatAtMs || heartbeatInFlightRef.current) return
       heartbeatInFlightRef.current = true
       const inbox = gmRuntimeRef.current.immediateQueue.map((action) => action.input)
-      await postGmHeartbeat(createBridgeSnapshot(stateRef.current, inbox), undefined, now)
+      await postGmHeartbeat(createBridgeSnapshot(gmRunId, stateRef.current, inbox), undefined, now)
       heartbeatInFlightRef.current = false
       if (!active) return
       const lastValidEventAt = lastValidGmEventAtRef.current
@@ -396,14 +417,14 @@ export default function App() {
       active = false
       window.clearInterval(timer)
     }
-  }, [])
+  }, [gmRunId])
 
   useEffect(() => {
     let active = true
     const poll = async () => {
       if (pollInFlightRef.current) return
       pollInFlightRef.current = true
-      const result = await pollGmEvents()
+      const result = await pollGmEvents(gmRunId)
       pollInFlightRef.current = false
       if (!active) return
       if (result.status === 'available' && result.events.length > 0) {
@@ -430,7 +451,7 @@ export default function App() {
       active = false
       window.clearInterval(timer)
     }
-  }, [])
+  }, [gmRunId])
 
   const switchMode = (nextDemoMode: boolean) => {
     if (nextDemoMode === demoMode) return
@@ -444,6 +465,7 @@ export default function App() {
     setBridgeMode('checking')
     setDemoElapsedSeconds(0)
     const now = Date.now()
+    setGmRunId(createGmRunId())
     gmRuntimeRef.current = createGmRuntimeState(now)
     lastValidGmEventAtRef.current = null
     demoStartedAtRef.current = now
@@ -453,6 +475,7 @@ export default function App() {
 
   const queueGmAction = async (kind: 'feature' | 'community_event' | 'choice_2029' | 'choice_2035', input: string) => {
     const action: ImmediateAction = {
+      runId: gmRunId,
       id: `${kind}-${Date.now()}`,
       kind,
       input,
@@ -462,7 +485,7 @@ export default function App() {
     if (!queued.accepted) return false
     gmRuntimeRef.current = queued.state
     const inbox = gmRuntimeRef.current.immediateQueue.map((queuedAction) => queuedAction.input)
-    const result = await postGmAction(createBridgeSnapshot(stateRef.current, inbox), action)
+    const result = await postGmAction(createBridgeSnapshot(gmRunId, stateRef.current, inbox), action)
     if (result.status === 'accepted') {
       setBridgeMode((current) => current === 'fallback' || current === 'available' ? current : 'checking')
       return true

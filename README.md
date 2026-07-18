@@ -35,6 +35,9 @@ The integrated browser experience includes:
 - Eight resolved outcomes: Beneficial Abundance, Managed Transition, Fragile Abundance, Race Future, Regulatory Freeze, Safety Incident, Misalignment, and Pyrrhic Monopoly.
 - A three-decision ending review comparing the reference scenarios with the player's timeline.
 - A fully authored automatic demo that reaches its 2040 ending at 54 seconds.
+- An official OpenAI Voice Agent (`RealtimeAgent` + `RealtimeSession`) over browser WebRTC for **Kibo — Demo Operator**, explicitly identified as a fictionalized operator using a generic synthetic voice.
+- A two-call `trigger_token_reset` function-tool contract: the first call creates a visible pending request, and a second call can invoke the existing in-game reset only after a separate explicit spoken confirmation.
+- A same-UI scripted voice fallback for missing credentials, microphone denial, or Realtime failure.
 - Automated tests covering the engine, GM contract, bridge client and server, scenario data, branches, and endings.
 
 ## Architecture and GM Boundary
@@ -43,6 +46,10 @@ The integrated browser experience includes:
 - `src/gm.ts` owns the GM schema, content guards, bounded event parsing, heartbeat state, fallback deck, and one-event/one-file contract.
 - `src/gmBridgeClient.ts` sanitizes read-only snapshots and player actions, POSTs actions and 60-second heartbeats, and polls for validated events.
 - `server/gmBridgePlugin.js` adds same-origin endpoints to the Vite development server and performs atomic filesystem handoff.
+- `server/realtimePlugin.js` uses the standard OpenAI API key only on the Vite server to mint a 120-second Realtime client secret. Upstream failures collapse to a non-sensitive fallback response.
+- `src/voiceAgent.ts` constructs the official OpenAI Agents SDK `RealtimeAgent` and `RealtimeSession`, pins `gpt-realtime-2.1` with the `webrtc` transport, and owns audio, subtitles, mute, lifecycle, and the function tool.
+- `src/voiceReset.ts` validates both `trigger_token_reset` calls, owns the visible approval state, rejects mismatched or duplicate confirmations, and respects the engine cooldown before allowing one game action.
+- `src/components/VoiceCallPanel.tsx` renders the operator identity, game-only scope, call state, microphone state, subtitles, fallback, keyboard hints, and approval controls.
 - `src/scenario.ts` is the canonical source for provenance metadata, milestones, 2029/2035 choices, and core outcome definitions.
 - `src/App.tsx` coordinates the browser runtime, local actions, bridge polling, fallback behavior, automatic demo schedule, decisions, and ending review.
 - `src/components/` contains the map, strategy tree, decision, and ending interfaces.
@@ -76,6 +83,8 @@ npm run dev
 
 Open `http://127.0.0.1:5173` in the Codex app browser. The Vite server supplies both the app and its local GM bridge endpoints.
 
+For live Realtime voice, place `OPENAI_API_KEY` in the ignored local `.env.local`. Vite loads it only into the server configuration; it is not exposed through `import.meta.env` or the client bundle. If the key is absent, invalid, or lacks Realtime access, the call panel automatically uses scripted voice fallback.
+
 Run verification with:
 
 ```bash
@@ -89,7 +98,18 @@ npm test
 npm run build
 ```
 
-The current integrated snapshot passes all 44 tests across five files and the production build.
+The current integrated snapshot passes all 61 tests across eight files and the production build.
+
+## Realtime Voice Demo
+
+1. Select **NORMAL** so the authored 60-second director does not spend the reset cooldown first.
+2. Open **VOICE OPERATOR**, then select **START CALL**. The browser asks for microphone access only after this explicit action.
+3. Ask: **「ゲーム内Tiboトークンのリミットをリセットして」**.
+4. The Voice Agent calls `trigger_token_reset` with `confirmed: false`; the game shows the pending tool request but does not execute it.
+5. The agent asks for confirmation aloud. Say **「はい、実行して」**. It then makes a second tool call with the matching approval ID and spoken confirmation; the existing engine reset runs once and the map emits its global pulse. No UI confirmation is required on this normal path.
+6. Use **MUTE**, **END CALL**, or the keyboard controls shown in the panel as needed. If the key, microphone, or Realtime connection is unavailable, the same panel clearly switches to scripted SpeechSynthesis backup, where visible buttons provide the explicit confirmation.
+
+The primary implementation follows the official [Voice agents](https://developers.openai.com/api/docs/guides/voice-agents), [Realtime WebRTC](https://developers.openai.com/api/docs/guides/realtime-webrtc), and [Realtime tools](https://developers.openai.com/api/docs/guides/realtime-mcp) flows. Scripted SpeechSynthesis is only the failure backup and is never treated as a live Voice Agent connection.
 
 ## Automatic 60-Second Demo
 
@@ -130,9 +150,9 @@ Codex was the development surface and engineering collaborator for the Build Wee
 
 ## Limitations
 
-- No external Codex/LLM producer is bundled, automated, or invoked by the app; there is no production OpenAI API call.
+- The GM file bridge still has no external producer. Realtime voice is a separate local-development OpenAI API path and cannot propose numeric GM effects.
 - The file bridge is a Vite development-server plugin. A static production host would need equivalent same-origin endpoints and filesystem handling.
+- The Realtime client-secret route is also Vite-development-only. A deployed build needs a trusted server endpoint with equivalent key isolation and origin controls.
 - A successful bridge heartbeat proves that the local transport accepted a snapshot, not that an external producer consumed it or returned an event.
 - The automatic demo is an authored happy-path lesson. It guarantees at least an A rank and disables terminal Misalignment so a presentation cannot end prematurely; Normal mode retains harsher branches.
 - The scenario is an educational simplification, not a forecast or policy recommendation.
-- Realtime voice interaction is a post-MVP proposal documented in `BACKLOG.md`; it is not implemented.

@@ -10,6 +10,7 @@ import {
   Cpu,
   GraduationCap,
   Network,
+  Phone,
   Radio,
   RotateCcw,
   ShieldCheck,
@@ -67,6 +68,15 @@ import UpgradeOverlay, {
 } from './components/UpgradeOverlay'
 import ScenarioDecision, { type ScenarioDecisionOptions } from './components/ScenarioDecision'
 import EndingOverlay, { type DecisionDivergences } from './components/EndingOverlay'
+import VoiceCallPanel, { type VoiceSubtitle } from './components/VoiceCallPanel'
+import { RealtimeVoiceClient, type MicPermissionStatus, type VoiceConnectionStatus } from './voiceAgent'
+import {
+  createVoiceResetState,
+  handleRealtimeResetToolCall,
+  requestFallbackReset,
+  resolveVoiceReset,
+  type VoiceResetState,
+} from './voiceReset'
 
 const EDUCATION_PROMPT = '世界中の学校で無料利用できる教育モード'
 const dayFor = (iso: string) => Math.round((Date.parse(`${iso}T00:00:00Z`) - START_DATE) / 86_400_000)
@@ -318,6 +328,13 @@ export default function App() {
   const [bridgeMode, setBridgeMode] = useState<'checking' | 'available' | 'unavailable' | 'fallback'>('checking')
   const [educationResponded, setEducationResponded] = useState(false)
   const [demoElapsedSeconds, setDemoElapsedSeconds] = useState(0)
+  const [voiceOpen, setVoiceOpen] = useState(false)
+  const [voiceStatus, setVoiceStatus] = useState<VoiceConnectionStatus>('idle')
+  const [micPermission, setMicPermission] = useState<MicPermissionStatus>('unknown')
+  const [voiceMuted, setVoiceMuted] = useState(false)
+  const [voiceSubtitles, setVoiceSubtitles] = useState<VoiceSubtitle[]>([])
+  const [operatorDraft, setOperatorDraft] = useState('')
+  const [voiceResetState, setVoiceResetState] = useState(createVoiceResetState)
 
   const stateRef = useRef(state)
   const gmRuntimeRef = useRef(createGmRuntimeState(Date.now()))
@@ -328,6 +345,9 @@ export default function App() {
   const heartbeatInFlightRef = useRef(false)
   const pollInFlightRef = useRef(false)
   const lastValidGmEventAtRef = useRef<number | null>(null)
+  const voiceClientRef = useRef<RealtimeVoiceClient | null>(null)
+  const voiceResetRef = useRef(voiceResetState)
+  const voiceSubtitleIdRef = useRef(0)
 
   const m = useMemo(() => metrics(state), [state])
   const score = useMemo(() => scoreState(state), [state])
@@ -343,9 +363,12 @@ export default function App() {
 
   useEffect(() => { stateRef.current = state }, [state])
   useEffect(() => { educationRespondedRef.current = educationResponded }, [educationResponded])
+  useEffect(() => { voiceResetRef.current = voiceResetState }, [voiceResetState])
 
   useEffect(() => () => {
     pendingTimersRef.current.forEach((timer) => window.clearTimeout(timer))
+    voiceClientRef.current?.end()
+    window.speechSynthesis?.cancel()
   }, [])
 
   useEffect(() => {
@@ -532,6 +555,183 @@ export default function App() {
     setState((current) => triggerReset(current))
     setResetPulse((value) => value + 1)
   }
+
+  const appendVoiceSubtitle = (speaker: VoiceSubtitle['speaker'], text: string) => {
+    const trimmed = text.trim()
+    if (!trimmed) return
+    voiceSubtitleIdRef.current += 1
+    setVoiceSubtitles((current) => [...current.slice(-11), { id: `voice-${Date.now()}-${voiceSubtitleIdRef.current}`, speaker, text: trimmed }])
+  }
+
+  const commitVoiceResetState = (next: VoiceResetState) => {
+    voiceResetRef.current = next
+    setVoiceResetState(next)
+  }
+
+  const speakFallback = (text: string) => {
+    if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') return
+    window.speechSynthesis.cancel()
+    const utterance = new SpeechSynthesisUtterance(text)
+    utterance.lang = 'ja-JP'
+    utterance.rate = 1
+    window.speechSynthesis.speak(utterance)
+  }
+
+  const activateVoiceFallback = (reason: 'microphone-denied' | 'realtime-unavailable') => {
+    voiceClientRef.current?.end()
+    voiceClientRef.current = null
+    setVoiceStatus('fallback')
+    setVoiceMuted(false)
+    setOperatorDraft('')
+    appendVoiceSubtitle('system', reason === 'microphone-denied'
+      ? 'Microphone permission was denied. Scripted voice fallback is active.'
+      : 'Realtime is unavailable. Scripted voice fallback is active.')
+    const line = 'こちらはKiboデモオペレーターです。音声回線の代わりに台本モードで、ゲーム内Tiboリセットを案内します。'
+    appendVoiceSubtitle('operator', line)
+    speakFallback(line)
+  }
+
+  const runConfirmedGameReset = () => {
+    if (stateRef.current.resetCooldownSeconds > 0) return false
+    const next = triggerReset(stateRef.current)
+    stateRef.current = next
+    setState(next)
+    setResetPulse((value) => value + 1)
+    appendVoiceSubtitle('system', 'Confirmed: the in-game Tibo reset ran once. Global map pulse activated.')
+    return true
+  }
+
+  const startVoiceCall = () => {
+    voiceClientRef.current?.end()
+    setVoiceOpen(true)
+    setVoiceStatus('connecting')
+    setMicPermission('requesting')
+    setVoiceMuted(false)
+    setVoiceSubtitles([])
+    setOperatorDraft('')
+    const client = new RealtimeVoiceClient({
+      onStatus: setVoiceStatus,
+      onMicPermission: setMicPermission,
+      onTranscript: (speaker, text, final) => {
+        if (speaker === 'operator' && !final) {
+          setOperatorDraft((current) => current + text)
+          return
+        }
+        if (speaker === 'operator') setOperatorDraft('')
+        appendVoiceSubtitle(speaker, text)
+      },
+      onToolCall: (call) => {
+        const before = voiceResetRef.current
+        const result = handleRealtimeResetToolCall(before, call, stateRef.current.resetCooldownSeconds)
+        commitVoiceResetState(result.state)
+        if (result.outcome === 'confirmation-required' && result.request) {
+          appendVoiceSubtitle('system', 'Tool request validated. Waiting for a separate spoken confirmation, e.g. 「やって！」 or “Do it!”')
+          return {
+            status: 'confirmation_required',
+            approval_id: result.request.id,
+            scope: 'codex-2040-game-only',
+            next_step: 'Ask the player aloud in Japanese whether to execute. Accept a new short direct approval such as やって, お願い, はい, Do it, or Go ahead; reject negative or unclear replies.',
+          }
+        }
+        if (result.outcome === 'executed' && result.shouldExecute) {
+          runConfirmedGameReset()
+          return {
+            status: 'executed',
+            scope: 'codex-2040-game-only',
+            message: 'The in-game Tibo reset ran exactly once and the global map pulse activated. Briefly tell the player in Japanese.',
+          }
+        }
+        if (result.outcome === 'cooldown') {
+          return {
+            status: 'cooldown',
+            retry_after_seconds: Math.ceil(stateRef.current.resetCooldownSeconds),
+            scope: 'codex-2040-game-only',
+            message: 'No reset ran. Briefly explain the game cooldown in Japanese.',
+          }
+        }
+        return { status: 'rejected', reason: result.outcome, scope: 'codex-2040-game-only', message: 'No game action ran.' }
+      },
+      onFailure: activateVoiceFallback,
+    })
+    voiceClientRef.current = client
+    void client.start()
+  }
+
+  const endVoiceCall = () => {
+    voiceClientRef.current?.end()
+    voiceClientRef.current = null
+    window.speechSynthesis?.cancel()
+    setVoiceStatus('ended')
+    setVoiceMuted(false)
+    setOperatorDraft('')
+  }
+
+  const closeVoiceCall = () => {
+    endVoiceCall()
+    setVoiceOpen(false)
+  }
+
+  const toggleVoiceMute = () => {
+    const next = !voiceMuted
+    voiceClientRef.current?.setMuted(next)
+    setVoiceMuted(next)
+  }
+
+  const runScriptedVoiceRequest = () => {
+    const before = voiceResetRef.current
+    const next = requestFallbackReset(before, String(Date.now()))
+    commitVoiceResetState(next)
+    if (!next.pending || next.pending === before.pending) return
+    appendVoiceSubtitle('player', 'ゲーム内Tiboトークンのリミットをリセットして')
+    const line = 'trigger_token_resetを要求しました。ゲーム内操作を実行するには、画面で確認してください。'
+    appendVoiceSubtitle('operator', line)
+    speakFallback(line)
+  }
+
+  const resolveVoiceApproval = (approved: boolean) => {
+    const result = resolveVoiceReset(voiceResetRef.current, approved, stateRef.current.resetCooldownSeconds)
+    commitVoiceResetState(result.state)
+    if (result.outcome === 'cooldown') {
+      appendVoiceSubtitle('system', `Reset cooldown is active for ${Math.ceil(stateRef.current.resetCooldownSeconds)} seconds.`)
+      return
+    }
+    if (result.request?.source === 'realtime') {
+      voiceClientRef.current?.requestResponse(result.outcome === 'rejected'
+        ? 'The player rejected the visible fallback approval. Briefly acknowledge that no game action ran.'
+        : 'The player used the visible fallback approval. Briefly acknowledge the game-only outcome.')
+    }
+    if (!result.shouldExecute) {
+      if (result.outcome === 'rejected') appendVoiceSubtitle('system', 'Player rejected trigger_token_reset. No game action ran.')
+      return
+    }
+    runConfirmedGameReset()
+  }
+
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      const target = event.target
+      if (target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement || target instanceof HTMLSelectElement) return
+      if (event.altKey && event.key.toLowerCase() === 'v') {
+        event.preventDefault()
+        if (!voiceOpen) setVoiceOpen(true)
+        if (voiceStatus === 'idle' || voiceStatus === 'ended') startVoiceCall()
+      }
+      if (event.altKey && event.key.toLowerCase() === 'm' && voiceStatus === 'connected') {
+        event.preventDefault()
+        toggleVoiceMute()
+      }
+      if (event.altKey && event.key === 'Enter' && voiceResetRef.current.pending && stateRef.current.resetCooldownSeconds <= 0) {
+        event.preventDefault()
+        resolveVoiceApproval(true)
+      }
+      if (event.key === 'Escape' && voiceOpen) {
+        event.preventDefault()
+        endVoiceCall()
+      }
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  })
 
   const setSpeed = (speed: Speed) => {
     setState((current) => ({ ...current, speed }))
@@ -759,6 +959,7 @@ export default function App() {
           <button aria-pressed={!demoMode} className={!demoMode ? 'is-active' : ''} onClick={() => switchMode(false)}>NORMAL</button>
         </div>
         <div className="simulation-clock">
+          <button className="voice-call-launcher" onClick={() => setVoiceOpen(true)} aria-expanded={voiceOpen}><Phone size={13} /> VOICE OPERATOR</button>
           <span><i /> DETERMINISTIC ENGINE</span>
           <strong>{date}</strong>
         </div>
@@ -766,7 +967,7 @@ export default function App() {
 
       <section className="intel-strip" aria-label="Latest scenario intelligence">
         <div className="intel-strip__label"><Radio size={13} /> SCENARIO INTELLIGENCE</div>
-        {latestNews && <div className="intel-strip__headline"><SourceBadge source={latestNews.source} /><b>{latestNews.headline}</b><span>{latestNewsDetail}</span></div>}
+        {latestNews && <div className="intel-strip__headline"><SourceBadge source={latestNews.source} /><b title={latestNews.headline}>{latestNews.headline}</b><span>{latestNewsDetail}</span></div>}
         <div className="source-key" aria-label="Source label key">
           {(['AI 2027', 'AI 2040', 'Your Timeline', 'Live GM'] as SourceLabel[]).map((source) => <SourceBadge source={source} key={source} />)}
         </div>
@@ -892,6 +1093,25 @@ export default function App() {
           {demoMode && <div className="demo-director" aria-live="polite"><Zap size={14} /><span><b>AUTO DIRECTOR · {Math.floor(demoElapsedSeconds)} / 60s</b><small>{nextDemoCue ? `NEXT · ${nextDemoCue.label}` : 'TIMELINE COMPLETE'}</small></span></div>}
         </div>
       </section>
+
+      <VoiceCallPanel
+        open={voiceOpen}
+        status={voiceStatus}
+        micPermission={micPermission}
+        muted={voiceMuted}
+        subtitles={voiceSubtitles}
+        operatorDraft={operatorDraft}
+        pendingReset={voiceResetState.pending}
+        resetNotice={voiceResetState.notice}
+        resetCooldownSeconds={state.resetCooldownSeconds}
+        onStart={startVoiceCall}
+        onEnd={endVoiceCall}
+        onClose={closeVoiceCall}
+        onToggleMute={toggleVoiceMute}
+        onScriptedRequest={runScriptedVoiceRequest}
+        onApproveReset={() => resolveVoiceApproval(true)}
+        onRejectReset={() => resolveVoiceApproval(false)}
+      />
 
       <UpgradeOverlay
         isOpen={upgradeOpen}

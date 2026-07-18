@@ -967,7 +967,7 @@ export default function App() {
 
       <section className="intel-strip" aria-label="Latest scenario intelligence">
         <div className="intel-strip__label"><Radio size={13} /> SCENARIO INTELLIGENCE</div>
-        {latestNews && <div className="intel-strip__headline"><SourceBadge source={latestNews.source} /><b>{latestNews.headline}</b><span>{latestNewsDetail}</span></div>}
+        {latestNews && <div className="intel-strip__headline"><SourceBadge source={latestNews.source} /><b title={latestNews.headline}>{latestNews.headline}</b><span>{latestNewsDetail}</span></div>}
         <div className="source-key" aria-label="Source label key">
           {(['AI 2027', 'AI 2040', 'Your Timeline', 'Live GM'] as SourceLabel[]).map((source) => <SourceBadge source={source} key={source} />)}
         </div>

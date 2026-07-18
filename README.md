@@ -6,6 +6,12 @@ The product thesis is simple: Codex helps build a game about its own spread, the
 
 > You did not own the world. You helped it learn.
 
+## Demo
+
+[![Codex 2040 running inside the Codex app](docs/assets/codex-2040-demo-poster.jpg)](docs/assets/codex-2040-demo.mp4)
+
+**[▶ Watch the 12-second Codex 2040 demo](docs/assets/codex-2040-demo.mp4)** — the Codex game master and browser simulation running together during Build Week Tokyo.
+
 ## Why Education
 
 Long-form AI scenarios ask readers to mentally connect capability progress, access, safety, regulation, trust, and concentration. Codex 2040 turns those relationships into actions with visible consequences:

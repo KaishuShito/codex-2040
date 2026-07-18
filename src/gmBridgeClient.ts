@@ -2,8 +2,10 @@ import {
   GM_CONSTANTS,
   containsNgContent,
   filterPlayerInput,
+  isGmRunId,
   parseGmEventCycle,
   type GmEvent,
+  type GmRunId,
   type GmSnapshot,
   type ImmediateAction,
   type ImmediateActionKind,
@@ -14,9 +16,9 @@ export const GM_BRIDGE_ENDPOINTS = {
   events: '/__codex2040/gm/events',
 } as const
 
-export const GM_BRIDGE_PROTOCOL_VERSION = 1 as const
+export const GM_BRIDGE_PROTOCOL_VERSION = 2 as const
 export const GM_BRIDGE_REQUEST_HEADER = 'x-codex2040-gm-bridge' as const
-export const GM_BRIDGE_REQUEST_HEADER_VALUE = '1' as const
+export const GM_BRIDGE_REQUEST_HEADER_VALUE = '2' as const
 export const GM_BRIDGE_TIMESTAMP_BOUNDS = {
   min: Date.UTC(2020, 0, 1),
   max: Date.UTC(2100, 0, 1) - 1,
@@ -33,6 +35,15 @@ const ACTION_ID = /^[A-Za-z0-9_-]{1,80}$/u
 const SNAPSHOT_LIST_LIMIT = 32
 const SNAPSHOT_TEXT_LIMIT = 120
 const DEFAULT_TIMEOUT_MS = 2_000
+
+/** One UUID per mounted browser runtime. It is never derived from an event ID. */
+export const createGmRunId = (
+  randomUuid: () => string = () => globalThis.crypto.randomUUID(),
+): GmRunId => {
+  const runId = `run-${randomUuid()}`
+  if (!isGmRunId(runId)) throw new Error('Unable to create a valid GM run ID')
+  return runId
+}
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
   typeof value === 'object' && value !== null && !Array.isArray(value)
@@ -68,7 +79,7 @@ const sanitizeDisplayList = (value: unknown): string[] | null => {
 
 /** Allow-list and bound the read-only state projection sent to the local GM. */
 export const sanitizeGmSnapshot = (raw: unknown): GmSnapshot | null => {
-  if (!isRecord(raw) || !safeDate(raw.date)) return null
+  if (!isRecord(raw) || !isGmRunId(raw.runId) || !safeDate(raw.date)) return null
   const AWorld = clampFinite(raw.A_world, 0, 1)
   const codexShare = clampFinite(raw.S_c, 0, 1)
   const hhi = clampFinite(raw.HHI, 0, 1)
@@ -98,6 +109,7 @@ export const sanitizeGmSnapshot = (raw: unknown): GmSnapshot | null => {
   }
 
   return {
+    runId: raw.runId,
     date: raw.date,
     A_world: AWorld!,
     S_c: codexShare!,
@@ -114,6 +126,7 @@ export const sanitizeGmSnapshot = (raw: unknown): GmSnapshot | null => {
 
 export const sanitizeGmAction = (raw: unknown): ImmediateAction | null => {
   if (!isRecord(raw)
+    || !isGmRunId(raw.runId)
     || typeof raw.id !== 'string'
     || !ACTION_ID.test(raw.id)
     || typeof raw.kind !== 'string'
@@ -125,6 +138,7 @@ export const sanitizeGmAction = (raw: unknown): ImmediateAction | null => {
   const filtered = filterPlayerInput(raw.input)
   if (!filtered.ok) return null
   return {
+    runId: raw.runId,
     id: raw.id,
     kind: raw.kind as ImmediateActionKind,
     input: filtered.value,
@@ -134,6 +148,7 @@ export const sanitizeGmAction = (raw: unknown): ImmediateAction | null => {
 
 type GmBridgeTurnBase = {
   version: typeof GM_BRIDGE_PROTOCOL_VERSION
+  runId: GmRunId
   sentAtMs: number
   snapshot: GmSnapshot
 }
@@ -147,28 +162,30 @@ export type GmBridgeTurn = GmBridgeTurnBase & (
 export const sanitizeGmBridgeTurn = (raw: unknown): GmBridgeTurn | null => {
   if (!isRecord(raw)
     || raw.version !== GM_BRIDGE_PROTOCOL_VERSION
+    || !isGmRunId(raw.runId)
     || typeof raw.sentAtMs !== 'number'
     || !Number.isSafeInteger(raw.sentAtMs)
     || raw.sentAtMs < GM_BRIDGE_TIMESTAMP_BOUNDS.min
     || raw.sentAtMs > GM_BRIDGE_TIMESTAMP_BOUNDS.max
     || typeof raw.kind !== 'string') return null
   const snapshot = sanitizeGmSnapshot(raw.snapshot)
-  if (!snapshot) return null
+  if (!snapshot || snapshot.runId !== raw.runId) return null
   const base = {
     version: GM_BRIDGE_PROTOCOL_VERSION,
+    runId: raw.runId,
     sentAtMs: raw.sentAtMs,
     snapshot,
   }
   if (raw.kind === 'snapshot' || raw.kind === 'heartbeat') return { ...base, kind: raw.kind }
   if (raw.kind !== 'action') return null
   const action = sanitizeGmAction(raw.action)
-  return action ? { ...base, kind: 'action', action } : null
+  return action && action.runId === raw.runId ? { ...base, kind: 'action', action } : null
 }
 
 export type GmBridgeUnavailableReason = 'network' | 'timeout' | 'http-error' | 'invalid-response'
 
 export type GmBridgeSubmitResult =
-  | { status: 'accepted'; turnId: string; fileName: string }
+  | { status: 'accepted'; runId: GmRunId; turnId: string; fileName: string }
   | { status: 'rejected'; reason: 'invalid-turn' }
   | { status: 'unavailable'; reason: GmBridgeUnavailableReason; httpStatus?: number }
 
@@ -229,18 +246,25 @@ export const submitGmBridgeTurn = async (
   }
   if (!isRecord(response.value)
     || response.value.ok !== true
+    || response.value.runId !== turn.runId
     || typeof response.value.turnId !== 'string'
     || typeof response.value.fileName !== 'string') {
     return { status: 'unavailable', reason: 'invalid-response' }
   }
-  return { status: 'accepted', turnId: response.value.turnId, fileName: response.value.fileName }
+  return { status: 'accepted', runId: turn.runId, turnId: response.value.turnId, fileName: response.value.fileName }
 }
 
 const createTurn = (
   kind: 'snapshot' | 'heartbeat',
   snapshot: GmSnapshot,
   sentAtMs = Date.now(),
-): GmBridgeTurn => ({ version: GM_BRIDGE_PROTOCOL_VERSION, kind, sentAtMs, snapshot })
+): GmBridgeTurn => ({
+  version: GM_BRIDGE_PROTOCOL_VERSION,
+  runId: snapshot.runId,
+  kind,
+  sentAtMs,
+  snapshot,
+})
 
 export const postGmSnapshot = (
   snapshot: GmSnapshot,
@@ -261,6 +285,7 @@ export const postGmAction = (
   sentAtMs = Date.now(),
 ) => submitGmBridgeTurn({
   version: GM_BRIDGE_PROTOCOL_VERSION,
+  runId: snapshot.runId,
   kind: 'action',
   sentAtMs,
   snapshot,
@@ -268,9 +293,11 @@ export const postGmAction = (
 }, options)
 
 export const pollGmEvents = async (
+  runId: GmRunId,
   options: GmBridgeClientOptions = {},
 ): Promise<GmBridgePollResult> => {
-  const response = await fetchJson(GM_BRIDGE_ENDPOINTS.events, {
+  if (!isGmRunId(runId)) return { status: 'unavailable', reason: 'invalid-response' }
+  const response = await fetchJson(`${GM_BRIDGE_ENDPOINTS.events}?runId=${encodeURIComponent(runId)}`, {
     method: 'GET',
     headers: {
       accept: 'application/json',
@@ -281,10 +308,13 @@ export const pollGmEvents = async (
   if ('reason' in response) {
     return { status: 'unavailable', reason: response.reason, httpStatus: response.httpStatus }
   }
-  if (!isRecord(response.value) || response.value.ok !== true || !Array.isArray(response.value.events)) {
+  if (!isRecord(response.value)
+    || response.value.ok !== true
+    || response.value.runId !== runId
+    || !Array.isArray(response.value.events)) {
     return { status: 'unavailable', reason: 'invalid-response' }
   }
-  const events = parseGmEventCycle(response.value.events)
+  const events = parseGmEventCycle(response.value.events, undefined, runId)
   if (events.length !== response.value.events.length) {
     return { status: 'unavailable', reason: 'invalid-response' }
   }

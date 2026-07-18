@@ -5,6 +5,7 @@ import {
   GM_BRIDGE_REQUEST_HEADER,
   GM_BRIDGE_REQUEST_HEADER_VALUE,
   GM_BRIDGE_TIMESTAMP_BOUNDS,
+  createGmRunId,
   isGmBridgeHeartbeatDue,
   pollGmEvents,
   postGmAction,
@@ -16,8 +17,10 @@ import {
 import type { GmSnapshot, ImmediateAction } from './gm'
 
 const SENT_AT_MS = 1_800_000_000_000
+const RUN_ID = 'run-12345678-1234-4123-8123-123456789abc' as const
 
 const snapshot = (): GmSnapshot => ({
+  runId: RUN_ID,
   date: '2028-04-10',
   A_world: 0.22,
   S_c: 0.31,
@@ -32,6 +35,7 @@ const snapshot = (): GmSnapshot => ({
 })
 
 const action = (): ImmediateAction => ({
+  runId: RUN_ID,
   id: 'feature-1',
   kind: 'feature',
   input: ' 世界中の学校で無料利用できる教育モード ',
@@ -45,7 +49,7 @@ describe('browser GM bridge client', () => {
     const fetchStub = vi.fn(async (url: string | URL | Request, init?: RequestInit) => {
       requestUrl = String(url)
       requestInit = init
-      return new Response(JSON.stringify({ ok: true, turnId: 'turn-id', fileName: 'turn.json' }), {
+      return new Response(JSON.stringify({ ok: true, runId: RUN_ID, turnId: 'turn-id', fileName: 'turn.json' }), {
         status: 201,
         headers: { 'content-type': 'application/json' },
       })
@@ -58,11 +62,12 @@ describe('browser GM bridge client', () => {
       SENT_AT_MS,
     )
 
-    expect(result).toEqual({ status: 'accepted', turnId: 'turn-id', fileName: 'turn.json' })
+    expect(result).toEqual({ status: 'accepted', runId: RUN_ID, turnId: 'turn-id', fileName: 'turn.json' })
     expect(requestUrl).toBe(GM_BRIDGE_ENDPOINTS.turns)
     const body = JSON.parse(String(requestInit?.body)) as Record<string, unknown>
     expect(body).toMatchObject({
       version: GM_BRIDGE_PROTOCOL_VERSION,
+      runId: RUN_ID,
       kind: 'action',
       sentAtMs: SENT_AT_MS,
       snapshot: { A_world: 1, T: 0 },
@@ -97,7 +102,7 @@ describe('browser GM bridge client', () => {
       reason: 'network',
       httpStatus: undefined,
     })
-    await expect(pollGmEvents(options)).resolves.toEqual({
+    await expect(pollGmEvents(RUN_ID, options)).resolves.toEqual({
       status: 'unavailable',
       reason: 'network',
       httpStatus: undefined,
@@ -108,18 +113,37 @@ describe('browser GM bridge client', () => {
     let requestInit: RequestInit | undefined
     const fetchStub = vi.fn(async (_url: string | URL | Request, init?: RequestInit) => {
       requestInit = init
-      return new Response(JSON.stringify({ ok: true, events: [] }), {
+      return new Response(JSON.stringify({ ok: true, runId: RUN_ID, events: [] }), {
         status: 200,
         headers: { 'content-type': 'application/json' },
       })
     })
-    await expect(pollGmEvents({ fetch: fetchStub as typeof fetch })).resolves.toEqual({
+    await expect(pollGmEvents(RUN_ID, { fetch: fetchStub as typeof fetch })).resolves.toEqual({
       status: 'available',
       events: [],
     })
     expect(requestInit?.headers).toMatchObject({
       [GM_BRIDGE_REQUEST_HEADER]: GM_BRIDGE_REQUEST_HEADER_VALUE,
     })
+  })
+
+  it('creates a bounded run ID and rejects cross-run nesting', () => {
+    expect(createGmRunId(() => '12345678-1234-4123-8123-123456789abc')).toBe(RUN_ID)
+    const validTurn = {
+      version: GM_BRIDGE_PROTOCOL_VERSION,
+      runId: RUN_ID,
+      kind: 'action',
+      sentAtMs: SENT_AT_MS,
+      snapshot: snapshot(),
+      action: action(),
+    }
+    expect(sanitizeGmBridgeTurn(validTurn)).not.toBeNull()
+    expect(sanitizeGmBridgeTurn({
+      ...validTurn,
+      action: { ...action(), runId: 'run-aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa' },
+    })).toBeNull()
+    expect(sanitizeGmBridgeTurn({ ...validTurn, runId: '../events' })).toBeNull()
+    expect(sanitizeGmBridgeTurn({ ...validTurn, runId: `run-${'a'.repeat(10_000)}` })).toBeNull()
   })
 
   it('exposes the 60-second heartbeat boundary without owning the game fallback', () => {
@@ -131,6 +155,7 @@ describe('browser GM bridge client', () => {
   it('rejects fractional, exponential-sized, and out-of-window filename timestamps', () => {
     const validTurn = {
       version: GM_BRIDGE_PROTOCOL_VERSION,
+      runId: RUN_ID,
       kind: 'heartbeat',
       sentAtMs: SENT_AT_MS,
       snapshot: snapshot(),

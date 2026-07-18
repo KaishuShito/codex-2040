@@ -12,7 +12,10 @@ import {
   type GmSnapshot,
 } from './gm'
 
+const RUN_ID = 'run-12345678-1234-4123-8123-123456789abc' as const
+
 const validEvent = () => ({
+  runId: RUN_ID,
   id: 'evt-12345678-1234-4123-8123-123456789abc',
   date: '2027-08-09',
   type: 'news',
@@ -58,6 +61,15 @@ describe('safe GM event contract', () => {
     expect(parseGmEvent('[]')).toBeNull()
   })
 
+  it('requires the expected run ID for live events without confusing it with the event ID', () => {
+    expect(parseGmEvent(validEvent(), undefined, RUN_ID)?.id).toBe(validEvent().id)
+    expect(parseGmEvent({ ...validEvent(), runId: undefined }, undefined, RUN_ID)).toBeNull()
+    expect(parseGmEvent({
+      ...validEvent(),
+      runId: 'run-aaaaaaaa-aaaa-4aaa-8aaa-aaaaaaaaaaaa',
+    }, undefined, RUN_ID)).toBeNull()
+  })
+
   it('explicitly ignores forbidden risk fields and keeps date display-only', () => {
     const parsed = parseGmEvent({
       ...validEvent(),
@@ -75,9 +87,10 @@ describe('safe GM event contract', () => {
 
   it('creates a same-directory tmp-to-rename plan for one event file', () => {
     const event = parseGmEvent(validEvent())!
-    const plan = createAtomicEventWritePlan(event)
-    expect(plan.finalPath).toBe('events/evt-12345678-1234-4123-8123-123456789abc.json')
-    expect(plan.temporaryPath).toBe('events/.evt-12345678-1234-4123-8123-123456789abc.json.tmp')
+    if (!event.runId) throw new Error('expected run-bound event')
+    const plan = createAtomicEventWritePlan({ ...event, runId: event.runId })
+    expect(plan.finalPath).toBe(`${GM_CONSTANTS.runDirectory}/${RUN_ID}/events/evt-12345678-1234-4123-8123-123456789abc.json`)
+    expect(plan.temporaryPath).toBe(`${GM_CONSTANTS.runDirectory}/${RUN_ID}/events/.evt-12345678-1234-4123-8123-123456789abc.json.tmp`)
     expect(parseGmEvent(plan.contents)).toEqual(event)
   })
 
@@ -93,6 +106,7 @@ describe('two-path GM runtime', () => {
   it('queues immediate actions independently of the heartbeat', () => {
     const initial = createGmRuntimeState(0)
     const queued = enqueueImmediateAction(initial, {
+      runId: RUN_ID,
       id: 'feature-1',
       kind: 'feature',
       input: '世界中の学校で無料利用できる教育モード',
@@ -126,6 +140,7 @@ describe('two-path GM runtime', () => {
 
   it('provides the representative education response with benefit and governance challenge', () => {
     const snapshot: GmSnapshot = {
+      runId: RUN_ID,
       date: '2028-04-10',
       A_world: 0.22,
       S_c: 0.31,

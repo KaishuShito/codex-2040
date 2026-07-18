@@ -37,7 +37,13 @@ export const createVoiceResetState = (): VoiceResetState => ({
 })
 
 const resetIntent = /(?:reset|リセット).{0,18}(?:limit|token|tibo|リミット|トークン)|(?:limit|token|tibo|リミット|トークン).{0,18}(?:reset|リセット)/iu
-const confirmationIntent = /(?:yes|confirm|execute|approve|はい|実行|承認|確定)/iu
+const confirmationDenial = /(?:やらない|しないで|やめて|止めて|キャンセル|取り消|待って|だめ|ダメ|いや|いいえ|不要|(?:do\s+not|don't|dont|never|cancel|stop|wait|no|nope|not)\b)/iu
+const confirmationIntent = /(?:やって|実行して|進めて|リセットして|お願い(?:します)?|どうぞ|いいよ|オッケー|はい|うん|ええ|(?:do\s+it|go\s+ahead|proceed|execute\s+it|reset\s+it|yes|yeah|yep|sure|confirm|approve|ok|okay)\b)/iu
+
+export const isExplicitResetConfirmation = (utterance: string) => {
+  const normalized = utterance.normalize('NFKC').trim().slice(0, 120)
+  return normalized.length > 0 && !confirmationDenial.test(normalized) && confirmationIntent.test(normalized)
+}
 
 export const parseResetToolCall = (raw: RealtimeFunctionCall): ParsedResetToolCall | null => {
   if (raw.type !== 'function_call' || raw.name !== RESET_TOOL_NAME) return null
@@ -67,7 +73,7 @@ export const parseResetToolCall = (raw: RealtimeFunctionCall): ParsedResetToolCa
     || typeof approvalId !== 'string'
     || !/^approval-[A-Za-z0-9_-]{1,128}$/u.test(approvalId)
     || typeof confirmationUtterance !== 'string'
-    || !confirmationIntent.test(confirmationUtterance.trim().slice(0, 120))) return null
+    || !isExplicitResetConfirmation(confirmationUtterance)) return null
   return {
     callId: raw.call_id,
     playerRequest: normalized,

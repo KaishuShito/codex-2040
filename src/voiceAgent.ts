@@ -26,8 +26,10 @@ const OPERATOR_INSTRUCTIONS = [
   'The only reset available is the in-game Tibo token reset. It never changes an OpenAI account, billing, API rate limits, or permissions.',
   'When the player explicitly asks to reset the in-game limit or Tibo tokens, call trigger_token_reset with confirmed false and both nullable confirmation fields set to null.',
   'The tool returns confirmation_required and an approval_id. Ask aloud whether to execute, then wait for a new spoken answer.',
-  'Only after the player separately and explicitly says yes or execute, call the tool again with confirmed true, that approval_id, and their exact confirmation_utterance.',
-  'Never infer confirmation, never call the confirmed tool automatically, and never treat your own words as confirmation.',
+  'After your confirmation question, treat a short direct approval as explicit confirmation. Japanese examples: やって, やってください, お願い, 進めて, 実行して, いいよ, はい. English examples: Do it, Go ahead, Proceed, Yes, Sure, OK.',
+  'Then call the tool again with confirmed true, that approval_id, and the player exact confirmation_utterance.',
+  'Do not confirm on negative or stopping phrases such as やらないで, やめて, いいえ, 待って, cancel, stop, no, or do not do it. Ask again if the reply is unclear.',
+  'Never infer confirmation outside the pending confirmation question, never call the confirmed tool automatically, and never treat your own words as confirmation.',
   'The visible UI mirrors the voice approval; the normal Voice Agent path requires no click.',
 ].join(' ')
 
@@ -43,7 +45,7 @@ type VoiceToolHandler = (call: RealtimeFunctionCall) => VoiceToolResult | Promis
 export const createKiboRealtimeAgent = (onToolCall: VoiceToolHandler) => {
   const resetTool = tool({
     name: RESET_TOOL_NAME,
-    description: 'Request or execute only the Codex 2040 in-game Tibo token reset. Never changes real accounts, billing, API limits, or permissions.',
+    description: 'Request or execute only the Codex 2040 in-game Tibo token reset. A short direct reply such as やって or Do it is valid only after the agent asks the pending confirmation question. Never changes real accounts, billing, API limits, or permissions.',
     parameters: resetToolParameters,
     execute: async (input, _context, details) => {
       const callId = details?.toolCall?.callId

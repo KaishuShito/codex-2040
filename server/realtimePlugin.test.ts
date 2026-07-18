@@ -40,6 +40,9 @@ describe('Realtime client secret service', () => {
   it('pins the fictional identity and game-only authority boundary in the session', () => {
     expect(REALTIME_SESSION.instructions).toContain('fictionalized demo operator')
     expect(REALTIME_SESSION.instructions).toContain('never changes an OpenAI account')
+    expect(REALTIME_SESSION.instructions).toContain('Do it')
+    expect(REALTIME_SESSION.instructions).toContain('やって')
+    expect(REALTIME_SESSION.instructions).toContain('do not do it')
     expect(REALTIME_SESSION.instructions).toContain('never call the confirmed tool automatically')
   })
 })

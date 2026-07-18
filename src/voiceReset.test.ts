@@ -2,6 +2,7 @@ import { describe, expect, it } from 'vitest'
 import {
   createVoiceResetState,
   handleRealtimeResetToolCall,
+  isExplicitResetConfirmation,
   parseResetToolCall,
   requestFallbackReset,
   resolveVoiceReset,
@@ -64,6 +65,39 @@ describe('voice reset tool approval contract', () => {
       }),
     }
     expect(handleRealtimeResetToolCall(requested.state, missing, 0).outcome).toBe('invalid')
+  })
+
+  it.each([
+    'やって！',
+    'やってください',
+    'お願い',
+    'うん、進めて',
+    'いいよ',
+    'Do it!',
+    'Go ahead.',
+    'Sure, proceed',
+    'OK',
+  ])('accepts a short direct approval: %s', (utterance) => {
+    expect(isExplicitResetConfirmation(utterance)).toBe(true)
+    const requested = handleRealtimeResetToolCall(createVoiceResetState(), validCall(), 0)
+    const confirmed = handleRealtimeResetToolCall(requested.state, confirmedCall('approval-call_reset_1', `call_${utterance.length}`, utterance), 0)
+    expect(confirmed.outcome).toBe('executed')
+    expect(confirmed.shouldExecute).toBe(true)
+  })
+
+  it.each([
+    'やらないで',
+    'やって、いや、やめて',
+    '実行しないで',
+    'いいえ',
+    '待って',
+    "Don't do it!",
+    'Do not proceed',
+    'No, cancel it',
+    'Maybe later',
+  ])('rejects a negative or unclear reply: %s', (utterance) => {
+    expect(isExplicitResetConfirmation(utterance)).toBe(false)
+    expect(parseResetToolCall(confirmedCall('approval-call_reset_1', `call_no_${utterance.length}`, utterance))).toBeNull()
   })
 
   it('blocks duplicate execution after a confirmed tool call', () => {

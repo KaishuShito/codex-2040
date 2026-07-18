@@ -95,7 +95,7 @@ export default function VoiceCallPanel({
           <small>TOOL REQUEST · {pendingReset.source === 'realtime' ? 'REALTIME' : 'SCRIPTED FALLBACK'}</small>
           <b>trigger_token_reset</b>
           <p>“{pendingReset.playerRequest}”</p>
-          <strong>{pendingReset.source === 'realtime' ? 'Say 「はい、実行して」. The visible buttons remain as a fallback.' : 'Confirming runs the existing in-game Tibo reset once.'}</strong>
+          <strong>{pendingReset.source === 'realtime' ? 'Say 「やって！」, 「お願い」, or “Do it!”. The visible buttons remain as a fallback.' : 'Confirming runs the existing in-game Tibo reset once.'}</strong>
           <div>
             <button onClick={onRejectReset}><X size={14} /> REJECT</button>
             <button className="is-confirm" onClick={onApproveReset} disabled={resetCooldownSeconds > 0}>

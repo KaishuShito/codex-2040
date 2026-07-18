@@ -625,12 +625,12 @@ export default function App() {
         const result = handleRealtimeResetToolCall(before, call, stateRef.current.resetCooldownSeconds)
         commitVoiceResetState(result.state)
         if (result.outcome === 'confirmation-required' && result.request) {
-          appendVoiceSubtitle('system', 'Tool request validated. Waiting for a separate spoken confirmation: 「はい、実行して」')
+          appendVoiceSubtitle('system', 'Tool request validated. Waiting for a separate spoken confirmation, e.g. 「やって！」 or “Do it!”')
           return {
             status: 'confirmation_required',
             approval_id: result.request.id,
             scope: 'codex-2040-game-only',
-            next_step: 'Ask the player aloud in Japanese whether to execute. Wait for a new explicit spoken confirmation before calling the tool again.',
+            next_step: 'Ask the player aloud in Japanese whether to execute. Accept a new short direct approval such as やって, お願い, はい, Do it, or Go ahead; reject negative or unclear replies.',
           }
         }
         if (result.outcome === 'executed' && result.shouldExecute) {

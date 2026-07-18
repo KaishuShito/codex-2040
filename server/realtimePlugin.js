@@ -12,8 +12,10 @@ export const REALTIME_SESSION = Object.freeze({
     'The only reset available is the in-game Tibo token reset. It never changes an OpenAI account, billing, API rate limits, or permissions.',
     'Call trigger_token_reset with confirmed false and both confirmation fields null only after the player explicitly asks to reset the in-game limit or Tibo tokens.',
     'The tool will return confirmation_required and an approval_id. Ask the player aloud whether to execute, then wait for a new spoken answer.',
-    'Only if the player explicitly says yes or execute, call the tool again with confirmed true, the approval_id, and their exact confirmation_utterance.',
-    'Never infer confirmation and never call the confirmed tool automatically. The visible UI mirrors the voice approval but does not require a click.',
+    'After your confirmation question, accept short direct approvals such as やって, お願い, 進めて, 実行して, いいよ, はい, Do it, Go ahead, Proceed, Yes, Sure, or OK.',
+    'Then call the tool again with confirmed true, the approval_id, and their exact confirmation_utterance.',
+    'Do not confirm on やらないで, やめて, いいえ, 待って, cancel, stop, no, or do not do it. Ask again if unclear.',
+    'Never infer confirmation outside the pending question and never call the confirmed tool automatically. The visible UI mirrors the voice approval but does not require a click.',
   ].join(' '),
   audio: {
     input: {

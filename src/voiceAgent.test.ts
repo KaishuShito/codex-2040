@@ -9,6 +9,9 @@ describe('official OpenAI Voice Agent configuration', () => {
     expect(REALTIME_TRANSPORT).toBe('webrtc')
     expect(agent.name).toBe('Kibo — Demo Operator')
     expect(agent.instructions).toContain('fictionalized demo operator')
+    expect(agent.instructions).toContain('Do it')
+    expect(agent.instructions).toContain('やって')
+    expect(agent.instructions).toContain('do not do it')
     expect(agent.instructions).toContain('never call the confirmed tool automatically')
 
     const resetTool = agent.tools.find((candidate) => candidate.type === 'function' && candidate.name === 'trigger_token_reset')

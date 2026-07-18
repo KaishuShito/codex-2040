@@ -26,7 +26,16 @@ export const REALTIME_SESSION = Object.freeze({
   },
 })
 
-const isLoopbackRequest = (request) => {
+const normalizeAllowedOrigins = (origins = []) => new Set(origins.flatMap((origin) => {
+  if (typeof origin !== 'string' || origin.length === 0) return []
+  try {
+    return [new URL(origin).origin]
+  } catch {
+    return []
+  }
+}))
+
+export const isAllowedRealtimeRequest = (request, allowedOrigins = []) => {
   const host = typeof request.headers.host === 'string' ? request.headers.host : ''
   if (!/^(?:127\.0\.0\.1|localhost)(?::[0-9]{1,5})?$/iu.test(host)) return false
   const fetchSite = request.headers['sec-fetch-site']
@@ -35,7 +44,8 @@ const isLoopbackRequest = (request) => {
   if (!origin) return true
   try {
     const parsed = new URL(origin)
-    return parsed.protocol === 'http:' && !parsed.username && !parsed.password && parsed.host.toLowerCase() === host.toLowerCase()
+    const isLoopbackOrigin = parsed.protocol === 'http:' && !parsed.username && !parsed.password && parsed.host.toLowerCase() === host.toLowerCase()
+    return isLoopbackOrigin || normalizeAllowedOrigins(allowedOrigins).has(parsed.origin)
   } catch {
     return false
   }
@@ -99,7 +109,7 @@ export const realtimePlugin = (options = {}) => ({
         next()
         return
       }
-      if (!isLoopbackRequest(request)) {
+      if (!isAllowedRealtimeRequest(request, options.allowedOrigins)) {
         sendJson(response, 403, { ok: false, error: 'forbidden-origin' })
         return
       }

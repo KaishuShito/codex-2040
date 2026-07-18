@@ -1,7 +1,19 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createRealtimeClientSecretService, REALTIME_SESSION } from './realtimePlugin.js'
+import { createRealtimeClientSecretService, isAllowedRealtimeRequest, REALTIME_SESSION } from './realtimePlugin.js'
 
 describe('Realtime client secret service', () => {
+  it('accepts loopback and one explicitly configured public demo origin only', () => {
+    const request = (origin: string, fetchSite = 'same-origin') => ({
+      headers: { host: '127.0.0.1:5173', origin, 'sec-fetch-site': fetchSite },
+    })
+    const publicOrigin = 'https://demo.example.com'
+
+    expect(isAllowedRealtimeRequest(request('http://127.0.0.1:5173'))).toBe(true)
+    expect(isAllowedRealtimeRequest(request(publicOrigin), [publicOrigin])).toBe(true)
+    expect(isAllowedRealtimeRequest(request('https://attacker.example'), [publicOrigin])).toBe(false)
+    expect(isAllowedRealtimeRequest(request(publicOrigin, 'cross-site'), [publicOrigin])).toBe(false)
+  })
+
   it('falls back without making a request when the server key is absent', async () => {
     const fetchImpl = vi.fn()
     await expect(createRealtimeClientSecretService({ apiKey: '', fetchImpl }).mint()).resolves.toEqual({

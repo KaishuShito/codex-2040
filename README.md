@@ -91,6 +91,8 @@ Open `http://127.0.0.1:5173` in the Codex app browser. The Vite server supplies 
 
 For live Realtime voice, place `OPENAI_API_KEY` in the ignored local `.env.local`. Vite loads it only into the server configuration; it is not exposed through `import.meta.env` or the client bundle. If the key is absent, invalid, or lacks Realtime access, the call panel automatically uses scripted voice fallback.
 
+When exposing the development server through a public HTTPS tunnel, also set `PUBLIC_DEMO_ORIGIN` to that tunnel's exact origin. The Realtime client-secret endpoint continues to reject every other non-loopback origin.
+
 Run verification with:
 
 ```bash

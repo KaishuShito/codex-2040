@@ -7,8 +7,12 @@ export default defineConfig(({ mode }) => {
   // Explicitly load the unprefixed server credential. It is passed only to the
   // dev-server plugin and is never exposed through Vite's client import.meta.env.
   const serverEnv = loadEnv(mode, process.cwd(), 'OPENAI_API_KEY')
+  const publicDemoEnv = loadEnv(mode, process.cwd(), 'PUBLIC_DEMO_ORIGIN')
   return {
-    plugins: [react(), gmBridgePlugin(), realtimePlugin({ apiKey: serverEnv.OPENAI_API_KEY })],
+    plugins: [react(), gmBridgePlugin(), realtimePlugin({
+      apiKey: serverEnv.OPENAI_API_KEY,
+      allowedOrigins: [publicDemoEnv.PUBLIC_DEMO_ORIGIN].filter(Boolean),
+    })],
     server: { host: '127.0.0.1', port: 5173 },
   }
 })

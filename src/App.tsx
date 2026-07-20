@@ -1,4 +1,4 @@
-import { type CSSProperties, type FormEvent, useEffect, useMemo, useRef, useState } from 'react'
+import { type CSSProperties, useEffect, useMemo, useRef, useState } from 'react'
 import {
   Activity,
   ArrowUpRight,
@@ -49,7 +49,6 @@ import {
   type Speed,
   type Upgrade,
 } from './engine'
-import { filterPlayerInput } from './gm'
 import { AI_2040_URL, getDecisionMilestones, type SourceLabel } from './scenario'
 import WorldMap, { type WorldMapCompetitiveView, type WorldMapMarker, type WorldMapRegionIntensity } from './components/WorldMap'
 import UpgradeOverlay, {
@@ -73,7 +72,15 @@ import {
 import { GameAudio, type GameSound } from './sound'
 import { decodeSession, encodeSession, SESSION_STORAGE_KEY } from './session'
 
-const EDUCATION_PROMPT = 'Free Education Mode for schools worldwide'
+const PREDEFINED_FEATURE_PROMPTS = {
+  mobile: 'Mobile support for Android and iOS',
+  enterprise: 'Enterprise SSO for public institutions',
+  education: 'Free Education Mode for schools worldwide',
+  research: 'Deep research with cited web and file sources',
+  connectors: 'Secure apps and connectors for workplace data',
+  analysis: 'Advanced data analysis with code execution',
+} as const
+type PredefinedFeatureId = keyof typeof PREDEFINED_FEATURE_PROMPTS
 const dayFor = (iso: string) => Math.round((Date.parse(`${iso}T00:00:00Z`) - START_DATE) / 86_400_000)
 const DECISION_2029_DAY = dayFor('2029-01-01')
 const DECISION_2035_DAY = dayFor('2035-01-01')
@@ -255,8 +262,7 @@ export default function App() {
   const [criticalNews, setCriticalNews] = useState<NewsItem | null>(null)
   const [selectedRegionId, setSelectedRegionId] = useState<RegionId | null>('eastAsia')
   const [selectedCompetitor, setSelectedCompetitor] = useState<number | null>(null)
-  const [featureText, setFeatureText] = useState('')
-  const [featureStatus, setFeatureStatus] = useState('効果はすぐ反映されます。公開前後にアドバイザーへ相談できます。')
+  const [actionStatus, setActionStatus] = useState('ゲーム内では定義済みの行動だけを選びます。費用とトレードオフは戦略ツリーで確認できます。')
   const [resetPulse, setResetPulse] = useState(0)
   const [upgradeOpen, setUpgradeOpen] = useState(false)
   const [upgradeTab, setUpgradeTab] = useState<UpgradeOverlayTab>('model')
@@ -427,32 +433,21 @@ export default function App() {
     return () => window.clearInterval(timer)
   }, [simulationBlocked])
 
-  const shipFeature = (raw: string) => {
-    const filtered = filterPlayerInput(raw)
-    if (!filtered.ok) {
-      setFeatureStatus(filtered.reason === 'too-long' ? '提案は60文字以内にしてください。' : '安全フィルターが提案を拒否しました。')
-      return
-    }
-    const input = filtered.value
+  const shipPredefinedFeature = (featureId: PredefinedFeatureId) => {
+    const input = PREDEFINED_FEATURE_PROMPTS[featureId]
     const before = stateRef.current
     const next = addFeature(before, input)
     if (next === before || next.features.length === before.features.length) {
-      setFeatureStatus(before.compute < 90 ? '公開には計算資源90が必要です。' : '効果は発生しませんでした。')
+      setActionStatus(before.compute < 90 ? 'この機能の公開には計算資源90 PFが必要です。' : '効果は発生しませんでした。')
       return
     }
     setState(next)
     stateRef.current = next
-    setFeatureText('')
     const education = /learn|school|student|teacher|classroom|education|教育|学習|学校|教室/i.test(input)
-    setFeatureStatus(education
-      ? '効果反映 · 教育アクセスと地域適合度が上昇。'
-      : '効果反映 · 地域適合度を更新。アドバイザーに相談できます。')
+    setActionStatus(education
+      ? '効果反映 · 教育アクセスと地域適合度が上昇しました。'
+      : '効果反映 · 定義済みのプロダクト機能を公開しました。')
     playSound('confirm')
-  }
-
-  const submitFeature = (event: FormEvent) => {
-    event.preventDefault()
-    shipFeature(featureText)
   }
 
   const deployRegion = () => {
@@ -460,13 +455,13 @@ export default function App() {
     const current = stateRef.current
     const next = introduceRegion(current, selectedRegionId)
     if (next === current) {
-      setFeatureStatus(current.compute < 45 ? '地域展開には計算資源45が必要です。' : 'この地域は展開済みです。')
+      setActionStatus(current.compute < 45 ? '地域展開には計算資源45 PFが必要です。' : 'この地域は展開済みです。')
       return
     }
     setState(next)
     stateRef.current = next
     playSound('confirm')
-    setFeatureStatus(`効果反映 · ${REGION_LABELS[selectedRegion.id]}のコミュニティ網を拡大。`)
+    setActionStatus(`効果反映 · ${REGION_LABELS[selectedRegion.id]}のコミュニティ網を拡大しました。`)
   }
 
   const finishTutorial = () => {
@@ -737,13 +732,13 @@ export default function App() {
       if (next !== current) playSound('confirm')
       return next
     })
-    if (action === 'feature-mobile') shipFeature('Mobile support for Android and iOS')
-    if (action === 'feature-enterprise') shipFeature('Enterprise SSO for public institutions')
-    if (action === 'feature-research') shipFeature('Deep research with cited web and file sources')
-    if (action === 'feature-connectors') shipFeature('Secure apps and connectors for workplace data')
-    if (action === 'feature-analysis') shipFeature('Advanced data analysis with code execution')
+    if (action === 'feature-mobile') shipPredefinedFeature('mobile')
+    if (action === 'feature-enterprise') shipPredefinedFeature('enterprise')
+    if (action === 'feature-research') shipPredefinedFeature('research')
+    if (action === 'feature-connectors') shipPredefinedFeature('connectors')
+    if (action === 'feature-analysis') shipPredefinedFeature('analysis')
     if (action === 'feature-education') {
-      shipFeature(EDUCATION_PROMPT)
+      shipPredefinedFeature('education')
       setUpgradeOpen(false)
     }
   }
@@ -1185,15 +1180,22 @@ export default function App() {
           <span><small>TIBOプロトコル · 世界強化 8秒</small><b>{state.resetCooldownSeconds > 0 ? `トークンリセット · あと${Math.ceil(state.resetCooldownSeconds)}秒` : 'トークンリセット準備完了'}</b></span>
         </button>
 
-        <form className="feature-console" onSubmit={submitFeature}>
-          <div className="feature-console__label"><Sparkles size={15} /><span><small>機能を公開</small><b>目的を入力。迷ったらアドバイザーへ相談</b></span></div>
-          <div className="feature-console__input">
-            <input value={featureText} onChange={(event) => setFeatureText(event.target.value)} maxLength={60} placeholder="60文字以内で機能を説明…" aria-label="機能提案" />
-            <button type="submit">公開 <ChevronRight size={13} /></button>
+        <section className="quick-actions" aria-label="Quick gameplay actions">
+          <div className="quick-actions__label"><Sparkles size={15} /><span><small>クイックアクション</small><b>定義済みのプロダクト施策を選択</b></span></div>
+          <div className="quick-actions__buttons">
+            <button
+              type="button"
+              disabled={state.flags.includes('feature:education') || state.compute < 90}
+              onClick={() => shipPredefinedFeature('education')}
+            >
+              <GraduationCap size={13} /> {state.flags.includes('feature:education') ? '教育モード配備済み' : '教育モード · 90 PF'}
+            </button>
+            <button type="button" onClick={() => openStrategy('product')}>
+              プロダクトツリー <ChevronRight size={13} />
+            </button>
           </div>
-          <button className="education-shortcut" type="button" onClick={() => shipFeature(EDUCATION_PROMPT)}><GraduationCap size={13} /> 教育モードを展開</button>
-          <p className={featureStatus.startsWith('LIVE GM') ? 'is-live' : ''}>{featureStatus}</p>
-        </form>
+          <p>{actionStatus}</p>
+        </section>
 
         <div className="time-controls">
           <button aria-pressed={paused} className="pause-button" onClick={() => { setPaused((value) => !value); playSound('time') }}>{paused ? <CirclePlay size={16} /> : <CirclePause size={16} />}{paused ? '再開' : '停止'}</button>
@@ -1251,7 +1253,6 @@ export default function App() {
         ecosystemCooldownDays={0}
         initialTab={upgradeTab}
         onAction={performUpgradeAction}
-        onCustomFeature={(feature) => shipFeature(feature)}
         onClose={() => { setUpgradeOpen(false); playSound('tap') }}
       />
 

@@ -383,35 +383,6 @@
   inset: 58px 4% 38px;
 }
 
-.upgrade-overlay__dialog--product .upgrade-overlay__network { bottom: 86px; }
-
-.upgrade-overlay__custom-feature {
-  position: absolute;
-  z-index: 4;
-  right: 18px;
-  bottom: 15px;
-  left: 18px;
-  display: grid;
-  grid-template-columns: 22px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 9px;
-  min-height: 54px;
-  padding: 8px 10px;
-  color: var(--uo-accent);
-  border: 1px solid rgba(var(--uo-accent-rgb), .3);
-  background: rgba(4, 14, 10, .92);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, .25);
-}
-.upgrade-overlay__custom-feature label { display: grid; min-width: 0; gap: 4px; }
-.upgrade-overlay__custom-feature label span { color: #718b7e; font-size: 6px; letter-spacing: .16em; }
-.upgrade-overlay__custom-feature .upgrade-overlay__custom-input { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 8px; min-height: 27px; padding: 0 8px; border: 1px solid rgba(var(--uo-accent-rgb), .22); background: rgba(0, 0, 0, .24); }
-.upgrade-overlay__custom-feature label:focus-within .upgrade-overlay__custom-input { border-color: var(--uo-accent); box-shadow: 0 0 0 1px rgba(var(--uo-accent-rgb), .18), 0 0 14px rgba(var(--uo-accent-rgb), .1); }
-.upgrade-overlay__custom-feature input { min-width: 0; width: 100%; padding: 0; color: #dff4e8; border: 0; outline: 0; background: transparent; font: 9px var(--mono); }
-.upgrade-overlay__custom-feature input::placeholder { color: #50665b; }
-.upgrade-overlay__custom-feature .upgrade-overlay__custom-input small { color: #4e665a; font: 7px var(--mono); letter-spacing: 0; }
-.upgrade-overlay__custom-feature button { min-height: 32px; padding: 0 13px; color: #06110c; border: 1px solid var(--uo-accent); background: var(--uo-accent); font: 700 8px var(--mono); letter-spacing: .06em; cursor: pointer; }
-.upgrade-overlay__custom-feature button:disabled { cursor: not-allowed; opacity: .4; }
-
 .upgrade-overlay__network > svg {
   position: absolute;
   inset: 0;
@@ -1040,9 +1011,6 @@
     right: 0;
     left: 0;
   }
-
-  .upgrade-overlay__custom-feature { grid-template-columns: 18px minmax(0, 1fr); }
-  .upgrade-overlay__custom-feature button { grid-column: 1 / -1; }
 
   .upgrade-overlay__node {
     --node-size: 56px;

@@ -62,7 +62,6 @@ export type UpgradeOverlayProps = {
   ecosystemCooldownDays?: number
   initialTab?: UpgradeOverlayTab
   onAction: (action: UpgradeOverlayAction) => void
-  onCustomFeature: (feature: string) => void
   onClose: () => void
 }
 
@@ -314,12 +313,10 @@ export function UpgradeOverlay({
   ecosystemCooldownDays = 0,
   initialTab = DEFAULT_TAB,
   onAction,
-  onCustomFeature,
   onClose,
 }: UpgradeOverlayProps) {
   const [activeTab, setActiveTab] = useState<UpgradeOverlayTab>(initialTab)
   const [selectedId, setSelectedId] = useState<NodeId>('model-foundation')
-  const [customFeature, setCustomFeature] = useState('')
   const dialogRef = useRef<HTMLDivElement>(null)
   const titleId = useId()
   const descriptionId = useId()
@@ -344,7 +341,7 @@ export function UpgradeOverlay({
     if (!isOpen) return
     const previouslyFocused = document.activeElement as HTMLElement | null
     const dialog = dialogRef.current
-    const focusableSelector = 'button:not(:disabled), [href], input:not(:disabled), [tabindex]:not([tabindex="-1"])'
+    const focusableSelector = 'button:not(:disabled), [href], [tabindex]:not([tabindex="-1"])'
 
     window.requestAnimationFrame(() => dialog?.querySelector<HTMLElement>('[data-autofocus]')?.focus())
 
@@ -537,26 +534,6 @@ export function UpgradeOverlay({
                 )
               })}
             </div>
-
-            {activeTab === 'product' && (
-              <form className="upgrade-overlay__custom-feature" onSubmit={(event) => {
-                event.preventDefault()
-                const feature = customFeature.trim()
-                if (!feature) return
-                onCustomFeature(feature)
-                setCustomFeature('')
-              }}>
-                <Sparkles size={15} />
-                <label htmlFor="custom-product-feature">
-                  <span>独自機能</span>
-                  <span className="upgrade-overlay__custom-input">
-                    <input id="custom-product-feature" value={customFeature} onChange={(event) => setCustomFeature(event.target.value)} maxLength={60} placeholder="新しい機能を入力…" />
-                    <small>{customFeature.length}/60</small>
-                  </span>
-                </label>
-                <button type="submit" disabled={customFeature.trim().length < 3 || compute < 90}>公開 · 90 PF</button>
-              </form>
-            )}
 
             {activeTab === 'model' && (
               <div className={`upgrade-overlay__riskline ${maxGap >= 3 ? 'is-critical' : maxGap >= 1 ? 'is-open' : ''}`}>

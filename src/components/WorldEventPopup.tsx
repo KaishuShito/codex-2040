@@ -39,7 +39,7 @@ export type WorldEventPopupProps = {
   advisorCopy?: string
 }
 
-const DEFAULT_ADVISOR_COPY = 'Ask what caused this event and which risk matters next. The Advisor explains; you stay in control.'
+const DEFAULT_ADVISOR_COPY = '原因と次に重要なリスクを聞けます。判断するのはあなたです。'
 
 export function WorldEventPopup({
   notice,
@@ -88,16 +88,16 @@ export function WorldEventPopup({
             <span className="world-event-category">{notice.category}</span>
             <time dateTime={notice.dateTime}>{notice.date}</time>
           </div>
-          <span className="world-event-popup__paused"><i aria-hidden="true" /> SIMULATION PAUSED</span>
+          <span className="world-event-popup__paused"><i aria-hidden="true" /> シミュレーション停止中</span>
         </header>
 
         <div className="world-event-popup__body">
-          <p className="world-event-popup__eyebrow">WORLD EVENT · CONTROL ROOM INTERRUPT</p>
+          <p className="world-event-popup__eyebrow">世界イベント · 緊急速報</p>
           <h2 id={titleId}>{notice.headline}</h2>
 
           <div id={descriptionId} className="world-event-popup__narrative">
             <div className="world-event-popup__cause">
-              <span>CAUSE</span>
+              <span>原因</span>
               <p>{notice.cause}</p>
             </div>
             <p className="world-event-popup__flavor">{notice.flavor}</p>
@@ -105,7 +105,7 @@ export function WorldEventPopup({
 
           {notice.combo && (
             <div className="world-event-popup__combo" role="status">
-              <span>COMBO ACTIVATED</span>
+              <span>コンボ発動</span>
               <strong>{notice.combo.priorFeature}</strong>
               {notice.combo.outcome && <p>{notice.combo.outcome}</p>}
             </div>
@@ -113,8 +113,8 @@ export function WorldEventPopup({
 
           <section className="world-event-popup__impact" aria-labelledby={`${titleId}-impact`}>
             <div className="world-event-popup__section-heading">
-              <span id={`${titleId}-impact`}>TIMELINE IMPACT</span>
-              <small>APPLIED · TIME PAUSED</small>
+              <span id={`${titleId}-impact`}>タイムラインへの影響</span>
+              <small>反映済み · 時間停止中</small>
             </div>
             <dl className="world-event-popup__effects">
               {notice.effects.map((effect, index) => (
@@ -132,14 +132,14 @@ export function WorldEventPopup({
           </section>
 
           <aside className="world-event-popup__advisor">
-            <span>ASK ADVISOR</span>
+            <span>アドバイザーに聞く</span>
             <p>{advisorCopy}</p>
           </aside>
         </div>
 
         <footer className="world-event-popup__footer">
           <button ref={acknowledgeRef} type="button" autoFocus onClick={onAcknowledge}>
-            ACKNOWLEDGE · RESUME <span aria-hidden="true">→</span>
+            確認して再開 <span aria-hidden="true">→</span>
           </button>
         </footer>
       </dialog>

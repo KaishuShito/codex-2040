@@ -82,14 +82,14 @@ const WIDTH = 960
 const HEIGHT = 540
 
 const REGION_META: Record<WorldMapRegionId, { label: string; coordinates: readonly [number, number] }> = {
-  na: { label: 'North America', coordinates: [-101, 42] },
-  latam: { label: 'Latin America', coordinates: [-61, -15] },
-  eu: { label: 'Europe', coordinates: [14, 52] },
-  africa: { label: 'Africa', coordinates: [22, 0] },
-  mena: { label: 'Middle East', coordinates: [45, 27] },
-  india: { label: 'India', coordinates: [79, 22] },
-  eastAsia: { label: 'East Asia', coordinates: [116, 34] },
-  oceania: { label: 'Oceania', coordinates: [137, -25] },
+  na: { label: '北米', coordinates: [-101, 42] },
+  latam: { label: '中南米', coordinates: [-61, -15] },
+  eu: { label: '欧州', coordinates: [14, 52] },
+  africa: { label: 'アフリカ', coordinates: [22, 0] },
+  mena: { label: '中東・北アフリカ', coordinates: [45, 27] },
+  india: { label: 'インド', coordinates: [79, 22] },
+  eastAsia: { label: '東アジア', coordinates: [116, 34] },
+  oceania: { label: 'オセアニア', coordinates: [137, -25] },
 }
 
 const NORTH_AMERICA = new Set(['124', '304', '840'])
@@ -168,7 +168,7 @@ export default function WorldMap({
   competitiveView = null,
   resetPulse = 0,
   className = '',
-  ariaLabel = 'Interactive map of global AI access and education networks',
+  ariaLabel = '世界のAI利用と教育ネットワークの操作マップ',
 }: WorldMapProps) {
   const rawId = useId().replaceAll(':', '')
   const glowId = `world-map-glow-${rawId}`
@@ -187,7 +187,7 @@ export default function WorldMap({
   return (
     <figure
       className={`world-map${competitiveView ? ' is-competitive' : ''} ${className}`.trim()}
-      aria-label={competitiveView ? `${ariaLabel}. ${competitiveView.label} estimated market territory view.` : ariaLabel}
+      aria-label={competitiveView ? `${ariaLabel}。${competitiveView.label}の推定市場分布。` : ariaLabel}
       style={competitiveView ? { '--rival-color': competitiveView.color.join(', ') } as CSSProperties : undefined}
     >
       <svg
@@ -240,8 +240,8 @@ export default function WorldMap({
               '--rival-share': rivalShare.toFixed(3),
             } as CSSProperties
             const marketLabel = competitiveView
-              ? `${competitiveView.label} estimated share ${percent(rivalShare)}`
-              : `Codex share ${percent(codexShare)}`
+              ? `${competitiveView.label}の推定シェア ${percent(rivalShare)}`
+              : `Codexシェア ${percent(codexShare)}`
 
             return (
               <path
@@ -252,11 +252,11 @@ export default function WorldMap({
                 role="button"
                 tabIndex={0}
                 aria-pressed={isSelected}
-                aria-label={`${label}. AI access ${percent(adoption)}. ${marketLabel}.`}
+                aria-label={`${label}。AI利用率 ${percent(adoption)}。${marketLabel}。`}
                 onClick={() => onRegionClick(regionId)}
                 onKeyDown={(event) => keyboardActivate(event, () => onRegionClick(regionId))}
               >
-                <title>{label}: AI access {percent(adoption)}, {marketLabel}</title>
+                <title>{label}: AI利用率 {percent(adoption)}、{marketLabel}</title>
               </path>
             )
           })}
@@ -305,7 +305,7 @@ export default function WorldMap({
               if (marker.regionId) onRegionClick(marker.regionId)
             }
             const actionable = Boolean(onMarkerClick || marker.regionId)
-            const source = marker.sourceLabel ? ` Source: ${marker.sourceLabel}.` : ''
+            const source = marker.sourceLabel ? ` 出典: ${marker.sourceLabel}。` : ''
             return (
               <g
                 key={marker.id}
@@ -314,7 +314,7 @@ export default function WorldMap({
                 style={{ '--marker-delay': `${index * -.42}s` } as CSSProperties}
                 role={actionable ? 'button' : 'img'}
                 tabIndex={0}
-                aria-label={`${marker.label}.${source}`}
+                aria-label={`${marker.label}。${source}`}
                 onClick={actionable ? activate : undefined}
                 onKeyDown={actionable ? (event) => keyboardActivate(event, activate) : undefined}
               >
@@ -336,10 +336,10 @@ export default function WorldMap({
       </svg>
 
       <figcaption className="world-map__legend">
-        <span><i className="world-map__legend-access" /> {competitiveView ? `${competitiveView.label} estimated share` : 'AI access'}</span>
-        <span><i className="world-map__legend-event" /> Scenario event</span>
+        <span><i className="world-map__legend-access" /> {competitiveView ? `${competitiveView.label}の推定シェア` : 'AI利用率'}</span>
+        <span><i className="world-map__legend-event" /> シナリオイベント</span>
       </figcaption>
-      <span className="world-map__coordinate" aria-hidden="true">{competitiveView ? `${competitiveView.label} TERRITORY ANALYSIS` : 'GLOBAL ACCESS NETWORK · 110M'}</span>
+      <span className="world-map__coordinate" aria-hidden="true">{competitiveView ? `${competitiveView.label} 市場分析` : '世界アクセス網 · 110M'}</span>
     </figure>
   )
 }

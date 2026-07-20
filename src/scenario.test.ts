@@ -63,6 +63,17 @@ describe('canonical scenario data', () => {
     for (const ending of ENDINGS) expect(SOURCE_LABELS).toContain(ending.source)
   })
 
+  it('provides player-facing scenario choices and explanations in Japanese', () => {
+    const decisions = getDecisionMilestones()
+
+    expect(decisions.find((milestone) => milestone.date.startsWith('2029-'))?.decision?.prompt)
+      .toBe('自己改善が実用化競争を加速させるなか、フロンティアラボはどう動く？')
+    expect(decisions.find((milestone) => milestone.date.startsWith('2035-'))?.decision?.options.map((option) => option.label))
+      .toEqual(['一線を守る', '再加速'])
+    expect(MILESTONE_DECK.every((milestone) => /[ぁ-んァ-ヶ一-龯]/u.test(`${milestone.title}${milestone.summary}${milestone.whyThisMatters}`))).toBe(true)
+    expect(ENDINGS.every((ending) => /[ぁ-んァ-ヶ一-龯]/u.test(`${ending.title}${ending.summary}${ending.whyThisMatters}${ending.closingLine}`))).toBe(true)
+  })
+
   it('defines all required endings and gates the beneficial S rank behind both major choices', () => {
     const endingIds = ENDINGS.map((ending) => ending.id)
 

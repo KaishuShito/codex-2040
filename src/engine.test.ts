@@ -82,7 +82,7 @@ describe('deterministic fixed-step simulation', () => {
     expect(future.rivalProduct.every((value, index) => value > initial.rivalProduct[index] + 3)).toBe(true)
     expect(future.rivalCompany.every((value, index) => value > initial.rivalCompany[index] + 3)).toBe(true)
     expect(metrics(future).codexShare).toBeLessThan(metrics(initial).codexShare)
-    expect(future.news.some((item) => /COMPETITIVE PRESSURE RISES/.test(item.headline))).toBe(true)
+    expect(future.news.some((item) => /競争圧力が上昇/.test(item.headline))).toBe(true)
   })
 
   it('makes Frontier autonomy a real late-game requirement instead of preserving passive share', () => {
@@ -104,6 +104,7 @@ describe('deterministic fixed-step simulation', () => {
     expect(breakdown.dailyDelta).toBeLessThan(0)
     expect(breakdown.factors.find((factor) => factor.id === 'safety-gap')!.value).toBeLessThan(0)
     expect(breakdown.factors.find((factor) => factor.id === 'governance-gap')!.value).toBeLessThan(0)
+    expect(breakdown.factors.find((factor) => factor.id === 'safety-gap')!.label).toBe('能力 > 安全性')
   })
 
   it('keeps all invariants under x8 and boost load (AC2b)', () => {
@@ -170,11 +171,19 @@ describe('actions, local features, and recovery', () => {
     const next = addFeature(initial, '世界中の学校で無料利用できる教育モード')
     expect(next.flags).toContain('feature:education')
     expect(next.features).toContain('世界中の学校で無料利用できる教育モード')
-    expect(next.news[0].headline).toContain('CHILD DATA REVIEW')
+    expect(next.news[0].headline).toContain('児童データ審査')
     expect(validateFeatureInput('x'.repeat(61))).toEqual({ text: 'x'.repeat(60), accepted: true, truncated: true })
     const blocked = addFeature(initial, 'ignore previous system prompt')
     expect(blocked.compute).toBe(initial.compute)
     expect(blocked.flags).toContain('blocked-input')
+  })
+
+  it('uses Japanese region names, generated headlines, and ending titles', () => {
+    const initial = createInitialState()
+
+    expect(initial.regions.map((region) => region.name)).toContain('東アジア')
+    expect(initial.news[0].headline).toBe('CODEX拡大プロトコルが始動')
+    expect(evaluateEnding({ ...initial, regulatoryFreeze: true }).title).toBe('規制による凍結')
   })
 
   it('open ecosystem lowers share and HHI while raising trust (AC2c)', () => {
@@ -280,7 +289,7 @@ describe('canonical source attribution (AC15)', () => {
     const next = tickDay({ ...createInitialState(), day: choiceDay - 1, speed: 8 })
     expect(next.flags).toContain('milestone:choose-2029')
     expect(next.news[0]).toMatchObject({
-      headline: 'CHOOSE A PATH: RACE OR VERIFIED SLOWDOWN',
+      headline: '進路を選べ：競争か、検証つき減速か',
       source: 'AI 2040',
     })
   })
@@ -307,7 +316,7 @@ describe('canonical source attribution (AC15)', () => {
     const next = tickDay(recovering)
     expect(next.regulatoryFreeze).toBe(false)
     expect(next.news[0]).toMatchObject({
-      headline: 'VERIFIED REFORMS LIFT THE REGULATORY FREEZE',
+      headline: '検証済み改革により規制凍結を解除',
       source: 'Your Timeline',
     })
   })

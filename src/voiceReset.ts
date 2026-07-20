@@ -33,7 +33,7 @@ export type ParsedResetToolCall = {
 export const createVoiceResetState = (): VoiceResetState => ({
   pending: null,
   completedCallIds: [],
-  notice: 'No reset tool request is pending.',
+  notice: '保留中のリセット要求はありません。',
 })
 
 const resetIntent = /(?:reset|リセット).{0,18}(?:limit|token|tibo|リミット|トークン)|(?:limit|token|tibo|リミット|トークン).{0,18}(?:reset|リセット)/iu
@@ -85,11 +85,11 @@ export const parseResetToolCall = (raw: RealtimeFunctionCall): ParsedResetToolCa
 
 export const requestRealtimeReset = (state: VoiceResetState, raw: RealtimeFunctionCall): VoiceResetState => {
   const parsed = parseResetToolCall(raw)
-  if (!parsed || parsed.confirmed) return { ...state, notice: 'Invalid initial reset tool request rejected.' }
+  if (!parsed || parsed.confirmed) return { ...state, notice: '無効な初回リセット要求を拒否しました。' }
   if (state.pending?.callId === parsed.callId || state.completedCallIds.includes(parsed.callId)) {
-    return { ...state, notice: 'Duplicate reset tool request ignored.' }
+    return { ...state, notice: '重複したリセット要求を無視しました。' }
   }
-  if (state.pending) return { ...state, notice: 'Another reset approval is already pending.' }
+  if (state.pending) return { ...state, notice: '別のリセット承認が保留中です。' }
   return {
     ...state,
     pending: {
@@ -98,7 +98,7 @@ export const requestRealtimeReset = (state: VoiceResetState, raw: RealtimeFuncti
       playerRequest: parsed.playerRequest,
       source: 'realtime',
     },
-    notice: 'Voice Agent requested the in-game reset. A separate spoken confirmation is required.',
+    notice: 'ボイス・オペレーターがゲーム内リセットを要求しました。別の発話で明示的に承認してください。',
   }
 }
 
@@ -116,16 +116,16 @@ export const handleRealtimeResetToolCall = (
   resetCooldownSeconds: number,
 ): RealtimeResetToolResolution => {
   const parsed = parseResetToolCall(raw)
-  if (!parsed) return { state: { ...state, notice: 'Invalid reset tool request rejected.' }, outcome: 'invalid', request: state.pending, replyCallId: typeof raw.call_id === 'string' ? raw.call_id : null, shouldExecute: false }
+  if (!parsed) return { state: { ...state, notice: '無効なリセット要求を拒否しました。' }, outcome: 'invalid', request: state.pending, replyCallId: typeof raw.call_id === 'string' ? raw.call_id : null, shouldExecute: false }
   if (state.completedCallIds.includes(parsed.callId)) {
-    return { state: { ...state, notice: 'Duplicate reset tool request ignored.' }, outcome: 'duplicate', request: state.pending, replyCallId: parsed.callId, shouldExecute: false }
+    return { state: { ...state, notice: '重複したリセット要求を無視しました。' }, outcome: 'duplicate', request: state.pending, replyCallId: parsed.callId, shouldExecute: false }
   }
   if (!parsed.confirmed) {
     const next = requestRealtimeReset(state, raw)
     const accepted = next.pending !== null && next.pending !== state.pending
     return {
       state: next,
-      outcome: accepted ? 'confirmation-required' : next.notice.startsWith('Duplicate') ? 'duplicate' : 'invalid',
+      outcome: accepted ? 'confirmation-required' : next.notice.startsWith('重複') ? 'duplicate' : 'invalid',
       request: next.pending,
       replyCallId: parsed.callId,
       shouldExecute: false,
@@ -133,14 +133,14 @@ export const handleRealtimeResetToolCall = (
   }
   const pending = state.pending
   if (!pending || parsed.approvalId !== pending.id) {
-    return { state: { ...state, notice: 'Spoken confirmation did not match a pending approval.' }, outcome: 'invalid', request: pending, replyCallId: parsed.callId, shouldExecute: false }
+    return { state: { ...state, notice: '音声確認のapproval_idが保留中の承認と一致しません。' }, outcome: 'invalid', request: pending, replyCallId: parsed.callId, shouldExecute: false }
   }
   if (resetCooldownSeconds > 0) {
     return {
       state: {
         pending: null,
         completedCallIds: [...state.completedCallIds, pending.callId, parsed.callId],
-        notice: `Reset cooldown active for ${Math.ceil(resetCooldownSeconds)}s. Ask again after cooldown.`,
+        notice: `リセットのクールダウン中です。${Math.ceil(resetCooldownSeconds)}秒後にもう一度依頼してください。`,
       },
       outcome: 'cooldown', request: pending, replyCallId: parsed.callId, shouldExecute: false,
     }
@@ -149,7 +149,7 @@ export const handleRealtimeResetToolCall = (
     state: {
       pending: null,
       completedCallIds: [...state.completedCallIds, pending.callId, parsed.callId],
-      notice: 'Spoken confirmation accepted. In-game Tibo reset executed once.',
+      notice: '音声での承認を受け付け、ゲーム内Tiboリセットを1回実行しました。',
     },
     outcome: 'executed', request: pending, replyCallId: parsed.callId, shouldExecute: true,
   }
@@ -158,7 +158,7 @@ export const handleRealtimeResetToolCall = (
 export const requestFallbackReset = (state: VoiceResetState, id: string): VoiceResetState => {
   const callId = `fallback-${id.replace(/[^A-Za-z0-9_-]/gu, '').slice(0, 80)}`
   if (!callId || state.pending || state.completedCallIds.includes(callId)) {
-    return { ...state, notice: state.pending ? 'Another reset approval is already pending.' : 'Duplicate fallback request ignored.' }
+    return { ...state, notice: state.pending ? '別のリセット承認が保留中です。' : '重複した台本モードの要求を無視しました。' }
   }
   return {
     ...state,
@@ -168,7 +168,7 @@ export const requestFallbackReset = (state: VoiceResetState, id: string): VoiceR
       playerRequest: 'ゲーム内Tiboトークンのリミットをリセットして',
       source: 'scripted-fallback',
     },
-    notice: 'Scripted fallback requested the in-game reset. Player confirmation is required.',
+    notice: '台本モードがゲーム内リセットを要求しました。プレイヤーの承認が必要です。',
   }
 }
 
@@ -185,21 +185,21 @@ export const resolveVoiceReset = (
   resetCooldownSeconds: number,
 ): VoiceResetResolution => {
   const request = state.pending
-  if (!request) return { state: { ...state, notice: 'No reset approval was pending.' }, outcome: 'missing', request: null, shouldExecute: false }
+  if (!request) return { state: { ...state, notice: '保留中のリセット承認はありませんでした。' }, outcome: 'missing', request: null, shouldExecute: false }
   if (state.completedCallIds.includes(request.callId)) {
-    return { state: { ...state, pending: null, notice: 'Duplicate reset execution blocked.' }, outcome: 'duplicate', request, shouldExecute: false }
+    return { state: { ...state, pending: null, notice: '重複したリセット実行をブロックしました。' }, outcome: 'duplicate', request, shouldExecute: false }
   }
   if (!approved) {
-    return { state: { ...state, pending: null, completedCallIds: [...state.completedCallIds, request.callId], notice: 'Player rejected the in-game reset.' }, outcome: 'rejected', request, shouldExecute: false }
+    return { state: { ...state, pending: null, completedCallIds: [...state.completedCallIds, request.callId], notice: 'プレイヤーがゲーム内リセットを拒否しました。' }, outcome: 'rejected', request, shouldExecute: false }
   }
   if (resetCooldownSeconds > 0) {
-    return { state: { ...state, notice: `Reset cooldown active for ${Math.ceil(resetCooldownSeconds)}s.` }, outcome: 'cooldown', request, shouldExecute: false }
+    return { state: { ...state, notice: `リセットのクールダウン中です。残り${Math.ceil(resetCooldownSeconds)}秒です。` }, outcome: 'cooldown', request, shouldExecute: false }
   }
   return {
     state: {
       pending: null,
       completedCallIds: [...state.completedCallIds, request.callId],
-      notice: 'Player confirmed. In-game Tibo reset executed once.',
+      notice: 'プレイヤーが承認し、ゲーム内Tiboリセットを1回実行しました。',
     },
     outcome: 'executed',
     request,

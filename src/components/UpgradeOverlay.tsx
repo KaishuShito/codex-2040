@@ -102,171 +102,171 @@ type NodeDefinition = {
 const DEFAULT_TAB: UpgradeOverlayTab = 'model'
 
 const TABS: readonly { id: UpgradeOverlayTab; label: string; kicker: string; icon: typeof Bot }[] = [
-  { id: 'model', label: 'Model', kicker: 'Capability', icon: BrainCircuit },
-  { id: 'product', label: 'Product', kicker: 'Features', icon: Sparkles },
-  { id: 'company', label: 'Company', kicker: 'Organization', icon: Building2 },
-  { id: 'ecosystem', label: 'Open', kicker: 'Ecosystem', icon: Network },
+  { id: 'model', label: 'モデル', kicker: '性能', icon: BrainCircuit },
+  { id: 'product', label: 'プロダクト', kicker: '機能', icon: Sparkles },
+  { id: 'company', label: '組織', kicker: '体制', icon: Building2 },
+  { id: 'ecosystem', label: 'オープン', kicker: 'エコシステム', icon: Network },
 ]
 
 const NODES: readonly NodeDefinition[] = [
   {
-    id: 'model-foundation', tab: 'model', eyebrow: 'K3', title: 'Foundation scale',
-    summary: 'Increase model capability and adoption momentum. Running cost and both control gaps rise with it.',
-    action: 'model', actionLabel: 'Invest in model', icon: Cpu, x: 18, y: 52, target: 3,
+    id: 'model-foundation', tab: 'model', eyebrow: 'K3', title: '基盤モデル',
+    summary: 'Kと普及の勢いを高める。運用費とS/Gギャップも広がる。',
+    action: 'model', actionLabel: 'モデルへ投資', icon: Cpu, x: 18, y: 52, target: 3,
     effects: [
-      { label: 'Capability', value: '+1.0', tone: 'good' },
-      { label: 'Safety gap', value: '+1.0', tone: 'risk' },
-      { label: 'Run cost', value: 'Higher', tone: 'risk' },
+      { label: 'K（性能）', value: '+1.0', tone: 'good' },
+      { label: 'Sギャップ', value: '+1.0', tone: 'risk' },
+      { label: '運用費', value: '増加', tone: 'risk' },
     ],
   },
   {
-    id: 'model-reasoning', tab: 'model', eyebrow: 'K5', title: 'Deep reasoning',
-    summary: 'Unlock stronger planning and broader product pull. Safe only when alignment capacity follows.',
-    action: 'model', actionLabel: 'Advance capability', icon: BrainCircuit, x: 45, y: 28, target: 5,
+    id: 'model-reasoning', tab: 'model', eyebrow: 'K5', title: '高度な推論',
+    summary: '計画力を高め、製品需要を広げる。Sの強化が追いついてこそ安全。',
+    action: 'model', actionLabel: 'Kを強化', icon: BrainCircuit, x: 45, y: 28, target: 5,
     effects: [
-      { label: 'Adoption pull', value: 'Strong', tone: 'good' },
-      { label: 'Control load', value: 'Elevated', tone: 'risk' },
-      { label: 'Requirement', value: 'K3', tone: 'neutral' },
+      { label: '普及力', value: '大', tone: 'good' },
+      { label: '制御負荷', value: '高', tone: 'risk' },
+      { label: '条件', value: 'K3', tone: 'neutral' },
     ],
   },
   {
-    id: 'model-agents', tab: 'model', eyebrow: 'K7', title: 'Agentic systems',
-    summary: 'Agents act across longer horizons. This is where an unmanaged capability gap becomes a scenario risk.',
-    action: 'model', actionLabel: 'Scale agent systems', icon: RadioTower, x: 47, y: 73, target: 7,
+    id: 'model-agents', tab: 'model', eyebrow: 'K7', title: '自律エージェント',
+    summary: 'より長期の仕事を自律実行する。放置したK–S/Gギャップが事故につながる段階。',
+    action: 'model', actionLabel: 'エージェント拡張', icon: RadioTower, x: 47, y: 73, target: 7,
     effects: [
-      { label: 'Momentum', value: 'Very high', tone: 'good' },
-      { label: 'Incident risk', value: 'Gap-driven', tone: 'risk' },
-      { label: 'Requirement', value: 'K5', tone: 'neutral' },
+      { label: '勢い', value: '非常に大', tone: 'good' },
+      { label: '事故リスク', value: 'ギャップ依存', tone: 'risk' },
+      { label: '条件', value: 'K5', tone: 'neutral' },
     ],
   },
   {
-    id: 'model-frontier', tab: 'model', eyebrow: 'K10', title: 'Frontier autonomy',
-    summary: 'Maximum acceleration, maximum control burden. Safety and governance should already be near parity.',
-    action: 'model', actionLabel: 'Enter the frontier', icon: Zap, x: 78, y: 50, target: 10,
+    id: 'model-frontier', tab: 'model', eyebrow: 'K10', title: '最前線の自律性',
+    summary: '加速は最大、制御負荷も最大。SとGをKに近づけてから進める。',
+    action: 'model', actionLabel: '最前線へ進む', icon: Zap, x: 78, y: 50, target: 10,
     effects: [
-      { label: 'Capability', value: 'Frontier', tone: 'good' },
-      { label: 'Gap pressure', value: 'Critical', tone: 'risk' },
-      { label: 'Requirement', value: 'K7', tone: 'neutral' },
+      { label: 'K（性能）', value: '最前線', tone: 'good' },
+      { label: 'ギャップ圧力', value: '危険', tone: 'risk' },
+      { label: '条件', value: 'K7', tone: 'neutral' },
     ],
   },
   {
-    id: 'product-mobile', tab: 'product', eyebrow: 'ACCESS', title: 'Mobile SDK',
-    summary: 'Reach mobile-first regions with a low-risk distribution feature.',
-    action: 'feature-mobile', actionLabel: 'Ship mobile SDK', icon: Smartphone, x: 14, y: 29,
+    id: 'product-mobile', tab: 'product', eyebrow: 'アクセス', title: 'モバイルSDK',
+    summary: 'モバイル中心の地域へ、低リスクで利用経路を広げる。',
+    action: 'feature-mobile', actionLabel: 'SDKを公開', icon: Smartphone, x: 14, y: 29,
     effects: [
-      { label: 'Regional fit', value: 'Mobile +', tone: 'good' },
-      { label: 'Primary reach', value: 'Global South', tone: 'neutral' },
-      { label: 'Risk', value: 'Low', tone: 'good' },
+      { label: '地域適性', value: 'モバイル＋', tone: 'good' },
+      { label: '主な対象', value: 'グローバルサウス', tone: 'neutral' },
+      { label: 'リスク', value: '低', tone: 'good' },
     ],
   },
   {
-    id: 'product-sso', tab: 'product', eyebrow: 'TRUST', title: 'Enterprise SSO',
-    summary: 'Reduce adoption friction for institutions in mature markets.',
-    action: 'feature-enterprise', actionLabel: 'Ship enterprise SSO', icon: KeyRound, x: 14, y: 73,
+    id: 'product-sso', tab: 'product', eyebrow: '信頼', title: '企業向けSSO',
+    summary: '成熟市場の組織で、導入時の手間を減らす。',
+    action: 'feature-enterprise', actionLabel: 'SSOを公開', icon: KeyRound, x: 14, y: 73,
     effects: [
-      { label: 'Regional fit', value: 'NA / EU +', tone: 'good' },
-      { label: 'Buyer', value: 'Institutions', tone: 'neutral' },
-      { label: 'Risk', value: 'Low', tone: 'good' },
+      { label: '地域適性', value: '北米/EU＋', tone: 'good' },
+      { label: '利用者', value: '組織', tone: 'neutral' },
+      { label: 'リスク', value: '低', tone: 'good' },
     ],
   },
   {
-    id: 'product-education', tab: 'product', eyebrow: 'PLAN A', title: 'Education Mode',
-    summary: 'Make classroom access the product strategy: broad public benefit with privacy governance kept visible.',
-    action: 'feature-education', actionLabel: 'Release Education Mode', icon: GraduationCap, x: 84, y: 51,
+    id: 'product-education', tab: 'product', eyebrow: 'PLAN A', title: '教育モード',
+    summary: '教室での利用を軸に、公共的価値と若年層データ保護を両立する。',
+    action: 'feature-education', actionLabel: '教育モードを公開', icon: GraduationCap, x: 84, y: 51,
     effects: [
-      { label: 'Learning access', value: 'Major +', tone: 'good' },
-      { label: 'Regions', value: 'India / Africa', tone: 'good' },
-      { label: 'Governance', value: 'Youth data', tone: 'risk' },
+      { label: '学習機会', value: '大幅＋', tone: 'good' },
+      { label: '地域', value: 'インド/アフリカ', tone: 'good' },
+      { label: 'ガバナンス', value: '若年層データ', tone: 'risk' },
     ],
   },
   {
-    id: 'product-research', tab: 'product', eyebrow: 'SYNTHESIS', title: 'Deep Research',
-    summary: 'Synthesize web, files, and connected sources into cited reports. High public value, but slower and compute-intensive.',
-    action: 'feature-research', actionLabel: 'Ship Deep Research', icon: Search, x: 42, y: 22,
+    id: 'product-research', tab: 'product', eyebrow: '情報統合', title: '深掘り調査',
+    summary: 'ウェブ・ファイル・連携先を横断し、出典付きレポートを作る。価値は高いが遅く、計算負荷も高い。',
+    action: 'feature-research', actionLabel: '深掘り調査を公開', icon: Search, x: 42, y: 22,
     effects: [
-      { label: 'Knowledge work', value: 'Major +', tone: 'good' },
-      { label: 'Compute load', value: 'High', tone: 'risk' },
-      { label: 'Trust need', value: 'Citations', tone: 'neutral' },
+      { label: '知的業務', value: '大幅＋', tone: 'good' },
+      { label: '計算負荷', value: '高', tone: 'risk' },
+      { label: '信頼条件', value: '出典', tone: 'neutral' },
     ],
   },
   {
-    id: 'product-connectors', tab: 'product', eyebrow: 'CONTEXT', title: 'Apps & Connectors',
-    summary: 'Connect permitted workplace data and actions. Adoption grows, while authorization and retention become governance work.',
-    action: 'feature-connectors', actionLabel: 'Ship Apps & Connectors', icon: Blocks, x: 42, y: 73,
+    id: 'product-connectors', tab: 'product', eyebrow: '文脈', title: 'アプリ連携',
+    summary: '許可済みの業務データと操作をつなぐ。普及するほど権限管理と保持方針が課題になる。',
+    action: 'feature-connectors', actionLabel: 'アプリ連携を公開', icon: Blocks, x: 42, y: 73,
     effects: [
-      { label: 'Workflow fit', value: 'Major +', tone: 'good' },
-      { label: 'Enterprise pull', value: 'Strong', tone: 'good' },
-      { label: 'Data governance', value: 'Required', tone: 'risk' },
+      { label: '業務適合', value: '大幅＋', tone: 'good' },
+      { label: '企業需要', value: '強', tone: 'good' },
+      { label: 'データ統治', value: '必須', tone: 'risk' },
     ],
   },
   {
-    id: 'product-analysis', tab: 'product', eyebrow: 'COMPUTE TOOL', title: 'Data Analyst',
-    summary: 'Run code over files to analyze numbers and generate charts. Capability becomes useful to more professions.',
-    action: 'feature-analysis', actionLabel: 'Ship Data Analyst', icon: BarChart3, x: 66, y: 73,
+    id: 'product-analysis', tab: 'product', eyebrow: '計算ツール', title: 'データ分析',
+    summary: 'ファイル上でコードを実行し、数値分析やグラフ作成を行う。多様な専門職でKを活かせる。',
+    action: 'feature-analysis', actionLabel: 'データ分析を公開', icon: BarChart3, x: 66, y: 73,
     effects: [
-      { label: 'Professional use', value: 'Broad +', tone: 'good' },
-      { label: 'Artifacts', value: 'Charts / files', tone: 'good' },
-      { label: 'Tool risk', value: 'Moderate', tone: 'risk' },
+      { label: '専門利用', value: '広く＋', tone: 'good' },
+      { label: '成果物', value: '図表/ファイル', tone: 'good' },
+      { label: 'ツールリスク', value: '中', tone: 'risk' },
     ],
   },
   {
-    id: 'company-safety', tab: 'company', eyebrow: 'ALIGNMENT', title: 'Safety Team',
-    summary: 'Raise alignment capacity and close the capability-to-safety gap before incidents compound.',
-    action: 'safety', actionLabel: 'Expand Safety Team', icon: ShieldCheck, x: 22, y: 31,
+    id: 'company-safety', tab: 'company', eyebrow: '整合性', title: '安全対策チーム',
+    summary: '安全対策を高め、事故が連鎖する前にK–Sギャップを縮める。',
+    action: 'safety', actionLabel: '安全対策を強化', icon: ShieldCheck, x: 22, y: 31,
     effects: [
-      { label: 'Safety', value: '+1.0', tone: 'good' },
-      { label: 'Safety gap', value: '−1.0', tone: 'good' },
-      { label: 'Prevents', value: 'Incidents', tone: 'neutral' },
+      { label: 'S（安全）', value: '+1.0', tone: 'good' },
+      { label: 'Sギャップ', value: '−1.0', tone: 'good' },
+      { label: '防止', value: '事故', tone: 'neutral' },
     ],
   },
   {
-    id: 'company-policy', tab: 'company', eyebrow: 'GOVERNANCE', title: 'Policy & Gov',
-    summary: 'Build verification, compliance, and international coordination before regulation freezes growth.',
-    action: 'governance', actionLabel: 'Fund Policy & Gov', icon: Landmark, x: 22, y: 72,
+    id: 'company-policy', tab: 'company', eyebrow: 'ガバナンス', title: '政策・統治',
+    summary: '規制で成長が止まる前に、検証・法令対応・国際連携を整える。',
+    action: 'governance', actionLabel: '政策・統治に投資', icon: Landmark, x: 22, y: 72,
     effects: [
-      { label: 'Governance', value: '+1.0', tone: 'good' },
-      { label: 'Gov gap', value: '−1.0', tone: 'good' },
-      { label: 'Prevents', value: 'Freeze', tone: 'neutral' },
+      { label: 'G（統治）', value: '+1.0', tone: 'good' },
+      { label: 'Gギャップ', value: '−1.0', tone: 'good' },
+      { label: '防止', value: '規制凍結', tone: 'neutral' },
     ],
   },
   {
-    id: 'company-datacenter', tab: 'company', eyebrow: 'OPERATIONS', title: 'Data Center',
-    summary: 'Improve compute efficiency so safer scaling remains economically possible.',
-    action: 'datacenter', actionLabel: 'Upgrade data center', icon: Database, x: 67, y: 50,
+    id: 'company-datacenter', tab: 'company', eyebrow: '運用', title: 'データセンター',
+    summary: '計算効率を高め、安全な拡張を経済的に続けやすくする。',
+    action: 'datacenter', actionLabel: '設備を強化', icon: Database, x: 67, y: 50,
     effects: [
-      { label: 'Efficiency', value: '+0.25×', tone: 'good' },
-      { label: 'Run margin', value: 'Improves', tone: 'good' },
-      { label: 'Capability', value: 'Unchanged', tone: 'neutral' },
+      { label: '効率', value: '+0.25×', tone: 'good' },
+      { label: '採算', value: '改善', tone: 'good' },
+      { label: 'K（性能）', value: '不変', tone: 'neutral' },
     ],
   },
   {
-    id: 'ecosystem-open', tab: 'ecosystem', eyebrow: 'RELEASE POWER', title: 'Open the API',
-    summary: 'Intentionally release share to partners. Trust rises, concentration falls, and the whole market grows.',
-    action: 'ecosystem', actionLabel: 'Release power', icon: GitFork, x: 21, y: 50,
+    id: 'ecosystem-open', tab: 'ecosystem', eyebrow: '権限開放', title: 'APIを開放',
+    summary: '意図的にシェアをパートナーへ渡す。信頼が上がり、集中が下がり、市場全体が育つ。',
+    action: 'ecosystem', actionLabel: 'APIを開放', icon: GitFork, x: 21, y: 50,
     effects: [
-      { label: 'Codex share', value: '−10%', tone: 'risk' },
-      { label: 'Trust', value: '+9', tone: 'good' },
-      { label: 'HHI', value: 'Lower', tone: 'good' },
+      { label: 'Codexシェア', value: '−10%', tone: 'risk' },
+      { label: '信頼', value: '+9', tone: 'good' },
+      { label: 'HHI', value: '低下', tone: 'good' },
     ],
   },
   {
-    id: 'ecosystem-partners', tab: 'ecosystem', eyebrow: 'DISTRIBUTE', title: 'Partner network',
-    summary: 'Let regional builders adapt access to local needs instead of centralizing every deployment.',
-    action: 'ecosystem', actionLabel: 'Open partner access', icon: Network, x: 50, y: 28,
+    id: 'ecosystem-partners', tab: 'ecosystem', eyebrow: '分散', title: '地域パートナー',
+    summary: '展開を中央に集めず、地域の作り手が現地のニーズに合わせられるようにする。',
+    action: 'ecosystem', actionLabel: '連携先に開放', icon: Network, x: 50, y: 28,
     effects: [
-      { label: 'Market pie', value: 'Expands', tone: 'good' },
-      { label: 'Coverage', value: 'Broader', tone: 'good' },
-      { label: 'Control', value: 'Shared', tone: 'neutral' },
+      { label: '市場規模', value: '拡大', tone: 'good' },
+      { label: '対応地域', value: '拡大', tone: 'good' },
+      { label: '管理', value: '共同', tone: 'neutral' },
     ],
   },
   {
-    id: 'ecosystem-commons', tab: 'ecosystem', eyebrow: 'HEALTHY FIELD', title: 'Model commons',
-    summary: 'Keep multiple capable providers alive. Competitive diversity becomes part of the safety strategy.',
-    action: 'ecosystem', actionLabel: 'Commit to the commons', icon: RadioTower, x: 78, y: 50,
+    id: 'ecosystem-commons', tab: 'ecosystem', eyebrow: '健全市場', title: 'モデル・コモンズ',
+    summary: '有力な提供者を複数残す。競争の多様性を安全戦略の一部にする。',
+    action: 'ecosystem', actionLabel: 'コモンズへ参加', icon: RadioTower, x: 78, y: 50,
     effects: [
-      { label: 'Competition', value: 'Healthier', tone: 'good' },
-      { label: 'Monopoly risk', value: 'Lower', tone: 'good' },
-      { label: 'Revenue share', value: 'Lower', tone: 'risk' },
+      { label: '競争', value: '健全化', tone: 'good' },
+      { label: '独占リスク', value: '低下', tone: 'good' },
+      { label: '収益シェア', value: '低下', tone: 'risk' },
     ],
   },
 ]
@@ -405,13 +405,13 @@ export function UpgradeOverlay({
 
   const actionStatus = (node: NodeDefinition) => {
     const cost = costs[node.action]
-    if (isComplete(node)) return { label: 'Deployed', disabled: true, kind: 'complete' }
-    if (disabledActions.includes(node.action)) return { label: 'Unavailable', disabled: true, kind: 'locked' }
-    if (isLocked(node)) return { label: `Requires K${modelRequirement(node)}`, disabled: true, kind: 'locked' }
+    if (isComplete(node)) return { label: '導入済み', disabled: true, kind: 'complete' }
+    if (disabledActions.includes(node.action)) return { label: '利用不可', disabled: true, kind: 'locked' }
+    if (isLocked(node)) return { label: `K${modelRequirement(node)}が必要`, disabled: true, kind: 'locked' }
     if (node.action === 'ecosystem' && ecosystemCooldownDays > 0) {
-      return { label: `Ready in ${ecosystemCooldownDays}d`, disabled: true, kind: 'cooldown' }
+      return { label: `${ecosystemCooldownDays}日後に利用可`, disabled: true, kind: 'cooldown' }
     }
-    if (compute < cost) return { label: `Need ${formatCompute(cost)} compute`, disabled: true, kind: 'cost' }
+    if (compute < cost) return { label: `計算資源が${formatCompute(cost)}必要`, disabled: true, kind: 'cost' }
     return { label: node.actionLabel, disabled: false, kind: 'ready' }
   }
 
@@ -437,21 +437,21 @@ export function UpgradeOverlay({
           <div className="upgrade-overlay__identity">
             <span className="upgrade-overlay__mark"><Bot size={18} /></span>
             <div>
-              <span>STRATEGY LAYER // CODEX 2040</span>
-              <h2 id={titleId}>Allocate the future</h2>
+              <span>戦略レイヤー // CODEX 2040</span>
+              <h2 id={titleId}>未来への投資</h2>
             </div>
           </div>
-          <p id={descriptionId}>Grow capability, then keep safety, governance, and competition in reach.</p>
-          <div className="upgrade-overlay__resources" aria-label="Available resources">
-            <span>AVAILABLE COMPUTE</span>
+          <p id={descriptionId}>性能を伸ばしつつ、安全・統治・競争との均衡を保つ。</p>
+          <div className="upgrade-overlay__resources" aria-label="利用可能なリソース">
+            <span>利用可能な計算資源</span>
             <strong>{formatCompute(compute)} <small>PF</small></strong>
           </div>
-          <button className="upgrade-overlay__close" type="button" onClick={onClose} aria-label="Close strategy layer">
+          <button className="upgrade-overlay__close" type="button" onClick={onClose} aria-label="戦略画面を閉じる">
             <X size={20} />
           </button>
         </header>
 
-        <nav className="upgrade-overlay__tabs" role="tablist" aria-label="Strategy axes">
+        <nav className="upgrade-overlay__tabs" role="tablist" aria-label="戦略カテゴリ">
           {TABS.map((tab) => {
             const Icon = tab.icon
             return (
@@ -468,8 +468,8 @@ export function UpgradeOverlay({
               >
                 <Icon size={16} />
                 <span><small>{tab.kicker}</small>{tab.label}</span>
-                {tab.id === 'model' && maxGap >= 2 && <i className="upgrade-overlay__alert">GAP</i>}
-                {tab.id === 'product' && !enabledFeatures.includes('education') && <i>NEW</i>}
+                {tab.id === 'model' && maxGap >= 2 && <i className="upgrade-overlay__alert">危険</i>}
+                {tab.id === 'product' && !enabledFeatures.includes('education') && <i>新規</i>}
               </button>
             )
           })}
@@ -481,13 +481,13 @@ export function UpgradeOverlay({
           role="tabpanel"
           aria-labelledby={`upgrade-tab-${activeTab}`}
         >
-          <section className="upgrade-overlay__graph" aria-label={`${activeTabMeta.label} strategy tree`}>
+          <section className="upgrade-overlay__graph" aria-label={`${activeTabMeta.label}の戦略ツリー`}>
             <div className="upgrade-overlay__graph-heading">
               <div>
-                <span>{activeTabMeta.kicker.toUpperCase()} AXIS</span>
-                <h3>{activeTabMeta.label} strategy</h3>
+                <span>{activeTabMeta.kicker}軸</span>
+                <h3>{activeTabMeta.label}戦略</h3>
               </div>
-              <p>{activeTab === 'ecosystem' ? 'Strength through distribution' : 'Select a node to inspect the tradeoff'}</p>
+              <p>{activeTab === 'ecosystem' ? '分散が強さを生む' : 'ノードを選んで得失を確認'}</p>
             </div>
 
             <div className="upgrade-overlay__network">
@@ -523,7 +523,7 @@ export function UpgradeOverlay({
                     className={`upgrade-overlay__node ${selected ? 'is-selected' : ''} ${complete ? 'is-complete' : ''} ${locked ? 'is-locked' : ''}`}
                     style={style}
                     aria-pressed={selected}
-                    aria-label={`${node.title}${complete ? ', deployed' : locked ? ', locked' : ''}`}
+                    aria-label={`${node.title}${complete ? '、導入済み' : locked ? '、ロック中' : ''}`}
                     onClick={() => setSelectedId(node.id)}
                   >
                     <span className="upgrade-overlay__node-core">
@@ -548,21 +548,21 @@ export function UpgradeOverlay({
               }}>
                 <Sparkles size={15} />
                 <label htmlFor="custom-product-feature">
-                  <span>CUSTOM FEATURE</span>
+                  <span>独自機能</span>
                   <span className="upgrade-overlay__custom-input">
-                    <input id="custom-product-feature" value={customFeature} onChange={(event) => setCustomFeature(event.target.value)} maxLength={60} placeholder="Describe a new capability…" />
+                    <input id="custom-product-feature" value={customFeature} onChange={(event) => setCustomFeature(event.target.value)} maxLength={60} placeholder="新しい機能を入力…" />
                     <small>{customFeature.length}/60</small>
                   </span>
                 </label>
-                <button type="submit" disabled={customFeature.trim().length < 3 || compute < 90}>SHIP · 90 PF</button>
+                <button type="submit" disabled={customFeature.trim().length < 3 || compute < 90}>公開 · 90 PF</button>
               </form>
             )}
 
             {activeTab === 'model' && (
               <div className={`upgrade-overlay__riskline ${maxGap >= 3 ? 'is-critical' : maxGap >= 1 ? 'is-open' : ''}`}>
-                <span><ShieldCheck size={14} /> CONTROL GAP</span>
+                <span><ShieldCheck size={14} /> 制御ギャップ</span>
                 <div><i style={{ width: `${clampPercent(maxGap * 20)}%` }} /></div>
-                <strong>{maxGap === 0 ? 'BALANCED' : `+${maxGap.toFixed(1)} EXPOSED`}</strong>
+                <strong>{maxGap === 0 ? '均衡' : `Kが+${maxGap.toFixed(1)}超過`}</strong>
               </div>
             )}
           </section>
@@ -583,12 +583,12 @@ export function UpgradeOverlay({
 
             {selectedNode.action === 'model' && (
               <div className="upgrade-overlay__forecast">
-                <span>AFTER NEXT MODEL INVESTMENT</span>
+                <span>次のモデル投資後</span>
                 <div>
                   <b>K{nextCapability.toFixed(0)}</b>
                   <ChevronRight size={14} />
-                  <strong className={nextSafetyGap >= 3 ? 'is-risk' : ''}>S GAP +{nextSafetyGap.toFixed(0)}</strong>
-                  <strong className={nextGovernanceGap >= 3 ? 'is-risk' : ''}>G GAP +{nextGovernanceGap.toFixed(0)}</strong>
+                  <strong className={nextSafetyGap >= 3 ? 'is-risk' : ''}>S差 +{nextSafetyGap.toFixed(0)}</strong>
+                  <strong className={nextGovernanceGap >= 3 ? 'is-risk' : ''}>G差 +{nextGovernanceGap.toFixed(0)}</strong>
                 </div>
               </div>
             )}
@@ -596,14 +596,14 @@ export function UpgradeOverlay({
             {selectedNode.id === 'product-education' && (
               <div className="upgrade-overlay__learning-note">
                 <GraduationCap size={16} />
-                <span><b>EDUCATION ROUTE</b>Public access grows fastest when youth-data governance grows with it.</span>
+                <span><b>教育ルート</b>若年層データの統治を整えるほど、教育アクセスは伸びる。</span>
               </div>
             )}
 
             {selectedNode.action === 'ecosystem' && (
               <div className="upgrade-overlay__learning-note upgrade-overlay__learning-note--open">
                 <ArrowUpRight size={16} />
-                <span><b>POSITIVE EXIT</b>Give up some share to gain trust, market health, and long-run momentum.</span>
+                <span><b>好循環</b>シェアを一部手放し、信頼・市場健全性・長期の勢いを得る。</span>
               </div>
             )}
 
@@ -618,8 +618,8 @@ export function UpgradeOverlay({
 
             <div className="upgrade-overlay__commit">
               <span>
-                <small>COST</small>
-                <strong>{selectedCost === 0 ? 'NO COMPUTE' : `${formatCompute(selectedCost)} PF`}</strong>
+                <small>費用</small>
+                <strong>{selectedCost === 0 ? '計算資源不要' : `${formatCompute(selectedCost)} PF`}</strong>
               </span>
               <button
                 type="button"
@@ -635,14 +635,14 @@ export function UpgradeOverlay({
         </main>
 
         <footer className="upgrade-overlay__footer">
-          <Metric label="Capability" value={capability} accent="capability" suffix="K" />
-          <Metric label="Safety" value={safety} accent={safetyGap >= 3 ? 'risk' : 'safety'} suffix="S" gap={safetyGap} />
-          <Metric label="Governance" value={governance} accent={governanceGap >= 3 ? 'risk' : 'governance'} suffix="G" gap={governanceGap} />
+          <Metric label="性能" value={capability} accent="capability" suffix="K" />
+          <Metric label="安全" value={safety} accent={safetyGap >= 3 ? 'risk' : 'safety'} suffix="S" gap={safetyGap} />
+          <Metric label="統治" value={governance} accent={governanceGap >= 3 ? 'risk' : 'governance'} suffix="G" gap={governanceGap} />
           <div className="upgrade-overlay__world-state">
-            <span><small>TRUST</small><b>{trust.toFixed(0)}</b></span>
-            <span><small>MARKET SHARE</small><b>{Math.round(codexShare * 100)}%</b></span>
+            <span><small>信頼</small><b>{trust.toFixed(0)}</b></span>
+            <span><small>市場シェア</small><b>{Math.round(codexShare * 100)}%</b></span>
             <span><small>HHI</small><b className={hhi > .45 ? 'is-risk' : ''}>{hhi.toFixed(2)}</b></span>
-            <span><small>EFFICIENCY</small><b>{efficiency.toFixed(2)}×</b></span>
+            <span><small>効率</small><b>{efficiency.toFixed(2)}×</b></span>
           </div>
         </footer>
       </div>
@@ -668,7 +668,7 @@ function Metric({
       <div>
         <span>{label}</span>
         <b>{suffix}{value.toFixed(1)}</b>
-        {gap !== undefined && gap > 0 && <small>GAP +{gap.toFixed(1)}</small>}
+        {gap !== undefined && gap > 0 && <small>差 +{gap.toFixed(1)}</small>}
       </div>
       <i><span style={{ width: `${clampPercent(value * 10)}%` }} /></i>
     </div>

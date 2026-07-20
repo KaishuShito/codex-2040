@@ -40,13 +40,13 @@ export type ScenarioDecisionProps = {
 const milestoneCopy = {
   'choose-path-2029': {
     year: '2029',
-    eyebrow: 'CHOOSE A PATH',
-    prompt: 'Set the rules for the capability race.',
+    eyebrow: '進路選択',
+    prompt: '能力開発競争のルールを決めてください。',
   },
   'hold-the-line-2035': {
     year: '2035',
-    eyebrow: 'HOLD THE LINE',
-    prompt: 'Decide whether a deliberate pause can survive competitive pressure.',
+    eyebrow: '方針を堅持',
+    prompt: '競争圧力の中でも、計画的な停止を維持するか決めてください。',
   },
 } as const
 
@@ -61,7 +61,7 @@ export function ScenarioDecision({
   whyThisMatters,
   onSelect,
   onConfirm,
-  confirmLabel = 'COMMIT DECISION',
+  confirmLabel = '決定して再開',
   isSubmitting = false,
 }: ScenarioDecisionProps) {
   const titleId = useId()
@@ -138,14 +138,14 @@ export function ScenarioDecision({
       >
         <div className="scenario-dialog__signal" aria-hidden="true" />
         <header className="scenario-decision__header">
-          <div className="scenario-year" aria-label={`Year ${copy.year}`}>
+          <div className="scenario-year" aria-label={`${copy.year}年`}>
             <span>{copy.year}</span>
             <small>{copy.eyebrow}</small>
           </div>
           <div className="scenario-decision__heading">
             <div className="scenario-kicker">
-              <span className="scenario-pause"><i /> SIMULATION PAUSED</span>
-              <span className="scenario-source">SOURCE · {source.label}</span>
+              <span className="scenario-pause"><i /> シミュレーション一時停止</span>
+              <span className="scenario-source">出典 · {source.label}</span>
             </div>
             <h2 id={titleId}>{title}</h2>
             <p id={descriptionId}>{context}</p>
@@ -153,11 +153,11 @@ export function ScenarioDecision({
         </header>
 
         <div className="scenario-decision__prompt">
-          <span>DECISION REQUIRED</span>
+          <span>判断が必要</span>
           <strong>{copy.prompt}</strong>
         </div>
 
-        <div className="scenario-options" role="radiogroup" aria-label={`${copy.year} decision options`}>
+        <div className="scenario-options" role="radiogroup" aria-label={`${copy.year}年の選択肢`}>
           {options.map((option, index) => {
             const selected = option.id === selectedOptionId
             return (
@@ -176,7 +176,7 @@ export function ScenarioDecision({
                 <span className="scenario-option__copy">
                   <strong>{option.title}</strong>
                   <span>{option.summary}</span>
-                  <small><b>CONSEQUENCE</b>{option.consequence}</small>
+                  <small><b>影響</b>{option.consequence}</small>
                 </span>
               </button>
             )
@@ -185,17 +185,17 @@ export function ScenarioDecision({
 
         <div className="scenario-learning">
           <details>
-            <summary>WHY THIS MATTERS <span aria-hidden="true">+</span></summary>
+            <summary>なぜ重要か <span aria-hidden="true">+</span></summary>
             <p>{whyThisMatters}</p>
           </details>
           <a href={source.href} target="_blank" rel="noreferrer">
-            {source.linkLabel ?? `Read the ${source.label} source`} <span aria-hidden="true">↗</span>
+            {source.linkLabel ?? `${source.label} の出典を開く`} <span aria-hidden="true">↗</span>
           </a>
         </div>
 
         <footer className="scenario-decision__footer">
           <p aria-live="polite">
-            {selectedOption ? <><span>SELECTED</span>{selectedOption.title}</> : 'Choose a path to continue the simulation.'}
+            {selectedOption ? <><span>選択中</span>{selectedOption.title}</> : '選択肢を選ぶとシミュレーションを再開できます。'}
           </p>
           <button
             type="button"
@@ -203,7 +203,7 @@ export function ScenarioDecision({
             disabled={!selectedOption || isSubmitting}
             onClick={() => selectedOption && onConfirm(selectedOption.id)}
           >
-            {isSubmitting ? 'APPLYING…' : confirmLabel}<span aria-hidden="true">→</span>
+            {isSubmitting ? '反映中…' : confirmLabel}<span aria-hidden="true">→</span>
           </button>
         </footer>
       </div>

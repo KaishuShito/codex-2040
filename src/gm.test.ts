@@ -140,8 +140,8 @@ describe('two-path GM runtime', () => {
     }
     const [access, governance] = createEducationModeResponse(snapshot)
     expect(access.effect.users_delta_pct).toBeGreaterThan(0)
-    expect(`${access.headline}${access.flavor}`).toMatch(/education|school|learner/i)
-    expect(`${governance.headline}${governance.flavor}`).toMatch(/child data|consent|audit/i)
+    expect(`${access.headline}${access.flavor}`).toMatch(/教育|学校|学習者/u)
+    expect(`${governance.headline}${governance.flavor}`).toMatch(/児童データ|同意|監査/u)
     expect(parseGmEvent(access)).toEqual(access)
     expect(parseGmEvent(governance)).toEqual(governance)
   })

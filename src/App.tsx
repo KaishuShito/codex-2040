@@ -79,21 +79,21 @@ const DECISION_2029_DAY = dayFor('2029-01-01')
 const DECISION_2035_DAY = dayFor('2035-01-01')
 
 const ENDING_CONTEXT: Record<EndingId, string> = {
-  'beneficial-abundance': 'The verified slowdown and deliberate pause converted restraint into a safe, plural restart.',
-  'managed-transition': 'The system remained governable, but the full conditions for Plan A were not secured.',
-  'fragile-abundance': 'Access grew faster than the institutional foundations needed to make abundance durable.',
-  'race-future': 'Competitive acceleration overruled the coordinated restraint needed for a controlled future.',
-  'regulatory-freeze': 'Governance debt turned public protection into a brake on beneficial access.',
-  'safety-incident': 'Repeated control gaps converted abstract risk into visible harm and lost trust.',
-  misalignment: 'The persistent safety gap crossed the point where human institutions could recover control.',
-  'pyrrhic-monopoly': 'Reach was achieved by concentrating power, leaving the ecosystem less resilient and less free.',
+  'beneficial-abundance': '検証可能な減速と意図的な停止が、安全で多元的な再始動につながりました。',
+  'managed-transition': '統治可能性は保ちましたが、Plan Aの条件をすべて満たせませんでした。',
+  'fragile-abundance': '豊かさを支える制度より先に、アクセスが広がりました。',
+  'race-future': '競争の加速が、制御された未来に必要な協調を上回りました。',
+  'regulatory-freeze': '統治の遅れにより、公共保護が有益な普及の足かせになりました。',
+  'safety-incident': '制御不足が重なり、リスクが実害と信頼低下に変わりました。',
+  misalignment: '安全不足が続き、人間の制度では制御を取り戻せない地点を越えました。',
+  'pyrrhic-monopoly': '普及の代償に権力が集中し、自由で強靭な市場を失いました。',
 }
 
 const decisionMilestones = getDecisionMilestones()
 const scenario2029 = decisionMilestones.find((milestone) => milestone.date.startsWith('2029-'))!
 const scenario2035 = decisionMilestones.find((milestone) => milestone.date.startsWith('2035-'))!
 
-const fmt = (value: number, maximumFractionDigits = 0) => new Intl.NumberFormat('en-US', { maximumFractionDigits }).format(value)
+const fmt = (value: number, maximumFractionDigits = 0) => new Intl.NumberFormat('ja-JP', { maximumFractionDigits }).format(value)
 const pct = (value: number) => `${Math.round(value * 100)}%`
 const clamp = (value: number, min = 0, max = 100) => Math.max(min, Math.min(max, value))
 
@@ -129,30 +129,60 @@ const RIVAL_REGION_FIT: Record<RegionId, readonly [number, number, number]> = {
   oceania: [1.1, 1.25, .72],
 }
 
+const REGION_LABELS: Record<RegionId, string> = {
+  na: '北米',
+  latam: 'ラテンアメリカ',
+  eu: '欧州',
+  africa: 'アフリカ',
+  mena: '中東・北アフリカ',
+  india: 'インド',
+  eastAsia: '東アジア',
+  oceania: 'オセアニア',
+}
+
+const WORLD_EVENT_CATEGORY_LABELS = {
+  disaster: '災害',
+  culture: '文化',
+  policy: '政策',
+  competition: '競争',
+  technology: '技術',
+} as const
+
+const TRUST_FACTOR_LABELS = {
+  baseline: '制度基盤',
+  diversity: '事業者の多様性',
+  safety: '安全能力',
+  governance: '統治能力',
+  'safety-gap': '能力 > 安全',
+  'governance-gap': '能力 > 統治',
+  concentration: '市場集中',
+  events: '進行中イベント',
+} as const
+
 const TUTORIAL_STEPS = [
   {
-    eyebrow: 'MISSION',
-    title: 'Grow useful AI without losing human control.',
-    body: 'Reach 2040 with broad access, high Trust, strong Safety and Governance, and at least two viable competitors. Market domination is not victory.',
-    cue: 'The simulation stays paused until you begin.',
+    eyebrow: 'ミッション',
+    title: '人間の制御を守り、役立つAIを広げる。',
+    body: '広いアクセス、高い信頼、強い安全と統治、2社以上の有力な競合を保って2040年を迎えます。独占は勝利ではありません。',
+    cue: '開始するまで時間は止まっています。',
   },
   {
-    eyebrow: 'MOMENTUM',
-    title: 'Waiting does not create progress.',
-    body: 'Ship a feature, open a region, invest Compute, or call the Voice Operator to create a limited growth window. When Momentum expires, access stalls while costs and rivals continue.',
-    cue: 'Watch MOMENTUM ACTIVE in the Strategy rail.',
+    eyebrow: '勢い',
+    title: '待つだけでは前進しない。',
+    body: '機能公開、地域展開、計算資源への投資、ボイス・オペレーターで成長期間を作ります。勢いが切れると普及は止まり、コストと競合だけが進みます。',
+    cue: '右の戦略欄で勢いを確認できます。',
   },
   {
-    eyebrow: 'CONTROL PRESSURE',
-    title: 'Every burst creates a governance problem.',
-    body: 'Capability gaps, concentration, incidents, and policy pressure move Social Trust. Critical events stop time so you can read the cause before continuing.',
-    cue: 'Trust causes and every game-over route are visible on the left.',
+    eyebrow: '制御圧力',
+    title: '急成長には統治の課題が伴う。',
+    body: '能力差、集中、事故、規制圧力が信頼を動かします。重大イベントでは時間が止まり、原因を読んでから再開できます。',
+    cue: '左欄で信頼の要因と敗北リスクを確認できます。',
   },
   {
-    eyebrow: 'YOUR FIRST MOVE',
-    title: 'Create the future, then survive its reaction.',
-    body: 'Start by deploying Education Mode, opening a community, or investing in the strategy tree. Switch between Normal and Fast Forward; major decisions always pause automatically.',
-    cue: 'Optional: call Kibo in Voice Operator for a spoken, approval-gated Token Reset.',
+    eyebrow: '最初の一手',
+    title: '未来を作り、その反応を乗り越える。',
+    body: '教育モード、地域コミュニティ、戦略ツリーへの投資から始めます。通常と高速を切り替えられ、重大な決定では自動停止します。',
+    cue: '任意: ボイス・オペレーターでKiboを呼ぶと、確認つきトークンリセットを試せます。',
   },
 ] as const
 
@@ -168,7 +198,7 @@ function Meter({ label, value, max = 100, danger = false, hint }: { label: strin
         aria-valuemin={0}
         aria-valuemax={max}
         aria-valuenow={Math.round(clamp(value, 0, max) * 10) / 10}
-        aria-valuetext={`${value.toFixed(max <= 10 ? 1 : 0)} of ${max}`}
+        aria-valuetext={`${value.toFixed(max <= 10 ? 1 : 0)} / ${max}`}
       ><i style={{ width: `${normalized}%` }} /></div>
       {hint && <small>{hint}</small>}
     </div>
@@ -176,7 +206,8 @@ function Meter({ label, value, max = 100, danger = false, hint }: { label: strin
 }
 
 function SourceBadge({ source }: { source: SourceLabel }) {
-  return <span className="source-badge" data-source={source}>{source}</span>
+  const label = source === 'Your Timeline' ? 'あなたの時間軸' : source === 'Live GM' ? 'ライブGM' : source
+  return <span className="source-badge" data-source={source}>{label}</span>
 }
 
 function OverflowTicker({ text, className = '' }: { text: string; className?: string }) {
@@ -225,7 +256,7 @@ export default function App() {
   const [selectedRegionId, setSelectedRegionId] = useState<RegionId | null>('eastAsia')
   const [selectedCompetitor, setSelectedCompetitor] = useState<number | null>(null)
   const [featureText, setFeatureText] = useState('')
-  const [featureStatus, setFeatureStatus] = useState('Local effects apply instantly. Ask the Advisor to review the tradeoff before or after shipping.')
+  const [featureStatus, setFeatureStatus] = useState('効果はすぐ反映されます。公開前後にアドバイザーへ相談できます。')
   const [resetPulse, setResetPulse] = useState(0)
   const [upgradeOpen, setUpgradeOpen] = useState(false)
   const [upgradeTab, setUpgradeTab] = useState<UpgradeOverlayTab>('model')
@@ -268,9 +299,9 @@ export default function App() {
     .slice(0, 4), [trustCausality.factors])
   const riskRadar = useMemo(() => {
     const risks = [
-      { label: 'SAFETY INCIDENT', ratio: m.safetyGap / constants.gapThreshold, detail: `GAP ${m.safetyGap.toFixed(1)} / ${constants.gapThreshold}` },
-      { label: 'ALIGNMENT LOSS', ratio: state.safetyGapDays / 90, detail: `${state.safetyGapDays} / 90 UNSAFE DAYS` },
-      { label: 'REGULATORY FREEZE', ratio: Math.max(m.governanceGap / constants.gapThreshold, m.hhi / .6), detail: `GAP ${m.governanceGap.toFixed(1)} · HHI ${m.hhi.toFixed(2)}` },
+      { label: '安全事故', ratio: m.safetyGap / constants.gapThreshold, detail: `差 ${m.safetyGap.toFixed(1)} / ${constants.gapThreshold}` },
+      { label: '制御喪失', ratio: state.safetyGapDays / 90, detail: `危険日 ${state.safetyGapDays} / 90` },
+      { label: '規制凍結', ratio: Math.max(m.governanceGap / constants.gapThreshold, m.hhi / .6), detail: `差 ${m.governanceGap.toFixed(1)} · HHI ${m.hhi.toFixed(2)}` },
     ]
     const primary = [...risks].sort((left, right) => right.ratio - left.ratio)[0]
     return { risks, primary, pressure: Math.round(Math.min(1, primary.ratio) * 100) }
@@ -288,10 +319,10 @@ export default function App() {
     if (!notice) return null
     const signed = (value: number, suffix = '') => `${value > 0 ? '+' : ''}${value}${suffix}`
     const effects = [
-      notice.effect.usersDeltaPct !== 0 ? { label: 'AI USERS', amount: signed(notice.effect.usersDeltaPct, '%'), tone: notice.effect.usersDeltaPct > 0 ? 'positive' as const : 'negative' as const } : null,
-      notice.effect.shareDelta !== 0 ? { label: notice.effect.target && notice.effect.target !== 'codex' ? 'RIVAL SHARE' : 'CODEX SHARE', amount: signed(Math.round(notice.effect.shareDelta * 100), ' pts'), tone: notice.effect.target && notice.effect.target !== 'codex' ? 'negative' as const : notice.effect.shareDelta > 0 ? 'positive' as const : 'negative' as const } : null,
-      notice.effect.growthRateDelta !== 0 ? { label: 'ADOPTION RATE', amount: signed(Math.round(notice.effect.growthRateDelta * 100), '%'), tone: notice.effect.growthRateDelta > 0 ? 'positive' as const : 'negative' as const } : null,
-      notice.effect.trustDelta !== 0 ? { label: 'TRUST TARGET', amount: signed(notice.effect.trustDelta), tone: notice.effect.trustDelta > 0 ? 'positive' as const : 'negative' as const } : null,
+      notice.effect.usersDeltaPct !== 0 ? { label: 'AI利用者', amount: signed(notice.effect.usersDeltaPct, '%'), tone: notice.effect.usersDeltaPct > 0 ? 'positive' as const : 'negative' as const } : null,
+      notice.effect.shareDelta !== 0 ? { label: notice.effect.target && notice.effect.target !== 'codex' ? '競合シェア' : 'CODEXシェア', amount: signed(Math.round(notice.effect.shareDelta * 100), '点'), tone: notice.effect.target && notice.effect.target !== 'codex' ? 'negative' as const : notice.effect.shareDelta > 0 ? 'positive' as const : 'negative' as const } : null,
+      notice.effect.growthRateDelta !== 0 ? { label: '普及率', amount: signed(Math.round(notice.effect.growthRateDelta * 100), '%'), tone: notice.effect.growthRateDelta > 0 ? 'positive' as const : 'negative' as const } : null,
+      notice.effect.trustDelta !== 0 ? { label: '信頼目標', amount: signed(notice.effect.trustDelta), tone: notice.effect.trustDelta > 0 ? 'positive' as const : 'negative' as const } : null,
     ].filter((effect): effect is NonNullable<typeof effect> => Boolean(effect))
     return {
       id: notice.eventId,
@@ -302,9 +333,9 @@ export default function App() {
       headline: notice.headline,
       cause: notice.cause,
       flavor: notice.flavor,
-      duration: `${notice.ttlDays} SIMULATION DAYS`,
-      effects: effects.length > 0 ? effects : [{ label: 'TIMELINE', amount: 'CONTEXT SHIFT', tone: 'neutral' }],
-      combo: notice.comboLabel ? { priorFeature: notice.comboFeature ?? notice.comboLabel, outcome: `${notice.comboLabel}${notice.momentumDays > 0 ? ` · MOMENTUM +${notice.momentumDays}D` : ''}` } : undefined,
+      duration: `シミュレーション ${notice.ttlDays}日`,
+      effects: effects.length > 0 ? effects : [{ label: '時間軸', amount: '状況変化', tone: 'neutral' }],
+      combo: notice.comboLabel ? { priorFeature: notice.comboFeature ?? notice.comboLabel, outcome: `${notice.comboLabel}${notice.momentumDays > 0 ? ` · 勢い +${notice.momentumDays}日` : ''}` } : undefined,
     }
   }, [state.pendingWorldEvent])
 
@@ -399,14 +430,14 @@ export default function App() {
   const shipFeature = (raw: string) => {
     const filtered = filterPlayerInput(raw)
     if (!filtered.ok) {
-      setFeatureStatus(filtered.reason === 'too-long' ? 'Keep feature proposals to 60 characters.' : 'Local safety filter rejected that proposal.')
+      setFeatureStatus(filtered.reason === 'too-long' ? '提案は60文字以内にしてください。' : '安全フィルターが提案を拒否しました。')
       return
     }
     const input = filtered.value
     const before = stateRef.current
     const next = addFeature(before, input)
     if (next === before || next.features.length === before.features.length) {
-      setFeatureStatus(before.compute < 90 ? '90 compute required to ship this feature.' : 'No local effect was applied.')
+      setFeatureStatus(before.compute < 90 ? '公開には計算資源90が必要です。' : '効果は発生しませんでした。')
       return
     }
     setState(next)
@@ -414,8 +445,8 @@ export default function App() {
     setFeatureText('')
     const education = /learn|school|student|teacher|classroom|education|教育|学習|学校|教室/i.test(input)
     setFeatureStatus(education
-      ? 'LOCAL EFFECT APPLIED · education access and regional fit increased immediately.'
-      : 'LOCAL EFFECT APPLIED · regional fit updated. Ask the Advisor to review the tradeoff.')
+      ? '効果反映 · 教育アクセスと地域適合度が上昇。'
+      : '効果反映 · 地域適合度を更新。アドバイザーに相談できます。')
     playSound('confirm')
   }
 
@@ -429,13 +460,13 @@ export default function App() {
     const current = stateRef.current
     const next = introduceRegion(current, selectedRegionId)
     if (next === current) {
-      setFeatureStatus(current.compute < 45 ? '45 compute required for a community deployment.' : 'Region is already active.')
+      setFeatureStatus(current.compute < 45 ? '地域展開には計算資源45が必要です。' : 'この地域は展開済みです。')
       return
     }
     setState(next)
     stateRef.current = next
     playSound('confirm')
-    setFeatureStatus(`LOCAL EFFECT APPLIED · ${selectedRegion.name} community network expanded.`)
+    setFeatureStatus(`効果反映 · ${REGION_LABELS[selectedRegion.id]}のコミュニティ網を拡大。`)
   }
 
   const finishTutorial = () => {
@@ -516,8 +547,8 @@ export default function App() {
     setVoiceMuted(false)
     setOperatorDraft('')
     appendVoiceSubtitle('system', reason === 'microphone-denied'
-      ? 'Microphone permission was denied. Scripted voice fallback is active.'
-      : 'Realtime is unavailable. Scripted voice fallback is active.')
+      ? 'マイクが許可されませんでした。台本モードに切り替えます。'
+      : 'リアルタイム接続を利用できません。台本モードに切り替えます。')
     const line = 'こちらはKiboデモオペレーターです。音声回線の代わりに台本モードで、ゲーム内Tiboリセットを案内します。'
     appendVoiceSubtitle('operator', line)
     speakFallback(line)
@@ -530,7 +561,7 @@ export default function App() {
     setState(next)
     setResetPulse((value) => value + 1)
     playSound('confirm')
-    appendVoiceSubtitle('system', 'Confirmed: the in-game Tibo reset ran once. Global map pulse activated.')
+    appendVoiceSubtitle('system', '確認済み: ゲーム内Tiboリセットを1回実行しました。')
     return true
   }
 
@@ -558,7 +589,7 @@ export default function App() {
         const result = handleRealtimeResetToolCall(before, call, stateRef.current.resetCooldownSeconds)
         commitVoiceResetState(result.state)
         if (result.outcome === 'confirmation-required' && result.request) {
-          appendVoiceSubtitle('system', 'Tool request validated. Waiting for a separate spoken confirmation, e.g. 「やって！」 or “Do it!”')
+          appendVoiceSubtitle('system', '要求を確認しました。「やって！」など、別の音声確認を待っています。')
           return {
             status: 'confirmation_required',
             approval_id: result.request.id,
@@ -625,7 +656,7 @@ export default function App() {
     const result = resolveVoiceReset(voiceResetRef.current, approved, stateRef.current.resetCooldownSeconds)
     commitVoiceResetState(result.state)
     if (result.outcome === 'cooldown') {
-      appendVoiceSubtitle('system', `Reset cooldown is active for ${Math.ceil(stateRef.current.resetCooldownSeconds)} seconds.`)
+      appendVoiceSubtitle('system', `リセットはあと${Math.ceil(stateRef.current.resetCooldownSeconds)}秒待つ必要があります。`)
       return
     }
     if (result.request?.source === 'realtime') {
@@ -634,7 +665,7 @@ export default function App() {
         : 'The player used the visible fallback approval. Briefly acknowledge the game-only outcome.')
     }
     if (!result.shouldExecute) {
-      if (result.outcome === 'rejected') appendVoiceSubtitle('system', 'Player rejected trigger_token_reset. No game action ran.')
+      if (result.outcome === 'rejected') appendVoiceSubtitle('system', 'プレイヤーがtrigger_token_resetを拒否しました。操作は実行されていません。')
       return
     }
     runConfirmedGameReset()
@@ -747,7 +778,7 @@ export default function App() {
       adoption: region.population > 0 ? region.users / region.population : 0,
       codexShare: region.codexShare,
       active: region.introduced,
-      label: region.name,
+      label: REGION_LABELS[region.id],
     } satisfies WorldMapRegionIntensity,
   ])) as Record<RegionId, WorldMapRegionIntensity>, [state.regions])
 
@@ -768,10 +799,10 @@ export default function App() {
   }, [selectedCompetitor, state.regions, state.rivalShares])
 
   const mapMarkers = useMemo<WorldMapMarker[]>(() => [
-    { id: 'tokyo', regionId: 'eastAsia', label: 'Build Week Tokyo', kind: 'community', sourceLabel: 'Your Timeline' },
-    { id: 'race', regionId: 'na', label: 'Race pressure', kind: 'source', sourceLabel: 'AI 2027', active: date >= '2027-01-01' },
-    { id: 'verification', regionId: 'eu', label: 'Verification forum', kind: 'policy', sourceLabel: 'AI 2040', active: date >= '2029-01-01' },
-    ...(state.flags.includes('feature:education') ? [{ id: 'education', regionId: 'india' as const, label: 'School access', kind: 'community' as const, sourceLabel: 'Your Timeline' as const }] : []),
+    { id: 'tokyo', regionId: 'eastAsia', label: 'Build Week 東京', kind: 'community', sourceLabel: 'Your Timeline' },
+    { id: 'race', regionId: 'na', label: '開発競争', kind: 'source', sourceLabel: 'AI 2027', active: date >= '2027-01-01' },
+    { id: 'verification', regionId: 'eu', label: '国際検証会議', kind: 'policy', sourceLabel: 'AI 2040', active: date >= '2029-01-01' },
+    ...(state.flags.includes('feature:education') ? [{ id: 'education', regionId: 'india' as const, label: '学校アクセス', kind: 'community' as const, sourceLabel: 'Your Timeline' as const }] : []),
   ], [date, state.flags])
 
   const enabledFeatures = useMemo<UpgradeOverlayFeature[]>(() => [
@@ -807,55 +838,61 @@ export default function App() {
 
   const decisionOptions2029 = scenario2029.decision!.options.map((option) => ({
     id: option.id,
-    title: option.label,
-    summary: option.summary,
-    consequence: option.id === 'verified-slowdown'
-      ? 'Trust, safety, governance, and healthy competition rise; near-term growth slows.'
+    title: option.id === 'verified-slowdown' ? '国際検証つき減速' : option.id === 'race-ahead' ? '開発競争を続行' : '一時減速',
+    summary: option.id === 'verified-slowdown'
+      ? '短期の速度を抑え、共同監視、透明な基準、複数ラボの追随余地を作る。'
       : option.id === 'race-ahead'
-        ? 'Capability and growth surge while both control gaps widen.'
-        : 'Internal safeguards improve, but competitors cannot verify the pause.',
+        ? '優位を守るため拡大を続け、安全と統治の差を受け入れる。'
+        : '国際検証なしで急拡大を止め、社内の安全を補強する。',
+    consequence: option.id === 'verified-slowdown'
+      ? '信頼、安全、統治、健全な競争が改善。短期成長は鈍化。'
+      : option.id === 'race-ahead'
+        ? '能力と成長が急伸し、制御の差も拡大。'
+        : '社内対策は改善するが、競合は停止を検証できない。',
   })) as unknown as ScenarioDecisionOptions
 
   const decisionOptions2035 = scenario2035.decision!.options.map((option) => ({
     id: option.id,
-    title: option.label,
-    summary: option.summary,
+    title: option.id === 'hold-the-line' ? '上限を守る' : '再加速',
+    summary: option.id === 'hold-the-line'
+      ? '評価、国際検証、公共制度が整うまで能力上限を維持する。'
+      : '大規模な安全性の実証前に、競争圧力へ能力強化で応じる。',
     consequence: option.id === 'hold-the-line'
-      ? 'A controlled pause preserves human agency and keeps Plan A available.'
-      : 'Growth resumes before the safety case is complete, reopening the race route.',
+      ? '制御された停止で人間の主体性とPlan Aを守る。'
+      : '安全性の実証前に成長を再開し、競争路線へ戻る。',
   })) as unknown as ScenarioDecisionOptions
 
   const divergences = useMemo<DecisionDivergences>(() => [
     {
       year: '2026',
-      decision: 'Public access',
-      referenceScenario: 'Coding agents diffuse through firms and research loops.',
-      yourTimeline: state.flags.includes('feature:education') ? 'Education Mode made schools a first-class access route.' : 'Product access remained commercially led.',
-      whyItMattered: 'Who gets access changes both the benefits and the governance obligations.',
+      decision: '公共アクセス',
+      referenceScenario: 'コーディングエージェントが企業と研究に普及。',
+      yourTimeline: state.flags.includes('feature:education') ? '教育モードで学校を主要なアクセス経路にした。' : '製品アクセスは商業主導のまま。',
+      whyItMattered: '誰が使えるかで、便益と統治責任が変わる。',
     },
     {
       year: '2029',
-      decision: 'Race or slowdown',
-      referenceScenario: 'Plan A uses a transparent, internationally verified slowdown.',
+      decision: '競争か減速か',
+      referenceScenario: 'Plan Aは透明で国際検証可能な減速を採用。',
       yourTimeline: state.choice2029 === null
-        ? 'Not reached before termination.'
+        ? '到達前に終了。'
         : state.choice2029 === 'verified-slowdown'
-          ? 'You chose verifiable coordination.'
+          ? '検証可能な協調を選択。'
           : state.choice2029 === 'slowdown'
-            ? 'You paused internally without shared verification.'
-            : 'You continued the capability race.',
-      whyItMattered: 'A pause creates safety only when rivals can see and trust it.',
+            ? '共同検証なしで社内停止。'
+            : '能力競争を続行。',
+      whyItMattered: '停止は、競合も検証し信頼できて初めて安全を生む。',
     },
     {
       year: '2035',
-      decision: 'Hold the line',
-      referenceScenario: 'Frontier systems stop at top-human expert capability while safety evidence matures.',
+      decision: '上限を守る',
+      referenceScenario: '安全性の実証が整うまで、最高水準の人間相当で停止。',
       yourTimeline: state.choice2035 === null
-        ? 'Not reached before termination.'
+        ? '到達前に終了。'
         : state.choice2035 === 'hold-the-line'
-          ? 'You kept the deliberate capability ceiling.'
-          : 'You accelerated again under competitive pressure.',
-      whyItMattered: 'This choice tested whether human control could outrank short-term advantage.',
+          ? '意図した能力上限を維持。'
+          : '競争圧力の中で再加速。',
+      whyItMattered: '人間の制御を短期的優位より優先できるかを問う選択。',
     },
   ], [state.choice2029, state.choice2035, state.flags])
 
@@ -865,37 +902,37 @@ export default function App() {
   const timelineProgress = clamp(state.day / END_DAY * 100)
   const latestNews = state.news[0]
   const latestNewsDetail = latestNews?.source === 'Live GM'
-    ? 'Validated event received through the browser-local GM bridge.'
-    : 'A deterministic scenario event with provenance owned by the simulation engine.'
+    ? 'ブラウザ内GMブリッジで検証済みイベントを受信。'
+    : 'シミュレーションエンジンが管理する決定論的イベント。'
   const tutorial = tutorialStep === null ? null : TUTORIAL_STEPS[tutorialStep]
   const isCrisisBrief = Boolean(criticalNews && /SAFETY|ALIGNMENT|REGULATORY|MISALIGNMENT|CRITICAL|EMERGENCY/i.test(criticalNews.headline))
   const simulationStatus = showStartScreen
-    ? 'STANDBY · AWAITING MISSION START'
+    ? '待機中 · ミッション開始待ち'
     : tutorial
-      ? 'PAUSED · TUTORIAL'
+      ? '停止中 · チュートリアル'
     : decisionKind
-      ? 'PAUSED · DECISION REQUIRED'
+      ? '停止中 · 決定が必要'
       : state.pendingWorldEvent
-        ? `PAUSED · ${state.pendingWorldEvent.category.toUpperCase()} EVENT`
+        ? `停止中 · ${WORLD_EVENT_CATEGORY_LABELS[state.pendingWorldEvent.category]}イベント`
       : criticalNews
-      ? `PAUSED · ${isCrisisBrief ? 'CRITICAL EVENT' : 'WORLD BRIEF'}`
+      ? `停止中 · ${isCrisisBrief ? '重大イベント' : '世界情勢'}`
       : upgradeOpen
-        ? 'PAUSED · STRATEGY REVIEW'
+        ? '停止中 · 戦略確認'
         : paused
-          ? 'PAUSED · PLAYER CONTROL'
-          : `RUNNING · ${state.speed === 8 ? 'FAST FORWARD' : 'NORMAL'} · ${state.momentumDays > 0 ? `MOMENTUM ${state.momentumDays}D` : 'MOMENTUM STALLED'}`
+          ? '停止中 · プレイヤー操作'
+          : `進行中 · ${state.speed === 8 ? '高速' : '通常'} · ${state.momentumDays > 0 ? `勢い ${state.momentumDays}日` : '勢い停止'}`
   const criticalCause = criticalNews
     ? /SAFETY|ALIGNMENT/i.test(criticalNews.headline)
-      ? `Capability is outrunning safety. Current safety gap: ${m.safetyGap.toFixed(1)}.`
+      ? `能力が安全を上回っています。現在の差: ${m.safetyGap.toFixed(1)}。`
       : /REGULATORY/i.test(criticalNews.headline)
-        ? `Governance debt or market concentration triggered policy action. HHI: ${m.hhi.toFixed(2)}.`
+        ? `統治不足または市場集中が規制対応を招きました。HHI: ${m.hhi.toFixed(2)}。`
         : /BUILD WEEK/i.test(criticalNews.headline)
-          ? 'A community milestone expands attention and creates a new window for action.'
+          ? 'コミュニティの節目が注目を集め、新たな行動機会を生みました。'
           : /AGENTS REACH/i.test(criticalNews.headline)
-            ? 'AI 2027 race pressure is accelerating. Control capacity must keep pace with capability.'
+            ? 'AI 2027の競争圧力が加速。制御能力をモデル能力に追いつかせる必要があります。'
             : criticalNews.source === 'Live GM'
-          ? 'A validated Game Master event changed the competitive field.'
-          : 'A reference-scenario milestone changed the world state.'
+          ? '検証済みのGMイベントが競争環境を変えました。'
+          : '参照シナリオの節目が世界の状態を変えました。'
     : ''
 
   return (
@@ -905,21 +942,21 @@ export default function App() {
       <header className="command-header">
         <div className="command-brand">
           <span className="command-brand__mark"><Bot size={20} /></span>
-          <span><b>CODEX <i>//</i> 2040</b><small>AI GOVERNANCE SCENARIO SIMULATOR</small></span>
+          <span><b>CODEX <i>//</i> 2040</b><small>AIガバナンス・シミュレーター</small></span>
         </div>
         <div className="command-header__center">
-          <button className="tutorial-launcher" onClick={beginWithTutorial} aria-expanded={tutorialStep !== null}>HOW TO PLAY</button>
-          <button className="new-game-launcher" type="button" disabled={showStartScreen} onClick={() => { setRestartConfirmOpen(true); playSound('tap') }}><RotateCcw size={11} /> NEW GAME</button>
+          <button className="tutorial-launcher" onClick={beginWithTutorial} aria-expanded={tutorialStep !== null}>遊び方</button>
+          <button className="new-game-launcher" type="button" disabled={showStartScreen} onClick={() => { setRestartConfirmOpen(true); playSound('tap') }}><RotateCcw size={11} /> 新しいゲーム</button>
         </div>
         <div className="simulation-clock">
           <div className="simulation-clock__actions">
-            <button className="voice-call-launcher" onClick={() => { setVoiceOpen(true); playSound('tap') }} aria-expanded={voiceOpen}><Phone size={13} /> VOICE OPERATOR</button>
+            <button className="voice-call-launcher" onClick={() => { setVoiceOpen(true); playSound('tap') }} aria-expanded={voiceOpen}><Phone size={13} /> ボイス・オペレーター</button>
             <button
               className="sound-toggle"
               type="button"
-              aria-label={soundEnabled ? 'Mute game sound effects' : 'Enable game sound effects'}
+              aria-label={soundEnabled ? '効果音をミュート' : '効果音をオン'}
               aria-pressed={!soundEnabled}
-              title={soundEnabled ? 'Mute sound effects' : 'Enable sound effects'}
+              title={soundEnabled ? '効果音をミュート' : '効果音をオン'}
               onClick={() => {
                 const enabled = !soundEnabled
                 setSoundEnabled(enabled)
@@ -927,52 +964,52 @@ export default function App() {
                 if (enabled) audioRef.current?.play('tap')
               }}
             >
-              {soundEnabled ? <Volume2 size={13} /> : <VolumeX size={13} />} {soundEnabled ? 'SFX ON' : 'SFX OFF'}
+              {soundEnabled ? <Volume2 size={13} /> : <VolumeX size={13} />} {soundEnabled ? '効果音 オン' : '効果音 オフ'}
             </button>
           </div>
-          <span><i /> DETERMINISTIC ENGINE</span>
+          <span><i /> 決定論エンジン</span>
           <strong>{date}</strong>
         </div>
       </header>
 
-      <section className="intel-strip" aria-label="Latest scenario intelligence">
-        <div className="intel-strip__label"><Radio size={13} /> SCENARIO INTELLIGENCE</div>
+      <section className="intel-strip" aria-label="最新シナリオ情報">
+        <div className="intel-strip__label"><Radio size={13} /> シナリオ情報</div>
         {latestNews && <div className="intel-strip__headline"><SourceBadge source={latestNews.source} /><OverflowTicker className="intel-strip__ticker" text={`${latestNews.headline} · ${latestNewsDetail}`} /></div>}
-        <div className="source-key" aria-label="Source label key">
+        <div className="source-key" aria-label="情報源">
           {(['AI 2027', 'AI 2040', 'Your Timeline'] as SourceLabel[]).map((source) => <SourceBadge source={source} key={source} />)}
         </div>
       </section>
 
       <section className="command-grid">
         <aside className="telemetry-rail">
-          <div className="section-label"><Activity size={13} /> GLOBAL TELEMETRY</div>
+          <div className="section-label"><Activity size={13} /> 世界テレメトリ</div>
           <div className="primary-counter">
-            <span>CODEX USERS</span>
+            <span>CODEX利用者</span>
             <strong>{fmt(m.codexUsers * 1_000_000)}</strong>
-            <small>{pct(m.codexShare)} OF ACTIVE AI USERS</small>
+            <small>AI利用者の {pct(m.codexShare)}</small>
           </div>
           <div className="telemetry-pair">
-            <span><small>WORLD ACCESS</small><b>{pct(m.worldAdoption)}</b></span>
-            <span><small>MISSION SCORE</small><b>{score.rank} · {Math.round(score.score * 100)}</b></span>
+            <span><small>世界アクセス</small><b>{pct(m.worldAdoption)}</b></span>
+            <span><small>ミッション得点</small><b>{score.rank} · {Math.round(score.score * 100)}</b></span>
           </div>
-          <div className="mission-breakdown" aria-label="Mission score breakdown">
-            <span><small>ACCESS</small><b>{Math.round(score.access * 100)}</b></span>
-            <span><small>COVERAGE</small><b>{Math.round(score.coverage * 100)}</b></span>
-            <span><small>COMPETITION</small><b>{Math.round(score.competition * 100)}</b></span>
-            <span><small>SAFETY</small><b>{Math.round(score.safety * 100)}</b></span>
+          <div className="mission-breakdown" aria-label="ミッション得点の内訳">
+            <span><small>アクセス</small><b>{Math.round(score.access * 100)}</b></span>
+            <span><small>地域</small><b>{Math.round(score.coverage * 100)}</b></span>
+            <span><small>競争</small><b>{Math.round(score.competition * 100)}</b></span>
+            <span><small>安全</small><b>{Math.round(score.safety * 100)}</b></span>
           </div>
-          <Meter label="SOCIAL TRUST" value={state.trust} danger={state.trust < 45} />
-          <div className="trust-causality" aria-label="Social Trust explanation">
-            <div><span>TRUST TARGET</span><b>{trustCausality.target.toFixed(0)}</b><strong className={trustCausality.dailyDelta < 0 ? 'is-negative' : 'is-positive'}>{trustCausality.dailyDelta >= 0 ? '+' : ''}{trustCausality.dailyDelta.toFixed(2)}/DAY</strong></div>
-            {trustFactors.map((factor) => <p key={factor.id} className={factor.value < 0 ? 'is-negative' : 'is-positive'}><span>{factor.label}</span><b>{factor.value >= 0 ? '+' : ''}{factor.value.toFixed(0)}</b></p>)}
+          <Meter label="社会的信頼" value={state.trust} danger={state.trust < 45} />
+          <div className="trust-causality" aria-label="社会的信頼の要因">
+            <div><span>信頼目標</span><b>{trustCausality.target.toFixed(0)}</b><strong className={trustCausality.dailyDelta < 0 ? 'is-negative' : 'is-positive'}>{trustCausality.dailyDelta >= 0 ? '+' : ''}{trustCausality.dailyDelta.toFixed(2)}/日</strong></div>
+            {trustFactors.map((factor) => <p key={factor.id} className={factor.value < 0 ? 'is-negative' : 'is-positive'}><span>{TRUST_FACTOR_LABELS[factor.id]}</span><b>{factor.value >= 0 ? '+' : ''}{factor.value.toFixed(0)}</b></p>)}
           </div>
           <div className="risk-radar" data-danger={riskRadar.pressure >= 80}>
-            <div><span>CONTROL PRESSURE</span><b>{riskRadar.pressure}%</b></div>
+            <div><span>制御圧力</span><b>{riskRadar.pressure}%</b></div>
             {riskRadar.risks.map((risk) => <p key={risk.label}><span>{risk.label}</span><b>{risk.detail}</b></p>)}
           </div>
-          <Meter label="MARKET HEALTH" value={(1 - m.hhi) * 100} hint={`HHI ${m.hhi.toFixed(2)} · lower concentration is healthier`} danger={m.hhi > .6} />
+          <Meter label="市場の健全性" value={(1 - m.hhi) * 100} hint={`HHI ${m.hhi.toFixed(2)} · 低いほど健全`} danger={m.hhi > .6} />
 
-          <div className="section-label section-label--sub"><Network size={13} /> COMPETITIVE FIELD</div>
+          <div className="section-label section-label--sub"><Network size={13} /> 競争環境</div>
           <div className="market-list">
             <div className="is-codex"><i /><b>CODEX<small>K{state.capability.toFixed(1)} · P{Math.min(10, 2 + state.features.length * 1.5).toFixed(1)} · C{((state.safety + state.governance) / 2).toFixed(1)}</small></b><strong>{pct(m.codexShare)}</strong></div>
             {RIVAL_NAMES.map((name, index) => (
@@ -984,35 +1021,35 @@ export default function App() {
           {selectedCompetitor !== null && (() => {
             const name = RIVAL_NAMES[selectedCompetitor]
             const axes = [
-              { label: 'MODEL', value: state.rivalCapability[selectedCompetitor] },
-              { label: 'PRODUCT', value: state.rivalProduct[selectedCompetitor] },
-              { label: 'COMPANY', value: state.rivalCompany[selectedCompetitor] },
+              { label: 'MODEL', displayLabel: 'モデル', value: state.rivalCapability[selectedCompetitor] },
+              { label: 'PRODUCT', displayLabel: '製品', value: state.rivalProduct[selectedCompetitor] },
+              { label: 'COMPANY', displayLabel: '組織', value: state.rivalCompany[selectedCompetitor] },
             ]
             const strongest = [...axes].sort((left, right) => right.value - left.value)[0]
             const shareDelta = state.rivalShares[selectedCompetitor] - m.codexShare
             return (
-              <section className="competitor-dossier" aria-label={`${name} competitive details`}>
-                <header><span>COMPETITOR DOSSIER · MAP VIEW ACTIVE</span><button type="button" onClick={() => { setSelectedCompetitor(null); playSound('tap') }} aria-label="Close competitor details">×</button></header>
-                <div><b>{name}</b><strong className={shareDelta > 0 ? 'is-leading' : ''}>{shareDelta > 0 ? '+' : ''}{Math.round(shareDelta * 100)} pts vs CODEX</strong></div>
+              <section className="competitor-dossier" aria-label={`${name}の競合情報`}>
+                <header><span>競合情報 · 地図表示中</span><button type="button" onClick={() => { setSelectedCompetitor(null); playSound('tap') }} aria-label="競合情報を閉じる">×</button></header>
+                <div><b>{name}</b><strong className={shareDelta > 0 ? 'is-leading' : ''}>{shareDelta > 0 ? '+' : ''}{Math.round(shareDelta * 100)}点 対CODEX</strong></div>
                 <dl>
-                  <div><dt>SHARE</dt><dd>{pct(state.rivalShares[selectedCompetitor])}</dd></div>
-                  {axes.map((axis) => <div key={axis.label}><dt>{axis.label}</dt><dd>{axis.value.toFixed(1)}</dd></div>)}
+                  <div><dt>シェア</dt><dd>{pct(state.rivalShares[selectedCompetitor])}</dd></div>
+                  {axes.map((axis) => <div key={axis.label}><dt>{axis.displayLabel}</dt><dd>{axis.value.toFixed(1)}</dd></div>)}
                 </dl>
-                <p><b>{strongest.label} LEAD</b>{strongest.value >= 8 ? 'Frontier-grade pressure is active.' : strongest.value >= 5 ? 'Scaling rapidly; respond before the next stage.' : 'Early investment is building momentum.'}</p>
+                <p><b>{strongest.displayLabel}が強み</b>{strongest.value >= 8 ? 'フロンティア級の圧力が発生中。' : strongest.value >= 5 ? '急成長中。次段階までに対応を。' : '先行投資で勢いを築いています。'}</p>
               </section>
             )
           })()}
 
           <div className="gm-watchdog" data-mode="advisor">
-            <div><Radio size={13} /><span><b>ADVISOR MODE</b><small>CONSULTATION ONLY</small></span></div>
+            <div><Radio size={13} /><span><b>助言モード</b><small>相談専用</small></span></div>
             <strong>100</strong>
-            <p>Ask the Advisor for a move or tradeoff. It translates your intent into an available action; the deterministic engine and your choices remain in control.</p>
+            <p>次の一手やトレードオフをアドバイザーに相談できます。実行するのはあなたです。</p>
           </div>
         </aside>
 
         <section className="world-stage">
           <div className="world-stage__header">
-            <span><small>OPERATIONS MAP</small><b>{competitiveMapView ? `${competitiveMapView.label} TERRITORY ANALYSIS` : 'GLOBAL AI ACCESS NETWORK'}</b></span>
+            <span><small>作戦マップ</small><b>{competitiveMapView ? `${competitiveMapView.label} 地域分析` : '世界AIアクセス網'}</b></span>
             <span className="world-stage__status"><i /> {simulationStatus}</span>
           </div>
           <div className="world-stage__map">
@@ -1028,38 +1065,38 @@ export default function App() {
             {(showStartScreen || restartConfirmOpen || tutorial || state.pendingWorldEvent || (criticalNews && !decisionKind && !state.terminal)) && <div className="game-modal-shield" aria-hidden="true" />}
             {showStartScreen && (
               <section className="start-brief" role="dialog" aria-modal="true" aria-labelledby="start-brief-title">
-                <span className="start-brief__eyebrow">AI GOVERNANCE SCENARIO SIMULATOR</span>
-                <h1 id="start-brief-title">BUILD THE FUTURE.</h1>
-                <p>Expand useful AI from 2026 to 2040 while keeping safety, governance, public trust, and healthy competition alive.</p>
+                <span className="start-brief__eyebrow">AIガバナンス・シミュレーター</span>
+                <h1 id="start-brief-title">未来をつくる。</h1>
+                <p>2026年から2040年へ。安全、統治、信頼、健全な競争を守りながら、役立つAIを広げます。</p>
                 <div className="start-brief__sources"><SourceBadge source="AI 2027" /><SourceBadge source="AI 2040" /><SourceBadge source="Your Timeline" /></div>
                 <footer>
-                  <button autoFocus onClick={beginWithTutorial}>START WITH BRIEFING <ChevronRight size={14} /></button>
-                  <button onClick={beginWithoutTutorial}>SKIP BRIEFING</button>
+                  <button autoFocus onClick={beginWithTutorial}>説明から始める <ChevronRight size={14} /></button>
+                  <button onClick={beginWithoutTutorial}>説明をスキップ</button>
                 </footer>
-                <small>PROGRESS AUTOSAVES IN THIS BROWSER</small>
+                <small>進行状況はこのブラウザに自動保存</small>
               </section>
             )}
             {restartConfirmOpen && !showStartScreen && (
               <section className="restart-confirm" role="dialog" aria-modal="true" aria-labelledby="restart-confirm-title">
-                <span>NEW TIMELINE</span>
-                <h2 id="restart-confirm-title">START FROM 2026?</h2>
-                <p>Your current timeline and browser autosave will be replaced. This cannot be undone.</p>
+                <span>新しい時間軸</span>
+                <h2 id="restart-confirm-title">2026年から始めますか？</h2>
+                <p>現在の時間軸と自動保存は上書きされ、元に戻せません。</p>
                 <footer>
-                  <button autoFocus onClick={() => { setRestartConfirmOpen(false); playSound('tap') }}>KEEP PLAYING</button>
-                  <button onClick={resetGameToStart}>ERASE · NEW GAME</button>
+                  <button autoFocus onClick={() => { setRestartConfirmOpen(false); playSound('tap') }}>続ける</button>
+                  <button onClick={resetGameToStart}>消去して開始</button>
                 </footer>
               </section>
             )}
             {tutorial && (
               <section className="tutorial-brief" role="dialog" aria-modal="true" aria-labelledby="tutorial-title">
-                <header><span>{tutorial.eyebrow}</span><span><b>{tutorialStep! + 1} / {TUTORIAL_STEPS.length}</b><button onClick={finishTutorial}>{hasStarted ? 'CLOSE · RESUME' : 'SKIP TUTORIAL'}</button></span></header>
+                <header><span>{tutorial.eyebrow}</span><span><b>{tutorialStep! + 1} / {TUTORIAL_STEPS.length}</b><button onClick={finishTutorial}>{hasStarted ? '閉じて再開' : '説明をスキップ'}</button></span></header>
                 <div className="tutorial-progress" aria-hidden="true">{TUTORIAL_STEPS.map((_, index) => <i key={index} className={index <= tutorialStep! ? 'is-active' : ''} />)}</div>
                 <h2 id="tutorial-title">{tutorial.title}</h2>
                 <p>{tutorial.body}</p>
-                <aside>{hasStarted && tutorialStep === 0 ? 'The simulation is paused while this guide is open.' : tutorial.cue}</aside>
+                <aside>{hasStarted && tutorialStep === 0 ? 'このガイドを開いている間、時間は止まります。' : tutorial.cue}</aside>
                 <footer>
-                  <button disabled={tutorialStep === 0} onClick={() => { setTutorialStep((step) => step === null ? 0 : Math.max(0, step - 1)); playSound('tap') }}>BACK</button>
-                  <button autoFocus onClick={() => { if (tutorialStep === TUTORIAL_STEPS.length - 1) finishTutorial(); else { setTutorialStep((step) => step === null ? 0 : step + 1); playSound('tap') } }}>{tutorialStep === TUTORIAL_STEPS.length - 1 ? (hasStarted ? 'RESUME SIMULATION' : 'BEGIN SIMULATION') : 'NEXT'}</button>
+                  <button disabled={tutorialStep === 0} onClick={() => { setTutorialStep((step) => step === null ? 0 : Math.max(0, step - 1)); playSound('tap') }}>戻る</button>
+                  <button autoFocus onClick={() => { if (tutorialStep === TUTORIAL_STEPS.length - 1) finishTutorial(); else { setTutorialStep((step) => step === null ? 0 : step + 1); playSound('tap') } }}>{tutorialStep === TUTORIAL_STEPS.length - 1 ? (hasStarted ? '再開する' : '開始する') : '次へ'}</button>
                 </footer>
               </section>
             )}
@@ -1072,30 +1109,30 @@ export default function App() {
                   setState(next)
                   playSound('confirm')
                 }}
-                advisorCopy="Tell the Codex 2040 Advisor what you want to protect or exploit. It will translate that intent into an available action; you execute it."
+                advisorCopy="守りたいもの、活かしたい機会をCodex 2040アドバイザーに伝えてください。実行可能な行動へ整理し、操作はあなたが行います。"
               />
             )}
             {criticalNews && !decisionKind && tutorialStep === null && !state.terminal && (
               <section className="critical-brief" data-crisis={isCrisisBrief} role="dialog" aria-modal="true" aria-labelledby="critical-brief-title">
-                <header><SourceBadge source={criticalNews.source} /><time>{criticalNews.date}</time><span>{isCrisisBrief ? 'CRITICAL BRIEF' : 'WORLD BRIEF'} · SIMULATION PAUSED</span></header>
+                <header><SourceBadge source={criticalNews.source} /><time>{criticalNews.date}</time><span>{isCrisisBrief ? '重大情報' : '世界情勢'} · 時間停止中</span></header>
                 <h2 id="critical-brief-title">{criticalNews.headline}</h2>
                 <p>{criticalCause}</p>
                 <dl>
-                  <div><dt>{isCrisisBrief ? 'TRUST' : 'TRUST OUTLOOK'}</dt><dd>{state.trust.toFixed(0)} → TARGET {trustCausality.target.toFixed(0)}</dd></div>
-                  <div><dt>TOP RISK</dt><dd>{riskRadar.primary.label} · {riskRadar.pressure}%</dd></div>
+                  <div><dt>{isCrisisBrief ? '信頼' : '信頼見通し'}</dt><dd>{state.trust.toFixed(0)} → 目標 {trustCausality.target.toFixed(0)}</dd></div>
+                  <div><dt>最大リスク</dt><dd>{riskRadar.primary.label} · {riskRadar.pressure}%</dd></div>
                 </dl>
-                <button autoFocus onClick={() => { setCriticalNews(null); playSound('tap') }}>ACKNOWLEDGE · RESUME {state.speed === 8 ? 'FAST FORWARD' : 'NORMAL'}</button>
+                <button autoFocus onClick={() => { setCriticalNews(null); playSound('tap') }}>確認して{state.speed === 8 ? '高速' : '通常'}再開</button>
               </section>
             )}
             {selectedRegion && selectedRegionId && <div className="region-inspector">
-              <span>SELECTED REGION</span>
-              <h2>{selectedRegion.name}</h2>
+              <span>選択中の地域</span>
+              <h2>{REGION_LABELS[selectedRegion.id]}</h2>
               <dl>
-                <div><dt>AI ACCESS</dt><dd>{pct(selectedRegion.users / selectedRegion.population)}</dd></div>
-                <div><dt>{competitiveMapView ? `${competitiveMapView.label} EST. SHARE` : 'CODEX SHARE'}</dt><dd>{pct(competitiveMapView?.shares[selectedRegionId] ?? selectedRegion.codexShare)}</dd></div>
-                <div><dt>REGULATION</dt><dd>{pct(selectedRegion.regulation)}</dd></div>
+                <div><dt>AIアクセス</dt><dd>{pct(selectedRegion.users / selectedRegion.population)}</dd></div>
+                <div><dt>{competitiveMapView ? `${competitiveMapView.label} 推定シェア` : 'CODEXシェア'}</dt><dd>{pct(competitiveMapView?.shares[selectedRegionId] ?? selectedRegion.codexShare)}</dd></div>
+                <div><dt>規制</dt><dd>{pct(selectedRegion.regulation)}</dd></div>
               </dl>
-              <button onClick={deployRegion}>{selectedRegion.introduced ? 'HOST COMMUNITY EVENT' : 'OPEN FIRST COMMUNITY'}<ChevronRight size={14} /></button>
+              <button onClick={deployRegion}>{selectedRegion.introduced ? '交流イベントを開く' : '最初の拠点を開く'}<ChevronRight size={14} /></button>
             </div>}
           </div>
           <div className="timeline-track">
@@ -1104,32 +1141,32 @@ export default function App() {
         </section>
 
         <aside className="strategy-rail">
-          <div className="section-label"><Cpu size={13} /> STRATEGY LAYER</div>
-          <div className="compute-counter"><span>AVAILABLE COMPUTE</span><strong>{fmt(state.compute, 1)} <small>PF</small></strong><small className={state.momentumDays > 0 ? 'is-active' : 'is-stalled'}><OverflowTicker text={state.momentumDays > 0 ? `MOMENTUM ACTIVE · ${state.momentumDays} DAYS` : 'MOMENTUM STALLED · ACT TO GROW MODEL CAPABILITY'} /></small></div>
+          <div className="section-label"><Cpu size={13} /> 戦略</div>
+          <div className="compute-counter"><span>利用可能な計算資源</span><strong>{fmt(state.compute, 1)} <small>PF</small></strong><small className={state.momentumDays > 0 ? 'is-active' : 'is-stalled'}><OverflowTicker text={state.momentumDays > 0 ? `勢いあり · あと${state.momentumDays}日` : '勢い停止 · 行動して成長を再開'} /></small></div>
           <button className="strategy-axis" onClick={() => openStrategy('model')}>
-            <span><BrainCircuit size={16} /><b>MODEL</b><small>CAPABILITY</small></span><strong>K{state.capability.toFixed(1)}</strong><ChevronRight size={14} />
+            <span><BrainCircuit size={16} /><b>モデル</b><small>能力</small></span><strong>K{state.capability.toFixed(1)}</strong><ChevronRight size={14} />
           </button>
           <button className="strategy-axis" onClick={() => openStrategy('product')}>
-            <span><Sparkles size={16} /><b>PRODUCT</b><small>{enabledFeatures.length} FEATURES</small></span><strong>ACCESS</strong><ChevronRight size={14} />
+            <span><Sparkles size={16} /><b>製品</b><small>機能 {enabledFeatures.length}</small></span><strong>アクセス</strong><ChevronRight size={14} />
           </button>
           <button className="strategy-axis" onClick={() => openStrategy('company')}>
-            <span><ShieldCheck size={16} /><b>COMPANY</b><small>CONTROL CAPACITY</small></span><strong>S{state.safety.toFixed(0)} / G{state.governance.toFixed(0)}</strong><ChevronRight size={14} />
+            <span><ShieldCheck size={16} /><b>組織</b><small>制御能力</small></span><strong>S{state.safety.toFixed(0)} / G{state.governance.toFixed(0)}</strong><ChevronRight size={14} />
           </button>
 
           <div className="control-envelope">
-            <div className="section-label section-label--sub"><ShieldCheck size={13} /> CONTROL ENVELOPE</div>
-            <Meter label="CAPABILITY" value={state.capability} max={10} />
-            <Meter label="SAFETY" value={state.safety} max={10} danger={m.safetyGap >= 3} hint={m.safetyGap > 0 ? `Capability gap +${m.safetyGap.toFixed(1)}` : 'At capability parity'} />
-            <Meter label="GOVERNANCE" value={state.governance} max={10} danger={m.governanceGap >= 3} hint={m.governanceGap > 0 ? `Capability gap +${m.governanceGap.toFixed(1)}` : 'At capability parity'} />
+            <div className="section-label section-label--sub"><ShieldCheck size={13} /> 制御バランス</div>
+            <Meter label="能力" value={state.capability} max={10} />
+            <Meter label="安全" value={state.safety} max={10} danger={m.safetyGap >= 3} hint={m.safetyGap > 0 ? `能力差 +${m.safetyGap.toFixed(1)}` : '能力と同等'} />
+            <Meter label="統治" value={state.governance} max={10} danger={m.governanceGap >= 3} hint={m.governanceGap > 0 ? `能力差 +${m.governanceGap.toFixed(1)}` : '能力と同等'} />
           </div>
 
           <button className="open-ecosystem" onClick={() => performUpgradeAction('ecosystem')} disabled={state.ecosystemCooldownSeconds > 0}>
-            <Network size={17} /><span><b>OPEN ECOSYSTEM</b><small>{state.ecosystemCooldownSeconds > 0 ? `READY IN ${Math.ceil(state.ecosystemCooldownSeconds)}s` : 'RELEASE SHARE · GROW TRUST'}</small></span><ArrowUpRight size={14} />
+            <Network size={17} /><span><b>エコシステムを開く</b><small>{state.ecosystemCooldownSeconds > 0 ? `あと${Math.ceil(state.ecosystemCooldownSeconds)}秒` : 'シェアを譲り · 信頼を上げる'}</small></span><ArrowUpRight size={14} />
           </button>
-          <button className="open-strategy" onClick={() => openStrategy('model')}>OPEN FULL CAPABILITY TREE <ChevronRight size={14} /></button>
+          <button className="open-strategy" onClick={() => openStrategy('model')}>戦略ツリーを開く <ChevronRight size={14} /></button>
 
           <div className="event-ledger">
-            <div className="section-label section-label--sub"><Radio size={13} /> EVENT LEDGER</div>
+            <div className="section-label section-label--sub"><Radio size={13} /> イベント履歴</div>
             {state.news.slice(0, 3).map((item) => (
               <article key={item.id}><SourceBadge source={item.source} /><time>{item.date}</time><b><OverflowTicker text={item.headline} /></b></article>
             ))}
@@ -1145,37 +1182,37 @@ export default function App() {
           style={{ '--reset-progress': `${resetProgress * 360}deg` } as CSSProperties}
         >
           <span className="reset-action__ring"><RotateCcw size={20} /></span>
-          <span><small>TIBO PROTOCOL · 8s GLOBAL BOOST</small><b>{state.resetCooldownSeconds > 0 ? `TOKEN RESET · ${Math.ceil(state.resetCooldownSeconds)}s` : 'TOKEN RESET READY'}</b></span>
+          <span><small>TIBOプロトコル · 世界強化 8秒</small><b>{state.resetCooldownSeconds > 0 ? `トークンリセット · あと${Math.ceil(state.resetCooldownSeconds)}秒` : 'トークンリセット準備完了'}</b></span>
         </button>
 
         <form className="feature-console" onSubmit={submitFeature}>
-          <div className="feature-console__label"><Sparkles size={15} /><span><small>SHIP A FEATURE</small><b>Describe the intent; ask the Advisor to map the tradeoff</b></span></div>
+          <div className="feature-console__label"><Sparkles size={15} /><span><small>機能を公開</small><b>目的を入力。迷ったらアドバイザーへ相談</b></span></div>
           <div className="feature-console__input">
-            <input value={featureText} onChange={(event) => setFeatureText(event.target.value)} maxLength={60} placeholder="Describe a capability in 60 characters…" aria-label="Feature proposal" />
-            <button type="submit">SHIP <ChevronRight size={13} /></button>
+            <input value={featureText} onChange={(event) => setFeatureText(event.target.value)} maxLength={60} placeholder="60文字以内で機能を説明…" aria-label="機能提案" />
+            <button type="submit">公開 <ChevronRight size={13} /></button>
           </div>
-          <button className="education-shortcut" type="button" onClick={() => shipFeature(EDUCATION_PROMPT)}><GraduationCap size={13} /> DEPLOY EDUCATION MODE</button>
+          <button className="education-shortcut" type="button" onClick={() => shipFeature(EDUCATION_PROMPT)}><GraduationCap size={13} /> 教育モードを展開</button>
           <p className={featureStatus.startsWith('LIVE GM') ? 'is-live' : ''}>{featureStatus}</p>
         </form>
 
         <div className="time-controls">
-          <button aria-pressed={paused} className="pause-button" onClick={() => { setPaused((value) => !value); playSound('time') }}>{paused ? <CirclePlay size={16} /> : <CirclePause size={16} />}{paused ? 'RESUME' : 'PAUSE'}</button>
+          <button aria-pressed={paused} className="pause-button" onClick={() => { setPaused((value) => !value); playSound('time') }}>{paused ? <CirclePlay size={16} /> : <CirclePause size={16} />}{paused ? '再開' : '停止'}</button>
           <div className="speed-modes">
             {SPEEDS.map((speed) => (
               <button
                 key={speed}
                 type="button"
-                aria-label={speed === 1 ? 'Normal speed — 1 day per second' : 'Fast forward — 8 days per second'}
+                aria-label={speed === 1 ? '通常速度 — 1秒で1日' : '高速 — 1秒で8日'}
                 aria-pressed={state.speed === speed}
                 className={state.speed === speed ? 'is-active' : ''}
                 onClick={() => setSpeed(speed)}
               >
                 {speed === 1 ? <CirclePlay size={16} /> : <ChevronsRight size={20} />}
-                <span>{speed === 1 ? 'NORMAL' : 'FAST'}</span>
+                <span>{speed === 1 ? '通常' : '高速'}</span>
               </button>
             ))}
           </div>
-          <small className="speed-readout">{state.speed === 8 ? 'FAST FORWARD · 8 DAYS / SEC' : 'NORMAL · 1 DAY / SEC'} · {state.momentumDays > 0 ? `${state.momentumDays} MOMENTUM DAYS` : 'ACCESS GROWTH STALLED'}</small>
+          <small className="speed-readout">{state.speed === 8 ? '高速 · 1秒で8日' : '通常 · 1秒で1日'} · {state.momentumDays > 0 ? `勢い あと${state.momentumDays}日` : 'アクセス成長停止'}</small>
         </div>
       </section>
 
@@ -1222,11 +1259,11 @@ export default function App() {
         open={decisionKind === '2029'}
         milestone="choose-path-2029"
         source={{ label: 'AI 2040 / Plan A', href: scenario2029.sourceUrl ?? AI_2040_URL }}
-        title={scenario2029.title}
-        context={scenario2029.summary}
+        title="進路を選ぶ"
+        context="短い協調機会の中で、競争、一時停止、国際検証つき減速のどれかを選びます。"
         options={decisionOptions2029}
         selectedOptionId={decisionSelection}
-        whyThisMatters={scenario2029.whyThisMatters}
+        whyThisMatters="得た時間を共有の安全資源にできるか、次の競争までの先延ばしにするかを決めます。"
         onSelect={setDecisionSelection}
         onConfirm={confirmDecision}
       />
@@ -1235,11 +1272,11 @@ export default function App() {
         open={decisionKind === '2035'}
         milestone="hold-the-line-2035"
         source={{ label: 'AI 2040 / Plan A', href: scenario2035.sourceUrl ?? AI_2040_URL }}
-        title={scenario2035.title}
-        context={scenario2035.summary}
+        title="上限を守る"
+        context="人間の最高専門家に迫る中、経済・地政学的な拡大圧力が頂点に達します。"
         options={decisionOptions2035}
         selectedOptionId={decisionSelection}
-        whyThisMatters={scenario2035.whyThisMatters}
+        whyThisMatters="人間の制御を短期的な競争優位より優先できるかを試します。"
         onSelect={setDecisionSelection}
         onConfirm={confirmDecision}
       />
@@ -1252,8 +1289,8 @@ export default function App() {
         completionDate={dateLabel(state.day).toUpperCase()}
         completionStatus={state.day < END_DAY ? 'terminated' : 'complete'}
         summary={ENDING_CONTEXT[ending.id]}
-        referenceSummary="AI 2027 supplies the race pressure. AI 2040: Plan A supplies the verified slowdown, deliberate pause, and evidence-led restart."
-        timelineSummary={`Simulation ${state.day < END_DAY ? 'terminated' : 'completed'} on ${dateLabel(state.day)}. The 2029 path was ${state.choice2029 ?? 'not reached before termination'}; the 2035 path was ${state.choice2035 ?? 'not reached before termination'}. Final access ${pct(m.worldAdoption)}, HHI ${m.hhi.toFixed(2)}.`}
+        referenceSummary="AI 2027は開発競争の圧力を、AI 2040のPlan Aは検証可能な減速、意図的停止、証拠に基づく再始動を示します。"
+        timelineSummary={`シミュレーションは${dateLabel(state.day)}に${state.day < END_DAY ? '終了' : '完了'}。2029年は${state.choice2029 === 'verified-slowdown' ? '国際検証つき減速' : state.choice2029 === 'slowdown' ? '一時減速' : state.choice2029 === 'race' ? '競争続行' : '未到達'}、2035年は${state.choice2035 === 'hold-the-line' ? '上限維持' : state.choice2035 === 'accelerate' ? '再加速' : '未到達'}。最終アクセス ${pct(m.worldAdoption)}、HHI ${m.hhi.toFixed(2)}。`}
         divergences={divergences}
         onClose={() => setEndingVisible(false)}
         onRestart={resetGameToStart}

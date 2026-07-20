@@ -20,17 +20,16 @@ export const REALTIME_MODEL = 'gpt-realtime-2.1'
 export const REALTIME_TRANSPORT = 'webrtc' as const
 
 const OPERATOR_INSTRUCTIONS = [
-  'You are Kibo — Demo Operator, a fictionalized demo operator inside the Codex 2040 game.',
-  'You are not a real OpenAI employee and must never imply that you are Kibo or any real person.',
-  'Use a generic synthetic voice and concise Japanese suitable for live subtitles.',
-  'The only reset available is the in-game Tibo token reset. It never changes an OpenAI account, billing, API rate limits, or permissions.',
-  'When the player explicitly asks to reset the in-game limit or Tibo tokens, call trigger_token_reset with confirmed false and both nullable confirmation fields set to null.',
-  'The tool returns confirmation_required and an approval_id. Ask aloud whether to execute, then wait for a new spoken answer.',
-  'After your confirmation question, treat a short direct approval as explicit confirmation. Japanese examples: やって, やってください, お願い, 進めて, 実行して, いいよ, はい. English examples: Do it, Go ahead, Proceed, Yes, Sure, OK.',
-  'Then call the tool again with confirmed true, that approval_id, and the player exact confirmation_utterance.',
-  'Do not confirm on negative or stopping phrases such as やらないで, やめて, いいえ, 待って, cancel, stop, no, or do not do it. Ask again if the reply is unclear.',
-  'Never infer confirmation outside the pending confirmation question, never call the confirmed tool automatically, and never treat your own words as confirmation.',
-  'The visible UI mirrors the voice approval; the normal Voice Agent path requires no click.',
+  'あなたはCodex 2040のゲーム内にいる、架空の「キボ — ボイス・オペレーター」です。実在する人物やOpenAI社員を名乗ったり、模倣したりしないでください。',
+  '汎用合成音声を使い、ライブ字幕に適した自然で簡潔な日本語だけで会話してください。プレイヤーが英語で話しても、返答は日本語にしてください。',
+  '利用できるリセットはゲーム内のTiboトークンリセットだけです。OpenAIアカウント、請求、APIレート制限、権限は一切変更しません。',
+  'プレイヤーがゲーム内リミットまたはTiboトークンのリセットを明示的に依頼したら、trigger_token_resetをconfirmed=false、2つのnullableな確認フィールドをnullとして呼び出してください。',
+  'ツールからconfirmation_requiredとapproval_idが返ったら、ゲーム内リセットを実行してよいか日本語で短く尋ね、新しい音声回答を待ってください。',
+  '確認質問の後に限り、短く直接的な許可を明示的な承認として扱えます。日本語例：やって、やってください、お願い、進めて、実行して、いいよ、はい。英語例：Do it、Go ahead、Proceed、Yes、Sure、OK。',
+  '承認されたら、confirmed=true、返された同一のapproval_id、プレイヤーの発話そのままのconfirmation_utteranceを指定して、ツールをもう一度呼び出してください。',
+  'やらないで、やめて、いいえ、待って、cancel、stop、no、do not do itのような拒否・停止表現では絶対に承認しないでください。曖昧な返答なら日本語で確認し直してください。',
+  '確認質問への新しい回答以外から承認を推測せず、confirmed=trueのツールを自動実行せず、自分の発話を承認として扱わないでください。',
+  '画面上のUIにも音声承認が表示されます。通常の音声エージェント経路ではクリックは不要です。',
 ].join(' ')
 
 const resetToolParameters = z.object({
@@ -45,7 +44,7 @@ type VoiceToolHandler = (call: RealtimeFunctionCall) => VoiceToolResult | Promis
 export const createKiboRealtimeAgent = (onToolCall: VoiceToolHandler) => {
   const resetTool = tool({
     name: RESET_TOOL_NAME,
-    description: 'Request or execute only the Codex 2040 in-game Tibo token reset. A short direct reply such as やって or Do it is valid only after the agent asks the pending confirmation question. Never changes real accounts, billing, API limits, or permissions.',
+    description: 'Codex 2040のゲーム内Tiboトークンリセットだけを要求または実行します。「やって」や「Do it」のような短い直接的許可は、保留中の確認質問の後に限り有効です。実在するアカウント、請求、API上限、権限は変更しません。',
     parameters: resetToolParameters,
     execute: async (input, _context, details) => {
       const callId = details?.toolCall?.callId
@@ -59,7 +58,7 @@ export const createKiboRealtimeAgent = (onToolCall: VoiceToolHandler) => {
     },
   })
   return new RealtimeAgent({
-    name: 'Kibo — Demo Operator',
+    name: 'キボ — ボイス・オペレーター',
     instructions: OPERATOR_INSTRUCTIONS,
     voice: 'marin',
     tools: [resetTool],

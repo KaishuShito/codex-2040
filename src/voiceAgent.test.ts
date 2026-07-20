@@ -1,22 +1,26 @@
 import { describe, expect, it, vi } from 'vitest'
 import { createKiboRealtimeAgent, REALTIME_MODEL, REALTIME_TRANSPORT } from './voiceAgent'
 
-describe('official OpenAI Voice Agent configuration', () => {
-  it('pins the Realtime model, WebRTC transport, fictional identity, and SDK function tool', async () => {
+describe('OpenAI公式ボイス・オペレーターの設定', () => {
+  it('Realtimeモデル、WebRTC、架空の日本語話者、SDK function toolを固定する', async () => {
     const onToolCall = vi.fn(async () => ({ status: 'validated' }))
     const agent = createKiboRealtimeAgent(onToolCall)
     expect(REALTIME_MODEL).toBe('gpt-realtime-2.1')
     expect(REALTIME_TRANSPORT).toBe('webrtc')
-    expect(agent.name).toBe('Kibo — Demo Operator')
-    expect(agent.instructions).toContain('fictionalized demo operator')
+    expect(agent.name).toBe('キボ — ボイス・オペレーター')
+    expect(agent.instructions).toContain('自然で簡潔な日本語だけで会話')
+    expect(agent.instructions).toContain('実在する人物やOpenAI社員を名乗ったり、模倣したりしない')
     expect(agent.instructions).toContain('Do it')
     expect(agent.instructions).toContain('やって')
     expect(agent.instructions).toContain('do not do it')
-    expect(agent.instructions).toContain('never call the confirmed tool automatically')
+    expect(agent.instructions).toContain('返された同一のapproval_id')
+    expect(agent.instructions).toContain('confirmed=trueのツールを自動実行せず')
 
     const resetTool = agent.tools.find((candidate) => candidate.type === 'function' && candidate.name === 'trigger_token_reset')
     expect(resetTool).toMatchObject({ type: 'function', name: 'trigger_token_reset', strict: true })
     if (!resetTool || resetTool.type !== 'function') throw new Error('missing SDK reset tool')
+    expect(resetTool.description).toContain('ゲーム内Tiboトークンリセットだけ')
+    expect(resetTool.description).toContain('「Do it」')
     const result = await resetTool.invoke({} as never, JSON.stringify({
       player_request: 'ゲーム内Tiboトークンをリセットして',
       confirmed: false,

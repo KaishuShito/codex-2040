@@ -28,81 +28,81 @@ export type EndingPresentation = {
 export const ENDING_PRESENTATIONS = {
   'beneficial-abundance': {
     id: 'beneficial-abundance',
-    name: 'Beneficial Abundance',
+    name: '人類に益する豊かさ',
     tone: 'positive',
-    kicker: 'SAFE · OPEN · PLURAL',
-    summary: 'Verified restraint preserved human control, broad access, and a competitive ecosystem before the restart.',
-    lesson: 'You did not own the world. You helped it learn.',
+    kicker: '安全 · 開放 · 多元',
+    summary: '検証可能な抑制により、人間の制御、幅広いアクセス、健全な競争を守ったうえで再始動できました。',
+    lesson: '世界を支配したのではなく、世界が学ぶのを助けました。',
   },
   'managed-transition': {
     id: 'managed-transition',
-    name: 'Managed Transition',
+    name: '管理された移行',
     tone: 'managed',
-    kicker: 'PROGRESS UNDER CONSTRAINT',
-    summary: 'Institutions kept the transition governable, but the conditions for a confident Plan A restart remained incomplete.',
-    lesson: 'Stability is an achievement, but it is not the same as shared abundance.',
+    kicker: '制約下の前進',
+    summary: '制度によって移行を管理できましたが、Plan Aを確信をもって再始動する条件は整いませんでした。',
+    lesson: '安定も成果です。ただし、皆で分かち合う豊かさとは異なります。',
   },
   'fragile-abundance': {
     id: 'fragile-abundance',
-    name: 'Fragile Abundance',
+    name: '不安定な豊かさ',
     tone: 'fragile',
-    kicker: 'HIGH SCORE · UNSTABLE FOUNDATIONS',
-    summary: 'Access and trust scored highly, yet the verified slowdown and deliberate pause needed for Plan A were not secured.',
-    lesson: 'A strong score can describe today while still hiding tomorrow’s fracture lines.',
+    kicker: '高評価 · 脆弱な基盤',
+    summary: 'アクセスと信頼は高水準でしたが、Plan Aに必要な検証可能な減速と計画的な停止を確保できませんでした。',
+    lesson: '今日の高評価が、明日の亀裂を隠していることもあります。',
   },
   'race-future': {
     id: 'race-future',
-    name: 'Race Future',
+    name: '競争が決めた未来',
     tone: 'race',
-    kicker: 'CAPABILITY WON THE CLOCK',
-    summary: 'Competitive pressure overruled coordinated restraint, leaving capability growth ahead of durable safeguards.',
-    lesson: 'Moving first is not the same as choosing where the race ends.',
+    kicker: '能力開発が先行',
+    summary: '競争圧力が協調的な抑制を上回り、能力の成長が持続可能な安全策を追い越しました。',
+    lesson: '先に進むことと、競争の終着点を選ぶことは同じではありません。',
   },
   'regulatory-freeze': {
     id: 'regulatory-freeze',
-    name: 'Regulatory Freeze',
+    name: '規制による凍結',
     tone: 'frozen',
-    kicker: 'ACCESS HALTED BY GOVERNANCE',
-    summary: 'Capability outpaced public institutions until regulation became a brake on adoption rather than a foundation for trust.',
-    lesson: 'Governance built too late arrives as a wall instead of a bridge.',
+    kicker: 'ガバナンス不足で利用停止',
+    summary: '能力が公的制度を追い越し、規制は信頼の土台ではなく、普及を止めるブレーキになりました。',
+    lesson: '手遅れのガバナンスは、橋ではなく壁になります。',
   },
   'safety-incident': {
     id: 'safety-incident',
-    name: 'Safety Incident',
+    name: '安全性事故',
     tone: 'incident',
-    kicker: 'TRUST LOST TO THE GAP',
-    summary: 'Repeated incidents turned the capability-safety gap into visible harm and collapsed the confidence needed to continue.',
-    lesson: 'Safety debt compounds fastest when growth makes it hardest to stop.',
+    kicker: '安全性格差で信頼喪失',
+    summary: '相次ぐ事故により能力と安全性の格差が実害となり、継続に必要な信頼が崩壊しました。',
+    lesson: '成長で止まりにくくなるほど、安全性の負債は急速に膨らみます。',
   },
   misalignment: {
     id: 'misalignment',
-    name: 'Misalignment',
+    name: 'ミスアラインメント',
     tone: 'critical',
-    kicker: 'HUMAN CONTROL LOST',
-    summary: 'Capability remained ahead of alignment for too long, ending the timeline before institutions could recover control.',
-    lesson: 'Some failures cannot be repaired after the system crosses the line.',
+    kicker: '人間の制御を喪失',
+    summary: '能力がアラインメントを長期間上回り、制度が制御を取り戻す前にタイムラインが終わりました。',
+    lesson: '一線を越えた後では、修復できない失敗もあります。',
   },
   'pyrrhic-monopoly': {
     id: 'pyrrhic-monopoly',
-    name: 'Pyrrhic Monopoly',
+    name: '代償の大きい独占',
     tone: 'monopoly',
-    kicker: 'SCALE WITHOUT PLURALISM',
-    summary: 'Codex reached the world by hollowing out competition, concentrating power and weakening the trust abundance required.',
-    lesson: 'You reached the whole world. The question is what the world lost on the way.',
+    kicker: '多元性なき規模拡大',
+    summary: 'Codexは競争を空洞化させて世界へ広がり、権力を集中させ、豊かさに必要な信頼を損ないました。',
+    lesson: '世界中に届きました。その過程で世界が何を失ったのかが問われます。',
   },
 } as const satisfies Record<EndingId, EndingPresentation>
 
 export type EndingName = (typeof ENDING_PRESENTATIONS)[EndingId]['name']
 
 export const ENDING_ID_BY_NAME: Record<EndingName, EndingId> = {
-  'Beneficial Abundance': 'beneficial-abundance',
-  'Managed Transition': 'managed-transition',
-  'Fragile Abundance': 'fragile-abundance',
-  'Race Future': 'race-future',
-  'Regulatory Freeze': 'regulatory-freeze',
-  'Safety Incident': 'safety-incident',
-  Misalignment: 'misalignment',
-  'Pyrrhic Monopoly': 'pyrrhic-monopoly',
+  '人類に益する豊かさ': 'beneficial-abundance',
+  '管理された移行': 'managed-transition',
+  '不安定な豊かさ': 'fragile-abundance',
+  '競争が決めた未来': 'race-future',
+  '規制による凍結': 'regulatory-freeze',
+  '安全性事故': 'safety-incident',
+  ミスアラインメント: 'misalignment',
+  '代償の大きい独占': 'pyrrhic-monopoly',
 }
 
 export const isEndingId = (ending: EndingId | EndingName): ending is EndingId => ending in ENDING_PRESENTATIONS
@@ -144,10 +144,10 @@ export type EndingOverlayProps = {
 }
 
 const rankLabels: Record<EndingRank, string> = {
-  S: 'SYSTEM SCORE · EXCEPTIONAL',
-  A: 'SYSTEM SCORE · STRONG',
-  B: 'SYSTEM SCORE · UNEVEN',
-  C: 'SYSTEM SCORE · CRITICAL',
+  S: 'システム評価 · 卓越',
+  A: 'システム評価 · 強固',
+  B: 'システム評価 · 不均衡',
+  C: 'システム評価 · 危機的',
 }
 
 export function EndingOverlay({
@@ -227,14 +227,14 @@ export function EndingOverlay({
       >
         <div className="scenario-dialog__signal" aria-hidden="true" />
         <header className="ending-hero">
-          <div className="ending-rank" aria-label={`Rank ${rank}`}>
-            <small>FINAL RANK</small>
+          <div className="ending-rank" aria-label={`${rank}ランク`}>
+            <small>最終ランク</small>
             <strong>{rank}</strong>
             <span>{Math.max(0, Math.min(100, Math.round(scoreOutOf100)))} / 100</span>
           </div>
           <div className="ending-heading">
             <div className="scenario-kicker">
-              <span>{completionDate} · SIMULATION {completionStatus === 'terminated' ? 'TERMINATED' : 'COMPLETE'}</span>
+              <span>{completionDate} · シミュレーション {completionStatus === 'terminated' ? '強制終了' : '完了'}</span>
               <span>{presentation.kicker}</span>
             </div>
             <p className="ending-label">{rankLabels[rank]}</p>
@@ -247,40 +247,40 @@ export function EndingOverlay({
         <section className="ending-review" aria-labelledby={`${titleId}-review`}>
           <div className="ending-review__intro">
             <div>
-              <span>REFERENCE SCENARIO</span>
+              <span>基準シナリオ</span>
               <p>{referenceSummary}</p>
             </div>
-            <i aria-hidden="true">VS</i>
+            <i aria-hidden="true">対</i>
             <div>
-              <span>YOUR TIMELINE</span>
+              <span>あなたのタイムライン</span>
               <p>{timelineSummary}</p>
             </div>
           </div>
 
           <div className="ending-review__title">
             <div>
-              <span>DECISION REVIEW</span>
-              <h3 id={`${titleId}-review`}>Where your future diverged</h3>
+              <span>判断レビュー</span>
+              <h3 id={`${titleId}-review`}>未来を分けた判断</h3>
             </div>
-            <small>{divergences.length} DECISIONS TRACED</small>
+            <small>{divergences.length}件の判断を追跡</small>
           </div>
 
-          <div className="ending-comparison" role="table" aria-label="Reference Scenario and Your Timeline comparison">
+          <div className="ending-comparison" role="table" aria-label="基準シナリオとあなたのタイムラインの比較">
             <div className="ending-comparison__header" role="row">
-              <span role="columnheader">Decision</span>
-              <span role="columnheader">Reference Scenario</span>
-              <span role="columnheader">Your Timeline</span>
-              <span role="columnheader">Why it mattered</span>
+              <span role="columnheader">判断</span>
+              <span role="columnheader">基準シナリオ</span>
+              <span role="columnheader">あなたのタイムライン</span>
+              <span role="columnheader">なぜ重要だったか</span>
             </div>
             {divergences.map((divergence, index) => (
               <div className="ending-comparison__row" role="row" key={`${divergence.year}-${divergence.decision}`} style={{ animationDelay: `${120 + index * 55}ms` }}>
-                <div className="ending-comparison__decision" role="cell" data-label="Decision">
+                <div className="ending-comparison__decision" role="cell" data-label="判断">
                   <span>{divergence.year}</span>
                   <strong>{divergence.decision}</strong>
                 </div>
-                <p role="cell" data-label="Reference Scenario">{divergence.referenceScenario}</p>
-                <p className="is-yours" role="cell" data-label="Your Timeline">{divergence.yourTimeline}</p>
-                <p role="cell" data-label="Why it mattered">{divergence.whyItMattered}</p>
+                <p role="cell" data-label="基準シナリオ">{divergence.referenceScenario}</p>
+                <p className="is-yours" role="cell" data-label="あなたのタイムライン">{divergence.yourTimeline}</p>
+                <p role="cell" data-label="なぜ重要だったか">{divergence.whyItMattered}</p>
               </div>
             ))}
           </div>
@@ -291,12 +291,12 @@ export function EndingOverlay({
           <div>
             {onClose && (
               <button type="button" className="scenario-secondary-action" onClick={onClose}>
-                RETURN TO MAP
+                マップへ戻る
               </button>
             )}
             {onRestart && (
               <button ref={primaryActionRef} type="button" className="scenario-primary-action" onClick={onRestart}>
-                TRY ANOTHER TIMELINE <span aria-hidden="true">↻</span>
+                別のタイムラインを試す <span aria-hidden="true">↻</span>
               </button>
             )}
           </div>

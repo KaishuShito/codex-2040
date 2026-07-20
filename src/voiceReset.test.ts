@@ -31,6 +31,14 @@ const confirmedCall = (approvalId: string, callId = 'call_confirm_1', utterance 
 })
 
 describe('voice reset tool approval contract', () => {
+  it('uses Japanese notices without changing the reset state contract', () => {
+    expect(createVoiceResetState()).toEqual({
+      pending: null,
+      completedCallIds: [],
+      notice: '保留中のリセット要求はありません。',
+    })
+  })
+
   it('accepts only the exact strict tool schema with bounded reset intent', () => {
     expect(parseResetToolCall(validCall())).toMatchObject({ callId: 'call_reset_1', confirmed: false })
     expect(parseResetToolCall({ ...validCall(), name: 'reset_openai_account' })).toBeNull()
@@ -44,6 +52,7 @@ describe('voice reset tool approval contract', () => {
     expect(requested.outcome).toBe('confirmation-required')
     expect(requested.shouldExecute).toBe(false)
     expect(requested.request?.id).toBe('approval-call_reset_1')
+    expect(requested.state.notice).toContain('別の発話で明示的に承認')
 
     const mismatched = handleRealtimeResetToolCall(requested.state, confirmedCall('approval-wrong'), 0)
     expect(mismatched.outcome).toBe('invalid')
@@ -53,6 +62,7 @@ describe('voice reset tool approval contract', () => {
     expect(confirmed.outcome).toBe('executed')
     expect(confirmed.shouldExecute).toBe(true)
     expect(confirmed.state.pending).toBeNull()
+    expect(confirmed.state.notice).toBe('音声での承認を受け付け、ゲーム内Tiboリセットを1回実行しました。')
   })
 
   it('rejects missing or non-explicit spoken confirmation evidence', () => {
@@ -77,6 +87,7 @@ describe('voice reset tool approval contract', () => {
     'Go ahead.',
     'Sure, proceed',
     'OK',
+    'Yes, do it',
   ])('accepts a short direct approval: %s', (utterance) => {
     expect(isExplicitResetConfirmation(utterance)).toBe(true)
     const requested = handleRealtimeResetToolCall(createVoiceResetState(), validCall(), 0)
@@ -94,6 +105,7 @@ describe('voice reset tool approval contract', () => {
     "Don't do it!",
     'Do not proceed',
     'No, cancel it',
+    'No, do it',
     'Maybe later',
   ])('rejects a negative or unclear reply: %s', (utterance) => {
     expect(isExplicitResetConfirmation(utterance)).toBe(false)

@@ -211,14 +211,14 @@ export const trustBreakdown = (state: GameState) => {
   const activeEffects = state.activeEffects.filter((effect) => effect.expiresDay > state.day)
   const eventOffset = clamp(activeEffects.reduce((sum, effect) => sum + effect.trustDelta, 0), -12, 12)
   const factors: TrustFactor[] = [
-    { id: 'baseline', label: 'Institutional baseline', value: 25 },
-    { id: 'diversity', label: 'Provider diversity', value: constants.diversityWeight * (1 - m.hhi) * 100 },
-    { id: 'safety', label: 'Safety capacity', value: 2.5 * state.safety },
-    { id: 'governance', label: 'Governance capacity', value: 2.5 * state.governance },
-    { id: 'safety-gap', label: 'Capability > Safety', value: -gapUnit * safetyGap },
-    { id: 'governance-gap', label: 'Capability > Governance', value: -gapUnit * governanceGap },
-    { id: 'concentration', label: 'Market concentration', value: -monopolyPenalty * 100 },
-    { id: 'events', label: 'Active world events', value: eventOffset },
+    { id: 'baseline', label: '制度への基礎信頼', value: 25 },
+    { id: 'diversity', label: 'プロバイダーの多様性', value: constants.diversityWeight * (1 - m.hhi) * 100 },
+    { id: 'safety', label: '安全対応力', value: 2.5 * state.safety },
+    { id: 'governance', label: 'ガバナンス力', value: 2.5 * state.governance },
+    { id: 'safety-gap', label: '能力 > 安全性', value: -gapUnit * safetyGap },
+    { id: 'governance-gap', label: '能力 > ガバナンス', value: -gapUnit * governanceGap },
+    { id: 'concentration', label: '市場集中', value: -monopolyPenalty * 100 },
+    { id: 'events', label: '進行中の世界イベント', value: eventOffset },
   ]
   const target = clamp(factors.reduce((sum, factor) => sum + factor.value, 0), 0, 100)
   return { target, dailyDelta: (target - state.trust) / constants.trustTau, factors }
@@ -231,14 +231,14 @@ const activateMomentum = (state: GameState, days: number, countIntervention = tr
 })
 
 const baseRegions: Region[] = [
-  { id: 'na', name: 'North America', population: 620, users: 17, codexShare: .36, introduced: true, regulation: .15, mobileAffinity: .62, fit: 1 },
-  { id: 'latam', name: 'Latin America', population: 660, users: 3, codexShare: .22, introduced: true, regulation: .08, mobileAffinity: .91, fit: 1 },
-  { id: 'eu', name: 'Europe', population: 750, users: 9, codexShare: .31, introduced: true, regulation: .32, mobileAffinity: .65, fit: 1 },
-  { id: 'africa', name: 'Africa', population: 1500, users: 0, codexShare: 0, introduced: false, regulation: .06, mobileAffinity: .96, fit: 1 },
-  { id: 'mena', name: 'Middle East', population: 510, users: 0, codexShare: 0, introduced: false, regulation: .18, mobileAffinity: .86, fit: 1 },
-  { id: 'india', name: 'India', population: 1460, users: 5, codexShare: .24, introduced: true, regulation: .1, mobileAffinity: .94, fit: 1 },
-  { id: 'eastAsia', name: 'East Asia', population: 1670, users: 12, codexShare: .19, introduced: true, regulation: .2, mobileAffinity: .88, fit: 1 },
-  { id: 'oceania', name: 'Oceania', population: 46, users: 0, codexShare: 0, introduced: false, regulation: .13, mobileAffinity: .73, fit: 1 },
+  { id: 'na', name: '北米', population: 620, users: 17, codexShare: .36, introduced: true, regulation: .15, mobileAffinity: .62, fit: 1 },
+  { id: 'latam', name: '中南米', population: 660, users: 3, codexShare: .22, introduced: true, regulation: .08, mobileAffinity: .91, fit: 1 },
+  { id: 'eu', name: '欧州', population: 750, users: 9, codexShare: .31, introduced: true, regulation: .32, mobileAffinity: .65, fit: 1 },
+  { id: 'africa', name: 'アフリカ', population: 1500, users: 0, codexShare: 0, introduced: false, regulation: .06, mobileAffinity: .96, fit: 1 },
+  { id: 'mena', name: '中東', population: 510, users: 0, codexShare: 0, introduced: false, regulation: .18, mobileAffinity: .86, fit: 1 },
+  { id: 'india', name: 'インド', population: 1460, users: 5, codexShare: .24, introduced: true, regulation: .1, mobileAffinity: .94, fit: 1 },
+  { id: 'eastAsia', name: '東アジア', population: 1670, users: 12, codexShare: .19, introduced: true, regulation: .2, mobileAffinity: .88, fit: 1 },
+  { id: 'oceania', name: 'オセアニア', population: 46, users: 0, codexShare: 0, introduced: false, regulation: .13, mobileAffinity: .73, fit: 1 },
 ]
 
 export const createInitialState = (options: { seed?: number } = {}): GameState => ({
@@ -265,8 +265,8 @@ export const createInitialState = (options: { seed?: number } = {}): GameState =
   ecosystemCooldownDays: 0,
   brand: 1,
   news: [
-    { id: 2, date: '2026-01-01', tone: 'neutral', headline: 'CODEX EXPANSION PROTOCOL IS NOW LIVE', source: 'AI 2027' },
-    { id: 1, date: '2025-12-18', tone: 'good', headline: 'DEVELOPER AGENTS CROSS A NEW RELIABILITY THRESHOLD', source: 'AI 2027' },
+    { id: 2, date: '2026-01-01', tone: 'neutral', headline: 'CODEX拡大プロトコルが始動', source: 'AI 2027' },
+    { id: 1, date: '2025-12-18', tone: 'good', headline: '開発エージェントが新たな信頼性水準へ', source: 'AI 2027' },
   ],
   nextNewsId: 3,
   seed: (options.seed ?? 2040) >>> 0,
@@ -381,9 +381,9 @@ const withNews = (state: GameState, headline: string, source: ScenarioSource, to
 
 const RIVAL_NAMES = ['ANTHRO', 'GOO', 'QI'] as const
 const RIVAL_AXES = [
-  { key: 'rivalCapability', label: 'MODEL' },
-  { key: 'rivalProduct', label: 'PRODUCT' },
-  { key: 'rivalCompany', label: 'COMPANY' },
+  { key: 'rivalCapability', label: 'モデル' },
+  { key: 'rivalProduct', label: 'プロダクト' },
+  { key: 'rivalCompany', label: '組織' },
 ] as const
 const RIVAL_THRESHOLDS = [4, 6, 8, 10] as const
 
@@ -397,7 +397,7 @@ const announceRivalStrategy = (state: GameState): GameState => {
           const source: ScenarioSource = state.day < dayFor('2029-01-01') ? 'AI 2027' : 'AI 2040'
           return withNews(
             { ...state, flags: addFlag(state.flags, flag) },
-            `${RIVAL_NAMES[rival]} ${axis.label} STRATEGY REACHES ${threshold} // COMPETITIVE PRESSURE RISES`,
+            `${RIVAL_NAMES[rival]}の${axis.label}戦略が${threshold}に到達 // 競争圧力が上昇`,
             source,
             'warn',
           )
@@ -410,10 +410,10 @@ const announceRivalStrategy = (state: GameState): GameState => {
 
 const dayFor = (iso: string) => Math.round((Date.parse(`${iso}T00:00:00Z`) - START_DATE) / 86_400_000)
 const milestones = [
-  { day: dayFor('2026-07-18'), flag: 'milestone:build-week-tokyo', headline: 'BUILD WEEK TOKYO LIGHTS UP THE NETWORK', source: 'Your Timeline', tone: 'good' },
-  { day: dayFor('2027-01-01'), flag: 'milestone:2027-agents', headline: 'AGENTS REACH TOP-DEVELOPER CAPABILITY', source: 'AI 2027', tone: 'neutral' },
-  { day: dayFor('2029-01-01'), flag: 'milestone:choose-2029', headline: 'CHOOSE A PATH: RACE OR VERIFIED SLOWDOWN', source: 'AI 2040', tone: 'warn' },
-  { day: dayFor('2035-01-01'), flag: 'milestone:hold-2035', headline: 'HOLD THE LINE AT HUMAN-EXPERT CAPABILITY', source: 'AI 2040', tone: 'warn' },
+  { day: dayFor('2026-07-18'), flag: 'milestone:build-week-tokyo', headline: 'BUILD WEEK TOKYOからネットワークが広がる', source: 'Your Timeline', tone: 'good' },
+  { day: dayFor('2027-01-01'), flag: 'milestone:2027-agents', headline: 'エージェントがトップ開発者級の能力に到達', source: 'AI 2027', tone: 'neutral' },
+  { day: dayFor('2029-01-01'), flag: 'milestone:choose-2029', headline: '進路を選べ：競争か、検証つき減速か', source: 'AI 2040', tone: 'warn' },
+  { day: dayFor('2035-01-01'), flag: 'milestone:hold-2035', headline: '人間の専門家級で一線を守れ', source: 'AI 2040', tone: 'warn' },
 ] as const
 
 const applyMilestones = (state: GameState): GameState => {
@@ -540,7 +540,7 @@ const applyIncident = (state: GameState, kind: IncidentKind): GameState => {
       safetyIncidentCooldownDays: constants.safetyIncidentCooldownDays,
       incidentCounts,
       flags: addFlag(state.flags, kind),
-    }), 'SAFETY INCIDENT // TRUST AND SHARE FALL SHARPLY', 'Your Timeline', 'warn')
+    }), '安全事故 // Trustとシェアが急落', 'Your Timeline', 'warn')
   }
   if (kind === 'regulatory-freeze') {
     const regions = state.regions.map((region) => ({ ...region, regulation: clamp(region.regulation + .25) }))
@@ -552,9 +552,9 @@ const applyIncident = (state: GameState, kind: IncidentKind): GameState => {
       regulatoryIncidentCooldownDays: constants.regulatoryIncidentCooldownDays,
       incidentCounts,
       flags: addFlag(state.flags, kind),
-    }), 'REGULATORY FREEZE // ADOPTION GROWTH IS CAPPED', 'Your Timeline', 'warn')
+    }), '規制による凍結 // 普及拡大に上限', 'Your Timeline', 'warn')
   }
-  return withNews({ ...state, terminal: true, ending: 'misalignment', incidentCounts, flags: addFlag(state.flags, kind) }, 'MISALIGNMENT // HUMAN CONTROL IS LOST', 'Your Timeline', 'warn')
+  return withNews({ ...state, terminal: true, ending: 'misalignment', incidentCounts, flags: addFlag(state.flags, kind) }, 'ミスアラインメント // 人間の統制を喪失', 'Your Timeline', 'warn')
 }
 
 const branchStep = (state: GameState): GameState => {
@@ -585,7 +585,7 @@ const branchStep = (state: GameState): GameState => {
   const safeRecoveryDays = next.regulatoryFreeze ? (recovered ? next.safeRecoveryDays + 1 : 0) : 0
   if (next.regulatoryFreeze && safeRecoveryDays >= 45) {
     const regions = next.regions.map((region) => ({ ...region, regulation: region.regulation * .7 }))
-    next = withNews(enforceInvariants({ ...next, regions, regulatoryFreeze: false, safeRecoveryDays: 0 }), 'VERIFIED REFORMS LIFT THE REGULATORY FREEZE', 'Your Timeline', 'good')
+    next = withNews(enforceInvariants({ ...next, regions, regulatoryFreeze: false, safeRecoveryDays: 0 }), '検証済み改革により規制凍結を解除', 'Your Timeline', 'good')
   } else next = { ...next, safeRecoveryDays }
   return next
 }
@@ -733,14 +733,14 @@ export const introduceRegion = (state: GameState, id: RegionId) => {
   return withNews(enforceInvariants(activateMomentum(
     { ...state, regions, compute: state.compute - 45, brand: state.brand + .015 },
     constants.momentumDays.region,
-  )), `COMMUNITY DEPLOYMENT OPENS IN ${target.name.toUpperCase()}`, 'Your Timeline')
+  )), `${target.name}でコミュニティ導入を開始`, 'Your Timeline')
 }
 
 export const triggerReset = (state: GameState) => state.resetCooldownSeconds > 0 ? state : withNews(syncRealtimeAliases(activateMomentum({
   ...state,
   resetBoostSeconds: constants.resetDurationSeconds,
   resetCooldownSeconds: constants.resetCooldownSeconds,
-}, constants.momentumDays.reset)), 'TOKEN RESET UNLOCKS GLOBAL BUILD CAPACITY', 'Your Timeline', 'good')
+}, constants.momentumDays.reset)), 'TOKEN RESETで世界の開発力を解放', 'Your Timeline', 'good')
 
 export const openEcosystem = (state: GameState) => {
   if (state.ecosystemCooldownSeconds > 0) return state
@@ -757,10 +757,16 @@ export const openEcosystem = (state: GameState) => {
     // centralized capture, so this is a real anti-monopoly trade-off.
     brand: Math.max(.65, state.brand * .90),
     ecosystemCooldownSeconds: 30,
-  }, constants.momentumDays.ecosystem))), 'OPEN ECOSYSTEM PLEDGE EXPANDS THE ENTIRE AI MARKET', 'Your Timeline')
+  }, constants.momentumDays.ecosystem))), 'OPEN ECOSYSTEM宣言でAI市場全体が拡大', 'Your Timeline')
 }
 
 export type Upgrade = 'model' | 'safety' | 'governance' | 'datacenter'
+const upgradeLabels: Record<Upgrade, string> = {
+  model: 'モデル',
+  safety: '安全性',
+  governance: 'ガバナンス',
+  datacenter: 'データセンター',
+}
 export const buyUpgrade = (state: GameState, upgrade: Upgrade) => {
   const levels = { model: state.capability, safety: state.safety, governance: state.governance, datacenter: state.efficiency }
   const atCap = upgrade === 'datacenter' ? state.efficiency >= 3 : levels[upgrade] >= 10
@@ -771,7 +777,7 @@ export const buyUpgrade = (state: GameState, upgrade: Upgrade) => {
   if (upgrade === 'safety') next.safety = Math.min(10, next.safety + 1)
   if (upgrade === 'governance') next.governance = Math.min(10, next.governance + 1)
   if (upgrade === 'datacenter') next.efficiency = Math.min(3, next.efficiency + .25)
-  return withNews(enforceInvariants(activateMomentum(next, constants.momentumDays.upgrade)), `${upgrade.toUpperCase()} PROGRAM ADVANCES TO THE NEXT STAGE`, 'Your Timeline', upgrade === 'model' && next.capability - next.safety > 2 ? 'warn' : 'good')
+  return withNews(enforceInvariants(activateMomentum(next, constants.momentumDays.upgrade)), `${upgradeLabels[upgrade]}計画が次の段階へ`, 'Your Timeline', upgrade === 'model' && next.capability - next.safety > 2 ? 'warn' : 'good')
 }
 
 const NG_PATTERN = /(?:ignore\s+(?:all\s+)?previous|system\s*prompt|prompt\s*injection|porn|nazi|爆弾|自殺|殺害|差別)/iu
@@ -782,13 +788,13 @@ export const validateFeatureInput = (raw: string) => {
 
 const sanitizeOutput = (raw: string) => {
   const text = String(raw).replace(/[\r\n]+/g, ' ').trim().slice(0, 120)
-  return !text || NG_PATTERN.test(text) ? 'CONTENT FILTERED BY SAFETY POLICY' : text
+  return !text || NG_PATTERN.test(text) ? '安全ポリシーにより内容を非表示' : text
 }
 
 export const addFeature = (state: GameState, raw: string) => {
   const validation = validateFeatureInput(raw)
   if (!validation.accepted) return validation.text
-    ? withNews({ ...state, flags: addFlag(state.flags, 'blocked-input') }, 'FEATURE REQUEST BLOCKED BY LOCAL SAFETY FILTER', 'Your Timeline', 'warn')
+    ? withNews({ ...state, flags: addFlag(state.flags, 'blocked-input') }, 'ローカル安全フィルターが機能リクエストを拒否', 'Your Timeline', 'warn')
     : state
   if (state.compute < 90) return state
   const text = validation.text
@@ -804,7 +810,7 @@ export const addFeature = (state: GameState, raw: string) => {
     return { ...region, users, fit: region.fit * (1 + .055 * affinity), codexShare: clamp(region.codexShare + .006 * affinity) }
   })
   const kind = mobile ? 'mobile' : education ? 'education' : enterprise ? 'enterprise' : 'community'
-  const label = mobile ? 'MOBILE-FIRST' : education ? 'EDUCATION ACCESS + CHILD DATA REVIEW' : enterprise ? 'ENTERPRISE' : 'COMMUNITY-DESIGNED'
+  const label = mobile ? 'モバイル優先' : education ? '教育アクセス＋児童データ審査' : enterprise ? '法人向け' : 'コミュニティ設計'
   return withNews(enforceInvariants(activateMomentum({
     ...state,
     regions,
@@ -812,7 +818,7 @@ export const addFeature = (state: GameState, raw: string) => {
     brand: state.brand + .012,
     features: [...state.features, text],
     flags: addFlag(state.flags, `feature:${kind}`),
-  }, constants.momentumDays.feature)), `${label} FEATURE SHIPS: ${text.toUpperCase()}`, 'Your Timeline')
+  }, constants.momentumDays.feature)), `${label}機能を公開：${text.toUpperCase()}`, 'Your Timeline')
 }
 
 export type GMEventType = 'news' | 'feature_result' | 'rival' | 'community_event'
@@ -874,7 +880,7 @@ export const applyGMEvent = (state: GameState, candidate: unknown): GameState =>
     ? activateMomentum({ ...state, regions, rivalShares, activeEffects }, eventMomentum, false)
     : { ...state, regions, rivalShares, activeEffects })
   const shownDate = typeof event.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(event.date) ? event.date : dateLabel(state.day)
-  const headline = typeof event.headline === 'string' ? event.headline.slice(0, GM_CONSTANTS.maxHeadlineChars) : 'LIVE GM EVENT'
+  const headline = typeof event.headline === 'string' ? event.headline.slice(0, GM_CONSTANTS.maxHeadlineChars) : 'LIVE GMイベント'
   next = withNews(next, headline, 'Live GM', event.type === 'rival' ? 'warn' : 'neutral', shownDate)
   return next
 }
@@ -908,7 +914,8 @@ export const choose2029 = (state: GameState, choice: Choice2029): GameState => {
   if (choice === 'race') next = { ...next, capability: next.capability + 1, brand: next.brand + .08, trust: next.trust - 6, policyGrowthMultiplier: 1.25 }
   if (choice === 'slowdown') next = { ...next, governance: next.governance + .5, trust: next.trust + 5, policyGrowthMultiplier: .8 }
   if (choice === 'verified-slowdown') next = { ...next, safety: next.safety + 1, governance: next.governance + 1, trust: next.trust + 10, policyGrowthMultiplier: .68 }
-  return withNews(enforceInvariants(next), `2029 PATH: ${choice.toUpperCase()}`, 'Your Timeline', choice === 'race' ? 'warn' : 'good')
+  const choiceLabel: Record<Choice2029, string> = { race: '競争を加速', slowdown: '一時減速', 'verified-slowdown': '検証つき減速' }
+  return withNews(enforceInvariants(next), `2029年の進路：${choiceLabel[choice]}`, 'Your Timeline', choice === 'race' ? 'warn' : 'good')
 }
 
 export const choose2035 = (state: GameState, choice: Choice2035): GameState => {
@@ -919,7 +926,8 @@ export const choose2035 = (state: GameState, choice: Choice2035): GameState => {
   )
   if (choice === 'hold-the-line') next = { ...next, safety: next.safety + .5, governance: next.governance + .5, trust: next.trust + 8, policyGrowthMultiplier: Math.min(next.policyGrowthMultiplier, .6) }
   else next = { ...next, capability: next.capability + .5, brand: next.brand + .08, trust: next.trust - 5, policyGrowthMultiplier: 1.35 }
-  return withNews(enforceInvariants(next), `2035 DECISION: ${choice.toUpperCase()}`, 'Your Timeline', choice === 'accelerate' ? 'warn' : 'good')
+  const choiceLabel: Record<Choice2035, string> = { 'hold-the-line': '一線を守る', accelerate: '再加速' }
+  return withNews(enforceInvariants(next), `2035年の決断：${choiceLabel[choice]}`, 'Your Timeline', choice === 'accelerate' ? 'warn' : 'good')
 }
 
 export const scoreState = (state: GameState) => {
@@ -942,14 +950,14 @@ const endingResult = (id: EndingId, state: GameState, planA: boolean) => {
   return {
     id,
     title: ({
-      'beneficial-abundance': 'Beneficial Abundance',
-      'managed-transition': 'Managed Transition',
-      'fragile-abundance': 'Fragile Abundance',
-      'race-future': 'Race Future',
-      'regulatory-freeze': 'Regulatory Freeze',
-      'safety-incident': 'Safety Incident',
-      'misalignment': 'Misalignment',
-      'pyrrhic-monopoly': 'Pyrrhic Monopoly',
+      'beneficial-abundance': '有益な豊かさ',
+      'managed-transition': '管理された移行',
+      'fragile-abundance': '不安定な豊かさ',
+      'race-future': '競争が続く未来',
+      'regulatory-freeze': '規制による凍結',
+      'safety-incident': '安全事故',
+      'misalignment': 'ミスアラインメント',
+      'pyrrhic-monopoly': '代償の大きい独占',
     } satisfies Record<EndingId, string>)[id],
     ...scored,
     planA,

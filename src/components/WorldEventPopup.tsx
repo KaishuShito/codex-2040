@@ -75,6 +75,7 @@ export function WorldEventPopup({
       <dialog
         className="world-event-popup"
         data-category={notice.category.toLowerCase()}
+        lang="ja"
         open
         aria-modal="true"
         aria-labelledby={titleId}

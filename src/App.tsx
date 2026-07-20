@@ -75,6 +75,7 @@ import {
 import { GameAudio, type GameSound } from './sound'
 import { decodeSession, encodeSession, SESSION_STORAGE_KEY } from './session'
 import type { StrategyNodeId } from './strategyNodes'
+import { WORLD_EVENTS } from './worldEvents'
 
 const PREDEFINED_FEATURE_PROMPTS = {
   mobile: 'Mobile support for Android and iOS',
@@ -327,6 +328,11 @@ export default function App() {
   const worldEventPopup = useMemo<WorldEventPopupNotice | null>(() => {
     const notice = state.pendingWorldEvent
     if (!notice) return null
+    const definition = WORLD_EVENTS.find((event) => event.id === notice.eventId)
+    const localizedCombo = notice.comboLabel
+      ? definition?.combos?.find((combo) => combo.label === notice.comboLabel)
+        ?? (definition?.combos?.length === 1 ? definition.combos[0] : undefined)
+      : undefined
     const signed = (value: number, suffix = '') => `${value > 0 ? '+' : ''}${value}${suffix}`
     const effects = [
       notice.effect.usersDeltaPct !== 0 ? { label: 'AI利用者', amount: signed(notice.effect.usersDeltaPct, '%'), tone: notice.effect.usersDeltaPct > 0 ? 'positive' as const : 'negative' as const } : null,
@@ -337,15 +343,18 @@ export default function App() {
     return {
       id: notice.eventId,
       source: notice.source,
-      category: notice.category,
+      category: WORLD_EVENT_CATEGORY_LABELS[notice.category],
       date: notice.date,
       dateTime: notice.date,
-      headline: notice.headline,
-      cause: notice.cause,
-      flavor: notice.flavor,
+      headline: localizedCombo?.headline ?? definition?.headline ?? notice.headline,
+      cause: definition?.cause ?? notice.cause,
+      flavor: definition?.flavor ?? notice.flavor,
       duration: `シミュレーション ${notice.ttlDays}日`,
       effects: effects.length > 0 ? effects : [{ label: '時間軸', amount: '状況変化', tone: 'neutral' }],
-      combo: notice.comboLabel ? { priorFeature: notice.comboFeature ?? notice.comboLabel, outcome: `${notice.comboLabel}${notice.momentumDays > 0 ? ` · 勢い +${notice.momentumDays}日` : ''}` } : undefined,
+      combo: notice.comboLabel ? {
+        priorFeature: localizedCombo?.label ?? notice.comboFeature ?? notice.comboLabel,
+        outcome: `${localizedCombo?.label ?? notice.comboLabel}${notice.momentumDays > 0 ? ` · 勢い +${notice.momentumDays}日` : ''}`,
+      } : undefined,
     }
   }, [state.pendingWorldEvent])
 

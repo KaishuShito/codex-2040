@@ -114,7 +114,7 @@ describe('50-node deterministic strategy engine', () => {
     expect(voice.features).toEqual(beforeFeatures)
   })
 
-  it('activates an authored world-event combo advertised by a purchased node', () => {
+  it('never bypasses authored combo requirements for a related strategy node', () => {
     const prepared = {
       ...createInitialState(),
       compute: 10_000,
@@ -130,8 +130,15 @@ describe('50-node deterministic strategy engine', () => {
     })
 
     expect(result.pendingWorldEvent).toBeNull()
-    expect(result.activeEffects.at(-1)).toMatchObject({ trustDelta: 7 })
-    expect(result.news[0].headline).toBe('Education Modeでメディア来歴が基礎技能に')
+    expect(result.activeEffects.at(-1)).toMatchObject({ trustDelta: 4 })
+    expect(result.news[0].headline).toBe('相互運用できるコンテンツ来歴標準を採用')
+  })
+
+  it('treats locked and unaffordable strategy purchases as reference-stable no-ops', () => {
+    const initial = createInitialState()
+    expect(buyStrategyNode(initial, 'product-education')).toBe(initial)
+    const broke = { ...initial, compute: 0 }
+    expect(buyStrategyNode(broke, 'product-mobile')).toBe(broke)
   })
 
   it('enforces mutually exclusive branches in both directions', () => {

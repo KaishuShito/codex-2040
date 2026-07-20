@@ -90,7 +90,7 @@ export const TECHNOLOGY_EVENTS: WorldEventDefinition[] = [
       {
         id: 'technology-verification-deep-research',
         label: '出典付き調査が検証可能に',
-        requires: { featureTermsAny: ['Deep research with cited web and file sources'] },
+        requires: { flagsAny: ['feature:research'] },
         effect: { usersDeltaPct: 2, shareDelta: 0.004, growthRateDelta: 0.02, trustDelta: 3 },
         ttlDays: 30,
         momentumDays: 16,
@@ -146,7 +146,7 @@ export const TECHNOLOGY_EVENTS: WorldEventDefinition[] = [
       {
         id: 'technology-zero-day-secure-connectors',
         label: 'コネクタ境界が攻撃を封じ込める',
-        requires: { featureTermsAny: ['Secure apps and connectors for workplace data'] },
+        requires: { flagsAny: ['feature:connectors'] },
         effect: { usersDeltaPct: 4, shareDelta: 0.009, growthRateDelta: 0.04, trustDelta: 4 },
         ttlDays: 18,
         momentumDays: 12,
@@ -289,10 +289,7 @@ export const TECHNOLOGY_EVENTS: WorldEventDefinition[] = [
         id: 'technology-private-compute-professional-tools',
         label: '信頼できる専門業務に対応',
         requires: {
-          featureTermsAny: [
-            'Advanced data analysis with code execution',
-            'Enterprise SSO for public institutions',
-          ],
+          flagsAny: ['feature:analysis', 'feature:enterprise'],
         },
         effect: { usersDeltaPct: 3, shareDelta: 0.006, growthRateDelta: 0.025, trustDelta: 2 },
         ttlDays: 30,

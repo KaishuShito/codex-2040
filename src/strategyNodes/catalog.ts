@@ -418,7 +418,7 @@ export const STRATEGY_CATALOG = Object.freeze([
     title: text('Open Pledge', 'オープン誓約'),
     summary: text('Release power and share so trust and market diversity can recover.', '力とシェアを開放し、信頼と市場の多様性を回復させる。'),
     action: text('Sign the Open Pledge', 'オープン誓約に署名'),
-    legacyAction: { id: 'ecosystem', repeatable: true }, prerequisite: always, exclusions: [],
+    legacyAction: { id: 'ecosystem', repeatable: false }, prerequisite: always, exclusions: [],
     effects: [add('codexShare', -0.03, 'Codex share -3 points', 'Codexシェア -3pt'), add('rivalShare', 0.01, 'Rival share +1 point', '競合シェア +1pt', 'all-rivals'), add('trust', 6, 'Trust +6', '社会的信頼 +6')],
     comboEventIds: ['policy-open-ecosystem-charter', 'competition-qi-open-model-coalition'], enabled: true,
   },

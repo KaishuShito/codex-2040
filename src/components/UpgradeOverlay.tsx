@@ -550,7 +550,7 @@ export function UpgradeOverlay({
                       className={`upgrade-overlay__node is-${state} ${selected ? 'is-selected' : ''}`}
                       style={style}
                       aria-pressed={selected}
-                      aria-label={`${localized(node.title, locale)}, ${state}`}
+                      aria-label={`${localized(node.title, locale)}, ${stateLabel(state, locale)}`}
                       onClick={() => setSelectedId(node.id)}
                     >
                       <span className="upgrade-overlay__node-core">
@@ -628,7 +628,7 @@ export function UpgradeOverlay({
             {selectedNode.comboEventIds.length > 0 && (
               <div className="upgrade-overlay__combo">
                 <BadgeCheck size={14} />
-                <span><small>{locale === 'ja' ? '世界イベント・コンボ' : 'WORLD EVENT COMBOS'}</small>{locale === 'ja' ? `導入後に${selectedNode.comboEventIds.length}件のシナリオ連携が有効` : `${selectedNode.comboEventIds.length} scenario hooks armed after deployment`}</span>
+                <span><small>{locale === 'ja' ? '関連する世界イベント' : 'RELATED WORLD EVENTS'}</small>{locale === 'ja' ? `${selectedNode.comboEventIds.length}件のシナリオで選択の影響が現れます` : `This choice matters in ${selectedNode.comboEventIds.length} authored scenarios`}</span>
               </div>
             )}
 

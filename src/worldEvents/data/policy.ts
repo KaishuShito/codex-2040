@@ -75,7 +75,7 @@ export const POLICY_EVENTS: WorldEventDefinition[] = [
       {
         id: 'policy-procurement-enterprise-sso',
         label: '検証済みの企業ID',
-        requires: { featureTermsAny: ['enterprise', 'sso', 'single sign-on', '企業', '法人'] },
+        requires: { flagsAny: ['feature:enterprise'] },
         headline: '企業向けSSOが調達基準を突破',
         effect: { usersDeltaPct: 2, shareDelta: 0.008, growthRateDelta: 0.01, trustDelta: 2 },
         ttlDays: 14,

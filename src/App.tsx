@@ -704,7 +704,7 @@ export default function App() {
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  })
+  }, [criticalNews, tutorialStep, voiceMuted, voiceOpen, voiceStatus])
 
   const setSpeed = (speed: Speed) => {
     setState((current) => ({ ...current, speed }))
@@ -1168,8 +1168,8 @@ export default function App() {
             <Meter label="統治" value={state.governance} max={10} danger={m.governanceGap >= 3} hint={m.governanceGap > 0 ? `能力差 +${m.governanceGap.toFixed(1)}` : '能力と同等'} />
           </div>
 
-          <button className="open-ecosystem" onClick={() => performUpgradeAction('ecosystem')} disabled={state.ecosystemCooldownSeconds > 0}>
-            <Network size={17} /><span><b>エコシステムを開く</b><small>{state.ecosystemCooldownSeconds > 0 ? `あと${Math.ceil(state.ecosystemCooldownSeconds)}秒` : 'シェアを譲り · 信頼を上げる'}</small></span><ArrowUpRight size={14} />
+          <button className="open-ecosystem" onClick={() => openStrategy('ecosystem')}>
+            <Network size={17} /><span><b>エコシステム戦略</b><small>開放と協調の選択肢を見る</small></span><ArrowUpRight size={14} />
           </button>
           <button className="open-strategy" onClick={() => openStrategy('model')}>戦略ツリーを開く <ChevronRight size={14} /></button>
 

@@ -131,7 +131,7 @@ export const COMPETITION_EVENTS: WorldEventDefinition[] = [
       {
         id: 'competition-combo-connector-portability',
         label: 'オープンなコネクタで移行圧力を軽減',
-        requires: { featureTermsAny: ['apps and connectors', 'connector', 'interoperability'] },
+        requires: { flagsAny: ['feature:connectors'] },
         effect: { usersDeltaPct: 1, shareDelta: 0.008, growthRateDelta: 0.018, trustDelta: 1, target: 'codex' },
         ttlDays: 15,
         momentumDays: 18,

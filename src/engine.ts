@@ -255,7 +255,8 @@ export const strategyPersistentEffects = (state: GameState): StrategyPersistentE
     if (!id) continue
     const node = STRATEGY_NODES_BY_ID.get(id)
     if (!node) continue
-    const purchases = Math.max(1, Math.floor(finite(state.strategyNodePurchaseCounts?.[id], 1)))
+    const purchaseCounts = state.strategyNodePurchaseCounts as Readonly<Record<string, number | undefined>> | undefined
+    const purchases = Math.max(1, Math.floor(finite(purchaseCounts?.[rawId] ?? purchaseCounts?.[id], 1)))
     for (let purchase = 0; purchase < purchases; purchase += 1) {
       for (const effect of node.effects) {
         if (effect.metric === 'incomeMultiplier') incomeMultiplier *= effect.value
@@ -552,15 +553,9 @@ export const applyWorldEvent = (
   scheduled: NonNullable<ReturnType<typeof scheduleWorldEvent>>,
 ): GameState => {
   const { definition } = scheduled
-  const advertisedNode = [...STRATEGY_NODES_BY_ID.values()].find((node) =>
-    (state.acquiredStrategyNodes ?? []).includes(node.id) && node.comboEventIds.includes(definition.id)) ?? null
-  // `comboEventIds` is authored strategy metadata. If the ordinary runtime
-  // requirements did not already select a combo, an advertised purchase may
-  // activate the event's first authored combo; no new bonus numbers are made up.
-  const strategyActivatedCombo = scheduled.combo === null && advertisedNode
-    ? definition.combos?.[0] ?? null
-    : null
-  const combo = scheduled.combo ?? strategyActivatedCombo
+  // Strategy catalog links are explanatory metadata. A combo only activates
+  // when the scheduler has verified its authored requirements.
+  const combo = scheduled.combo
   const region: RegionId | 'global' = definition.regions === 'global'
     ? 'global'
     : definition.regions[Math.floor(worldEventDateRandom(state.worldEventSeed, state.day, `${definition.id}:region`) * definition.regions.length)] ?? 'global'
@@ -588,12 +583,8 @@ export const applyWorldEvent = (
         source: definition.source,
       }]
     : state.activeEffects
-  const comboFeature = strategyActivatedCombo
-    ? advertisedNode?.title.en ?? null
-    : findComboFeature(state, combo?.requires.featureTermsAny)
-  const comboLabel = strategyActivatedCombo && advertisedNode
-    ? `${advertisedNode.title.en} × ${strategyActivatedCombo.label}`
-    : combo?.label ?? (advertisedNode ? `${advertisedNode.title.en} READY` : null)
+  const comboFeature = findComboFeature(state, combo?.requires.featureTermsAny)
+  const comboLabel = combo?.label ?? null
   const momentumDays = Math.min(30, Math.max(0, combo?.momentumDays ?? 0))
   const popupAllowed = scheduled.requestedPresentation === 'popup'
     && state.worldEventPopupCooldownSeconds <= 0

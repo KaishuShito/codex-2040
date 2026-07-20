@@ -131,7 +131,7 @@ describe('50-node deterministic strategy engine', () => {
 
     expect(result.pendingWorldEvent).toBeNull()
     expect(result.activeEffects.at(-1)).toMatchObject({ trustDelta: 7 })
-    expect(result.news[0].headline).toBe('EDUCATION MODE MAKES MEDIA PROVENANCE A CORE SKILL')
+    expect(result.news[0].headline).toBe('Education Modeでメディア来歴が基礎技能に')
   })
 
   it('enforces mutually exclusive branches in both directions', () => {

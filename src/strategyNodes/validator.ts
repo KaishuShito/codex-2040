@@ -192,8 +192,18 @@ export const validateStrategyCatalog = (
   nodes.forEach((node, index) => {
     const prerequisiteIds = collectPrerequisiteIds(node.prerequisite)
     prerequisiteIds.forEach((id) => {
-      if (!byId.has(id)) issues.push({ path: `[${index}].prerequisite`, message: `unknown node id ${id}` })
+      const prerequisiteNode = byId.get(id)
+      if (!prerequisiteNode) issues.push({ path: `[${index}].prerequisite`, message: `unknown node id ${id}` })
+      else if (prerequisiteNode.tier > node.tier) {
+        issues.push({
+          path: `[${index}].prerequisite`,
+          message: `prerequisite ${id} tier ${prerequisiteNode.tier} exceeds node tier ${node.tier}`,
+        })
+      }
       if (id === node.id) issues.push({ path: `[${index}].prerequisite`, message: 'node cannot require itself' })
+      if (node.exclusions.includes(id)) {
+        issues.push({ path: `[${index}].prerequisite`, message: `node cannot both require and exclude ${id}` })
+      }
     })
     node.exclusions.forEach((id) => {
       const excluded = byId.get(id)

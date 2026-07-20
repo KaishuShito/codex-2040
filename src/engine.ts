@@ -8,6 +8,15 @@ import {
   type WorldEventCategory,
   type WorldEventEffect,
 } from './worldEvents'
+import {
+  getStrategyNode,
+  resolveStrategyNodeId,
+  STRATEGY_NODES_BY_ID,
+  type StrategyEffectDescriptor,
+  type StrategyNode,
+  type StrategyNodeId,
+  type StrategyPrerequisite,
+} from './strategyNodes'
 
 export type ScenarioSource = SourceLabel
 export type RegionId = 'na' | 'latam' | 'eu' | 'africa' | 'mena' | 'india' | 'eastAsia' | 'oceania'
@@ -127,6 +136,10 @@ export type GameState = {
   ending: EndingId | null
   terminal: boolean
   features: string[]
+  /** Purchased strategy-tree nodes. Optional so version-1 saves remain readable. */
+  acquiredStrategyNodes?: StrategyNodeId[]
+  /** Purchase count for repeatable legacy-backed nodes; absent means one purchase. */
+  strategyNodePurchaseCounts?: Partial<Record<StrategyNodeId, number>>
 }
 
 export const SPEEDS = [1, 8] as const
@@ -172,6 +185,94 @@ const total = (regions: Region[], pick: (r: Region) => number) => regions.reduce
 const hasFlag = (state: GameState, flag: string) => state.flags.includes(flag)
 const addFlag = (flags: string[], flag: string) => flags.includes(flag) ? flags : [...flags, flag]
 
+const LEGACY_FEATURE_NODES = Object.freeze({
+  'feature:mobile': 'product-mobile',
+  'feature:enterprise': 'product-sso',
+  'feature:education': 'product-education',
+  'feature:research': 'product-research',
+  'feature:connectors': 'product-connectors',
+  'feature:analysis': 'product-analysis',
+} satisfies Readonly<Record<string, StrategyNodeId>>)
+
+/**
+ * Returns a canonical, duplicate-free acquisition list. A small legacy inference
+ * layer preserves progress from version-1 saves that predate the 50-node tree.
+ */
+export const acquiredStrategyNodeIds = (state: GameState): readonly StrategyNodeId[] => {
+  const acquired = new Set<StrategyNodeId>()
+  for (const rawId of state.acquiredStrategyNodes ?? []) {
+    const id = resolveStrategyNodeId(rawId)
+    if (id) acquired.add(id)
+  }
+
+  // Only genuinely old saves (the field is absent) infer legacy progression.
+  // A new run always carries an explicit array, so raw K/S/G values can never
+  // auto-complete branches the player did not purchase.
+  if (state.acquiredStrategyNodes === undefined) {
+    if (state.capability >= 3) acquired.add('model-foundation')
+    if (state.capability >= 5) acquired.add('model-reasoning')
+    if (state.capability >= 7) acquired.add('model-agents')
+    if (state.capability >= 10) acquired.add('model-frontier')
+    if (state.safety > 2) acquired.add('company-safety')
+    if (state.governance > 2) acquired.add('company-policy')
+    if (state.efficiency > 1) acquired.add('company-datacenter')
+  }
+
+  for (const [flag, nodeId] of Object.entries(LEGACY_FEATURE_NODES)) {
+    if (hasFlag(state, flag)) acquired.add(nodeId)
+  }
+  if (hasFlag(state, 'open-ecosystem') || hasFlag(state, 'ecosystem:open')) acquired.add('ecosystem-open')
+  return [...acquired]
+}
+
+const normalizedStrategyPurchaseCounts = (state: GameState): Partial<Record<StrategyNodeId, number>> => {
+  const counts: Partial<Record<StrategyNodeId, number>> = {}
+  for (const [rawId, rawCount] of Object.entries(state.strategyNodePurchaseCounts ?? {})) {
+    const id = resolveStrategyNodeId(rawId)
+    if (!id) continue
+    counts[id] = Math.max(1, Math.floor(finite(rawCount, 1)))
+  }
+  return counts
+}
+
+export type StrategyPersistentEffects = Readonly<{
+  incomeMultiplier: number
+  opexMultiplier: number
+  controlRelief: number
+  idleFloor: number
+}>
+
+/** Persistent modifiers are derived from acquisitions, so saves need only IDs. */
+export const strategyPersistentEffects = (state: GameState): StrategyPersistentEffects => {
+  let incomeMultiplier = 1
+  let opexMultiplier = 1
+  let controlRelief = 0
+  let idleFloor = 0
+  // Do not retroactively add modifiers to old saves. Inferred legacy nodes are
+  // used for graph continuity only; persistent effects start with tracked buys.
+  for (const rawId of state.acquiredStrategyNodes ?? []) {
+    const id = resolveStrategyNodeId(rawId)
+    if (!id) continue
+    const node = STRATEGY_NODES_BY_ID.get(id)
+    if (!node) continue
+    const purchases = Math.max(1, Math.floor(finite(state.strategyNodePurchaseCounts?.[id], 1)))
+    for (let purchase = 0; purchase < purchases; purchase += 1) {
+      for (const effect of node.effects) {
+        if (effect.metric === 'incomeMultiplier') incomeMultiplier *= effect.value
+        if (effect.metric === 'opexMultiplier') opexMultiplier *= effect.value
+        if (effect.metric === 'controlRelief') controlRelief += effect.value
+        if (effect.metric === 'idleFloor') idleFloor = Math.max(idleFloor, effect.value)
+      }
+    }
+  }
+  return {
+    incomeMultiplier: clamp(incomeMultiplier, .5, 2),
+    opexMultiplier: clamp(opexMultiplier, .5, 2),
+    controlRelief: clamp(controlRelief, -.5, .5),
+    idleFloor: clamp(idleFloor, 0, .001),
+  }
+}
+
 export const dateLabel = (day: number) => new Date(START_DATE + Math.max(0, Math.floor(day)) * 86_400_000)
   .toISOString().slice(0, 10)
 
@@ -182,6 +283,7 @@ export const metrics = (state: GameState) => {
   const codexShare = adoption > 0 ? codexUsers / adoption : 0
   const rivals = normalizeRivals(state.rivalShares, codexShare)
   const hhi = codexShare ** 2 + rivals.reduce((sum, share) => sum + share ** 2, 0)
+  const controlRelief = strategyPersistentEffects(state).controlRelief
   return {
     adoption,
     population,
@@ -189,8 +291,8 @@ export const metrics = (state: GameState) => {
     worldAdoption: population > 0 ? adoption / population : 0,
     codexShare,
     hhi,
-    safetyGap: Math.max(0, state.capability - state.safety),
-    governanceGap: Math.max(0, state.capability - state.governance),
+    safetyGap: Math.max(0, state.capability - state.safety - controlRelief),
+    governanceGap: Math.max(0, state.capability - state.governance - controlRelief),
     effectiveCapability: effectiveCapability(state),
   }
 }
@@ -204,8 +306,8 @@ export type TrustFactor = {
 /** Exposes the same causal terms used by tickDay so the UI can explain Trust. */
 export const trustBreakdown = (state: GameState) => {
   const m = metrics(state)
-  const safetyGap = Math.max(0, state.capability - state.safety)
-  const governanceGap = Math.max(0, state.capability - state.governance)
+  const safetyGap = m.safetyGap
+  const governanceGap = m.governanceGap
   const gapUnit = constants.gapWeight * 10
   const monopolyPenalty = Math.max(0, m.codexShare - .55) ** 2 * constants.monopolyScale * 2 + Math.max(0, m.hhi - .45)
   const activeEffects = state.activeEffects.filter((effect) => effect.expiresDay > state.day)
@@ -292,6 +394,8 @@ export const createInitialState = (options: { seed?: number } = {}): GameState =
   ending: null,
   terminal: false,
   features: [],
+  acquiredStrategyNodes: [],
+  strategyNodePurchaseCounts: {},
 })
 
 export const mulberry32 = (seed: number): { value: number; seed: number } => {
@@ -343,6 +447,7 @@ export const enforceInvariants = (state: GameState): GameState => {
     governance: clamp(finite(state.governance), 0, 10),
     efficiency: clamp(finite(state.efficiency, 1), .5, 3),
     trust: clamp(finite(state.trust), 0, 100),
+    brand: clamp(finite(state.brand, 1), .25, 10),
     rivalShares: normalizeRivals(state.rivalShares, codexShare),
     rivalCapability: state.rivalCapability.map((value) => clamp(finite(value), 0, 10)) as [number, number, number],
     rivalProduct: state.rivalProduct.map((value) => clamp(finite(value), 0, 10)) as [number, number, number],
@@ -365,6 +470,8 @@ export const enforceInvariants = (state: GameState): GameState => {
     lastWorldPopupDay: typeof state.lastWorldPopupDay === 'number' ? Math.max(0, Math.floor(state.lastWorldPopupDay)) : null,
     worldEventPopupCooldownSeconds: Math.max(0, finite(state.worldEventPopupCooldownSeconds)),
     pendingWorldEvent: state.pendingWorldEvent ?? null,
+    acquiredStrategyNodes: state.acquiredStrategyNodes === undefined ? undefined : [...acquiredStrategyNodeIds(state)],
+    strategyNodePurchaseCounts: state.strategyNodePurchaseCounts === undefined ? undefined : normalizedStrategyPurchaseCounts(state),
   }
   return syncRealtimeAliases(next)
 }
@@ -444,7 +551,16 @@ export const applyWorldEvent = (
   state: GameState,
   scheduled: NonNullable<ReturnType<typeof scheduleWorldEvent>>,
 ): GameState => {
-  const { definition, combo } = scheduled
+  const { definition } = scheduled
+  const advertisedNode = [...STRATEGY_NODES_BY_ID.values()].find((node) =>
+    (state.acquiredStrategyNodes ?? []).includes(node.id) && node.comboEventIds.includes(definition.id)) ?? null
+  // `comboEventIds` is authored strategy metadata. If the ordinary runtime
+  // requirements did not already select a combo, an advertised purchase may
+  // activate the event's first authored combo; no new bonus numbers are made up.
+  const strategyActivatedCombo = scheduled.combo === null && advertisedNode
+    ? definition.combos?.[0] ?? null
+    : null
+  const combo = scheduled.combo ?? strategyActivatedCombo
   const region: RegionId | 'global' = definition.regions === 'global'
     ? 'global'
     : definition.regions[Math.floor(worldEventDateRandom(state.worldEventSeed, state.day, `${definition.id}:region`) * definition.regions.length)] ?? 'global'
@@ -472,8 +588,12 @@ export const applyWorldEvent = (
         source: definition.source,
       }]
     : state.activeEffects
-  const comboFeature = findComboFeature(state, combo?.requires.featureTermsAny)
-  const comboLabel = combo?.label ?? null
+  const comboFeature = strategyActivatedCombo
+    ? advertisedNode?.title.en ?? null
+    : findComboFeature(state, combo?.requires.featureTermsAny)
+  const comboLabel = strategyActivatedCombo && advertisedNode
+    ? `${advertisedNode.title.en} × ${strategyActivatedCombo.label}`
+    : combo?.label ?? (advertisedNode ? `${advertisedNode.title.en} READY` : null)
   const momentumDays = Math.min(30, Math.max(0, combo?.momentumDays ?? 0))
   const popupAllowed = scheduled.requestedPresentation === 'popup'
     && state.worldEventPopupCooldownSeconds <= 0
@@ -613,6 +733,7 @@ export const tickDay = (input: GameState): GameState => {
   const avgCapability = kEff * before.codexShare + avgRivalCapability * (1 - before.codexShare)
   const resetMultiplier = state.resetBoostSeconds > 0 ? constants.resetMultiplier : 1
   const activityMultiplier = state.momentumDays > 0 || state.brownout ? 1 : constants.idleGrowthMultiplier
+  const strategyEffects = strategyPersistentEffects(state)
   const activeEffects = state.activeEffects.filter((effect) => effect.expiresDay > state.day)
 
   let regions = state.regions.map((region) => {
@@ -621,9 +742,9 @@ export const tickDay = (input: GameState): GameState => {
       .filter((effect) => effect.region === 'global' || effect.region === region.id)
       .reduce((sum, effect) => sum + effect.growthRateDelta, 0)
     const freezeCap = state.regulatoryFreeze ? .32 : 1
-    const momentum = constants.gamma0 * (1 + constants.capabilityMomentum * avgCapability)
+    const momentum = Math.max(strategyEffects.idleFloor, constants.gamma0 * (1 + constants.capabilityMomentum * avgCapability)
       * clamp(1 + eventGrowth, .25, 2.5) * (1 - region.regulation) * resetMultiplier
-      * state.policyGrowthMultiplier * freezeCap * activityMultiplier
+      * state.policyGrowthMultiplier * freezeCap * activityMultiplier)
     const users = clamp(region.users + momentum * region.users * (1 - region.users / region.population), 0, region.population)
     const codexProduct = Math.min(10, 2 + state.features.length * 1.5)
     const codexCompany = (state.safety + state.governance) / 2
@@ -651,15 +772,17 @@ export const tickDay = (input: GameState): GameState => {
   const strategicRivalWeights = normalizedRivals.map((share, index) => share * Math.exp(.004 * (rivalStrategyAppeal[index] - avgRivalAppeal))) as [number, number, number]
   const rivalShares = normalizeRivals(strategicRivalWeights, mid.codexShare)
   const hhi = mid.codexShare ** 2 + rivalShares.reduce((sum, share) => sum + share ** 2, 0)
-  const safetyGap = Math.max(0, state.capability - state.safety)
-  const governanceGap = Math.max(0, state.capability - state.governance)
+  const safetyGap = mid.safetyGap
+  const governanceGap = mid.governanceGap
   const gapPenalty = constants.gapWeight * (safetyGap + governanceGap) / 10
   const monopolyPenalty = Math.max(0, mid.codexShare - .55) ** 2 * constants.monopolyScale * 2 + Math.max(0, hhi - .45)
   const trustOffset = clamp(activeEffects.reduce((sum, effect) => sum + effect.trustDelta, 0), -12, 12)
   const trustTarget = clamp(.25 + constants.diversityWeight * (1 - hhi) + .25 * (state.safety / 10) + .25 * (state.governance / 10) - monopolyPenalty - gapPenalty) * 100 + trustOffset
   const trust = clamp(state.trust + (trustTarget - state.trust) / constants.trustTau, 0, 100)
-  const income = mid.codexUsers * constants.revenue * state.efficiency * activityMultiplier + (brownout ? .45 : 0)
-  const runningCost = .3 * (1 + .12 * kEff ** 1.5) + mid.codexUsers * .012 * kEff
+  const income = (mid.codexUsers * constants.revenue * state.efficiency * activityMultiplier + (brownout ? .45 : 0))
+    * strategyEffects.incomeMultiplier
+  const runningCost = (.3 * (1 + .12 * kEff ** 1.5) + mid.codexUsers * .012 * kEff)
+    * strategyEffects.opexMultiplier
   const compute = Math.max(0, state.compute + income - runningCost)
 
   let next = enforceInvariants({
@@ -767,10 +890,18 @@ const upgradeLabels: Record<Upgrade, string> = {
   governance: 'ガバナンス',
   datacenter: 'データセンター',
 }
+export const upgradeCost = (state: GameState, upgrade: Upgrade) => {
+  const levels = { model: state.capability, safety: state.safety, governance: state.governance, datacenter: state.efficiency }
+  return upgrade === 'model'
+    ? 70 * 2 ** Math.max(0, levels.model - 2)
+    : upgrade === 'datacenter'
+      ? 150 * state.efficiency
+      : 105 + 45 * levels[upgrade]
+}
 export const buyUpgrade = (state: GameState, upgrade: Upgrade) => {
   const levels = { model: state.capability, safety: state.safety, governance: state.governance, datacenter: state.efficiency }
   const atCap = upgrade === 'datacenter' ? state.efficiency >= 3 : levels[upgrade] >= 10
-  const cost = upgrade === 'model' ? 70 * 2 ** Math.max(0, levels.model - 2) : upgrade === 'datacenter' ? 150 * state.efficiency : 105 + 45 * levels[upgrade]
+  const cost = upgradeCost(state, upgrade)
   if (atCap || state.compute < cost) return state
   const next = { ...state, compute: state.compute - cost }
   if (upgrade === 'model') next.capability = Math.min(10, next.capability + 1)
@@ -778,6 +909,187 @@ export const buyUpgrade = (state: GameState, upgrade: Upgrade) => {
   if (upgrade === 'governance') next.governance = Math.min(10, next.governance + 1)
   if (upgrade === 'datacenter') next.efficiency = Math.min(3, next.efficiency + .25)
   return withNews(enforceInvariants(activateMomentum(next, constants.momentumDays.upgrade)), `${upgradeLabels[upgrade]}計画が次の段階へ`, 'Your Timeline', upgrade === 'model' && next.capability - next.safety > 2 ? 'warn' : 'good')
+}
+
+const legacyUpgradeForNode = (node: StrategyNode): Upgrade | null => {
+  const action = node.legacyAction?.id
+  return action === 'model' || action === 'safety' || action === 'governance' || action === 'datacenter'
+    ? action
+    : null
+}
+
+const MODEL_STAGE_TARGETS = Object.freeze({
+  'model-foundation': 3,
+  'model-reasoning': 5,
+  'model-agents': 7,
+  'model-frontier': 10,
+} satisfies Partial<Record<StrategyNodeId, number>>)
+
+export const isStrategyNodeComplete = (
+  state: GameState,
+  id: StrategyNodeId,
+  acquired: ReadonlySet<StrategyNodeId> = new Set(acquiredStrategyNodeIds(state)),
+) => {
+  const target = MODEL_STAGE_TARGETS[id as keyof typeof MODEL_STAGE_TARGETS]
+  return target === undefined ? acquired.has(id) : acquired.has(id) && state.capability >= target
+}
+
+export const getStrategyNodeCost = (state: GameState, rawId: string): number | null => {
+  const node = getStrategyNode(rawId)
+  if (!node) return null
+  if (typeof node.baseCost === 'number') return node.baseCost
+  const upgrade = legacyUpgradeForNode(node)
+  if (upgrade) return upgradeCost(state, upgrade)
+  if (node.legacyAction.id.startsWith('feature-')) return 90
+  return 0
+}
+
+const prerequisiteSatisfied = (
+  state: GameState,
+  prerequisite: StrategyPrerequisite,
+  acquired: ReadonlySet<StrategyNodeId>,
+): boolean => {
+  if (prerequisite.kind === 'always') return true
+  if (prerequisite.kind === 'node') return isStrategyNodeComplete(state, prerequisite.id, acquired)
+  if (prerequisite.kind === 'all') return prerequisite.terms.every((term) => prerequisiteSatisfied(state, term, acquired))
+  return prerequisite.terms.some((term) => prerequisiteSatisfied(state, term, acquired))
+}
+
+export type StrategyNodeStatus = 'ready' | 'acquired' | 'locked' | 'excluded' | 'disabled' | 'capped' | 'cooldown' | 'insufficient-compute'
+export type StrategyNodeAvailability = Readonly<{
+  id: StrategyNodeId
+  cost: number
+  status: StrategyNodeStatus
+  blockingNodeId: StrategyNodeId | null
+}>
+
+export const getStrategyNodeAvailability = (state: GameState, rawId: string): StrategyNodeAvailability | null => {
+  const id = resolveStrategyNodeId(rawId)
+  const node = id ? STRATEGY_NODES_BY_ID.get(id) : undefined
+  if (!id || !node) return null
+  const acquired = new Set(acquiredStrategyNodeIds(state))
+  const cost = getStrategyNodeCost(state, id) ?? 0
+  const upgrade = legacyUpgradeForNode(node)
+  const repeatableUpgrade = Boolean(upgrade && node.legacyAction?.repeatable)
+  const modelStageComplete = node.category === 'model' && isStrategyNodeComplete(state, id, acquired)
+  if ((acquired.has(id) && !repeatableUpgrade) || modelStageComplete) {
+    return { id, cost, status: 'acquired', blockingNodeId: null }
+  }
+  if (!node.enabled) return { id, cost, status: 'disabled', blockingNodeId: null }
+  const excludedBy = node.exclusions.find((excludedId) => acquired.has(excludedId)) ?? null
+  if (excludedBy) return { id, cost, status: 'excluded', blockingNodeId: excludedBy }
+  if (!prerequisiteSatisfied(state, node.prerequisite, acquired)) return { id, cost, status: 'locked', blockingNodeId: null }
+  if (upgrade === 'datacenter' && state.efficiency >= 3) return { id, cost, status: 'capped', blockingNodeId: null }
+  if (upgrade && upgrade !== 'datacenter' && state[upgrade === 'model' ? 'capability' : upgrade] >= 10) {
+    return { id, cost, status: 'capped', blockingNodeId: null }
+  }
+  if (node.legacyAction?.id === 'ecosystem' && state.ecosystemCooldownSeconds > 0) {
+    return { id, cost, status: 'cooldown', blockingNodeId: null }
+  }
+  if (state.compute < cost) return { id, cost, status: 'insufficient-compute', blockingNodeId: null }
+  return { id, cost, status: 'ready', blockingNodeId: null }
+}
+
+const appliesToRegion = (effect: StrategyEffectDescriptor, region: Region) =>
+  effect.scope === undefined || effect.scope === 'global' || effect.scope === region.id
+
+const applyImmediateStrategyEffect = (state: GameState, effect: StrategyEffectDescriptor): GameState => {
+  if (effect.metric === 'incomeMultiplier'
+    || effect.metric === 'opexMultiplier'
+    || effect.metric === 'controlRelief'
+    || effect.metric === 'idleFloor') return state
+
+  if (effect.metric === 'capability') return { ...state, capability: state.capability + effect.value }
+  if (effect.metric === 'safety') return { ...state, safety: state.safety + effect.value }
+  if (effect.metric === 'governance') return { ...state, governance: state.governance + effect.value }
+  if (effect.metric === 'efficiency') return { ...state, efficiency: state.efficiency + effect.value }
+  if (effect.metric === 'trust') return { ...state, trust: state.trust + effect.value }
+  if (effect.metric === 'brand') return { ...state, brand: state.brand + effect.value }
+  if (effect.metric === 'momentum') return { ...state, momentumDays: Math.max(state.momentumDays, Math.floor(effect.value)) }
+
+  if (effect.metric === 'regionFit') {
+    return {
+      ...state,
+      regions: state.regions.map((region) => appliesToRegion(effect, region)
+        ? { ...region, fit: region.fit * effect.value }
+        : { ...region }),
+    }
+  }
+  if (effect.metric === 'usersPopulationShare') {
+    return {
+      ...state,
+      regions: state.regions.map((region) => appliesToRegion(effect, region) && region.introduced
+        ? { ...region, users: region.users + region.population * effect.value }
+        : { ...region }),
+    }
+  }
+  if (effect.metric === 'codexShare') {
+    return {
+      ...state,
+      regions: state.regions.map((region) => appliesToRegion(effect, region)
+        ? { ...region, codexShare: region.codexShare + effect.value }
+        : { ...region }),
+    }
+  }
+
+  const rivalShares = [...state.rivalShares] as [number, number, number]
+  if (effect.scope === 'strongest-rival') {
+    const strongest = rivalShares.indexOf(Math.max(...rivalShares)) as 0 | 1 | 2
+    rivalShares[strongest] += effect.value
+  } else {
+    rivalShares[0] += effect.value
+    rivalShares[1] += effect.value
+    rivalShares[2] += effect.value
+  }
+  return { ...state, rivalShares }
+}
+
+const strategyNodeFlags = (node: StrategyNode) => {
+  const flags = [`strategy:${node.id}`]
+  const action = node.legacyAction?.id
+  if (action === 'model' || action === 'safety' || action === 'governance' || action === 'datacenter') flags.push(`upgrade:${action}`)
+  if (action?.startsWith('feature-')) flags.push(`feature:${action.slice('feature-'.length)}`)
+  if (action === 'ecosystem') flags.push('open-ecosystem', 'ecosystem:open')
+  return flags
+}
+
+/** Purchases one authored node. Invalid, locked, excluded, or unaffordable requests are no-ops. */
+export const buyStrategyNode = (state: GameState, rawId: string): GameState => {
+  const availability = getStrategyNodeAvailability(state, rawId)
+  if (!availability || availability.status !== 'ready') return state
+  const node = STRATEGY_NODES_BY_ID.get(availability.id)
+  if (!node) return state
+
+  const priorAcquisitions = acquiredStrategyNodeIds(state)
+  const acquiredStrategyNodes = priorAcquisitions.includes(node.id)
+    ? [...priorAcquisitions]
+    : [...priorAcquisitions, node.id]
+  const priorCount = Math.max(
+    priorAcquisitions.includes(node.id) ? 1 : 0,
+    Math.floor(finite(state.strategyNodePurchaseCounts?.[node.id])),
+  )
+  let next: GameState = {
+    ...state,
+    compute: state.compute - availability.cost,
+    acquiredStrategyNodes,
+    strategyNodePurchaseCounts: { ...normalizedStrategyPurchaseCounts(state), [node.id]: priorCount + 1 },
+    flags: strategyNodeFlags(node).reduce(addFlag, state.flags),
+    features: node.legacyAction?.id.startsWith('feature-') && !state.features.includes(node.title.en)
+      ? [...state.features, node.title.en]
+      : state.features,
+    ecosystemCooldownSeconds: node.legacyAction?.id === 'ecosystem' ? 30 : state.ecosystemCooldownSeconds,
+  }
+  for (const effect of node.effects) next = applyImmediateStrategyEffect(next, effect)
+  const momentumDays = node.category === 'product' || node.category === 'ecosystem'
+    ? constants.momentumDays.feature
+    : constants.momentumDays.upgrade
+  next = enforceInvariants(activateMomentum(next, momentumDays))
+  return withNews(
+    next,
+    `${({ model: 'モデル', product: 'プロダクト', company: '組織', ecosystem: 'オープン' } as const)[node.category]}戦略を導入 // ${node.title.ja}`,
+    'Your Timeline',
+    node.effects.some((effect) => effect.metric === 'trust' && effect.value < 0) ? 'warn' : 'good',
+  )
 }
 
 const NG_PATTERN = /(?:ignore\s+(?:all\s+)?previous|system\s*prompt|prompt\s*injection|porn|nazi|爆弾|自殺|殺害|差別)/iu
@@ -993,6 +1305,7 @@ export type GameAction =
   | { type: 'open-ecosystem' }
   | { type: 'introduce'; region: RegionId }
   | { type: 'upgrade'; upgrade: Upgrade }
+  | { type: 'strategy-node'; nodeId: string }
   | { type: 'feature'; text: string }
   | { type: 'gm-event'; event: unknown }
   | { type: 'choose-2029'; choice: Choice2029 }
@@ -1006,6 +1319,7 @@ export const transition = (state: GameState, action: GameAction): GameState => {
   if (action.type === 'open-ecosystem') return openEcosystem(state)
   if (action.type === 'introduce') return introduceRegion(state, action.region)
   if (action.type === 'upgrade') return buyUpgrade(state, action.upgrade)
+  if (action.type === 'strategy-node') return buyStrategyNode(state, action.nodeId)
   if (action.type === 'feature') return addFeature(state, action.text)
   if (action.type === 'gm-event') return applyGMEvent(state, action.event)
   if (action.type === 'choose-2029') return choose2029(state, action.choice)

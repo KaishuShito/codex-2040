@@ -1,50 +1,90 @@
 import {
+  Accessibility,
   ArrowUpRight,
-  Bot,
-  BrainCircuit,
+  AudioWaveform,
+  BadgeCheck,
+  BadgeDollarSign,
   BarChart3,
   Blocks,
+  Bot,
+  BrainCircuit,
+  BriefcaseBusiness,
+  BugOff,
   Building2,
   Check,
   ChevronRight,
+  Coins,
   Cpu,
   Database,
+  FileCheck2,
+  FlaskConical,
+  Gauge,
   GitFork,
   GraduationCap,
   KeyRound,
   Landmark,
+  Languages,
   LockKeyhole,
+  MemoryStick,
   Network,
+  PanelsTopLeft,
+  PlugZap,
   RadioTower,
+  Rocket,
+  Scale,
+  ScanEye,
+  School,
+  ScrollText,
   Search,
   ShieldCheck,
+  ShieldEllipsis,
+  Siren,
   Smartphone,
   Sparkles,
+  Stamp,
+  University,
+  Unplug,
+  UsersRound,
+  Waypoints,
+  Weight,
+  WifiOff,
   X,
   Zap,
+  type LucideIcon,
 } from 'lucide-react'
 import type { CSSProperties } from 'react'
 import { useEffect, useId, useMemo, useRef, useState } from 'react'
+import {
+  STRATEGY_CATALOG,
+  collectPrerequisiteIds,
+  getStrategyNodesByCategory,
+  type LegacyStrategyAction,
+  type Locale,
+  type StrategyEffectDescriptor,
+  type StrategyNode,
+  type StrategyNodeId,
+  type StrategyPrerequisite,
+} from '../strategyNodes'
 import './UpgradeOverlay.css'
 
 export type UpgradeOverlayTab = 'model' | 'product' | 'company' | 'ecosystem'
-
-export type UpgradeOverlayAction =
-  | 'model'
-  | 'feature-mobile'
-  | 'feature-enterprise'
-  | 'feature-education'
-  | 'feature-research'
-  | 'feature-connectors'
-  | 'feature-analysis'
-  | 'safety'
-  | 'governance'
-  | 'datacenter'
-  | 'ecosystem'
-
+export type UpgradeOverlayAction = LegacyStrategyAction
 export type UpgradeOverlayFeature = 'mobile' | 'enterprise' | 'education' | 'research' | 'connectors' | 'analysis'
-
 export type UpgradeOverlayCosts = Record<UpgradeOverlayAction, number>
+export type UpgradeOverlayNodeAvailabilityStatus =
+  | 'ready'
+  | 'acquired'
+  | 'locked'
+  | 'excluded'
+  | 'disabled'
+  | 'capped'
+  | 'cooldown'
+  | 'insufficient-compute'
+export type UpgradeOverlayNodeAvailability = Readonly<{
+  status: UpgradeOverlayNodeAvailabilityStatus
+  cost: number
+  blockingNodeId?: StrategyNodeId | null
+}>
 
 export type UpgradeOverlayProps = {
   isOpen: boolean
@@ -61,241 +101,191 @@ export type UpgradeOverlayProps = {
   disabledActions?: readonly UpgradeOverlayAction[]
   ecosystemCooldownDays?: number
   initialTab?: UpgradeOverlayTab
+  /** Persistent catalog node progress. Older App callers can omit this during engine migration. */
+  completedNodeIds?: readonly StrategyNodeId[]
+  /** Optional explicit exclusions, in addition to exclusions implied by completed nodes. */
+  excludedNodeIds?: readonly StrategyNodeId[]
+  locale?: Locale
+  /** Engine-owned state wins over every UI inference, especially for repeatable nodes. */
+  getNodeAvailability?: (nodeId: StrategyNodeId) => UpgradeOverlayNodeAvailability | null
+  /** Preferred catalog action. When absent, legacy nodes continue through onAction. */
+  onNodeAction?: (nodeId: StrategyNodeId) => void
   onAction: (action: UpgradeOverlayAction) => void
   onClose: () => void
 }
 
-type NodeId =
-  | 'model-foundation'
-  | 'model-reasoning'
-  | 'model-agents'
-  | 'model-frontier'
-  | 'product-mobile'
-  | 'product-sso'
-  | 'product-education'
-  | 'product-research'
-  | 'product-connectors'
-  | 'product-analysis'
-  | 'company-safety'
-  | 'company-policy'
-  | 'company-datacenter'
-  | 'ecosystem-open'
-  | 'ecosystem-partners'
-  | 'ecosystem-commons'
+export type StrategyNodeUiState = 'ready' | 'locked' | 'complete' | 'excluded' | 'cooldown' | 'cost' | 'pending'
 
-type NodeDefinition = {
-  id: NodeId
-  tab: UpgradeOverlayTab
-  eyebrow: string
-  title: string
-  summary: string
-  action: UpgradeOverlayAction
-  actionLabel: string
-  icon: typeof Bot
-  x: number
-  y: number
-  target?: number
-  effects: readonly { label: string; value: string; tone?: 'good' | 'risk' | 'neutral' }[]
+export const resolveStrategyNodeUiState = (
+  availability: UpgradeOverlayNodeAvailability | null | undefined,
+  fallback: StrategyNodeUiState,
+): StrategyNodeUiState => {
+  if (!availability) return fallback
+  if (availability.status === 'ready') return 'ready'
+  if (availability.status === 'acquired' || availability.status === 'capped') return 'complete'
+  if (availability.status === 'excluded') return 'excluded'
+  if (availability.status === 'cooldown') return 'cooldown'
+  if (availability.status === 'insufficient-compute') return 'cost'
+  return 'locked'
 }
 
 const DEFAULT_TAB: UpgradeOverlayTab = 'model'
 
-const TABS: readonly { id: UpgradeOverlayTab; label: string; kicker: string; icon: typeof Bot }[] = [
-  { id: 'model', label: 'モデル', kicker: '性能', icon: BrainCircuit },
-  { id: 'product', label: 'プロダクト', kicker: '機能', icon: Sparkles },
-  { id: 'company', label: '組織', kicker: '体制', icon: Building2 },
-  { id: 'ecosystem', label: 'オープン', kicker: 'エコシステム', icon: Network },
+const TABS: readonly { id: UpgradeOverlayTab; label: Readonly<Record<Locale, string>>; kicker: Readonly<Record<Locale, string>>; icon: LucideIcon }[] = [
+  { id: 'model', label: { en: 'Model', ja: 'モデル' }, kicker: { en: 'Capability', ja: '性能' }, icon: BrainCircuit },
+  { id: 'product', label: { en: 'Product', ja: 'プロダクト' }, kicker: { en: 'Features', ja: '機能' }, icon: Sparkles },
+  { id: 'company', label: { en: 'Company', ja: '組織' }, kicker: { en: 'Organization', ja: '体制' }, icon: Building2 },
+  { id: 'ecosystem', label: { en: 'Open', ja: 'オープン' }, kicker: { en: 'Ecosystem', ja: 'エコシステム' }, icon: Network },
 ]
 
-const NODES: readonly NodeDefinition[] = [
-  {
-    id: 'model-foundation', tab: 'model', eyebrow: 'K3', title: '基盤モデル',
-    summary: 'Kと普及の勢いを高める。運用費とS/Gギャップも広がる。',
-    action: 'model', actionLabel: 'モデルへ投資', icon: Cpu, x: 18, y: 52, target: 3,
-    effects: [
-      { label: 'K（性能）', value: '+1.0', tone: 'good' },
-      { label: 'Sギャップ', value: '+1.0', tone: 'risk' },
-      { label: '運用費', value: '増加', tone: 'risk' },
-    ],
-  },
-  {
-    id: 'model-reasoning', tab: 'model', eyebrow: 'K5', title: '高度な推論',
-    summary: '計画力を高め、製品需要を広げる。Sの強化が追いついてこそ安全。',
-    action: 'model', actionLabel: 'Kを強化', icon: BrainCircuit, x: 45, y: 28, target: 5,
-    effects: [
-      { label: '普及力', value: '大', tone: 'good' },
-      { label: '制御負荷', value: '高', tone: 'risk' },
-      { label: '条件', value: 'K3', tone: 'neutral' },
-    ],
-  },
-  {
-    id: 'model-agents', tab: 'model', eyebrow: 'K7', title: '自律エージェント',
-    summary: 'より長期の仕事を自律実行する。放置したK–S/Gギャップが事故につながる段階。',
-    action: 'model', actionLabel: 'エージェント拡張', icon: RadioTower, x: 47, y: 73, target: 7,
-    effects: [
-      { label: '勢い', value: '非常に大', tone: 'good' },
-      { label: '事故リスク', value: 'ギャップ依存', tone: 'risk' },
-      { label: '条件', value: 'K5', tone: 'neutral' },
-    ],
-  },
-  {
-    id: 'model-frontier', tab: 'model', eyebrow: 'K10', title: '最前線の自律性',
-    summary: '加速は最大、制御負荷も最大。SとGをKに近づけてから進める。',
-    action: 'model', actionLabel: '最前線へ進む', icon: Zap, x: 78, y: 50, target: 10,
-    effects: [
-      { label: 'K（性能）', value: '最前線', tone: 'good' },
-      { label: 'ギャップ圧力', value: '危険', tone: 'risk' },
-      { label: '条件', value: 'K7', tone: 'neutral' },
-    ],
-  },
-  {
-    id: 'product-mobile', tab: 'product', eyebrow: 'アクセス', title: 'モバイルSDK',
-    summary: 'モバイル中心の地域へ、低リスクで利用経路を広げる。',
-    action: 'feature-mobile', actionLabel: 'SDKを公開', icon: Smartphone, x: 14, y: 29,
-    effects: [
-      { label: '地域適性', value: 'モバイル＋', tone: 'good' },
-      { label: '主な対象', value: 'グローバルサウス', tone: 'neutral' },
-      { label: 'リスク', value: '低', tone: 'good' },
-    ],
-  },
-  {
-    id: 'product-sso', tab: 'product', eyebrow: '信頼', title: '企業向けSSO',
-    summary: '成熟市場の組織で、導入時の手間を減らす。',
-    action: 'feature-enterprise', actionLabel: 'SSOを公開', icon: KeyRound, x: 14, y: 73,
-    effects: [
-      { label: '地域適性', value: '北米/EU＋', tone: 'good' },
-      { label: '利用者', value: '組織', tone: 'neutral' },
-      { label: 'リスク', value: '低', tone: 'good' },
-    ],
-  },
-  {
-    id: 'product-education', tab: 'product', eyebrow: 'PLAN A', title: '教育モード',
-    summary: '教室での利用を軸に、公共的価値と若年層データ保護を両立する。',
-    action: 'feature-education', actionLabel: '教育モードを公開', icon: GraduationCap, x: 84, y: 51,
-    effects: [
-      { label: '学習機会', value: '大幅＋', tone: 'good' },
-      { label: '地域', value: 'インド/アフリカ', tone: 'good' },
-      { label: 'ガバナンス', value: '若年層データ', tone: 'risk' },
-    ],
-  },
-  {
-    id: 'product-research', tab: 'product', eyebrow: '情報統合', title: '深掘り調査',
-    summary: 'ウェブ・ファイル・連携先を横断し、出典付きレポートを作る。価値は高いが遅く、計算負荷も高い。',
-    action: 'feature-research', actionLabel: '深掘り調査を公開', icon: Search, x: 42, y: 22,
-    effects: [
-      { label: '知的業務', value: '大幅＋', tone: 'good' },
-      { label: '計算負荷', value: '高', tone: 'risk' },
-      { label: '信頼条件', value: '出典', tone: 'neutral' },
-    ],
-  },
-  {
-    id: 'product-connectors', tab: 'product', eyebrow: '文脈', title: 'アプリ連携',
-    summary: '許可済みの業務データと操作をつなぐ。普及するほど権限管理と保持方針が課題になる。',
-    action: 'feature-connectors', actionLabel: 'アプリ連携を公開', icon: Blocks, x: 42, y: 73,
-    effects: [
-      { label: '業務適合', value: '大幅＋', tone: 'good' },
-      { label: '企業需要', value: '強', tone: 'good' },
-      { label: 'データ統治', value: '必須', tone: 'risk' },
-    ],
-  },
-  {
-    id: 'product-analysis', tab: 'product', eyebrow: '計算ツール', title: 'データ分析',
-    summary: 'ファイル上でコードを実行し、数値分析やグラフ作成を行う。多様な専門職でKを活かせる。',
-    action: 'feature-analysis', actionLabel: 'データ分析を公開', icon: BarChart3, x: 66, y: 73,
-    effects: [
-      { label: '専門利用', value: '広く＋', tone: 'good' },
-      { label: '成果物', value: '図表/ファイル', tone: 'good' },
-      { label: 'ツールリスク', value: '中', tone: 'risk' },
-    ],
-  },
-  {
-    id: 'company-safety', tab: 'company', eyebrow: '整合性', title: '安全対策チーム',
-    summary: '安全対策を高め、事故が連鎖する前にK–Sギャップを縮める。',
-    action: 'safety', actionLabel: '安全対策を強化', icon: ShieldCheck, x: 22, y: 31,
-    effects: [
-      { label: 'S（安全）', value: '+1.0', tone: 'good' },
-      { label: 'Sギャップ', value: '−1.0', tone: 'good' },
-      { label: '防止', value: '事故', tone: 'neutral' },
-    ],
-  },
-  {
-    id: 'company-policy', tab: 'company', eyebrow: 'ガバナンス', title: '政策・統治',
-    summary: '規制で成長が止まる前に、検証・法令対応・国際連携を整える。',
-    action: 'governance', actionLabel: '政策・統治に投資', icon: Landmark, x: 22, y: 72,
-    effects: [
-      { label: 'G（統治）', value: '+1.0', tone: 'good' },
-      { label: 'Gギャップ', value: '−1.0', tone: 'good' },
-      { label: '防止', value: '規制凍結', tone: 'neutral' },
-    ],
-  },
-  {
-    id: 'company-datacenter', tab: 'company', eyebrow: '運用', title: 'データセンター',
-    summary: '計算効率を高め、安全な拡張を経済的に続けやすくする。',
-    action: 'datacenter', actionLabel: '設備を強化', icon: Database, x: 67, y: 50,
-    effects: [
-      { label: '効率', value: '+0.25×', tone: 'good' },
-      { label: '採算', value: '改善', tone: 'good' },
-      { label: 'K（性能）', value: '不変', tone: 'neutral' },
-    ],
-  },
-  {
-    id: 'ecosystem-open', tab: 'ecosystem', eyebrow: '権限開放', title: 'APIを開放',
-    summary: '意図的にシェアをパートナーへ渡す。信頼が上がり、集中が下がり、市場全体が育つ。',
-    action: 'ecosystem', actionLabel: 'APIを開放', icon: GitFork, x: 21, y: 50,
-    effects: [
-      { label: 'Codexシェア', value: '−10%', tone: 'risk' },
-      { label: '信頼', value: '+9', tone: 'good' },
-      { label: 'HHI', value: '低下', tone: 'good' },
-    ],
-  },
-  {
-    id: 'ecosystem-partners', tab: 'ecosystem', eyebrow: '分散', title: '地域パートナー',
-    summary: '展開を中央に集めず、地域の作り手が現地のニーズに合わせられるようにする。',
-    action: 'ecosystem', actionLabel: '連携先に開放', icon: Network, x: 50, y: 28,
-    effects: [
-      { label: '市場規模', value: '拡大', tone: 'good' },
-      { label: '対応地域', value: '拡大', tone: 'good' },
-      { label: '管理', value: '共同', tone: 'neutral' },
-    ],
-  },
-  {
-    id: 'ecosystem-commons', tab: 'ecosystem', eyebrow: '健全市場', title: 'モデル・コモンズ',
-    summary: '有力な提供者を複数残す。競争の多様性を安全戦略の一部にする。',
-    action: 'ecosystem', actionLabel: 'コモンズへ参加', icon: RadioTower, x: 78, y: 50,
-    effects: [
-      { label: '競争', value: '健全化', tone: 'good' },
-      { label: '独占リスク', value: '低下', tone: 'good' },
-      { label: '収益シェア', value: '低下', tone: 'risk' },
-    ],
-  },
-]
-
-const LINKS: Record<UpgradeOverlayTab, readonly [NodeId, NodeId][]> = {
-  model: [
-    ['model-foundation', 'model-reasoning'],
-    ['model-foundation', 'model-agents'],
-    ['model-reasoning', 'model-frontier'],
-    ['model-agents', 'model-frontier'],
-  ],
-  product: [
-    ['product-mobile', 'product-research'],
-    ['product-sso', 'product-connectors'],
-    ['product-research', 'product-education'],
-    ['product-connectors', 'product-analysis'],
-    ['product-analysis', 'product-education'],
-  ],
-  company: [
-    ['company-safety', 'company-datacenter'],
-    ['company-policy', 'company-datacenter'],
-  ],
-  ecosystem: [
-    ['ecosystem-open', 'ecosystem-partners'],
-    ['ecosystem-partners', 'ecosystem-commons'],
-  ],
+const ICONS: Readonly<Record<string, LucideIcon>> = {
+  accessibility: Accessibility,
+  'audio-waveform': AudioWaveform,
+  'badge-check': BadgeCheck,
+  'badge-dollar-sign': BadgeDollarSign,
+  'bar-chart-3': BarChart3,
+  blocks: Blocks,
+  bot: Bot,
+  'brain-circuit': BrainCircuit,
+  'briefcase-business': BriefcaseBusiness,
+  'bug-off': BugOff,
+  coins: Coins,
+  cpu: Cpu,
+  database: Database,
+  'file-check-2': FileCheck2,
+  'flask-conical': FlaskConical,
+  gauge: Gauge,
+  'git-fork': GitFork,
+  'graduation-cap': GraduationCap,
+  'key-round': KeyRound,
+  landmark: Landmark,
+  languages: Languages,
+  'memory-stick': MemoryStick,
+  network: Network,
+  'panels-top-left': PanelsTopLeft,
+  'plug-zap': PlugZap,
+  'radio-tower': RadioTower,
+  rocket: Rocket,
+  scale: Scale,
+  'scan-eye': ScanEye,
+  school: School,
+  'scroll-text': ScrollText,
+  search: Search,
+  'shield-check': ShieldCheck,
+  'shield-ellipsis': ShieldEllipsis,
+  'shield-lock': LockKeyhole,
+  siren: Siren,
+  smartphone: Smartphone,
+  stamp: Stamp,
+  university: University,
+  unplug: Unplug,
+  'users-round': UsersRound,
+  waypoints: Waypoints,
+  weight: Weight,
+  'wifi-off': WifiOff,
+  zap: Zap,
 }
+
+const LEGACY_FEATURE_NODES: Readonly<Record<UpgradeOverlayFeature, StrategyNodeId>> = {
+  mobile: 'product-mobile',
+  enterprise: 'product-sso',
+  education: 'product-education',
+  research: 'product-research',
+  connectors: 'product-connectors',
+  analysis: 'product-analysis',
+}
+
+const MODEL_MILESTONES: readonly [StrategyNodeId, number][] = [
+  ['model-foundation', 3],
+  ['model-reasoning', 5],
+  ['model-agents', 7],
+  ['model-frontier', 10],
+]
 
 const clampPercent = (value: number) => Math.max(0, Math.min(100, value))
 const formatCompute = (value: number) => new Intl.NumberFormat('en-US', { maximumFractionDigits: 0 }).format(value)
+
+export const isStrategyPrerequisiteSatisfied = (
+  prerequisite: StrategyPrerequisite,
+  completed: ReadonlySet<StrategyNodeId>,
+): boolean => {
+  if (prerequisite.kind === 'always') return true
+  if (prerequisite.kind === 'node') return completed.has(prerequisite.id)
+  if (prerequisite.kind === 'all') return prerequisite.terms.every((term) => isStrategyPrerequisiteSatisfied(term, completed))
+  return prerequisite.terms.some((term) => isStrategyPrerequisiteSatisfied(term, completed))
+}
+
+export const inferLegacyStrategyProgress = ({
+  capability,
+  safety,
+  governance,
+  efficiency,
+  enabledFeatures,
+}: {
+  capability: number
+  safety: number
+  governance: number
+  efficiency: number
+  enabledFeatures: readonly UpgradeOverlayFeature[]
+}): ReadonlySet<StrategyNodeId> => {
+  const progress = new Set<StrategyNodeId>()
+  MODEL_MILESTONES.forEach(([id, target]) => {
+    if (capability >= target) progress.add(id)
+  })
+  enabledFeatures.forEach((feature) => progress.add(LEGACY_FEATURE_NODES[feature]))
+  if (safety > 2) progress.add('company-safety')
+  if (governance > 2) progress.add('company-policy')
+  if (efficiency > 1) progress.add('company-datacenter')
+  return progress
+}
+
+const localized = (value: Readonly<Record<Locale, string>>, locale: Locale) => value[locale]
+
+const stateLabel = (state: StrategyNodeUiState, locale: Locale) => locale === 'ja'
+  ? ({ ready: '利用可能', locked: 'ロック', complete: '完了', excluded: '排他', cooldown: '待機中', cost: '資源不足', pending: '準備中' } as const)[state]
+  : state.toUpperCase()
+
+const metricLabel = (metric: StrategyEffectDescriptor['metric'], locale: Locale) => {
+  if (locale !== 'ja') return metric.replaceAll(/([A-Z])/g, ' $1')
+  return ({
+    capability: 'モデル能力', safety: '安全性', governance: 'ガバナンス', efficiency: '効率', trust: '社会的信頼',
+    brand: 'ブランド', momentum: '成長モメンタム', incomeMultiplier: '収入倍率', opexMultiplier: '運用費倍率',
+    controlRelief: '制御余力', idleFloor: '基礎成長', regionFit: '地域適合', usersPopulationShare: '利用者',
+    codexShare: 'Codexシェア', rivalShare: '競合シェア',
+  } as const)[metric]
+}
+
+const effectTone = (effect: StrategyEffectDescriptor): 'good' | 'risk' | 'neutral' => {
+  if (effect.metric === 'opexMultiplier') return effect.value <= 1 ? 'good' : 'risk'
+  if (effect.metric === 'incomeMultiplier' || effect.metric === 'regionFit') return effect.value >= 1 ? 'good' : 'risk'
+  if (effect.metric === 'rivalShare') return effect.value > 0 ? 'risk' : 'good'
+  if (effect.metric === 'controlRelief') return effect.value >= 0 ? 'good' : 'risk'
+  if (effect.metric === 'idleFloor' || effect.metric === 'momentum') return effect.value > 0 ? 'good' : 'neutral'
+  return effect.value > 0 ? 'good' : effect.value < 0 ? 'risk' : 'neutral'
+}
+
+const describePrerequisite = (
+  prerequisite: StrategyPrerequisite,
+  byId: ReadonlyMap<StrategyNodeId, StrategyNode>,
+  locale: Locale,
+): string => {
+  if (prerequisite.kind === 'always') return locale === 'ja' ? 'なし' : 'None'
+  if (prerequisite.kind === 'node') return localized(byId.get(prerequisite.id)?.title ?? { en: prerequisite.id, ja: prerequisite.id }, locale)
+  const separator = prerequisite.kind === 'all' ? ' + ' : ' / '
+  return prerequisite.terms.map((term) => describePrerequisite(term, byId, locale)).join(separator)
+}
+
+const getNodeCost = (node: StrategyNode, costs: UpgradeOverlayCosts) =>
+  node.baseCost ?? costs[node.legacyAction.id]
+
+const getInferredComplete = (
+  node: StrategyNode,
+  inferredProgress: ReadonlySet<StrategyNodeId>,
+) => {
+  if (node.category === 'model') return inferredProgress.has(node.id)
+  if (node.legacyAction && !node.legacyAction.repeatable) return inferredProgress.has(node.id)
+  return false
+}
 
 export function UpgradeOverlay({
   isOpen,
@@ -312,17 +302,39 @@ export function UpgradeOverlay({
   disabledActions = [],
   ecosystemCooldownDays = 0,
   initialTab = DEFAULT_TAB,
+  completedNodeIds = [],
+  excludedNodeIds = [],
+  locale = 'en',
+  getNodeAvailability,
+  onNodeAction,
   onAction,
   onClose,
 }: UpgradeOverlayProps) {
   const [activeTab, setActiveTab] = useState<UpgradeOverlayTab>(initialTab)
-  const [selectedId, setSelectedId] = useState<NodeId>('model-foundation')
+  const [selectedId, setSelectedId] = useState<StrategyNodeId>('model-foundation')
   const dialogRef = useRef<HTMLDivElement>(null)
   const titleId = useId()
   const descriptionId = useId()
 
-  const tabNodes = useMemo(() => NODES.filter((node) => node.tab === activeTab), [activeTab])
+  const nodesById = useMemo(
+    () => new Map<StrategyNodeId, StrategyNode>(STRATEGY_CATALOG.map((node) => [node.id, node])),
+    [],
+  )
+  const tabNodes = useMemo(() => getStrategyNodesByCategory(activeTab), [activeTab])
   const selectedNode = tabNodes.find((node) => node.id === selectedId) ?? tabNodes[0]
+  const explicitCompleted = useMemo(() => new Set(completedNodeIds), [completedNodeIds])
+  const inferredProgress = useMemo(() => inferLegacyStrategyProgress({
+    capability,
+    safety,
+    governance,
+    efficiency,
+    enabledFeatures,
+  }), [capability, efficiency, enabledFeatures, governance, safety])
+  const prerequisiteProgress = useMemo(
+    () => new Set<StrategyNodeId>([...explicitCompleted, ...inferredProgress]),
+    [explicitCompleted, inferredProgress],
+  )
+  const explicitExcluded = useMemo(() => new Set(excludedNodeIds), [excludedNodeIds])
   const safetyGap = Math.max(0, capability - safety)
   const governanceGap = Math.max(0, capability - governance)
   const maxGap = Math.max(safetyGap, governanceGap)
@@ -330,10 +342,42 @@ export function UpgradeOverlay({
   const nextSafetyGap = Math.max(0, nextCapability - safety)
   const nextGovernanceGap = Math.max(0, nextCapability - governance)
 
+  const fallbackComplete = (node: StrategyNode) => explicitCompleted.has(node.id) || getInferredComplete(node, inferredProgress)
+  const fallbackExcluded = (node: StrategyNode) => explicitExcluded.has(node.id)
+    || node.exclusions.some((id) => prerequisiteProgress.has(id))
+  const fallbackLocked = (node: StrategyNode) => !isStrategyPrerequisiteSatisfied(node.prerequisite, prerequisiteProgress)
+  const fallbackNodeState = (node: StrategyNode): StrategyNodeUiState => {
+    if (fallbackComplete(node)) return 'complete'
+    if (fallbackExcluded(node)) return 'excluded'
+    if (!node.enabled || fallbackLocked(node) || (node.legacyAction && disabledActions.includes(node.legacyAction.id))) return 'locked'
+    if (node.category === 'ecosystem' && ecosystemCooldownDays > 0) return 'cooldown'
+    if (compute < getNodeCost(node, costs)) return 'cost'
+    if (!node.legacyAction && !onNodeAction) return 'pending'
+    return 'ready'
+  }
+  const availabilityFor = (node: StrategyNode) => getNodeAvailability?.(node.id) ?? null
+  const nodeState = (node: StrategyNode): StrategyNodeUiState =>
+    resolveStrategyNodeUiState(availabilityFor(node), fallbackNodeState(node))
+  const isComplete = (node: StrategyNode) => nodeState(node) === 'complete'
+
+  const statusLabel = (node: StrategyNode, state: StrategyNodeUiState) => {
+    const availability = availabilityFor(node)
+    const blocker = availability?.blockingNodeId ? nodesById.get(availability.blockingNodeId) : null
+    if (state === 'complete') return availability?.status === 'capped' ? (locale === 'ja' ? '上限到達' : 'At capacity') : (locale === 'ja' ? '導入済み' : 'Deployed')
+    if (state === 'excluded') return blocker ? (locale === 'ja' ? `${localized(blocker.title, locale)}と排他` : `Excluded by ${localized(blocker.title, locale)}`) : (locale === 'ja' ? '選択不可のルート' : 'Route excluded')
+    if (state === 'locked') return blocker
+      ? (locale === 'ja' ? `${localized(blocker.title, locale)}が必要` : `Requires ${localized(blocker.title, locale)}`)
+      : node.enabled ? (locale === 'ja' ? `${describePrerequisite(node.prerequisite, nodesById, locale)}が必要` : `Requires ${describePrerequisite(node.prerequisite, nodesById, locale)}`) : (locale === 'ja' ? '近日公開' : 'Coming soon')
+    if (state === 'cooldown') return locale === 'ja' ? `${ecosystemCooldownDays}日後に利用可能` : `Ready in ${ecosystemCooldownDays}d`
+    if (state === 'cost') return locale === 'ja' ? `計算資源${formatCompute(availability?.cost ?? getNodeCost(node, costs))}が必要` : `Need ${formatCompute(availability?.cost ?? getNodeCost(node, costs))} compute`
+    if (state === 'pending') return locale === 'ja' ? 'エンジン統合待ち' : 'Engine integration pending'
+    return localized(node.action, locale)
+  }
+
   useEffect(() => {
     if (!isOpen) return
     setActiveTab(initialTab)
-    const firstNode = NODES.find((node) => node.tab === initialTab)
+    const firstNode = getStrategyNodesByCategory(initialTab)[0]
     if (firstNode) setSelectedId(firstNode.id)
   }, [initialTab, isOpen])
 
@@ -376,45 +420,25 @@ export function UpgradeOverlay({
 
   const changeTab = (tab: UpgradeOverlayTab) => {
     setActiveTab(tab)
-    const firstNode = NODES.find((node) => node.tab === tab)
+    const firstNode = getStrategyNodesByCategory(tab)[0]
     if (firstNode) setSelectedId(firstNode.id)
   }
 
-  const isComplete = (node: NodeDefinition) => {
-    if (node.action === 'model') return node.target !== undefined && capability >= node.target
-    if (node.action === 'feature-mobile') return enabledFeatures.includes('mobile')
-    if (node.action === 'feature-enterprise') return enabledFeatures.includes('enterprise')
-    if (node.action === 'feature-education') return enabledFeatures.includes('education')
-    if (node.action === 'feature-research') return enabledFeatures.includes('research')
-    if (node.action === 'feature-connectors') return enabledFeatures.includes('connectors')
-    if (node.action === 'feature-analysis') return enabledFeatures.includes('analysis')
-    return false
-  }
-
-  const modelRequirement = (node: NodeDefinition) => {
-    if (node.action !== 'model') return 0
-    const modelNodes = NODES.filter((candidate) => candidate.action === 'model')
-    const index = modelNodes.findIndex((candidate) => candidate.id === node.id)
-    return index > 0 ? modelNodes[index - 1].target ?? 0 : 0
-  }
-
-  const isLocked = (node: NodeDefinition) => capability < modelRequirement(node)
-
-  const actionStatus = (node: NodeDefinition) => {
-    const cost = costs[node.action]
-    if (isComplete(node)) return { label: '導入済み', disabled: true, kind: 'complete' }
-    if (disabledActions.includes(node.action)) return { label: '利用不可', disabled: true, kind: 'locked' }
-    if (isLocked(node)) return { label: `K${modelRequirement(node)}が必要`, disabled: true, kind: 'locked' }
-    if (node.action === 'ecosystem' && ecosystemCooldownDays > 0) {
-      return { label: `${ecosystemCooldownDays}日後に利用可`, disabled: true, kind: 'cooldown' }
-    }
-    if (compute < cost) return { label: `計算資源が${formatCompute(cost)}必要`, disabled: true, kind: 'cost' }
-    return { label: node.actionLabel, disabled: false, kind: 'ready' }
-  }
-
-  const selectedStatus = actionStatus(selectedNode)
-  const selectedCost = costs[selectedNode.action]
+  const selectedState = nodeState(selectedNode)
+  const selectedCost = availabilityFor(selectedNode)?.cost ?? getNodeCost(selectedNode, costs)
   const activeTabMeta = TABS.find((tab) => tab.id === activeTab) ?? TABS[0]
+  const prerequisiteIds = collectPrerequisiteIds(selectedNode.prerequisite)
+  const selectedExclusions = selectedNode.exclusions.map((id) => nodesById.get(id)).filter(Boolean) as StrategyNode[]
+  const tabLinks = tabNodes.flatMap((node) => collectPrerequisiteIds(node.prerequisite)
+    .filter((id) => nodesById.get(id)?.category === activeTab)
+    .map((id) => [id, node.id] as const))
+  const readyCount = tabNodes.filter((node) => nodeState(node) === 'ready').length
+
+  const commitNode = () => {
+    if (selectedState !== 'ready') return
+    if (onNodeAction) onNodeAction(selectedNode.id)
+    else if (selectedNode.legacyAction) onAction(selectedNode.legacyAction.id)
+  }
 
   return (
     <div className="upgrade-overlay" onMouseDown={(event) => {
@@ -434,23 +458,25 @@ export function UpgradeOverlay({
           <div className="upgrade-overlay__identity">
             <span className="upgrade-overlay__mark"><Bot size={18} /></span>
             <div>
-              <span>戦略レイヤー // CODEX 2040</span>
-              <h2 id={titleId}>未来への投資</h2>
+              <span>{locale === 'ja' ? '戦略レイヤー' : 'STRATEGY LAYER'} // CODEX 2040</span>
+              <h2 id={titleId}>{locale === 'ja' ? '未来への投資' : 'Allocate the future'}</h2>
             </div>
           </div>
-          <p id={descriptionId}>性能を伸ばしつつ、安全・統治・競争との均衡を保つ。</p>
-          <div className="upgrade-overlay__resources" aria-label="利用可能なリソース">
-            <span>利用可能な計算資源</span>
+          <p id={descriptionId}>{locale === 'ja' ? '50の強化から進路を選択。あらゆる優位性には制御負荷か機会費用が伴います。' : 'Build a route through 50 upgrades. Every advantage creates a control burden or opportunity cost.'}</p>
+          <div className="upgrade-overlay__resources" aria-label={locale === 'ja' ? '利用可能なリソース' : 'Available resources'}>
+            <span>{locale === 'ja' ? '利用可能な計算資源' : 'AVAILABLE COMPUTE'}</span>
             <strong>{formatCompute(compute)} <small>PF</small></strong>
           </div>
-          <button className="upgrade-overlay__close" type="button" onClick={onClose} aria-label="戦略画面を閉じる">
+          <button className="upgrade-overlay__close" type="button" onClick={onClose} aria-label={locale === 'ja' ? '戦略画面を閉じる' : 'Close strategy layer'}>
             <X size={20} />
           </button>
         </header>
 
-        <nav className="upgrade-overlay__tabs" role="tablist" aria-label="戦略カテゴリ">
+        <nav className="upgrade-overlay__tabs" role="tablist" aria-label={locale === 'ja' ? '戦略カテゴリ' : 'Strategy axes'}>
           {TABS.map((tab) => {
             const Icon = tab.icon
+            const tabTotal = getStrategyNodesByCategory(tab.id).length
+            const tabComplete = getStrategyNodesByCategory(tab.id).filter(isComplete).length
             return (
               <button
                 key={tab.id}
@@ -464,9 +490,9 @@ export function UpgradeOverlay({
                 data-autofocus={tab.id === initialTab ? '' : undefined}
               >
                 <Icon size={16} />
-                <span><small>{tab.kicker}</small>{tab.label}</span>
-                {tab.id === 'model' && maxGap >= 2 && <i className="upgrade-overlay__alert">危険</i>}
-                {tab.id === 'product' && !enabledFeatures.includes('education') && <i>新規</i>}
+                <span><small>{localized(tab.kicker, locale)}</small>{localized(tab.label, locale)}</span>
+                <i>{String(tabComplete).padStart(2, '0')} / {String(tabTotal).padStart(2, '0')}</i>
+                {tab.id === 'model' && maxGap >= 2 && <i className="upgrade-overlay__alert">GAP</i>}
               </button>
             )
           })}
@@ -478,148 +504,161 @@ export function UpgradeOverlay({
           role="tabpanel"
           aria-labelledby={`upgrade-tab-${activeTab}`}
         >
-          <section className="upgrade-overlay__graph" aria-label={`${activeTabMeta.label}の戦略ツリー`}>
+          <section className="upgrade-overlay__graph" aria-label={`${localized(activeTabMeta.label, locale)} ${locale === 'ja' ? '戦略ツリー' : 'strategy tree'}`}>
             <div className="upgrade-overlay__graph-heading">
               <div>
-                <span>{activeTabMeta.kicker}軸</span>
-                <h3>{activeTabMeta.label}戦略</h3>
+                <span>{localized(activeTabMeta.kicker, locale).toUpperCase()} {locale === 'ja' ? '軸' : 'AXIS'} · {tabNodes.length} {locale === 'ja' ? 'ノード' : 'NODES'}</span>
+                <h3>{localized(activeTabMeta.label, locale)}{locale === 'ja' ? '戦略' : ' strategy'}</h3>
               </div>
-              <p>{activeTab === 'ecosystem' ? '分散が強さを生む' : 'ノードを選んで得失を確認'}</p>
+              <p>{locale === 'ja' ? `${readyCount}件利用可能 · ティア I → IV · ノードを選んで得失を確認` : `${readyCount} ready · tier I → IV · choose a node to inspect its tradeoff`}</p>
             </div>
 
-            <div className="upgrade-overlay__network">
-              <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
-                {LINKS[activeTab].map(([fromId, toId]) => {
-                  const from = tabNodes.find((node) => node.id === fromId)
-                  const to = tabNodes.find((node) => node.id === toId)
-                  if (!from || !to) return null
-                  const active = selectedNode.id === fromId || selectedNode.id === toId
+            <div className="upgrade-overlay__network-frame">
+              <div className="upgrade-overlay__network">
+                <div className="upgrade-overlay__tiers" aria-hidden="true">
+                  {[1, 2, 3, 4].map((tier) => <span key={tier}>{locale === 'ja' ? 'ティア' : 'TIER'} {String(tier).padStart(2, '0')}</span>)}
+                </div>
+                <svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+                  {tabLinks.map(([fromId, toId]) => {
+                    const from = nodesById.get(fromId)
+                    const to = nodesById.get(toId)
+                    if (!from || !to) return null
+                    const active = selectedNode.id === fromId || selectedNode.id === toId
+                    const complete = prerequisiteProgress.has(fromId) && prerequisiteProgress.has(toId)
+                    return (
+                      <line
+                        key={`${fromId}-${toId}`}
+                        className={`${active ? 'is-active' : ''} ${complete ? 'is-complete' : ''}`}
+                        x1={from.x}
+                        y1={from.y}
+                        x2={to.x}
+                        y2={to.y}
+                      />
+                    )
+                  })}
+                </svg>
+
+                {tabNodes.map((node, index) => {
+                  const Icon = ICONS[node.iconKey] ?? Sparkles
+                  const state = nodeState(node)
+                  const selected = selectedNode.id === node.id
+                  const style = { '--node-x': `${node.x}%`, '--node-y': `${node.y}%`, '--node-order': index } as CSSProperties
                   return (
-                    <line
-                      key={`${fromId}-${toId}`}
-                      className={active ? 'is-active' : ''}
-                      x1={from.x}
-                      y1={from.y}
-                      x2={to.x}
-                      y2={to.y}
-                    />
+                    <button
+                      key={node.id}
+                      type="button"
+                      className={`upgrade-overlay__node is-${state} ${selected ? 'is-selected' : ''}`}
+                      style={style}
+                      aria-pressed={selected}
+                      aria-label={`${localized(node.title, locale)}, ${state}`}
+                      onClick={() => setSelectedId(node.id)}
+                    >
+                      <span className="upgrade-overlay__node-core">
+                        {state === 'complete' ? <Check size={15} /> : state === 'locked' || state === 'excluded' ? <LockKeyhole size={13} /> : <Icon size={16} />}
+                      </span>
+                      <span className="upgrade-overlay__node-copy">
+                        <small>T{node.tier} · {stateLabel(state, locale)}</small>
+                        <strong>{localized(node.title, locale)}</strong>
+                      </span>
+                    </button>
                   )
                 })}
-              </svg>
-
-              {tabNodes.map((node, index) => {
-                const Icon = node.icon
-                const complete = isComplete(node)
-                const locked = isLocked(node)
-                const selected = selectedNode.id === node.id
-                const style = { '--node-x': `${node.x}%`, '--node-y': `${node.y}%`, '--node-order': index } as CSSProperties
-                return (
-                  <button
-                    key={node.id}
-                    type="button"
-                    className={`upgrade-overlay__node ${selected ? 'is-selected' : ''} ${complete ? 'is-complete' : ''} ${locked ? 'is-locked' : ''}`}
-                    style={style}
-                    aria-pressed={selected}
-                    aria-label={`${node.title}${complete ? '、導入済み' : locked ? '、ロック中' : ''}`}
-                    onClick={() => setSelectedId(node.id)}
-                  >
-                    <span className="upgrade-overlay__node-core">
-                      {complete ? <Check size={17} /> : locked ? <LockKeyhole size={15} /> : <Icon size={18} />}
-                    </span>
-                    <span className="upgrade-overlay__node-copy">
-                      <small>{node.eyebrow}</small>
-                      <strong>{node.title}</strong>
-                    </span>
-                  </button>
-                )
-              })}
+              </div>
             </div>
 
             {activeTab === 'model' && (
               <div className={`upgrade-overlay__riskline ${maxGap >= 3 ? 'is-critical' : maxGap >= 1 ? 'is-open' : ''}`}>
-                <span><ShieldCheck size={14} /> 制御ギャップ</span>
+                <span><ShieldCheck size={14} /> {locale === 'ja' ? '制御ギャップ' : 'CONTROL GAP'}</span>
                 <div><i style={{ width: `${clampPercent(maxGap * 20)}%` }} /></div>
-                <strong>{maxGap === 0 ? '均衡' : `Kが+${maxGap.toFixed(1)}超過`}</strong>
+                <strong>{maxGap === 0 ? (locale === 'ja' ? '均衡' : 'BALANCED') : (locale === 'ja' ? `Kが+${maxGap.toFixed(1)}超過` : `+${maxGap.toFixed(1)} EXPOSED`)}</strong>
               </div>
             )}
           </section>
 
           <aside className="upgrade-overlay__detail" aria-live="polite">
             <div className="upgrade-overlay__detail-index">
-              <span>{selectedNode.eyebrow}</span>
+              <span>{locale === 'ja' ? 'ティア' : 'TIER'} {String(selectedNode.tier).padStart(2, '0')} · {stateLabel(selectedState, locale)}</span>
               <span>{String(tabNodes.indexOf(selectedNode) + 1).padStart(2, '0')} / {String(tabNodes.length).padStart(2, '0')}</span>
             </div>
             <div className="upgrade-overlay__detail-icon">
               {(() => {
-                const DetailIcon = selectedNode.icon
+                const DetailIcon = ICONS[selectedNode.iconKey] ?? Sparkles
                 return <DetailIcon size={28} />
               })()}
             </div>
-            <h3>{selectedNode.title}</h3>
-            <p>{selectedNode.summary}</p>
+            <h3>{localized(selectedNode.title, locale)}</h3>
+            <p>{localized(selectedNode.summary, locale)}</p>
 
-            {selectedNode.action === 'model' && (
+            {selectedNode.category === 'model' && (
               <div className="upgrade-overlay__forecast">
-                <span>次のモデル投資後</span>
+                <span>{locale === 'ja' ? '制御予測' : 'CONTROL FORECAST'}</span>
                 <div>
                   <b>K{nextCapability.toFixed(0)}</b>
                   <ChevronRight size={14} />
-                  <strong className={nextSafetyGap >= 3 ? 'is-risk' : ''}>S差 +{nextSafetyGap.toFixed(0)}</strong>
-                  <strong className={nextGovernanceGap >= 3 ? 'is-risk' : ''}>G差 +{nextGovernanceGap.toFixed(0)}</strong>
+                  <strong className={nextSafetyGap >= 3 ? 'is-risk' : ''}>S{locale === 'ja' ? '差' : ' GAP'} +{nextSafetyGap.toFixed(0)}</strong>
+                  <strong className={nextGovernanceGap >= 3 ? 'is-risk' : ''}>G{locale === 'ja' ? '差' : ' GAP'} +{nextGovernanceGap.toFixed(0)}</strong>
                 </div>
               </div>
             )}
 
-            {selectedNode.id === 'product-education' && (
-              <div className="upgrade-overlay__learning-note">
-                <GraduationCap size={16} />
-                <span><b>教育ルート</b>若年層データの統治を整えるほど、教育アクセスは伸びる。</span>
-              </div>
-            )}
+            <div className="upgrade-overlay__route">
+              <span><small>{locale === 'ja' ? '前提条件' : 'REQUIRES'}</small><b>{describePrerequisite(selectedNode.prerequisite, nodesById, locale)}</b></span>
+              <span>
+                <small>{locale === 'ja' ? '排他' : 'EXCLUDES'}</small>
+                <b>{selectedExclusions.length ? selectedExclusions.map((node) => localized(node.title, locale)).join(' / ') : (locale === 'ja' ? 'なし' : 'None')}</b>
+              </span>
+            </div>
 
-            {selectedNode.action === 'ecosystem' && (
-              <div className="upgrade-overlay__learning-note upgrade-overlay__learning-note--open">
+            {selectedExclusions.length > 0 && (
+              <div className="upgrade-overlay__learning-note upgrade-overlay__learning-note--tradeoff">
                 <ArrowUpRight size={16} />
-                <span><b>好循環</b>シェアを一部手放し、信頼・市場健全性・長期の勢いを得る。</span>
+                <span><b>{locale === 'ja' ? '失う選択肢' : 'WHAT YOU GIVE UP'}</b>{locale === 'ja' ? `導入すると ${selectedExclusions.map((node) => localized(node.title, locale)).join(' と ')} は恒久的に選べません。` : `Deploying this permanently closes ${selectedExclusions.map((node) => localized(node.title, locale)).join(' and ')}.`}</span>
               </div>
             )}
 
             <dl className="upgrade-overlay__effects">
-              {selectedNode.effects.map((effect) => (
-                <div key={effect.label}>
-                  <dt>{effect.label}</dt>
-                  <dd className={`is-${effect.tone ?? 'neutral'}`}>{effect.value}</dd>
+              {selectedNode.effects.map((effect, index) => (
+                <div key={`${effect.metric}-${index}`}>
+                  <dt>{metricLabel(effect.metric, locale)}</dt>
+                  <dd className={`is-${effectTone(effect)}`}>{localized(effect.text, locale)}</dd>
                 </div>
               ))}
             </dl>
 
+            {selectedNode.comboEventIds.length > 0 && (
+              <div className="upgrade-overlay__combo">
+                <BadgeCheck size={14} />
+                <span><small>{locale === 'ja' ? '世界イベント・コンボ' : 'WORLD EVENT COMBOS'}</small>{locale === 'ja' ? `導入後に${selectedNode.comboEventIds.length}件のシナリオ連携が有効` : `${selectedNode.comboEventIds.length} scenario hooks armed after deployment`}</span>
+              </div>
+            )}
+
             <div className="upgrade-overlay__commit">
               <span>
-                <small>費用</small>
-                <strong>{selectedCost === 0 ? '計算資源不要' : `${formatCompute(selectedCost)} PF`}</strong>
+                <small>{locale === 'ja' ? '費用' : 'COST'}</small>
+                <strong>{selectedCost === 0 ? (locale === 'ja' ? '計算資源不要' : 'NO COMPUTE') : `${formatCompute(selectedCost)} PF`}</strong>
               </span>
               <button
                 type="button"
-                disabled={selectedStatus.disabled}
-                onClick={() => onAction(selectedNode.action)}
-                data-kind={selectedStatus.kind}
+                disabled={selectedState !== 'ready'}
+                onClick={commitNode}
+                data-kind={selectedState}
               >
-                {selectedStatus.label}
-                {!selectedStatus.disabled && <ChevronRight size={16} />}
+                {statusLabel(selectedNode, selectedState)}
+                {selectedState === 'ready' && <ChevronRight size={16} />}
               </button>
             </div>
           </aside>
         </main>
 
         <footer className="upgrade-overlay__footer">
-          <Metric label="性能" value={capability} accent="capability" suffix="K" />
-          <Metric label="安全" value={safety} accent={safetyGap >= 3 ? 'risk' : 'safety'} suffix="S" gap={safetyGap} />
-          <Metric label="統治" value={governance} accent={governanceGap >= 3 ? 'risk' : 'governance'} suffix="G" gap={governanceGap} />
+          <Metric label={locale === 'ja' ? 'モデル能力' : 'Capability'} value={capability} accent="capability" suffix="K" />
+          <Metric label={locale === 'ja' ? '安全性' : 'Safety'} value={safety} accent={safetyGap >= 3 ? 'risk' : 'safety'} suffix="S" gap={safetyGap} />
+          <Metric label={locale === 'ja' ? 'ガバナンス' : 'Governance'} value={governance} accent={governanceGap >= 3 ? 'risk' : 'governance'} suffix="G" gap={governanceGap} />
           <div className="upgrade-overlay__world-state">
-            <span><small>信頼</small><b>{trust.toFixed(0)}</b></span>
-            <span><small>市場シェア</small><b>{Math.round(codexShare * 100)}%</b></span>
+            <span><small>{locale === 'ja' ? '社会的信頼' : 'TRUST'}</small><b>{trust.toFixed(0)}</b></span>
+            <span><small>{locale === 'ja' ? '市場シェア' : 'MARKET SHARE'}</small><b>{Math.round(codexShare * 100)}%</b></span>
             <span><small>HHI</small><b className={hhi > .45 ? 'is-risk' : ''}>{hhi.toFixed(2)}</b></span>
-            <span><small>効率</small><b>{efficiency.toFixed(2)}×</b></span>
+            <span><small>{locale === 'ja' ? '効率' : 'EFFICIENCY'}</small><b>{efficiency.toFixed(2)}×</b></span>
           </div>
         </footer>
       </div>
@@ -645,7 +684,7 @@ function Metric({
       <div>
         <span>{label}</span>
         <b>{suffix}{value.toFixed(1)}</b>
-        {gap !== undefined && gap > 0 && <small>差 +{gap.toFixed(1)}</small>}
+        {gap !== undefined && gap > 0 && <small>GAP +{gap.toFixed(1)}</small>}
       </div>
       <i><span style={{ width: `${clampPercent(value * 10)}%` }} /></i>
     </div>

@@ -32,7 +32,7 @@ export const STRATEGY_EFFECT_BOUNDS = Object.freeze({
   governance: Object.freeze({ min: -2, max: 2 }),
   efficiency: Object.freeze({ min: -0.5, max: 0.5 }),
   trust: Object.freeze({ min: -6, max: 6 }),
-  brand: Object.freeze({ min: -6, max: 6 }),
+  brand: Object.freeze({ min: -0.1, max: 0.1 }),
   momentum: Object.freeze({ min: 0, max: 90 }),
   incomeMultiplier: Object.freeze({ min: 0.85, max: 1.10 }),
   opexMultiplier: Object.freeze({ min: 0.85, max: 1.10 }),

@@ -33,7 +33,7 @@ The integrated browser experience includes:
 - A deterministic seeded engine using fixed one-day steps with a Plague Inc.-style Normal / Fast Forward control (1 or 8 substeps per frame).
 - Logistic adoption, competitor dynamics, regulation, incidents, brownout recovery, and bounded invariants.
 - Model, Product, Safety Team, Policy, and Data Center investments funded by Compute.
-- Local keyword handling and input filtering for mobile, education, and enterprise proposals.
+- Curated product actions and a strategy tree; arbitrary feature text is not accepted inside the game.
 - Community deployments, an eight-second Token Reset boost, and an Open Ecosystem action.
 - A deterministic catalog of 100 authored world events: 20 each for disasters, culture, policy, competition, and technology.
 - Weighted date-key scheduling with global/category cooldowns, one-time event history, and an independent random stream that cannot perturb incidents.
@@ -41,6 +41,8 @@ The integrated browser experience includes:
 - Feature/event combos that recognize prior player actions, add bounded secondary effects, and can award at most 30 days of Momentum.
 - Three active provenance labels rendered from engine metadata: **AI 2027**, **AI 2040**, and **Your Timeline**.
 - A read-only Codex Advisor Skill that translates freeform intentions into available game actions without clicking, injecting events, or running a heartbeat.
+- Autonomous rivals that continue investing and competing while the player waits, creating a credible passive-loss path rather than guaranteed growth.
+- An exact bilingual 50-node strategy catalog (12 Model, 16 Product, 12 Company, and 10 Open Ecosystem nodes), with prerequisites, exclusions, costs, effects, and catalog validation. Its full engine/UI integration is still being verified on this development branch and should not be presented as submission-complete until `npm run check` is green.
 - Required 2029 and 2035 decisions whose choices change engine state and endings.
 - Eight resolved outcomes: Beneficial Abundance, Managed Transition, Fragile Abundance, Race Future, Regulatory Freeze, Safety Incident, Misalignment, and Pyrrhic Monopoly.
 - A three-decision ending review comparing the reference scenarios with the player's timeline.
@@ -58,6 +60,7 @@ The integrated browser experience includes:
 - `src/engine.ts` owns state, fixed-step transitions, action effects, incidents, invariants, provenance-bearing news, scoring, and ending evaluation.
 - `src/worldEvents/` owns the five-category catalog, schema validation, eligibility rules, combos, and the date-key deterministic scheduler.
 - `.agents/skills/codex-2040-advisor/SKILL.md` defines the consultation-only contract and maps freeform product intentions to player-executed UI actions.
+- `src/strategyNodes/` defines and validates the bilingual 50-node catalog while `src/components/UpgradeOverlay.tsx` renders the strategy surface.
 - `src/gm.ts`, `src/gmBridgeClient.ts`, and `server/gmBridgePlugin.js` preserve the earlier bounded bridge experiment for tests and reference, but normal gameplay does not start its heartbeat, polling loop, fallback deck, or action transport.
 - `server/realtimePlugin.js` uses the standard OpenAI API key only on the Vite server to mint a 120-second Realtime client secret. Upstream failures collapse to a non-sensitive fallback response.
 - `src/voiceAgent.ts` constructs the official OpenAI Agents SDK `RealtimeAgent` and `RealtimeSession`, pins `gpt-realtime-2.1` with the `webrtc` transport, and owns audio, subtitles, mute, lifecycle, and the function tool.
@@ -76,7 +79,7 @@ The integrated browser experience includes:
 5. Events apply only bounded user/share/growth/Trust effects. They cannot write Compute, Capability, Safety, Governance, decisions, incidents, or endings.
 6. Major events pause the browser simulation until acknowledgement; smaller events enter the ticker and Event Ledger without interruption.
 
-The authority boundary is strict: the engine owns every number, risk transition, and ending; the player owns every action; the Advisor owns explanation only.
+The authority boundary is strict: the engine owns every number, risk transition, and ending; the player owns every action; the Advisor owns explanation only. Freeform feature creation has deliberately been removed from the browser game. Players discuss an idea with the Advisor, then choose one of the deterministic actions that the game exposes.
 
 ## Run Locally
 
@@ -111,7 +114,26 @@ npm test
 npm run build
 ```
 
-The current integrated snapshot passes 111 tests across 13 files and the production build.
+Do not treat a passing test stage as a complete release check: `npm run check` must finish both Vitest and the TypeScript/Vite production build. The current 50-node integration passes 140 tests and the production build; browser E2E remains a separate release gate.
+
+## Static Hosting and OpenAI Sites
+
+The deterministic game is a Vite single-page application and can be published as a static site. OpenAI Sites is the recommended judging URL because it is stable and does not depend on a laptop or temporary tunnel. A site has **not** been created yet, so this README intentionally contains no public deployment URL.
+
+A static deployment includes the complete game, tutorial, autosave, strategy controls, autonomous rivals, authored events, decisions, and endings. It does not include Vite development-server routes:
+
+- `/api/realtime/client-secret` is local-server-only, so a static site uses the clearly labelled scripted voice fallback rather than claiming a live Realtime connection.
+- The dormant GM file bridge is also development-server-only and is not required for normal play.
+
+Build and inspect the static artifact locally before publishing:
+
+```bash
+npm ci
+npm run build
+npm run preview
+```
+
+For a live OpenAI Realtime Voice Agent demo, use the local development server with a server-held `OPENAI_API_KEY`, or add an equivalent trusted backend before claiming Realtime support on a hosted origin. Never place the standard API key in the static bundle.
 
 ## Realtime Voice Demo
 
@@ -130,7 +152,7 @@ Codex 2040 now has one real ruleset. The former automatic presentation mode has 
 
 After **BEGIN SIMULATION**, passive waiting produces only residual adoption and cannot earn an S rank. Ship a feature, open a region, invest in the strategy tree, use Token Reset, or open the ecosystem to activate a limited Momentum window. Critical news and the 2029/2035 choices stop time until the player has read and acknowledged them. The speed selector reports its actual rate as days per second.
 
-Keep Codex visible on the left as the Advisor while the browser runs on the right. The Advisor responds when asked; no background heartbeat or browser-driving loop is required.
+Keep Codex visible on the left as the Advisor while the browser runs on the right. Ask it about a tradeoff or a desired capability, then execute the recommended deterministic action yourself. The Advisor responds when asked; no background heartbeat, browser-driving loop, or free-text game input is required.
 
 ## Canonical Sources and Endings
 
@@ -152,6 +174,8 @@ Codex was the development surface and engineering collaborator for the Build Wee
 
 - The older GM file bridge remains in the repository as a dormant experiment; it is not part of normal gameplay.
 - The Realtime client-secret route is also Vite-development-only. A deployed build needs a trusted server endpoint with equivalent key isolation and origin controls.
+- Static hosting therefore uses the scripted voice fallback unless such a trusted endpoint is added; it must not be described as a live Realtime connection.
+- The bilingual 50-node catalog is integrated with the deterministic engine and strategy UI; browser E2E and final submission packaging remain release gates.
 - A successful bridge heartbeat proves that the local transport accepted a snapshot, not that an external producer consumed it or returned an event.
 - There is no presentation-safe ruleset: the tutorial leads into Normal mode, where critical incidents and terminal Misalignment remain possible.
 - The scenario is an educational simplification, not a forecast or policy recommendation.

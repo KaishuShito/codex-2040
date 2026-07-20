@@ -46,6 +46,14 @@ describe('strategy node catalog', () => {
     for (const id of shippedIds) expect(byId.has(id)).toBe(true)
   })
 
+  it('keeps the ecosystem entry free and prices its deeper legacy-id nodes', () => {
+    expect(byId.get('ecosystem-open')).toMatchObject({ legacyAction: { id: 'ecosystem' } })
+    expect(byId.get('ecosystem-partners')).toMatchObject({ baseCost: 170 })
+    expect(byId.get('ecosystem-commons')).toMatchObject({ baseCost: 320 })
+    expect(byId.get('ecosystem-partners')).not.toHaveProperty('legacyAction')
+    expect(byId.get('ecosystem-commons')).not.toHaveProperty('legacyAction')
+  })
+
   it('keeps English and Japanese copy non-empty for title, summary, action, and effects', () => {
     for (const node of STRATEGY_CATALOG) {
       for (const localized of [node.title, node.summary, node.action]) {
@@ -62,7 +70,11 @@ describe('strategy node catalog', () => {
 
   it('references existing prerequisite ids and forms a DAG', () => {
     for (const node of STRATEGY_CATALOG) {
-      for (const requiredId of collectPrerequisiteIds(node.prerequisite)) expect(byId.has(requiredId)).toBe(true)
+      for (const requiredId of collectPrerequisiteIds(node.prerequisite)) {
+        expect(byId.has(requiredId)).toBe(true)
+        expect(byId.get(requiredId)!.tier).toBeLessThanOrEqual(node.tier)
+        expect(node.exclusions).not.toContain(requiredId)
+      }
     }
 
     const visiting = new Set<StrategyNodeId>()
@@ -80,12 +92,46 @@ describe('strategy node catalog', () => {
     for (const node of STRATEGY_CATALOG) visit(node.id)
   })
 
+  it('rejects prerequisites from a higher tier', () => {
+    const invalid = STRATEGY_CATALOG.map((node) => node.id === 'model-reasoning'
+      ? { ...node, prerequisite: { kind: 'node' as const, id: 'model-frontier' as const } }
+      : node)
+    expect(validateStrategyCatalog(invalid)).toEqual(expect.arrayContaining([
+      expect.objectContaining({ message: expect.stringContaining('tier 4 exceeds node tier 2') }),
+    ]))
+  })
+
+  it('rejects a node that directly requires one of its exclusions', () => {
+    const invalid = STRATEGY_CATALOG.map((node) => node.id === 'model-efficient-inference'
+      ? { ...node, prerequisite: { kind: 'node' as const, id: 'model-scale-race' as const } }
+      : node)
+    expect(validateStrategyCatalog(invalid)).toEqual(expect.arrayContaining([
+      expect.objectContaining({ message: 'node cannot both require and exclude model-scale-race' }),
+    ]))
+  })
+
   it('keeps exclusions symmetric', () => {
     for (const node of STRATEGY_CATALOG) {
       for (const excludedId of node.exclusions) {
         expect(byId.get(excludedId)?.exclusions).toContain(node.id)
       }
     }
+  })
+
+  it('uses exactly the four Fable hard-exclusion pairs', () => {
+    const actualPairs = new Set<string>()
+    for (const node of STRATEGY_CATALOG) {
+      for (const excludedId of node.exclusions) {
+        actualPairs.add([node.id, excludedId].sort().join('::'))
+      }
+    }
+    expect([...actualPairs].sort()).toEqual([
+      'company-central-command::company-distributed-oversight',
+      'ecosystem-open-weights-lite::model-scale-race',
+      'model-efficient-inference::model-scale-race',
+      'product-interop-first::product-super-app',
+    ])
+    expect(byId.get('model-verified-reasoning')?.exclusions).toEqual([])
   })
 
   it('uses only combo ids present in WORLD_EVENTS', () => {
@@ -104,6 +150,12 @@ describe('strategy node catalog', () => {
         expect(effect.value).toBeLessThanOrEqual(bounds.max)
       }
     }
+  })
+
+  it('keeps additive brand effects proportional to the engine brand scalar', () => {
+    const brandEffects = STRATEGY_CATALOG.flatMap((node) => node.effects).filter((effect) => effect.metric === 'brand')
+    expect(brandEffects.length).toBeGreaterThan(0)
+    for (const effect of brandEffects) expect(Math.abs(effect.value)).toBeLessThanOrEqual(0.1)
   })
 
   it('passes the complete runtime validator', () => {

@@ -23,16 +23,19 @@ import {
   END_DAY,
   SPEEDS,
   START_DATE,
+  acquiredStrategyNodeIds,
   addFeature,
   acknowledgeWorldEvent,
   advanceRealtime,
   buyUpgrade,
+  buyStrategyNode,
   choose2029,
   choose2035,
   constants,
   createInitialState,
   dateLabel,
   evaluateEnding,
+  getStrategyNodeAvailability,
   introduceRegion,
   metrics,
   openEcosystem,
@@ -71,6 +74,7 @@ import {
 } from './voiceReset'
 import { GameAudio, type GameSound } from './sound'
 import { decodeSession, encodeSession, SESSION_STORAGE_KEY } from './session'
+import type { StrategyNodeId } from './strategyNodes'
 
 const PREDEFINED_FEATURE_PROMPTS = {
   mobile: 'Mobile support for Android and iOS',
@@ -743,6 +747,15 @@ export default function App() {
     }
   }
 
+  const performStrategyNodeAction = (nodeId: StrategyNodeId) => {
+    const before = stateRef.current
+    const next = buyStrategyNode(before, nodeId)
+    if (next === before) return
+    stateRef.current = next
+    setState(next)
+    playSound('confirm')
+  }
+
   const confirmDecision = (optionId: string) => {
     if (decisionKind === '2029') {
       const choiceMap: Record<string, Choice2029> = {
@@ -1252,6 +1265,10 @@ export default function App() {
         disabledActions={disabledUpgradeActions}
         ecosystemCooldownDays={0}
         initialTab={upgradeTab}
+        completedNodeIds={acquiredStrategyNodeIds(state)}
+        getNodeAvailability={(nodeId) => getStrategyNodeAvailability(state, nodeId)}
+        locale="ja"
+        onNodeAction={performStrategyNodeAction}
         onAction={performUpgradeAction}
         onClose={() => { setUpgradeOpen(false); playSound('tap') }}
       />

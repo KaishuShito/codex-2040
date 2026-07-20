@@ -1,5 +1,13 @@
 import { GM_CONSTANTS } from './gm'
 import type { SourceLabel } from './scenario'
+import { WORLD_EVENTS } from './worldEvents/catalog'
+import {
+  scheduleWorldEvent,
+  WORLD_EVENT_SCHEDULER_CONSTANTS,
+  worldEventDateRandom,
+  type WorldEventCategory,
+  type WorldEventEffect,
+} from './worldEvents'
 
 export type ScenarioSource = SourceLabel
 export type RegionId = 'na' | 'latam' | 'eu' | 'africa' | 'mena' | 'india' | 'eastAsia' | 'oceania'
@@ -47,6 +55,22 @@ export type ActiveEffect = {
   source: ScenarioSource
 }
 
+export type WorldEventNotice = {
+  eventId: string
+  category: WorldEventCategory
+  source: ScenarioSource
+  date: string
+  headline: string
+  cause: string
+  flavor: string
+  region: RegionId | 'global'
+  effect: WorldEventEffect
+  ttlDays: number
+  comboLabel: string | null
+  comboFeature: string | null
+  momentumDays: number
+}
+
 export type GameState = {
   day: number
   regions: Region[]
@@ -79,6 +103,14 @@ export type GameState = {
   nextNewsId: number
   /** Current uint32 state for mulberry32. */
   seed: number
+  /** Stable seed and history for the independent authored-world-event stream. */
+  worldEventSeed: number
+  firedWorldEventIds: string[]
+  lastWorldEventDay: number | null
+  lastWorldEventCategoryDay: Partial<Record<WorldEventCategory, number>>
+  lastWorldPopupDay: number | null
+  worldEventPopupCooldownSeconds: number
+  pendingWorldEvent: WorldEventNotice | null
   flags: string[]
   activeEffects: ActiveEffect[]
   safetyGapDays: number
@@ -177,7 +209,7 @@ export const trustBreakdown = (state: GameState) => {
   const gapUnit = constants.gapWeight * 10
   const monopolyPenalty = Math.max(0, m.codexShare - .55) ** 2 * constants.monopolyScale * 2 + Math.max(0, m.hhi - .45)
   const activeEffects = state.activeEffects.filter((effect) => effect.expiresDay > state.day)
-  const eventOffset = activeEffects.reduce((sum, effect) => sum + effect.trustDelta, 0)
+  const eventOffset = clamp(activeEffects.reduce((sum, effect) => sum + effect.trustDelta, 0), -12, 12)
   const factors: TrustFactor[] = [
     { id: 'baseline', label: 'Institutional baseline', value: 25 },
     { id: 'diversity', label: 'Provider diversity', value: constants.diversityWeight * (1 - m.hhi) * 100 },
@@ -238,6 +270,13 @@ export const createInitialState = (options: { seed?: number } = {}): GameState =
   ],
   nextNewsId: 3,
   seed: (options.seed ?? 2040) >>> 0,
+  worldEventSeed: ((options.seed ?? 2040) ^ 0x9e3779b9) >>> 0,
+  firedWorldEventIds: [],
+  lastWorldEventDay: null,
+  lastWorldEventCategoryDay: {},
+  lastWorldPopupDay: null,
+  worldEventPopupCooldownSeconds: 0,
+  pendingWorldEvent: null,
   flags: [],
   activeEffects: [],
   safetyGapDays: 0,
@@ -317,6 +356,15 @@ export const enforceInvariants = (state: GameState): GameState => {
     ecosystemCooldownSeconds: Math.max(0, finite(state.ecosystemCooldownSeconds)),
     policyGrowthMultiplier: clamp(finite(state.policyGrowthMultiplier, 1), .25, 2),
     seed: state.seed >>> 0,
+    worldEventSeed: finite(state.worldEventSeed, state.seed ^ 0x9e3779b9) >>> 0,
+    firedWorldEventIds: Array.isArray(state.firedWorldEventIds) ? [...new Set(state.firedWorldEventIds.filter((id): id is string => typeof id === 'string'))] : [],
+    lastWorldEventDay: typeof state.lastWorldEventDay === 'number' ? Math.max(0, Math.floor(state.lastWorldEventDay)) : null,
+    lastWorldEventCategoryDay: state.lastWorldEventCategoryDay && typeof state.lastWorldEventCategoryDay === 'object'
+      ? { ...state.lastWorldEventCategoryDay }
+      : {},
+    lastWorldPopupDay: typeof state.lastWorldPopupDay === 'number' ? Math.max(0, Math.floor(state.lastWorldPopupDay)) : null,
+    worldEventPopupCooldownSeconds: Math.max(0, finite(state.worldEventPopupCooldownSeconds)),
+    pendingWorldEvent: state.pendingWorldEvent ?? null,
   }
   return syncRealtimeAliases(next)
 }
@@ -377,6 +425,109 @@ const applyMilestones = (state: GameState): GameState => {
   }
   return next
 }
+
+const combineWorldEventEffects = (base: WorldEventEffect, bonus?: WorldEventEffect): WorldEventEffect => ({
+  usersDeltaPct: clamp(base.usersDeltaPct + (bonus?.usersDeltaPct ?? 0), constants.gm.usersDeltaPct.min, constants.gm.usersDeltaPct.max),
+  shareDelta: clamp(base.shareDelta + (bonus?.shareDelta ?? 0), constants.gm.shareDelta.min, constants.gm.shareDelta.max),
+  growthRateDelta: clamp(base.growthRateDelta + (bonus?.growthRateDelta ?? 0), constants.gm.growthRateDelta.min, constants.gm.growthRateDelta.max),
+  trustDelta: clamp(base.trustDelta + (bonus?.trustDelta ?? 0), constants.gm.trustDelta.min, constants.gm.trustDelta.max),
+  target: bonus?.target ?? base.target ?? 'codex',
+})
+
+const findComboFeature = (state: GameState, terms: readonly string[] | undefined) => {
+  if (!terms) return null
+  return state.features.find((feature) => terms.some((term) => feature.toLocaleLowerCase().includes(term.toLocaleLowerCase()))) ?? null
+}
+
+/** Applies one authored event without granting automatic Momentum or touching control axes. */
+export const applyWorldEvent = (
+  state: GameState,
+  scheduled: NonNullable<ReturnType<typeof scheduleWorldEvent>>,
+): GameState => {
+  const { definition, combo } = scheduled
+  const region: RegionId | 'global' = definition.regions === 'global'
+    ? 'global'
+    : definition.regions[Math.floor(worldEventDateRandom(state.worldEventSeed, state.day, `${definition.id}:region`) * definition.regions.length)] ?? 'global'
+  const effect = combineWorldEventEffects(definition.effect, combo?.effect)
+  const ttlDays = Math.round(clamp(combo?.ttlDays ?? definition.ttlDays, constants.gm.ttlDays.min, constants.gm.ttlDays.max))
+  const target = effect.target ?? 'codex'
+  const regions = state.regions.map((item) => {
+    if (region !== 'global' && item.id !== region) return { ...item }
+    return {
+      ...item,
+      users: item.users * (1 + effect.usersDeltaPct / 100),
+      codexShare: target === 'codex' ? item.codexShare + effect.shareDelta : item.codexShare,
+    }
+  })
+  const rivalShares = [...state.rivalShares] as [number, number, number]
+  const rivalIndex: 0 | 1 | 2 | null = target === 'rivalAnthro' ? 0 : target === 'rivalGoo' ? 1 : target === 'rivalQi' ? 2 : null
+  if (rivalIndex !== null) rivalShares[rivalIndex] += effect.shareDelta
+  const activeEffects = effect.growthRateDelta !== 0 || effect.trustDelta !== 0
+    ? [...state.activeEffects, {
+        id: definition.id,
+        region,
+        growthRateDelta: effect.growthRateDelta,
+        trustDelta: effect.trustDelta,
+        expiresDay: state.day + ttlDays,
+        source: definition.source,
+      }]
+    : state.activeEffects
+  const comboFeature = findComboFeature(state, combo?.requires.featureTermsAny)
+  const comboLabel = combo?.label ?? null
+  const momentumDays = Math.min(30, Math.max(0, combo?.momentumDays ?? 0))
+  const popupAllowed = scheduled.requestedPresentation === 'popup'
+    && state.worldEventPopupCooldownSeconds <= 0
+    && (state.lastWorldPopupDay === null || state.day - state.lastWorldPopupDay >= WORLD_EVENT_SCHEDULER_CONSTANTS.popupSpacingDays)
+  const notice: WorldEventNotice = {
+    eventId: definition.id,
+    category: definition.category,
+    source: definition.source,
+    date: dateLabel(state.day),
+    headline: combo?.headline ?? definition.headline,
+    cause: definition.cause,
+    flavor: definition.flavor,
+    region,
+    effect,
+    ttlDays,
+    comboLabel,
+    comboFeature,
+    momentumDays,
+  }
+  let next = enforceInvariants({
+    ...state,
+    regions,
+    rivalShares,
+    activeEffects,
+    firedWorldEventIds: [...state.firedWorldEventIds, definition.id],
+    lastWorldEventDay: state.day,
+    lastWorldEventCategoryDay: { ...state.lastWorldEventCategoryDay, [definition.category]: state.day },
+    lastWorldPopupDay: popupAllowed ? state.day : state.lastWorldPopupDay,
+    pendingWorldEvent: popupAllowed ? notice : null,
+    momentumDays: momentumDays > 0 ? Math.max(state.momentumDays, momentumDays) : state.momentumDays,
+  })
+  const tone: NewsItem['tone'] = effect.trustDelta < 0 || (target !== 'codex' && effect.shareDelta > 0) ? 'warn' : effect.trustDelta > 0 || effect.usersDeltaPct > 0 ? 'good' : 'neutral'
+  next = withNews(next, notice.headline, definition.source, tone, notice.date)
+  return next
+}
+
+const scheduleWorldEventForState = (state: GameState) => state.day < 120 ? null : scheduleWorldEvent(WORLD_EVENTS, {
+  seed: state.worldEventSeed,
+  day: state.day,
+  year: new Date(START_DATE + state.day * 86_400_000).getUTCFullYear(),
+  flags: state.flags,
+  features: state.features,
+  trust: state.trust,
+  capability: state.capability,
+  worldAdoption: metrics(state).worldAdoption,
+  codexShare: metrics(state).codexShare,
+  firedEventIds: state.firedWorldEventIds,
+  lastEventDay: state.lastWorldEventDay,
+  lastCategoryEventDay: state.lastWorldEventCategoryDay,
+})
+
+export const acknowledgeWorldEvent = (state: GameState): GameState => state.pendingWorldEvent
+  ? { ...state, pendingWorldEvent: null, worldEventPopupCooldownSeconds: 45 }
+  : state
 
 const applyIncident = (state: GameState, kind: IncidentKind): GameState => {
   const incidentCounts = { ...state.incidentCounts, [kind]: state.incidentCounts[kind] + 1 }
@@ -471,7 +622,7 @@ export const tickDay = (input: GameState): GameState => {
       .reduce((sum, effect) => sum + effect.growthRateDelta, 0)
     const freezeCap = state.regulatoryFreeze ? .32 : 1
     const momentum = constants.gamma0 * (1 + constants.capabilityMomentum * avgCapability)
-      * Math.max(.1, 1 + eventGrowth) * (1 - region.regulation) * resetMultiplier
+      * clamp(1 + eventGrowth, .25, 2.5) * (1 - region.regulation) * resetMultiplier
       * state.policyGrowthMultiplier * freezeCap * activityMultiplier
     const users = clamp(region.users + momentum * region.users * (1 - region.users / region.population), 0, region.population)
     const codexProduct = Math.min(10, 2 + state.features.length * 1.5)
@@ -504,7 +655,7 @@ export const tickDay = (input: GameState): GameState => {
   const governanceGap = Math.max(0, state.capability - state.governance)
   const gapPenalty = constants.gapWeight * (safetyGap + governanceGap) / 10
   const monopolyPenalty = Math.max(0, mid.codexShare - .55) ** 2 * constants.monopolyScale * 2 + Math.max(0, hhi - .45)
-  const trustOffset = activeEffects.reduce((sum, effect) => sum + effect.trustDelta, 0)
+  const trustOffset = clamp(activeEffects.reduce((sum, effect) => sum + effect.trustDelta, 0), -12, 12)
   const trustTarget = clamp(.25 + constants.diversityWeight * (1 - hhi) + .25 * (state.safety / 10) + .25 * (state.governance / 10) - monopolyPenalty - gapPenalty) * 100 + trustOffset
   const trust = clamp(state.trust + (trustTarget - state.trust) / constants.trustTau, 0, 100)
   const income = mid.codexUsers * constants.revenue * state.efficiency * activityMultiplier + (brownout ? .45 : 0)
@@ -531,6 +682,10 @@ export const tickDay = (input: GameState): GameState => {
   next = announceRivalStrategy(next)
   next = applyMilestones(next)
   next = branchStep(next)
+  if (!next.terminal && next.nextNewsId === input.nextNewsId) {
+    const scheduled = scheduleWorldEventForState(next)
+    if (scheduled) next = applyWorldEvent(next, scheduled)
+  }
   if (next.day >= END_DAY && !next.terminal) {
     const result = evaluateEnding(next)
     next = { ...next, day: END_DAY, ending: result.id, terminal: true }
@@ -565,6 +720,7 @@ export const advanceRealtime = (state: GameState, elapsedSeconds: number): GameS
     resetBoostSeconds: Math.max(0, state.resetBoostSeconds - elapsed),
     resetCooldownSeconds: Math.max(0, state.resetCooldownSeconds - elapsed),
     ecosystemCooldownSeconds: Math.max(0, state.ecosystemCooldownSeconds - elapsed),
+    worldEventPopupCooldownSeconds: Math.max(0, state.worldEventPopupCooldownSeconds - elapsed),
   })
 }
 

@@ -24,8 +24,8 @@ import {
   SPEEDS,
   START_DATE,
   addFeature,
+  acknowledgeWorldEvent,
   advanceRealtime,
-  applyGMEvents,
   buyUpgrade,
   choose2029,
   choose2035,
@@ -49,18 +49,7 @@ import {
   type Speed,
   type Upgrade,
 } from './engine'
-import {
-  advanceHeartbeat,
-  createEducationModeResponse,
-  createGmRuntimeState,
-  enqueueImmediateAction,
-  filterPlayerInput,
-  GM_CONSTANTS,
-  type GmEvent,
-  type GmSnapshot,
-  type ImmediateAction,
-} from './gm'
-import { pollGmEvents, postGmAction, postGmHeartbeat } from './gmBridgeClient'
+import { filterPlayerInput } from './gm'
 import { AI_2040_URL, getDecisionMilestones, type SourceLabel } from './scenario'
 import WorldMap, { type WorldMapCompetitiveView, type WorldMapMarker, type WorldMapRegionIntensity } from './components/WorldMap'
 import UpgradeOverlay, {
@@ -72,6 +61,7 @@ import UpgradeOverlay, {
 import ScenarioDecision, { type ScenarioDecisionOptions } from './components/ScenarioDecision'
 import EndingOverlay, { type DecisionDivergences } from './components/EndingOverlay'
 import VoiceCallPanel, { type VoiceSubtitle } from './components/VoiceCallPanel'
+import WorldEventPopup, { type WorldEventPopupNotice } from './components/WorldEventPopup'
 import { RealtimeVoiceClient, type MicPermissionStatus, type VoiceConnectionStatus } from './voiceAgent'
 import {
   createVoiceResetState,
@@ -166,39 +156,6 @@ const TUTORIAL_STEPS = [
   },
 ] as const
 
-const createBridgeSnapshot = (state: GameState, playerInbox: readonly string[] = []): GmSnapshot => {
-  const current = metrics(state)
-  const topRegions = [...state.regions]
-    .sort((left, right) => right.users / right.population - left.users / left.population)
-    .slice(0, 4)
-    .map((region) => region.id)
-  return {
-    date: dateLabel(state.day),
-    A_world: current.worldAdoption,
-    S_c: current.codexShare,
-    HHI: current.hhi,
-    T: state.trust,
-    K: state.capability,
-    S: state.safety,
-    G: state.governance,
-    topRegions,
-    recentEvents: state.news.slice(0, 8).map((item) => item.headline),
-    playerInbox,
-  }
-}
-
-/** Engine-applied authored events remain visibly distinct from validated live GM output. */
-export const applyScriptedEvents = (state: GameState, events: readonly GmEvent[]): GameState => {
-  const firstNewId = state.nextNewsId
-  const next = applyGMEvents(state, events.map((event) => ({ ...event, date: dateLabel(state.day) })))
-  return {
-    ...next,
-    news: next.news.map((item) => item.id >= firstNewId && item.source === 'Live GM'
-      ? { ...item, source: 'Your Timeline' as const }
-      : item),
-  }
-}
-
 function Meter({ label, value, max = 100, danger = false, hint }: { label: string; value: number; max?: number; danger?: boolean; hint?: string }) {
   const normalized = clamp(value / max * 100)
   return (
@@ -268,15 +225,12 @@ export default function App() {
   const [selectedRegionId, setSelectedRegionId] = useState<RegionId | null>('eastAsia')
   const [selectedCompetitor, setSelectedCompetitor] = useState<number | null>(null)
   const [featureText, setFeatureText] = useState('')
-  const [featureStatus, setFeatureStatus] = useState('Local effects apply instantly. GM interpretation follows asynchronously.')
+  const [featureStatus, setFeatureStatus] = useState('Local effects apply instantly. Ask the Advisor to review the tradeoff before or after shipping.')
   const [resetPulse, setResetPulse] = useState(0)
   const [upgradeOpen, setUpgradeOpen] = useState(false)
   const [upgradeTab, setUpgradeTab] = useState<UpgradeOverlayTab>('model')
   const [decisionSelection, setDecisionSelection] = useState<string | null>(null)
   const [endingVisible, setEndingVisible] = useState(true)
-  const [heartbeatSeconds, setHeartbeatSeconds] = useState(60)
-  const [bridgeMode, setBridgeMode] = useState<'checking' | 'available' | 'unavailable' | 'fallback'>('checking')
-  const [educationResponded, setEducationResponded] = useState(false)
   const [voiceOpen, setVoiceOpen] = useState(false)
   const [voiceStatus, setVoiceStatus] = useState<VoiceConnectionStatus>('idle')
   const [micPermission, setMicPermission] = useState<MicPermissionStatus>('unknown')
@@ -290,17 +244,11 @@ export default function App() {
   const persistTimerRef = useRef<number | null>(null)
   const audioRef = useRef<GameAudio | null>(null)
   if (!audioRef.current) audioRef.current = new GameAudio()
-  const gmRuntimeRef = useRef(createGmRuntimeState(Date.now()))
   const pendingTimersRef = useRef<number[]>([])
-  const educationRespondedRef = useRef(false)
-  const heartbeatInFlightRef = useRef(false)
-  const pollInFlightRef = useRef(false)
-  const lastValidGmEventAtRef = useRef<number | null>(null)
   const voiceClientRef = useRef<RealtimeVoiceClient | null>(null)
   const voiceResetRef = useRef(voiceResetState)
   const voiceSubtitleIdRef = useRef(0)
   const observedNewsIdRef = useRef(state.news[0]?.id ?? 0)
-  const tutorialActiveRef = useRef(true)
   const actionDockRef = useRef<HTMLElement | null>(null)
   const lastBriefSoundIdRef = useRef<number | null>(null)
   const lastDecisionSoundRef = useRef<string | null>(null)
@@ -333,7 +281,32 @@ export default function App() {
     : state.day >= DECISION_2029_DAY && !state.choice2029
       ? '2029'
       : null
-  const simulationBlocked = showStartScreen || restartConfirmOpen || tutorialStep !== null || paused || Boolean(criticalNews) || upgradeOpen || Boolean(decisionKind) || state.terminal
+  const simulationBlocked = showStartScreen || restartConfirmOpen || tutorialStep !== null || paused || Boolean(criticalNews) || Boolean(state.pendingWorldEvent) || upgradeOpen || Boolean(decisionKind) || state.terminal
+
+  const worldEventPopup = useMemo<WorldEventPopupNotice | null>(() => {
+    const notice = state.pendingWorldEvent
+    if (!notice) return null
+    const signed = (value: number, suffix = '') => `${value > 0 ? '+' : ''}${value}${suffix}`
+    const effects = [
+      notice.effect.usersDeltaPct !== 0 ? { label: 'AI USERS', amount: signed(notice.effect.usersDeltaPct, '%'), tone: notice.effect.usersDeltaPct > 0 ? 'positive' as const : 'negative' as const } : null,
+      notice.effect.shareDelta !== 0 ? { label: notice.effect.target && notice.effect.target !== 'codex' ? 'RIVAL SHARE' : 'CODEX SHARE', amount: signed(Math.round(notice.effect.shareDelta * 100), ' pts'), tone: notice.effect.target && notice.effect.target !== 'codex' ? 'negative' as const : notice.effect.shareDelta > 0 ? 'positive' as const : 'negative' as const } : null,
+      notice.effect.growthRateDelta !== 0 ? { label: 'ADOPTION RATE', amount: signed(Math.round(notice.effect.growthRateDelta * 100), '%'), tone: notice.effect.growthRateDelta > 0 ? 'positive' as const : 'negative' as const } : null,
+      notice.effect.trustDelta !== 0 ? { label: 'TRUST TARGET', amount: signed(notice.effect.trustDelta), tone: notice.effect.trustDelta > 0 ? 'positive' as const : 'negative' as const } : null,
+    ].filter((effect): effect is NonNullable<typeof effect> => Boolean(effect))
+    return {
+      id: notice.eventId,
+      source: notice.source,
+      category: notice.category,
+      date: notice.date,
+      dateTime: notice.date,
+      headline: notice.headline,
+      cause: notice.cause,
+      flavor: notice.flavor,
+      duration: `${notice.ttlDays} SIMULATION DAYS`,
+      effects: effects.length > 0 ? effects : [{ label: 'TIMELINE', amount: 'CONTEXT SHIFT', tone: 'neutral' }],
+      combo: notice.comboLabel ? { priorFeature: notice.comboFeature ?? notice.comboLabel, outcome: `${notice.comboLabel}${notice.momentumDays > 0 ? ` · MOMENTUM +${notice.momentumDays}D` : ''}` } : undefined,
+    }
+  }, [state.pendingWorldEvent])
 
   const playSound = (sound: GameSound) => audioRef.current?.play(sound)
 
@@ -350,9 +323,7 @@ export default function App() {
       }
     }, 500)
   }, [hasStarted, state])
-  useEffect(() => { educationRespondedRef.current = educationResponded }, [educationResponded])
   useEffect(() => { voiceResetRef.current = voiceResetState }, [voiceResetState])
-  useEffect(() => { tutorialActiveRef.current = showStartScreen || tutorialStep !== null }, [showStartScreen, tutorialStep])
 
   useEffect(() => {
     audioRef.current?.preload()
@@ -389,7 +360,7 @@ export default function App() {
   }, [decisionKind])
 
   useEffect(() => {
-    if (decisionKind || criticalNews || tutorialStep !== null || state.terminal) return
+    if (decisionKind || criticalNews || state.pendingWorldEvent || tutorialStep !== null || state.terminal) return
     const newestId = state.news.reduce((maximum, item) => Math.max(maximum, item.id), observedNewsIdRef.current)
     const unseen = state.news.filter((item) => item.id > observedNewsIdRef.current)
     observedNewsIdRef.current = newestId
@@ -397,7 +368,7 @@ export default function App() {
       item.tone === 'warn' && /SAFETY INCIDENT|REGULATORY FREEZE|MISALIGNMENT|CRITICAL|EMERGENCY|DECISION/i.test(item.headline)
     ))
     if (critical) setCriticalNews(critical)
-  }, [criticalNews, decisionKind, state.news, state.terminal, tutorialStep])
+  }, [criticalNews, decisionKind, state.news, state.pendingWorldEvent, state.terminal, tutorialStep])
 
   useEffect(() => () => {
     pendingTimersRef.current.forEach((timer) => window.clearTimeout(timer))
@@ -425,102 +396,6 @@ export default function App() {
     return () => window.clearInterval(timer)
   }, [simulationBlocked])
 
-  useEffect(() => {
-    let active = true
-    const checkHeartbeat = async () => {
-      const now = Date.now()
-      setHeartbeatSeconds(Math.max(0, Math.ceil((gmRuntimeRef.current.nextHeartbeatAtMs - now) / 1000)))
-      if (now < gmRuntimeRef.current.nextHeartbeatAtMs || heartbeatInFlightRef.current) return
-      heartbeatInFlightRef.current = true
-      const inbox = gmRuntimeRef.current.immediateQueue.map((action) => action.input)
-      await postGmHeartbeat(createBridgeSnapshot(stateRef.current, inbox), undefined, now)
-      heartbeatInFlightRef.current = false
-      if (!active) return
-      const lastValidEventAt = lastValidGmEventAtRef.current
-      const hasFreshValidEvent = lastValidEventAt !== null
-        && now - lastValidEventAt <= GM_CONSTANTS.heartbeatIntervalMs
-      const heartbeat = advanceHeartbeat(gmRuntimeRef.current, now, hasFreshValidEvent ? 'available' : 'unavailable')
-      gmRuntimeRef.current = heartbeat.state
-      setHeartbeatSeconds(Math.max(0, Math.ceil((heartbeat.state.nextHeartbeatAtMs - Date.now()) / 1000)))
-      setBridgeMode(heartbeat.source === 'live-gm' ? 'available' : 'fallback')
-      if (heartbeat.fallbackEvent && !tutorialActiveRef.current) {
-        gmRuntimeRef.current = { ...gmRuntimeRef.current, immediateQueue: [] }
-        setState((current) => applyScriptedEvents(current, [heartbeat.fallbackEvent!]))
-      }
-    }
-    const timer = window.setInterval(() => { void checkHeartbeat() }, 1000)
-    void checkHeartbeat()
-    return () => {
-      active = false
-      window.clearInterval(timer)
-    }
-  }, [])
-
-  useEffect(() => {
-    let active = true
-    const poll = async () => {
-      if (tutorialActiveRef.current || pollInFlightRef.current) return
-      pollInFlightRef.current = true
-      const result = await pollGmEvents()
-      pollInFlightRef.current = false
-      if (!active) return
-      if (result.status === 'available' && result.events.length > 0) {
-        lastValidGmEventAtRef.current = Date.now()
-        gmRuntimeRef.current = {
-          ...gmRuntimeRef.current,
-          mode: 'live',
-          consecutiveFailures: 0,
-          immediateQueue: [],
-        }
-        setBridgeMode('available')
-        setState((current) => applyGMEvents(current, result.events))
-        if (result.events.some((event) => /教育|学校|児童データ|learning|school/i.test(`${event.headline} ${event.flavor}`))) {
-          setEducationResponded(true)
-          setFeatureStatus('LOCAL GM EVENT · validated access and child-data governance response received.')
-        }
-      } else if (result.status === 'unavailable') {
-        setBridgeMode((current) => current === 'fallback' ? current : 'unavailable')
-      }
-    }
-    const timer = window.setInterval(() => { void poll() }, 2500)
-    void poll()
-    return () => {
-      active = false
-      window.clearInterval(timer)
-    }
-  }, [])
-
-  const queueGmAction = async (kind: 'feature' | 'community_event' | 'choice_2029' | 'choice_2035', input: string) => {
-    const action: ImmediateAction = {
-      id: `${kind}-${Date.now()}`,
-      kind,
-      input,
-      receivedAtMs: Date.now(),
-    }
-    const queued = enqueueImmediateAction(gmRuntimeRef.current, action)
-    if (!queued.accepted) return false
-    gmRuntimeRef.current = queued.state
-    const inbox = gmRuntimeRef.current.immediateQueue.map((queuedAction) => queuedAction.input)
-    const result = await postGmAction(createBridgeSnapshot(stateRef.current, inbox), action)
-    if (result.status === 'accepted') {
-      setBridgeMode((current) => current === 'fallback' || current === 'available' ? current : 'checking')
-      return true
-    }
-    setBridgeMode((current) => current === 'fallback' ? current : 'unavailable')
-    return false
-  }
-
-  const applyEducationFallback = () => {
-    if (educationRespondedRef.current) return
-    const responses = createEducationModeResponse({ date: dateLabel(stateRef.current.day) })
-    setState((current) => applyScriptedEvents(current, responses))
-    gmRuntimeRef.current = { ...gmRuntimeRef.current, mode: 'scripted-fallback', immediateQueue: [] }
-    setBridgeMode('fallback')
-    educationRespondedRef.current = true
-    setEducationResponded(true)
-    setFeatureStatus('SCRIPTED GM FALLBACK · access benefit confirmed; child-data governance review opened.')
-  }
-
   const shipFeature = (raw: string) => {
     const filtered = filterPlayerInput(raw)
     if (!filtered.ok) {
@@ -540,13 +415,8 @@ export default function App() {
     const education = /learn|school|student|teacher|classroom|education|教育|学習|学校|教室/i.test(input)
     setFeatureStatus(education
       ? 'LOCAL EFFECT APPLIED · education access and regional fit increased immediately.'
-      : 'LOCAL EFFECT APPLIED · regional fit updated immediately; GM response queued.')
+      : 'LOCAL EFFECT APPLIED · regional fit updated. Ask the Advisor to review the tradeoff.')
     playSound('confirm')
-    void queueGmAction('feature', input).then((available) => {
-      if (!education || available) return
-      const timer = window.setTimeout(applyEducationFallback, 900)
-      pendingTimersRef.current.push(timer)
-    })
   }
 
   const submitFeature = (event: FormEvent) => {
@@ -565,7 +435,6 @@ export default function App() {
     setState(next)
     stateRef.current = next
     playSound('confirm')
-    void queueGmAction('community_event', selectedRegion.name)
     setFeatureStatus(`LOCAL EFFECT APPLIED · ${selectedRegion.name} community network expanded.`)
   }
 
@@ -609,13 +478,6 @@ export default function App() {
     setHasStarted(false)
     setActionNudge(false)
     setSelectedCompetitor(null)
-    setEducationResponded(false)
-    educationRespondedRef.current = false
-    const now = Date.now()
-    gmRuntimeRef.current = createGmRuntimeState(now)
-    lastValidGmEventAtRef.current = null
-    setBridgeMode('checking')
-    setHeartbeatSeconds(60)
     playSound('confirm')
   }
 
@@ -867,7 +729,6 @@ export default function App() {
       const next = choose2029(stateRef.current, choice)
       stateRef.current = next
       setState(next)
-      void queueGmAction('choice_2029', optionId)
     } else if (decisionKind === '2035') {
       const choiceMap: Record<string, Choice2035> = { 'hold-the-line': 'hold-the-line', 'accelerate-again': 'accelerate' }
       const choice = choiceMap[optionId]
@@ -875,7 +736,6 @@ export default function App() {
       const next = choose2035(stateRef.current, choice)
       stateRef.current = next
       setState(next)
-      void queueGmAction('choice_2035', optionId)
     }
     setDecisionSelection(null)
     playSound('confirm')
@@ -911,8 +771,8 @@ export default function App() {
     { id: 'tokyo', regionId: 'eastAsia', label: 'Build Week Tokyo', kind: 'community', sourceLabel: 'Your Timeline' },
     { id: 'race', regionId: 'na', label: 'Race pressure', kind: 'source', sourceLabel: 'AI 2027', active: date >= '2027-01-01' },
     { id: 'verification', regionId: 'eu', label: 'Verification forum', kind: 'policy', sourceLabel: 'AI 2040', active: date >= '2029-01-01' },
-    ...(educationResponded ? [{ id: 'education', regionId: 'india' as const, label: 'School access', kind: 'live' as const, sourceLabel: 'Live GM' }] : []),
-  ], [date, educationResponded])
+    ...(state.flags.includes('feature:education') ? [{ id: 'education', regionId: 'india' as const, label: 'School access', kind: 'community' as const, sourceLabel: 'Your Timeline' as const }] : []),
+  ], [date, state.flags])
 
   const enabledFeatures = useMemo<UpgradeOverlayFeature[]>(() => [
     ...(state.flags.includes('feature:mobile') ? ['mobile' as const] : []),
@@ -1007,13 +867,6 @@ export default function App() {
   const latestNewsDetail = latestNews?.source === 'Live GM'
     ? 'Validated event received through the browser-local GM bridge.'
     : 'A deterministic scenario event with provenance owned by the simulation engine.'
-  const bridgeLabel = bridgeMode === 'available'
-    ? 'LIVE BRIDGE AVAILABLE'
-    : bridgeMode === 'fallback'
-      ? 'SCRIPTED FALLBACK ACTIVE'
-      : bridgeMode === 'unavailable'
-        ? 'BRIDGE UNAVAILABLE'
-        : 'AWAITING VALID GM EVENT'
   const tutorial = tutorialStep === null ? null : TUTORIAL_STEPS[tutorialStep]
   const isCrisisBrief = Boolean(criticalNews && /SAFETY|ALIGNMENT|REGULATORY|MISALIGNMENT|CRITICAL|EMERGENCY/i.test(criticalNews.headline))
   const simulationStatus = showStartScreen
@@ -1022,6 +875,8 @@ export default function App() {
       ? 'PAUSED · TUTORIAL'
     : decisionKind
       ? 'PAUSED · DECISION REQUIRED'
+      : state.pendingWorldEvent
+        ? `PAUSED · ${state.pendingWorldEvent.category.toUpperCase()} EVENT`
       : criticalNews
       ? `PAUSED · ${isCrisisBrief ? 'CRITICAL EVENT' : 'WORLD BRIEF'}`
       : upgradeOpen
@@ -1084,7 +939,7 @@ export default function App() {
         <div className="intel-strip__label"><Radio size={13} /> SCENARIO INTELLIGENCE</div>
         {latestNews && <div className="intel-strip__headline"><SourceBadge source={latestNews.source} /><OverflowTicker className="intel-strip__ticker" text={`${latestNews.headline} · ${latestNewsDetail}`} /></div>}
         <div className="source-key" aria-label="Source label key">
-          {(['AI 2027', 'AI 2040', 'Your Timeline', 'Live GM'] as SourceLabel[]).map((source) => <SourceBadge source={source} key={source} />)}
+          {(['AI 2027', 'AI 2040', 'Your Timeline'] as SourceLabel[]).map((source) => <SourceBadge source={source} key={source} />)}
         </div>
       </section>
 
@@ -1148,10 +1003,10 @@ export default function App() {
             )
           })()}
 
-          <div className="gm-watchdog" data-mode={bridgeMode}>
-            <div><Radio size={13} /><span><b>GM BRIDGE</b><small>{bridgeLabel}</small></span></div>
-            <strong>{heartbeatSeconds}s</strong>
-            <p>Transport acknowledgements remain pending. Only a validated non-empty event marks GM live; the 60-second watchdog otherwise runs a bounded script.</p>
+          <div className="gm-watchdog" data-mode="advisor">
+            <div><Radio size={13} /><span><b>ADVISOR MODE</b><small>CONSULTATION ONLY</small></span></div>
+            <strong>100</strong>
+            <p>Ask the Advisor for a move or tradeoff. It translates your intent into an available action; the deterministic engine and your choices remain in control.</p>
           </div>
         </aside>
 
@@ -1170,13 +1025,13 @@ export default function App() {
               competitiveView={competitiveMapView}
               resetPulse={resetPulse}
             />
-            {(showStartScreen || restartConfirmOpen || tutorial || (criticalNews && !decisionKind && !state.terminal)) && <div className="game-modal-shield" aria-hidden="true" />}
+            {(showStartScreen || restartConfirmOpen || tutorial || state.pendingWorldEvent || (criticalNews && !decisionKind && !state.terminal)) && <div className="game-modal-shield" aria-hidden="true" />}
             {showStartScreen && (
               <section className="start-brief" role="dialog" aria-modal="true" aria-labelledby="start-brief-title">
                 <span className="start-brief__eyebrow">AI GOVERNANCE SCENARIO SIMULATOR</span>
                 <h1 id="start-brief-title">BUILD THE FUTURE.</h1>
                 <p>Expand useful AI from 2026 to 2040 while keeping safety, governance, public trust, and healthy competition alive.</p>
-                <div className="start-brief__sources"><SourceBadge source="AI 2027" /><SourceBadge source="AI 2040" /><SourceBadge source="Your Timeline" /><SourceBadge source="Live GM" /></div>
+                <div className="start-brief__sources"><SourceBadge source="AI 2027" /><SourceBadge source="AI 2040" /><SourceBadge source="Your Timeline" /></div>
                 <footer>
                   <button autoFocus onClick={beginWithTutorial}>START WITH BRIEFING <ChevronRight size={14} /></button>
                   <button onClick={beginWithoutTutorial}>SKIP BRIEFING</button>
@@ -1207,6 +1062,18 @@ export default function App() {
                   <button autoFocus onClick={() => { if (tutorialStep === TUTORIAL_STEPS.length - 1) finishTutorial(); else { setTutorialStep((step) => step === null ? 0 : step + 1); playSound('tap') } }}>{tutorialStep === TUTORIAL_STEPS.length - 1 ? (hasStarted ? 'RESUME SIMULATION' : 'BEGIN SIMULATION') : 'NEXT'}</button>
                 </footer>
               </section>
+            )}
+            {worldEventPopup && tutorialStep === null && !decisionKind && !state.terminal && (
+              <WorldEventPopup
+                notice={worldEventPopup}
+                onAcknowledge={() => {
+                  const next = acknowledgeWorldEvent(stateRef.current)
+                  stateRef.current = next
+                  setState(next)
+                  playSound('confirm')
+                }}
+                advisorCopy="Tell the Codex 2040 Advisor what you want to protect or exploit. It will translate that intent into an available action; you execute it."
+              />
             )}
             {criticalNews && !decisionKind && tutorialStep === null && !state.terminal && (
               <section className="critical-brief" data-crisis={isCrisisBrief} role="dialog" aria-modal="true" aria-labelledby="critical-brief-title">
@@ -1282,7 +1149,7 @@ export default function App() {
         </button>
 
         <form className="feature-console" onSubmit={submitFeature}>
-          <div className="feature-console__label"><Sparkles size={15} /><span><small>SHIP A FEATURE</small><b>Change the timeline locally, then let GM respond</b></span></div>
+          <div className="feature-console__label"><Sparkles size={15} /><span><small>SHIP A FEATURE</small><b>Describe the intent; ask the Advisor to map the tradeoff</b></span></div>
           <div className="feature-console__input">
             <input value={featureText} onChange={(event) => setFeatureText(event.target.value)} maxLength={60} placeholder="Describe a capability in 60 characters…" aria-label="Feature proposal" />
             <button type="submit">SHIP <ChevronRight size={13} /></button>

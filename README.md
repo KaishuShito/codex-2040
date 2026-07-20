@@ -2,7 +2,7 @@
 
 **Codex 2040 is an educational AI-governance simulation about expanding access without outrunning safety, governance, or healthy competition.**
 
-The product thesis is simple: Codex helps build a game about its own spread, then shares the game board with a Codex game master. In the Codex app experience, the left surface provides narration and discussion while the right in-app browser runs the playable simulation. The player is not trying to own the world; the goal is to help the world adopt useful AI while preserving trust and a plural ecosystem.
+The product thesis is simple: Codex helps build a game about its own spread, then becomes the player's strategy advisor. In the Codex app experience, the left surface explains tradeoffs while the right in-app browser runs the deterministic simulation. The player is the only operator. The goal is not to own the world, but to help it adopt useful AI while preserving trust and a plural ecosystem.
 
 > You did not own the world. You helped it learn.
 
@@ -10,7 +10,7 @@ The product thesis is simple: Codex helps build a game about its own spread, the
 
 [![Codex 2040 running inside the Codex app](docs/assets/codex-2040-demo-poster.jpg)](docs/assets/codex-2040-demo.mp4)
 
-**[▶ Watch the 12-second Codex 2040 demo](docs/assets/codex-2040-demo.mp4)** — the Codex game master and browser simulation running together during Build Week Tokyo.
+**[▶ Watch the 12-second Codex 2040 demo](docs/assets/codex-2040-demo.mp4)** — the Codex advisor and browser simulation running together during Build Week Tokyo.
 
 ## Why Education
 
@@ -35,9 +35,12 @@ The integrated browser experience includes:
 - Model, Product, Safety Team, Policy, and Data Center investments funded by Compute.
 - Local keyword handling and input filtering for mobile, education, and enterprise proposals.
 - Community deployments, an eight-second Token Reset boost, and an Open Ecosystem action.
-- A working local-development file bridge for GM actions, heartbeats, and validated event delivery.
-- A 60-second watchdog and bounded scripted fallback when the local bridge is unavailable.
-- Four canonical provenance labels rendered from engine metadata: **AI 2027**, **AI 2040**, **Your Timeline**, and **Live GM**.
+- A deterministic catalog of 100 authored world events: 20 each for disasters, culture, policy, competition, and technology.
+- Weighted date-key scheduling with global/category cooldowns, one-time event history, and an independent random stream that cannot perturb incidents.
+- Twenty-five major popup candidates, automatically rate-limited and downgraded to the news ticker when another interruption would be too frequent.
+- Feature/event combos that recognize prior player actions, add bounded secondary effects, and can award at most 30 days of Momentum.
+- Three active provenance labels rendered from engine metadata: **AI 2027**, **AI 2040**, and **Your Timeline**.
+- A read-only Codex Advisor Skill that translates freeform intentions into available game actions without clicking, injecting events, or running a heartbeat.
 - Required 2029 and 2035 decisions whose choices change engine state and endings.
 - Eight resolved outcomes: Beneficial Abundance, Managed Transition, Fragile Abundance, Race Future, Regulatory Freeze, Safety Incident, Misalignment, and Pyrrhic Monopoly.
 - A three-decision ending review comparing the reference scenarios with the player's timeline.
@@ -48,34 +51,32 @@ The integrated browser experience includes:
 - An official OpenAI Voice Agent (`RealtimeAgent` + `RealtimeSession`) over browser WebRTC for **Kibo — Demo Operator**, explicitly identified as a fictionalized operator using a generic synthetic voice.
 - A two-call `trigger_token_reset` function-tool contract: the first call creates a visible pending request, and a second call can invoke the existing in-game reset only after a separate explicit spoken confirmation.
 - A same-UI scripted voice fallback for missing credentials, microphone denial, or Realtime failure.
-- Automated tests covering the engine, GM contract, bridge client and server, scenario data, branches, and endings.
+- Automated tests covering the engine, 100-event catalog, deterministic scheduling, popup integration, the dormant bridge contract, scenario data, branches, and endings.
 
-## Architecture and GM Boundary
+## Architecture and Advisor Boundary
 
 - `src/engine.ts` owns state, fixed-step transitions, action effects, incidents, invariants, provenance-bearing news, scoring, and ending evaluation.
-- `src/gm.ts` owns the GM schema, content guards, bounded event parsing, heartbeat state, fallback deck, and one-event/one-file contract.
-- `src/gmBridgeClient.ts` sanitizes read-only snapshots and player actions, POSTs actions and 60-second heartbeats, and polls for validated events.
-- `server/gmBridgePlugin.js` adds same-origin endpoints to the Vite development server and performs atomic filesystem handoff.
+- `src/worldEvents/` owns the five-category catalog, schema validation, eligibility rules, combos, and the date-key deterministic scheduler.
+- `.agents/skills/codex-2040-advisor/SKILL.md` defines the consultation-only contract and maps freeform product intentions to player-executed UI actions.
+- `src/gm.ts`, `src/gmBridgeClient.ts`, and `server/gmBridgePlugin.js` preserve the earlier bounded bridge experiment for tests and reference, but normal gameplay does not start its heartbeat, polling loop, fallback deck, or action transport.
 - `server/realtimePlugin.js` uses the standard OpenAI API key only on the Vite server to mint a 120-second Realtime client secret. Upstream failures collapse to a non-sensitive fallback response.
 - `src/voiceAgent.ts` constructs the official OpenAI Agents SDK `RealtimeAgent` and `RealtimeSession`, pins `gpt-realtime-2.1` with the `webrtc` transport, and owns audio, subtitles, mute, lifecycle, and the function tool.
 - `src/voiceReset.ts` validates both `trigger_token_reset` calls, owns the visible approval state, rejects mismatched or duplicate confirmations, and respects the engine cooldown before allowing one game action.
 - `src/components/VoiceCallPanel.tsx` renders the operator identity, game-only scope, call state, microphone state, subtitles, fallback, keyboard hints, and approval controls.
 - `src/scenario.ts` is the canonical source for provenance metadata, milestones, 2029/2035 choices, and core outcome definitions.
-- `src/App.tsx` coordinates the browser runtime, tutorial, local actions, Momentum feedback, critical-event pauses, bridge polling, fallback behavior, decisions, and ending review.
+- `src/App.tsx` coordinates the browser runtime, tutorial, local actions, Momentum feedback, authored-event pauses, decisions, and ending review.
 - `src/components/` contains the map, strategy tree, decision, and ending interfaces.
 
-### Local file-bridge flow
+### Advisor and world-event flow
 
-1. A player action is applied locally first, so gameplay never waits for a GM.
-2. The browser POSTs the action plus an allow-listed state snapshot to `/__codex2040/gm/turns`. It POSTs a heartbeat to the same endpoint every 60 seconds.
-3. Vite's local bridge validates the turn and atomically writes `gm-bridge/inbox/turn-*.json`.
-4. A producer may consume that inbox and atomically write one `events/evt-<uuid>.json` file per proposed event.
-5. The browser polls `/__codex2040/gm/events` every 2.5 seconds. The bridge validates complete files, leaves partial or invalid files for retry, and moves delivered files to `gm-bridge/processed/`.
-6. The browser validates the returned cycle again, then the deterministic engine clamps and applies it.
+1. The player may tell the Codex Advisor what they want to build or protect.
+2. The Advisor consults its Skill, names an available action, explains cost/effect/tradeoff, and returns control. It never clicks or modifies state.
+3. The player performs the action in the browser. Local effects apply immediately through the deterministic engine.
+4. Independently, the engine checks the authored event catalog using the run seed and simulated date. Eligible events respect date windows, requirements, and cooldowns.
+5. Events apply only bounded user/share/growth/Trust effects. They cannot write Compute, Capability, Safety, Governance, decisions, incidents, or endings.
+6. Major events pause the browser simulation until acknowledgement; smaller events enter the ticker and Event Ledger without interruption.
 
-The repository does **not** automate or invoke an external Codex/LLM producer. Running the app creates the local transport, but it does not generate external model responses by itself. If the bridge is unavailable, the 60-second watchdog can apply a bounded scripted event.
-
-The authority boundary is strict: the engine owns every number, risk transition, and ending. GM events can supply only allow-listed effects. Unsafe text is rejected, malformed values become zero or are ignored, oversized effects are clamped, and no producer can write risk directly.
+The authority boundary is strict: the engine owns every number, risk transition, and ending; the player owns every action; the Advisor owns explanation only.
 
 ## Run Locally
 
@@ -91,7 +92,7 @@ npm ci
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173` in the Codex app browser. The Vite server supplies both the app and its local GM bridge endpoints.
+Open `http://127.0.0.1:5173` in the Codex app browser.
 
 For live Realtime voice, place `OPENAI_API_KEY` in the ignored local `.env.local`. Vite loads it only into the server configuration; it is not exposed through `import.meta.env` or the client bundle. If the key is absent, invalid, or lacks Realtime access, the call panel automatically uses scripted voice fallback.
 
@@ -110,7 +111,7 @@ npm test
 npm run build
 ```
 
-The current integrated snapshot passes all 85 tests across eight files and the production build.
+The current integrated snapshot passes 111 tests across 13 files and the production build.
 
 ## Realtime Voice Demo
 
@@ -129,7 +130,7 @@ Codex 2040 now has one real ruleset. The former automatic presentation mode has 
 
 After **BEGIN SIMULATION**, passive waiting produces only residual adoption and cannot earn an S rank. Ship a feature, open a region, invest in the strategy tree, use Token Reset, or open the ecosystem to activate a limited Momentum window. Critical news and the 2029/2035 choices stop time until the player has read and acknowledged them. The speed selector reports its actual rate as days per second.
 
-Keep Codex visible on the left to narrate the tradeoffs while the browser runs on the right. The bridge status is also visible: **Live Bridge Available** means the local transport answered, not that an external model generated an event.
+Keep Codex visible on the left as the Advisor while the browser runs on the right. The Advisor responds when asked; no background heartbeat or browser-driving loop is required.
 
 ## Canonical Sources and Endings
 
@@ -138,7 +139,6 @@ Every news item carries an explicit source field; the UI does not infer provenan
 - **AI 2027** — adapted reference-scenario capability, race, and slowdown dynamics.
 - **AI 2040** — adapted reference-scenario governance and coordination ideas from Plan A.
 - **Your Timeline** — consequences of player choices, not claims made by either source.
-- **Live GM** — GM interpolation delivered through the bridge or scripted fallback, not a source-scenario claim.
 
 The engine and ending UI share the eight ending IDs listed above. Beneficial Abundance requires an S score, the verified 2029 slowdown, the deliberate 2035 pause, sufficient control capacity and trust, viable competitors, and non-monopolistic concentration.
 
@@ -150,8 +150,7 @@ Codex was the development surface and engineering collaborator for the Build Wee
 
 ## Limitations
 
-- The GM file bridge still has no external producer. Realtime voice is a separate local-development OpenAI API path and cannot propose numeric GM effects.
-- The file bridge is a Vite development-server plugin. A static production host would need equivalent same-origin endpoints and filesystem handling.
+- The older GM file bridge remains in the repository as a dormant experiment; it is not part of normal gameplay.
 - The Realtime client-secret route is also Vite-development-only. A deployed build needs a trusted server endpoint with equivalent key isolation and origin controls.
 - A successful bridge heartbeat proves that the local transport accepted a snapshot, not that an external producer consumed it or returned an event.
 - There is no presentation-safe ruleset: the tutorial leads into Normal mode, where critical incidents and terminal Misalignment remain possible.

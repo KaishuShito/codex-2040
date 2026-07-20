@@ -95,13 +95,13 @@ describe('two-path GM runtime', () => {
     const queued = enqueueImmediateAction(initial, {
       id: 'feature-1',
       kind: 'feature',
-      input: '世界中の学校で無料利用できる教育モード',
+      input: 'Free Education Mode for schools worldwide',
       receivedAtMs: 1_000,
     })
     expect(queued.accepted).toBe(true)
     if (!queued.accepted) return
     const taken = takeImmediateAction(queued.state)
-    expect(taken.action?.input).toContain('教育モード')
+    expect(taken.action?.input).toContain('Education Mode')
     expect(taken.state.immediateQueue).toHaveLength(0)
     expect(taken.state.nextHeartbeatAtMs).toBe(60_000)
   })
@@ -136,12 +136,12 @@ describe('two-path GM runtime', () => {
       G: 3,
       topRegions: ['india', 'africa'],
       recentEvents: [],
-      playerInbox: ['世界中の学校で無料利用できる教育モード'],
+      playerInbox: ['Free Education Mode for schools worldwide'],
     }
     const [access, governance] = createEducationModeResponse(snapshot)
     expect(access.effect.users_delta_pct).toBeGreaterThan(0)
-    expect(`${access.headline}${access.flavor}`).toMatch(/教育|学校|学習/)
-    expect(`${governance.headline}${governance.flavor}`).toMatch(/児童データ|同意|監査/)
+    expect(`${access.headline}${access.flavor}`).toMatch(/education|school|learner/i)
+    expect(`${governance.headline}${governance.flavor}`).toMatch(/child data|consent|audit/i)
     expect(parseGmEvent(access)).toEqual(access)
     expect(parseGmEvent(governance)).toEqual(governance)
   })

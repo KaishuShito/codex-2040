@@ -80,6 +80,27 @@
   outline: none;
 }
 
+.world-map.is-competitive .world-map__region {
+  fill: rgba(var(--rival-color), calc(.07 + var(--rival-share) * .9));
+  stroke: rgba(var(--rival-color), calc(.24 + var(--rival-share) * .65));
+}
+
+.world-map.is-competitive .world-map__region:hover,
+.world-map.is-competitive .world-map__region:focus-visible,
+.world-map.is-competitive .world-map__region.is-selected {
+  fill: rgba(var(--rival-color), calc(.18 + var(--rival-share) * .82));
+  stroke: rgb(var(--rival-color));
+  filter: drop-shadow(0 0 6px rgba(var(--rival-color), .62));
+}
+
+.world-map.is-competitive .world-map__hub-aura { fill: rgba(var(--rival-color), .2); }
+.world-map.is-competitive .world-map__hub-core { fill: rgb(var(--rival-color)); }
+.world-map.is-competitive .world-map__hub-wave { stroke: rgba(var(--rival-color), .7); }
+.world-map.is-competitive .world-map__legend-access {
+  border-color: rgb(var(--rival-color));
+  background: rgba(var(--rival-color), .58);
+}
+
 .world-map__region:not(.is-active) {
   fill: rgba(33, 72, 58, .17);
   stroke: rgba(94, 139, 119, .18);
@@ -105,27 +126,6 @@
   stroke: rgba(132, 193, 165, .24);
   stroke-width: .52;
   vector-effect: non-scaling-stroke;
-}
-
-.world-map__network { pointer-events: none; }
-
-.world-map__arc-halo,
-.world-map__arc {
-  fill: none;
-  vector-effect: non-scaling-stroke;
-}
-
-.world-map__arc-halo {
-  stroke: rgba(80, 246, 169, .09);
-  stroke-width: 4;
-}
-
-.world-map__arc {
-  stroke: rgba(129, 255, 198, .7);
-  stroke-width: 1;
-  stroke-dasharray: .055 .945;
-  stroke-linecap: round;
-  animation: world-map-route 4.6s var(--arc-delay) linear infinite;
 }
 
 .world-map__hub-aura { fill: rgba(64, 242, 158, .25); }
@@ -257,17 +257,11 @@
 }
 
 .world-map__legend-access { background: rgba(85, 232, 159, .38); }
-.world-map__legend-network { box-shadow: 0 0 7px var(--wm-accent); }
 .world-map__legend-event { transform: rotate(45deg); border-radius: 0 !important; }
 
 .world-map__coordinate {
   right: clamp(16px, 2.5vw, 28px);
   color: rgba(132, 174, 155, .42);
-}
-
-@keyframes world-map-route {
-  from { stroke-dashoffset: 1; }
-  to { stroke-dashoffset: 0; }
 }
 
 @keyframes world-map-breathe {
@@ -304,7 +298,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .world-map__arc,
   .world-map__hub-wave,
   .world-map__selection path,
   .world-map__reset circle,

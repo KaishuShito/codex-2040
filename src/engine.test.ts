@@ -20,13 +20,15 @@ import {
   scoreState,
   START_DATE,
   tickDay,
+  trustBreakdown,
   triggerReset,
   validateFeatureInput,
 } from './engine'
 import type { GameState } from './engine'
-import { GM_CONSTANTS } from './gm'
+import { GM_CONSTANTS, SCRIPTED_FALLBACK_EVENTS } from './gm'
 
 const CANONICAL_SOURCES = ['AI 2027', 'AI 2040', 'Your Timeline', 'Live GM'] as const
+const dayForTest = (iso: string) => Math.round((Date.parse(`${iso}T00:00:00Z`) - START_DATE) / 86_400_000)
 
 describe('deterministic fixed-step simulation', () => {
   it('is replay-identical for equal seeds and action sequences (AC10)', () => {
@@ -48,16 +50,60 @@ describe('deterministic fixed-step simulation', () => {
     expect(tickDay(initial).day).toBe(1)
   })
 
-  it('grows adoption and the Codex counter monotonically when left alone (AC1)', () => {
+  it('keeps total adoption monotonic while an idle Codex can lose the AI 2027 race', () => {
     let state = createInitialState()
     let prior = metrics(state)
     for (let day = 0; day < 30; day += 1) {
       state = tickDay(state)
       const next = metrics(state)
       expect(next.adoption).toBeGreaterThanOrEqual(prior.adoption)
-      expect(next.codexUsers).toBeGreaterThanOrEqual(prior.codexUsers)
       prior = next
     }
+  })
+
+  it('keeps passive Normal growth low until a player action creates momentum', () => {
+    const initial = createInitialState()
+    const idle = runTicks(initial, 180)
+    const active = runTicks(addFeature(initial, 'Education access'), 180)
+    const idleGain = metrics(idle).adoption - metrics(initial).adoption
+    const activeGain = metrics(active).adoption - metrics(addFeature(initial, 'Education access')).adoption
+
+    expect(idle.compute).toBeLessThan(initial.compute)
+    expect(activeGain).toBeGreaterThan(idleGain * 5)
+    expect(active.momentumDays).toBe(60)
+    expect(active.interventions).toBe(1)
+  })
+
+  it('lets autonomous rivals invest across Model, Product, and Company while an idle Codex loses share', () => {
+    const initial = createInitialState({ seed: 42 })
+    const future = runTicks(initial, 365 * 10)
+
+    expect(future.rivalCapability.every((value, index) => value > initial.rivalCapability[index] + 4)).toBe(true)
+    expect(future.rivalProduct.every((value, index) => value > initial.rivalProduct[index] + 3)).toBe(true)
+    expect(future.rivalCompany.every((value, index) => value > initial.rivalCompany[index] + 3)).toBe(true)
+    expect(metrics(future).codexShare).toBeLessThan(metrics(initial).codexShare)
+    expect(future.news.some((item) => /COMPETITIVE PRESSURE RISES/.test(item.headline))).toBe(true)
+  })
+
+  it('makes Frontier autonomy a real late-game requirement instead of preserving passive share', () => {
+    const late2038 = runTicks(createInitialState({ seed: 7 }), dayForTest('2038-12-03'))
+    expect(Math.max(...late2038.rivalCapability)).toBeGreaterThanOrEqual(9.5)
+    expect(metrics(late2038).codexShare).toBeLessThan(.4)
+  })
+
+  it('allows at least one autonomous rival to overtake an idle Codex by 2028', () => {
+    const future = runTicks(createInitialState({ seed: 2040 }), dayForTest('2028-01-01'))
+    expect(Math.max(...future.rivalShares)).toBeGreaterThan(metrics(future).codexShare)
+  })
+
+  it('explains the Trust target using the same causal terms as the engine', () => {
+    const strained = { ...createInitialState(), capability: 7, safety: 3, governance: 2 }
+    const breakdown = trustBreakdown(strained)
+
+    expect(breakdown.target).toBeLessThan(strained.trust)
+    expect(breakdown.dailyDelta).toBeLessThan(0)
+    expect(breakdown.factors.find((factor) => factor.id === 'safety-gap')!.value).toBeLessThan(0)
+    expect(breakdown.factors.find((factor) => factor.id === 'governance-gap')!.value).toBeLessThan(0)
   })
 
   it('keeps all invariants under x8 and boost load (AC2b)', () => {
@@ -92,11 +138,11 @@ describe('deterministic fixed-step simulation', () => {
     expect(runTicks(triggerReset(initial), 100).resetBoostSeconds).toBe(8)
   })
 
-  it('auto-slows to x1 exactly when a milestone fires', () => {
+  it('stops the current frame at a milestone without changing player speed', () => {
     const beforeTokyo = { ...createInitialState(), day: 197, speed: 8 as const }
     const next = runFrame(beforeTokyo)
     expect(next.day).toBe(198)
-    expect(next.speed).toBe(1)
+    expect(next.speed).toBe(8)
     expect(next.flags).toContain('milestone:build-week-tokyo')
     expect(next.news[0].source).toBe('Your Timeline')
   })
@@ -280,11 +326,24 @@ describe('incidents and ranked endings', () => {
   })
 
   it('reaches an S-ranked Beneficial Abundance only on the healthy Plan A route (AC8/AC14)', () => {
-    const healthy = choose2035(choose2029(endingState(), 'verified-slowdown'), 'hold-the-line')
+    const healthy = choose2035(choose2029({ ...endingState(), interventions: 2 }, 'verified-slowdown'), 'hold-the-line')
     expect(scoreState(healthy).rank).toBe('S')
     expect(evaluateEnding(healthy)).toMatchObject({ id: 'beneficial-abundance', rank: 'S', planA: true })
     const race = choose2035(choose2029(endingState(), 'race'), 'accelerate')
     expect(evaluateEnding(race).id).toBe('race-future')
+  })
+
+  it('does not award S rank to a high-state Normal run without meaningful interventions', () => {
+    const passive = endingState()
+    expect(passive.interventions).toBe(0)
+    expect(scoreState(passive).rank).toBe('A')
+  })
+
+  it('does not count mandatory scenario choices as voluntary interventions', () => {
+    const initial = createInitialState()
+    const decided = choose2035(choose2029(initial, 'verified-slowdown'), 'hold-the-line')
+    expect(decided.interventions).toBe(0)
+    expect(decided.momentumDays).toBe(constants.momentumDays.decision)
   })
 
   it('makes a high-adoption monopoly Pyrrhic and never beneficial (AC7)', () => {
@@ -307,11 +366,24 @@ describe('incidents and ranked endings', () => {
     expect(evaluateEnding(misaligned).id).toBe('misalignment')
   })
 
-  it('disables terminal misalignment and guarantees at least A in demo mode (AC9)', () => {
-    let demo = { ...createInitialState({ demoMode: true }), capability: 10, safety: 0, governance: 0, safetyGapDays: 89 }
-    demo = runTicks(demo, 20)
-    expect(demo.ending).not.toBe('misalignment')
-    expect(demo.terminal).toBe(false)
-    expect(scoreState(demo).rank === 'A' || scoreState(demo).rank === 'S').toBe(true)
+  it('enforces a refractory window after a safety incident instead of spamming incidents', () => {
+    let state = enforceInvariants({
+      ...createInitialState({ seed: 7 }),
+      capability: 5.9,
+      safety: 2,
+      governance: 8,
+      regions: createInitialState().regions.map((region) => ({ ...region, codexShare: .4 })),
+    })
+    for (let day = 0; day < 2_000 && state.incidentCounts['safety-incident'] === 0; day += 1) state = tickDay(state)
+    expect(state.incidentCounts['safety-incident']).toBe(1)
+    expect(state.safetyIncidentCooldownDays).toBe(constants.safetyIncidentCooldownDays)
+    const count = state.incidentCounts['safety-incident']
+    for (let day = 0; day < constants.safetyIncidentCooldownDays - 1; day += 1) state = tickDay(state)
+    expect(state.incidentCounts['safety-incident']).toBe(count)
   })
+
+  it('keeps the scripted fallback community event regional so it cannot unlock the whole world', () => {
+    expect(SCRIPTED_FALLBACK_EVENTS[0]).toMatchObject({ type: 'community_event', region: 'africa' })
+  })
+
 })

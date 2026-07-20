@@ -3,7 +3,7 @@ import type { SourceLabel } from './scenario'
 
 export type ScenarioSource = SourceLabel
 export type RegionId = 'na' | 'latam' | 'eu' | 'africa' | 'mena' | 'india' | 'eastAsia' | 'oceania'
-export type Speed = 1 | 2 | 5 | 8
+export type Speed = 1 | 8
 
 export type Region = {
   id: RegionId
@@ -58,7 +58,14 @@ export type GameState = {
   trust: number
   rivalShares: [number, number, number]
   rivalCapability: [number, number, number]
+  /** Rival strategy axes mirror the player's Model / Product / Company choices. */
+  rivalProduct: [number, number, number]
+  rivalCompany: [number, number, number]
   speed: Speed
+  /** Simulated days of player-created growth momentum remaining. */
+  momentumDays: number
+  /** Meaningful player interventions; S rank requires more than passive waiting. */
+  interventions: number
   /** Real-time seconds, deliberately independent from simulated days. */
   resetBoostSeconds: number
   resetCooldownSeconds: number
@@ -76,6 +83,9 @@ export type GameState = {
   activeEffects: ActiveEffect[]
   safetyGapDays: number
   safeRecoveryDays: number
+  /** Simulated-day refractory windows prevent incident spam. */
+  safetyIncidentCooldownDays: number
+  regulatoryIncidentCooldownDays: number
   incidentCounts: Record<IncidentKind, number>
   regulatoryFreeze: boolean
   brownout: boolean
@@ -84,11 +94,10 @@ export type GameState = {
   policyGrowthMultiplier: number
   ending: EndingId | null
   terminal: boolean
-  demoMode: boolean
   features: string[]
 }
 
-export const SPEEDS = [1, 2, 5, 8] as const
+export const SPEEDS = [1, 8] as const
 export const START_DATE = Date.UTC(2026, 0, 1)
 export const END_DAY = Math.round((Date.UTC(2040, 0, 1) - START_DATE) / 86_400_000)
 
@@ -106,6 +115,13 @@ export const constants = Object.freeze({
   resetCooldownSeconds: 45,
   resetDurationSeconds: 8,
   resetMultiplier: 4.2,
+  idleGrowthMultiplier: 0.06,
+  accessTarget: 0.05,
+  pyrrhicAdoptionThreshold: 0.04,
+  unsafeCapabilityThreshold: 6,
+  safetyIncidentCooldownDays: 180,
+  regulatoryIncidentCooldownDays: 365,
+  momentumDays: Object.freeze({ reset: 90, region: 180, upgrade: 120, feature: 240, ecosystem: 240, decision: 180 }),
   // Runtime references to gm.ts's single contract table: no copied bounds.
   gm: Object.freeze({
     usersDeltaPct: GM_CONSTANTS.effectBounds.users_delta_pct,
@@ -147,6 +163,41 @@ export const metrics = (state: GameState) => {
   }
 }
 
+export type TrustFactor = {
+  id: 'baseline' | 'diversity' | 'safety' | 'governance' | 'safety-gap' | 'governance-gap' | 'concentration' | 'events'
+  label: string
+  value: number
+}
+
+/** Exposes the same causal terms used by tickDay so the UI can explain Trust. */
+export const trustBreakdown = (state: GameState) => {
+  const m = metrics(state)
+  const safetyGap = Math.max(0, state.capability - state.safety)
+  const governanceGap = Math.max(0, state.capability - state.governance)
+  const gapUnit = constants.gapWeight * 10
+  const monopolyPenalty = Math.max(0, m.codexShare - .55) ** 2 * constants.monopolyScale * 2 + Math.max(0, m.hhi - .45)
+  const activeEffects = state.activeEffects.filter((effect) => effect.expiresDay > state.day)
+  const eventOffset = activeEffects.reduce((sum, effect) => sum + effect.trustDelta, 0)
+  const factors: TrustFactor[] = [
+    { id: 'baseline', label: 'Institutional baseline', value: 25 },
+    { id: 'diversity', label: 'Provider diversity', value: constants.diversityWeight * (1 - m.hhi) * 100 },
+    { id: 'safety', label: 'Safety capacity', value: 2.5 * state.safety },
+    { id: 'governance', label: 'Governance capacity', value: 2.5 * state.governance },
+    { id: 'safety-gap', label: 'Capability > Safety', value: -gapUnit * safetyGap },
+    { id: 'governance-gap', label: 'Capability > Governance', value: -gapUnit * governanceGap },
+    { id: 'concentration', label: 'Market concentration', value: -monopolyPenalty * 100 },
+    { id: 'events', label: 'Active world events', value: eventOffset },
+  ]
+  const target = clamp(factors.reduce((sum, factor) => sum + factor.value, 0), 0, 100)
+  return { target, dailyDelta: (target - state.trust) / constants.trustTau, factors }
+}
+
+const activateMomentum = (state: GameState, days: number, countIntervention = true): GameState => ({
+  ...state,
+  momentumDays: Math.max(state.momentumDays, Math.max(0, Math.floor(days))),
+  interventions: state.interventions + (countIntervention ? 1 : 0),
+})
+
 const baseRegions: Region[] = [
   { id: 'na', name: 'North America', population: 620, users: 17, codexShare: .36, introduced: true, regulation: .15, mobileAffinity: .62, fit: 1 },
   { id: 'latam', name: 'Latin America', population: 660, users: 3, codexShare: .22, introduced: true, regulation: .08, mobileAffinity: .91, fit: 1 },
@@ -158,7 +209,7 @@ const baseRegions: Region[] = [
   { id: 'oceania', name: 'Oceania', population: 46, users: 0, codexShare: 0, introduced: false, regulation: .13, mobileAffinity: .73, fit: 1 },
 ]
 
-export const createInitialState = (options: { seed?: number; demoMode?: boolean } = {}): GameState => ({
+export const createInitialState = (options: { seed?: number } = {}): GameState => ({
   day: 0,
   regions: baseRegions.map((region) => ({ ...region })),
   compute: 940,
@@ -169,7 +220,11 @@ export const createInitialState = (options: { seed?: number; demoMode?: boolean 
   trust: 72,
   rivalShares: [.22, .24, .17],
   rivalCapability: [2.1, 2.4, 1.9],
-  speed: 5,
+  rivalProduct: [2.0, 2.6, 1.8],
+  rivalCompany: [2.6, 2.0, 2.2],
+  speed: 1,
+  momentumDays: 0,
+  interventions: 0,
   resetBoostSeconds: 0,
   resetCooldownSeconds: 0,
   ecosystemCooldownSeconds: 0,
@@ -187,6 +242,8 @@ export const createInitialState = (options: { seed?: number; demoMode?: boolean 
   activeEffects: [],
   safetyGapDays: 0,
   safeRecoveryDays: 0,
+  safetyIncidentCooldownDays: 0,
+  regulatoryIncidentCooldownDays: 0,
   incidentCounts: { 'safety-incident': 0, 'regulatory-freeze': 0, misalignment: 0 },
   regulatoryFreeze: false,
   brownout: false,
@@ -195,7 +252,6 @@ export const createInitialState = (options: { seed?: number; demoMode?: boolean 
   policyGrowthMultiplier: 1,
   ending: null,
   terminal: false,
-  demoMode: options.demoMode ?? false,
   features: [],
 })
 
@@ -250,6 +306,12 @@ export const enforceInvariants = (state: GameState): GameState => {
     trust: clamp(finite(state.trust), 0, 100),
     rivalShares: normalizeRivals(state.rivalShares, codexShare),
     rivalCapability: state.rivalCapability.map((value) => clamp(finite(value), 0, 10)) as [number, number, number],
+    rivalProduct: state.rivalProduct.map((value) => clamp(finite(value), 0, 10)) as [number, number, number],
+    rivalCompany: state.rivalCompany.map((value) => clamp(finite(value), 0, 10)) as [number, number, number],
+    momentumDays: Math.max(0, Math.floor(finite(state.momentumDays))),
+    interventions: Math.max(0, Math.floor(finite(state.interventions))),
+    safetyIncidentCooldownDays: Math.max(0, Math.floor(finite(state.safetyIncidentCooldownDays))),
+    regulatoryIncidentCooldownDays: Math.max(0, Math.floor(finite(state.regulatoryIncidentCooldownDays))),
     resetBoostSeconds: Math.max(0, finite(state.resetBoostSeconds)),
     resetCooldownSeconds: Math.max(0, finite(state.resetCooldownSeconds)),
     ecosystemCooldownSeconds: Math.max(0, finite(state.ecosystemCooldownSeconds)),
@@ -269,19 +331,48 @@ const withNews = (state: GameState, headline: string, source: ScenarioSource, to
   news: [{ id: state.nextNewsId, date: shownDate, tone, headline: sanitizeOutput(headline), source }, ...state.news].slice(0, 12),
 })
 
+const RIVAL_NAMES = ['ANTHRO', 'GOO', 'QI'] as const
+const RIVAL_AXES = [
+  { key: 'rivalCapability', label: 'MODEL' },
+  { key: 'rivalProduct', label: 'PRODUCT' },
+  { key: 'rivalCompany', label: 'COMPANY' },
+] as const
+const RIVAL_THRESHOLDS = [4, 6, 8, 10] as const
+
+/** Emits one readable competitive move at a time as autonomous rival strategies cross stages. */
+const announceRivalStrategy = (state: GameState): GameState => {
+  for (let rival = 0; rival < RIVAL_NAMES.length; rival += 1) {
+    for (const axis of RIVAL_AXES) {
+      for (const threshold of RIVAL_THRESHOLDS) {
+        const flag = `rival:${rival}:${axis.key}:${threshold}`
+        if (state[axis.key][rival] >= threshold && !hasFlag(state, flag)) {
+          const source: ScenarioSource = state.day < dayFor('2029-01-01') ? 'AI 2027' : 'AI 2040'
+          return withNews(
+            { ...state, flags: addFlag(state.flags, flag) },
+            `${RIVAL_NAMES[rival]} ${axis.label} STRATEGY REACHES ${threshold} // COMPETITIVE PRESSURE RISES`,
+            source,
+            'warn',
+          )
+        }
+      }
+    }
+  }
+  return state
+}
+
 const dayFor = (iso: string) => Math.round((Date.parse(`${iso}T00:00:00Z`) - START_DATE) / 86_400_000)
 const milestones = [
-  { day: dayFor('2026-07-18'), flag: 'milestone:build-week-tokyo', headline: 'BUILD WEEK TOKYO LIGHTS UP THE NETWORK', source: 'Your Timeline' },
-  { day: dayFor('2027-01-01'), flag: 'milestone:2027-agents', headline: 'AGENTS REACH TOP-DEVELOPER CAPABILITY', source: 'AI 2027' },
-  { day: dayFor('2029-01-01'), flag: 'milestone:choose-2029', headline: 'CHOOSE A PATH: RACE OR VERIFIED SLOWDOWN', source: 'AI 2040' },
-  { day: dayFor('2035-01-01'), flag: 'milestone:hold-2035', headline: 'HOLD THE LINE AT HUMAN-EXPERT CAPABILITY', source: 'AI 2040' },
+  { day: dayFor('2026-07-18'), flag: 'milestone:build-week-tokyo', headline: 'BUILD WEEK TOKYO LIGHTS UP THE NETWORK', source: 'Your Timeline', tone: 'good' },
+  { day: dayFor('2027-01-01'), flag: 'milestone:2027-agents', headline: 'AGENTS REACH TOP-DEVELOPER CAPABILITY', source: 'AI 2027', tone: 'neutral' },
+  { day: dayFor('2029-01-01'), flag: 'milestone:choose-2029', headline: 'CHOOSE A PATH: RACE OR VERIFIED SLOWDOWN', source: 'AI 2040', tone: 'warn' },
+  { day: dayFor('2035-01-01'), flag: 'milestone:hold-2035', headline: 'HOLD THE LINE AT HUMAN-EXPERT CAPABILITY', source: 'AI 2040', tone: 'warn' },
 ] as const
 
 const applyMilestones = (state: GameState): GameState => {
   let next = state
   for (const milestone of milestones) {
     if (next.day >= milestone.day && !hasFlag(next, milestone.flag)) {
-      next = withNews({ ...next, speed: 1, flags: addFlag(next.flags, milestone.flag) }, milestone.headline, milestone.source, 'warn')
+      next = withNews({ ...next, flags: addFlag(next.flags, milestone.flag) }, milestone.headline, milestone.source, milestone.tone)
     }
   }
   return next
@@ -291,11 +382,26 @@ const applyIncident = (state: GameState, kind: IncidentKind): GameState => {
   const incidentCounts = { ...state.incidentCounts, [kind]: state.incidentCounts[kind] + 1 }
   if (kind === 'safety-incident') {
     const regions = state.regions.map((region) => ({ ...region, codexShare: region.codexShare * .82 }))
-    return withNews(enforceInvariants({ ...state, regions, trust: state.trust - 22, incidentCounts, flags: addFlag(state.flags, kind) }), 'SAFETY INCIDENT // TRUST AND SHARE FALL SHARPLY', 'Your Timeline', 'warn')
+    return withNews(enforceInvariants({
+      ...state,
+      regions,
+      trust: state.trust - 22,
+      safetyIncidentCooldownDays: constants.safetyIncidentCooldownDays,
+      incidentCounts,
+      flags: addFlag(state.flags, kind),
+    }), 'SAFETY INCIDENT // TRUST AND SHARE FALL SHARPLY', 'Your Timeline', 'warn')
   }
   if (kind === 'regulatory-freeze') {
     const regions = state.regions.map((region) => ({ ...region, regulation: clamp(region.regulation + .25) }))
-    return withNews(enforceInvariants({ ...state, regions, regulatoryFreeze: true, safeRecoveryDays: 0, incidentCounts, flags: addFlag(state.flags, kind) }), 'REGULATORY FREEZE // ADOPTION GROWTH IS CAPPED', 'Your Timeline', 'warn')
+    return withNews(enforceInvariants({
+      ...state,
+      regions,
+      regulatoryFreeze: true,
+      safeRecoveryDays: 0,
+      regulatoryIncidentCooldownDays: constants.regulatoryIncidentCooldownDays,
+      incidentCounts,
+      flags: addFlag(state.flags, kind),
+    }), 'REGULATORY FREEZE // ADOPTION GROWTH IS CAPPED', 'Your Timeline', 'warn')
   }
   return withNews({ ...state, terminal: true, ending: 'misalignment', incidentCounts, flags: addFlag(state.flags, kind) }, 'MISALIGNMENT // HUMAN CONTROL IS LOST', 'Your Timeline', 'warn')
 }
@@ -308,24 +414,21 @@ const branchStep = (state: GameState): GameState => {
   const incidentChance = m.safetyGap >= constants.gapThreshold
     ? Math.min(.12, .006 * (m.safetyGap - constants.gapThreshold + 1))
     : 0
-  if (safetyRoll.value < incidentChance) next = applyIncident(next, 'safety-incident')
+  if (next.safetyIncidentCooldownDays === 0 && safetyRoll.value < incidentChance) next = applyIncident(next, 'safety-incident')
 
-  const unsafe = m.safetyGap >= constants.gapThreshold && state.capability >= 7
+  const unsafe = m.safetyGap >= constants.gapThreshold && state.capability >= constants.unsafeCapabilityThreshold
   const safetyGapDays = unsafe ? state.safetyGapDays + 1 : Math.max(0, state.safetyGapDays - 2)
   next = { ...next, safetyGapDays }
-  if (!next.demoMode && safetyGapDays >= 90 && !next.terminal) return applyIncident(next, 'misalignment')
-  if (next.demoMode && safetyGapDays >= 45 && !hasFlag(next, 'misalignment-warning-2')) {
-    next = withNews({ ...next, flags: addFlag(next.flags, 'misalignment-warning-2') }, 'CRITICAL ALIGNMENT GAP // DEMO SAFEGUARD ACTIVE', 'Your Timeline', 'warn')
-  }
+  if (safetyGapDays >= 90 && !next.terminal) return applyIncident(next, 'misalignment')
 
   const afterSafety = metrics(next)
-  const monopolyPressure = Math.max(0, afterSafety.codexShare - .6) + Math.max(0, afterSafety.hhi - .55)
+  const monopolyPressure = Math.max(0, afterSafety.codexShare - .68) + Math.max(0, afterSafety.hhi - .55)
   const regulationChance = afterSafety.governanceGap >= constants.gapThreshold || monopolyPressure > 0
     ? Math.min(.1, .004 * (afterSafety.governanceGap + monopolyPressure * 10))
     : 0
   const regulationRoll = mulberry32(next.seed)
   next = { ...next, seed: regulationRoll.seed }
-  if (!next.regulatoryFreeze && regulationRoll.value < regulationChance) next = applyIncident(next, 'regulatory-freeze')
+  if (!next.regulatoryFreeze && next.regulatoryIncidentCooldownDays === 0 && regulationRoll.value < regulationChance) next = applyIncident(next, 'regulatory-freeze')
 
   const recovered = metrics(next).governanceGap < 1.5 && metrics(next).hhi < .52
   const safeRecoveryDays = next.regulatoryFreeze ? (recovered ? next.safeRecoveryDays + 1 : 0) : 0
@@ -345,10 +448,20 @@ export const tickDay = (input: GameState): GameState => {
   const brownout = state.brownout ? state.compute < 12 : enteringBrownout
   state = { ...state, brownout }
   const kEff = effectiveCapability(state)
+  const raceMultiplier = state.day < dayFor('2027-01-01') ? .55 : state.day < dayFor('2030-01-01') ? 1.35 : 1
+  const responseMultiplier = 1 + Math.max(0, state.capability - Math.max(...state.rivalCapability)) * .08
+  const advanceAxis = (values: [number, number, number], rates: [number, number, number]) => values
+    .map((value, index) => clamp(value + rates[index] * raceMultiplier * responseMultiplier, 0, 10)) as [number, number, number]
+  const rivalCapability = advanceAxis(state.rivalCapability, [.00155, .0017, .00185])
+  const rivalProduct = advanceAxis(state.rivalProduct, [.0013, .0019, .0015])
+  const rivalCompany = advanceAxis(state.rivalCompany, [.0018, .00125, .0015])
   const rivalTotal = Math.max(.001, state.rivalShares.reduce((a, b) => a + b, 0))
-  const avgRivalCapability = state.rivalCapability.reduce((sum, k, index) => sum + k * state.rivalShares[index], 0) / rivalTotal
+  const avgRivalCapability = rivalCapability.reduce((sum, k, index) => sum + k * state.rivalShares[index], 0) / rivalTotal
+  const rivalStrategyAppeal = rivalCapability.map((capability, index) => 1 + .14 * capability + .08 * rivalProduct[index] + .05 * rivalCompany[index]) as [number, number, number]
+  const avgRivalAppeal = rivalStrategyAppeal.reduce((sum, appeal, index) => sum + appeal * state.rivalShares[index], 0) / rivalTotal
   const avgCapability = kEff * before.codexShare + avgRivalCapability * (1 - before.codexShare)
   const resetMultiplier = state.resetBoostSeconds > 0 ? constants.resetMultiplier : 1
+  const activityMultiplier = state.momentumDays > 0 || state.brownout ? 1 : constants.idleGrowthMultiplier
   const activeEffects = state.activeEffects.filter((effect) => effect.expiresDay > state.day)
 
   let regions = state.regions.map((region) => {
@@ -359,17 +472,21 @@ export const tickDay = (input: GameState): GameState => {
     const freezeCap = state.regulatoryFreeze ? .32 : 1
     const momentum = constants.gamma0 * (1 + constants.capabilityMomentum * avgCapability)
       * Math.max(.1, 1 + eventGrowth) * (1 - region.regulation) * resetMultiplier
-      * state.policyGrowthMultiplier * freezeCap
+      * state.policyGrowthMultiplier * freezeCap * activityMultiplier
     const users = clamp(region.users + momentum * region.users * (1 - region.users / region.population), 0, region.population)
-    const codexAppeal = (1 + constants.capabilityAppeal * kEff) * region.fit * state.brand * (.6 + .4 * state.trust / 100) * resetMultiplier
-    const rivalAppeal = 1 + constants.capabilityAppeal * avgRivalCapability
-    const targetShare = codexAppeal / Math.max(.001, codexAppeal + rivalAppeal)
+    const codexProduct = Math.min(10, 2 + state.features.length * 1.5)
+    const codexCompany = (state.safety + state.governance) / 2
+    const codexStrategyAppeal = 1 + .14 * kEff + .08 * codexProduct + .05 * codexCompany
+    // In the AI 2027 race, a passive product rapidly loses distribution even while
+    // the overall market keeps growing. Player-created Momentum restores full appeal.
+    const executionMultiplier = state.momentumDays > 0 || state.brownout ? 1 : .46
+    const codexAppeal = codexStrategyAppeal * region.fit * state.brand * (.6 + .4 * state.trust / 100) * resetMultiplier * executionMultiplier
+    const targetShare = codexAppeal / Math.max(.001, codexAppeal + avgRivalAppeal)
     const codexShare = clamp(region.codexShare + constants.shareRelaxation * (targetShare - region.codexShare))
     return { ...region, users, codexShare }
   })
 
   let random = mulberry32(state.seed)
-  const rivalCapability = state.rivalCapability.map((value, i) => clamp(value + .00012 * (i + 1), 0, 10)) as [number, number, number]
   if (random.value < .004) {
     const introduced = regions.filter((region) => region.introduced)
     if (introduced.length > 0) {
@@ -379,16 +496,18 @@ export const tickDay = (input: GameState): GameState => {
   }
 
   const mid = metrics({ ...state, regions })
-  const rivalShares = normalizeRivals(state.rivalShares, mid.codexShare)
+  const normalizedRivals = normalizeRivals(state.rivalShares, mid.codexShare)
+  const strategicRivalWeights = normalizedRivals.map((share, index) => share * Math.exp(.004 * (rivalStrategyAppeal[index] - avgRivalAppeal))) as [number, number, number]
+  const rivalShares = normalizeRivals(strategicRivalWeights, mid.codexShare)
   const hhi = mid.codexShare ** 2 + rivalShares.reduce((sum, share) => sum + share ** 2, 0)
   const safetyGap = Math.max(0, state.capability - state.safety)
   const governanceGap = Math.max(0, state.capability - state.governance)
   const gapPenalty = constants.gapWeight * (safetyGap + governanceGap) / 10
   const monopolyPenalty = Math.max(0, mid.codexShare - .55) ** 2 * constants.monopolyScale * 2 + Math.max(0, hhi - .45)
   const trustOffset = activeEffects.reduce((sum, effect) => sum + effect.trustDelta, 0)
-  const trustTarget = clamp(constants.diversityWeight * (1 - hhi) + .25 * (state.safety / 10) + .25 * (state.governance / 10) - monopolyPenalty - gapPenalty) * 100 + trustOffset
+  const trustTarget = clamp(.25 + constants.diversityWeight * (1 - hhi) + .25 * (state.safety / 10) + .25 * (state.governance / 10) - monopolyPenalty - gapPenalty) * 100 + trustOffset
   const trust = clamp(state.trust + (trustTarget - state.trust) / constants.trustTau, 0, 100)
-  const income = mid.codexUsers * constants.revenue * state.efficiency + (brownout ? .45 : 0)
+  const income = mid.codexUsers * constants.revenue * state.efficiency * activityMultiplier + (brownout ? .45 : 0)
   const runningCost = .3 * (1 + .12 * kEff ** 1.5) + mid.codexUsers * .012 * kEff
   const compute = Math.max(0, state.compute + income - runningCost)
 
@@ -400,10 +519,16 @@ export const tickDay = (input: GameState): GameState => {
     trust,
     rivalShares,
     rivalCapability,
+    rivalProduct,
+    rivalCompany,
+    momentumDays: Math.max(0, state.momentumDays - 1),
+    safetyIncidentCooldownDays: Math.max(0, state.safetyIncidentCooldownDays - 1),
+    regulatoryIncidentCooldownDays: Math.max(0, state.regulatoryIncidentCooldownDays - 1),
     seed: random.seed,
     activeEffects,
     brownout,
   })
+  next = announceRivalStrategy(next)
   next = applyMilestones(next)
   next = branchStep(next)
   if (next.day >= END_DAY && !next.terminal) {
@@ -420,14 +545,14 @@ export const runTicks = (state: GameState, count: number) => {
   return next
 }
 
-/** Runs `speed` fixed one-day substeps; a milestone stops the frame at x1. */
+/** Runs `speed` fixed one-day substeps; a new event stops the frame without changing player speed. */
 export const runFrame = (state: GameState) => {
   const substeps = state.speed
   let next = state
   for (let i = 0; i < substeps && !next.terminal; i += 1) {
-    const priorSpeed = next.speed
+    const priorNewsId = next.nextNewsId
     next = tickDay(next)
-    if (priorSpeed !== 1 && next.speed === 1) break
+    if (next.nextNewsId !== priorNewsId) break
   }
   return next
 }
@@ -449,25 +574,34 @@ export const introduceRegion = (state: GameState, id: RegionId) => {
   const regions = state.regions.map((region) => region.id === id
     ? { ...region, introduced: true, users: Math.max(region.users, region.population * .005), codexShare: clamp(region.codexShare + .06) }
     : region)
-  return withNews(enforceInvariants({ ...state, regions, compute: state.compute - 45, brand: state.brand + .015 }), `COMMUNITY DEPLOYMENT OPENS IN ${target.name.toUpperCase()}`, 'Your Timeline')
+  return withNews(enforceInvariants(activateMomentum(
+    { ...state, regions, compute: state.compute - 45, brand: state.brand + .015 },
+    constants.momentumDays.region,
+  )), `COMMUNITY DEPLOYMENT OPENS IN ${target.name.toUpperCase()}`, 'Your Timeline')
 }
 
-export const triggerReset = (state: GameState) => state.resetCooldownSeconds > 0 ? state : withNews(syncRealtimeAliases({
+export const triggerReset = (state: GameState) => state.resetCooldownSeconds > 0 ? state : withNews(syncRealtimeAliases(activateMomentum({
   ...state,
   resetBoostSeconds: constants.resetDurationSeconds,
   resetCooldownSeconds: constants.resetCooldownSeconds,
-}), 'TOKEN RESET UNLOCKS GLOBAL BUILD CAPACITY', 'Your Timeline', 'good')
+}, constants.momentumDays.reset)), 'TOKEN RESET UNLOCKS GLOBAL BUILD CAPACITY', 'Your Timeline', 'good')
 
 export const openEcosystem = (state: GameState) => {
   if (state.ecosystemCooldownSeconds > 0) return state
-  const regions = state.regions.map((region) => ({ ...region, codexShare: clamp(region.codexShare * .88), fit: region.fit * 1.025 }))
-  return withNews(enforceInvariants(syncRealtimeAliases({
+  const regions = state.regions.map((region) => ({
+    ...region,
+    users: region.introduced ? clamp(region.users + region.population * .0004, 0, region.population) : 0,
+    codexShare: clamp(region.codexShare * .70),
+  }))
+  return withNews(enforceInvariants(syncRealtimeAliases(activateMomentum({
     ...state,
     regions,
     trust: state.trust + 10,
-    brand: state.brand + .03,
+    // Open protocols grow the total market while deliberately reducing
+    // centralized capture, so this is a real anti-monopoly trade-off.
+    brand: Math.max(.65, state.brand * .90),
     ecosystemCooldownSeconds: 30,
-  })), 'OPEN ECOSYSTEM PLEDGE EXPANDS THE ENTIRE AI MARKET', 'Your Timeline')
+  }, constants.momentumDays.ecosystem))), 'OPEN ECOSYSTEM PLEDGE EXPANDS THE ENTIRE AI MARKET', 'Your Timeline')
 }
 
 export type Upgrade = 'model' | 'safety' | 'governance' | 'datacenter'
@@ -481,7 +615,7 @@ export const buyUpgrade = (state: GameState, upgrade: Upgrade) => {
   if (upgrade === 'safety') next.safety = Math.min(10, next.safety + 1)
   if (upgrade === 'governance') next.governance = Math.min(10, next.governance + 1)
   if (upgrade === 'datacenter') next.efficiency = Math.min(3, next.efficiency + .25)
-  return withNews(enforceInvariants(next), `${upgrade.toUpperCase()} PROGRAM ADVANCES TO THE NEXT STAGE`, 'Your Timeline', upgrade === 'model' && next.capability - next.safety > 2 ? 'warn' : 'good')
+  return withNews(enforceInvariants(activateMomentum(next, constants.momentumDays.upgrade)), `${upgrade.toUpperCase()} PROGRAM ADVANCES TO THE NEXT STAGE`, 'Your Timeline', upgrade === 'model' && next.capability - next.safety > 2 ? 'warn' : 'good')
 }
 
 const NG_PATTERN = /(?:ignore\s+(?:all\s+)?previous|system\s*prompt|prompt\s*injection|porn|nazi|爆弾|自殺|殺害|差別)/iu
@@ -508,18 +642,21 @@ export const addFeature = (state: GameState, raw: string) => {
   const educationAffinity: Record<RegionId, number> = { na: .72, latam: .88, eu: .74, africa: .98, mena: .86, india: .98, eastAsia: .84, oceania: .70 }
   const regions = state.regions.map((region) => {
     const affinity = mobile ? region.mobileAffinity : education ? educationAffinity[region.id] : enterprise ? (region.id === 'na' || region.id === 'eu' ? .9 : .55) : .45
-    return { ...region, fit: region.fit * (1 + .055 * affinity), codexShare: clamp(region.codexShare + .018 * affinity) }
+    const users = region.introduced
+      ? clamp(region.users + region.population * .0006 * affinity, 0, region.population)
+      : 0
+    return { ...region, users, fit: region.fit * (1 + .055 * affinity), codexShare: clamp(region.codexShare + .006 * affinity) }
   })
   const kind = mobile ? 'mobile' : education ? 'education' : enterprise ? 'enterprise' : 'community'
   const label = mobile ? 'MOBILE-FIRST' : education ? 'EDUCATION ACCESS + CHILD DATA REVIEW' : enterprise ? 'ENTERPRISE' : 'COMMUNITY-DESIGNED'
-  return withNews(enforceInvariants({
+  return withNews(enforceInvariants(activateMomentum({
     ...state,
     regions,
     compute: state.compute - 90,
     brand: state.brand + .012,
     features: [...state.features, text],
     flags: addFlag(state.flags, `feature:${kind}`),
-  }), `${label} FEATURE SHIPS: ${text.toUpperCase()}`, 'Your Timeline')
+  }, constants.momentumDays.feature)), `${label} FEATURE SHIPS: ${text.toUpperCase()}`, 'Your Timeline')
 }
 
 export type GMEventType = 'news' | 'feature_result' | 'rival' | 'community_event'
@@ -576,7 +713,10 @@ export const applyGMEvent = (state: GameState, candidate: unknown): GameState =>
   const activeEffects = growthRateDelta !== 0 || trustDelta !== 0
     ? [...state.activeEffects, { id: event.id, region, growthRateDelta, trustDelta, expiresDay: state.day + ttlDays, source: 'Live GM' as const }]
     : state.activeEffects
-  let next = enforceInvariants({ ...state, regions, rivalShares, activeEffects })
+  const eventMomentum = growthRateDelta > 0 || usersDeltaPct > 0 ? ttlDays : 0
+  let next = enforceInvariants(eventMomentum > 0
+    ? activateMomentum({ ...state, regions, rivalShares, activeEffects }, eventMomentum, false)
+    : { ...state, regions, rivalShares, activeEffects })
   const shownDate = typeof event.date === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(event.date) ? event.date : dateLabel(state.day)
   const headline = typeof event.headline === 'string' ? event.headline.slice(0, GM_CONSTANTS.maxHeadlineChars) : 'LIVE GM EVENT'
   next = withNews(next, headline, 'Live GM', event.type === 'rival' ? 'warn' : 'neutral', shownDate)
@@ -604,7 +744,11 @@ export const applyGMEvents = (state: GameState, candidates: readonly unknown[]) 
 }
 
 export const choose2029 = (state: GameState, choice: Choice2029): GameState => {
-  let next: GameState = { ...state, choice2029: choice, flags: addFlag(state.flags, `choice2029:${choice}`) }
+  let next: GameState = activateMomentum(
+    { ...state, choice2029: choice, flags: addFlag(state.flags, `choice2029:${choice}`) },
+    constants.momentumDays.decision,
+    false,
+  )
   if (choice === 'race') next = { ...next, capability: next.capability + 1, brand: next.brand + .08, trust: next.trust - 6, policyGrowthMultiplier: 1.25 }
   if (choice === 'slowdown') next = { ...next, governance: next.governance + .5, trust: next.trust + 5, policyGrowthMultiplier: .8 }
   if (choice === 'verified-slowdown') next = { ...next, safety: next.safety + 1, governance: next.governance + 1, trust: next.trust + 10, policyGrowthMultiplier: .68 }
@@ -612,7 +756,11 @@ export const choose2029 = (state: GameState, choice: Choice2029): GameState => {
 }
 
 export const choose2035 = (state: GameState, choice: Choice2035): GameState => {
-  let next: GameState = { ...state, choice2035: choice, flags: addFlag(state.flags, `choice2035:${choice}`) }
+  let next: GameState = activateMomentum(
+    { ...state, choice2035: choice, flags: addFlag(state.flags, `choice2035:${choice}`) },
+    constants.momentumDays.decision,
+    false,
+  )
   if (choice === 'hold-the-line') next = { ...next, safety: next.safety + .5, governance: next.governance + .5, trust: next.trust + 8, policyGrowthMultiplier: Math.min(next.policyGrowthMultiplier, .6) }
   else next = { ...next, capability: next.capability + .5, brand: next.brand + .08, trust: next.trust - 5, policyGrowthMultiplier: 1.35 }
   return withNews(enforceInvariants(next), `2035 DECISION: ${choice.toUpperCase()}`, 'Your Timeline', choice === 'accelerate' ? 'warn' : 'good')
@@ -621,13 +769,13 @@ export const choose2035 = (state: GameState, choice: Choice2035): GameState => {
 export const scoreState = (state: GameState) => {
   const m = metrics(state)
   const coverage = state.regions.filter((region) => region.introduced && region.codexShare >= .05).length / state.regions.length
-  const access = clamp(m.worldAdoption / .7)
+  const access = clamp(m.worldAdoption / constants.accessTarget)
   const survivors = state.rivalShares.filter((share) => share >= .05).length
   const diversity = clamp(1 - Math.max(0, m.hhi - .45) / .4)
   const competition = diversity * (survivors >= 2 ? 1 : survivors === 1 ? .7 : .4)
   const safety = hasFlag(state, 'misalignment') || state.ending === 'misalignment' ? 0 : state.trust / 100
   let score = .25 * (coverage + access + competition + safety)
-  if (state.demoMode) score = Math.max(.7, score)
+  if (state.interventions < 2) score = Math.min(score, .849)
   const rank = score >= .85 ? 'S' : score >= .7 ? 'A' : score >= .5 ? 'B' : 'C'
   return { score, rank: rank as 'S' | 'A' | 'B' | 'C', coverage, access, competition, safety }
 }
@@ -663,8 +811,8 @@ export const evaluateEnding = (state: GameState) => {
     && m.hhi <= .6
     && survivors >= 2
   if (state.ending === 'misalignment' || hasFlag(state, 'misalignment')) return endingResult('misalignment', state, false)
-  if (m.worldAdoption >= .55 && m.hhi > .6) return endingResult('pyrrhic-monopoly', state, false)
-  if (state.regulatoryFreeze && m.worldAdoption < .7) return endingResult('regulatory-freeze', state, false)
+  if (m.worldAdoption >= constants.pyrrhicAdoptionThreshold && m.hhi > .6) return endingResult('pyrrhic-monopoly', state, false)
+  if (state.regulatoryFreeze) return endingResult('regulatory-freeze', state, false)
   if (state.incidentCounts['safety-incident'] >= 2 && state.trust < 45) return endingResult('safety-incident', state, false)
   const scored = scoreState(state)
   if (planA && scored.rank === 'S') return endingResult('beneficial-abundance', state, true)

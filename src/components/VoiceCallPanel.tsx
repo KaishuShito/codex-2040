@@ -81,9 +81,9 @@ export default function VoiceCallPanel({
       <div className="voice-call__transcript" aria-label="Voice call subtitles" aria-live="polite">
         {subtitles.length === 0 && <p className="voice-call__empty">Start the call, then ask: 「リミットをリセットして」</p>}
         {subtitles.map((subtitle, index) => (
-          <p key={`${subtitle.id}-${index}`} data-speaker={subtitle.speaker}><b>{subtitle.speaker === 'player' ? 'YOU' : subtitle.speaker === 'operator' ? 'KIBO — DEMO' : 'SYSTEM'}</b><span>{subtitle.text}</span></p>
+          <p key={`${subtitle.id}-${index}`} data-speaker={subtitle.speaker}><b>{subtitle.speaker === 'player' ? 'YOU' : subtitle.speaker === 'operator' ? 'KIBO — VOICE AGENT' : 'SYSTEM'}</b><span>{subtitle.text}</span></p>
         ))}
-        {operatorDraft && <p data-speaker="operator"><b>KIBO — DEMO</b><span>{operatorDraft}</span></p>}
+        {operatorDraft && <p data-speaker="operator"><b>KIBO — VOICE AGENT</b><span>{operatorDraft}</span></p>}
       </div>
 
       {status === 'fallback' && !pendingReset && (

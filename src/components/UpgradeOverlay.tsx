@@ -2,6 +2,8 @@ import {
   ArrowUpRight,
   Bot,
   BrainCircuit,
+  BarChart3,
+  Blocks,
   Building2,
   Check,
   ChevronRight,
@@ -14,6 +16,7 @@ import {
   LockKeyhole,
   Network,
   RadioTower,
+  Search,
   ShieldCheck,
   Smartphone,
   Sparkles,
@@ -31,12 +34,15 @@ export type UpgradeOverlayAction =
   | 'feature-mobile'
   | 'feature-enterprise'
   | 'feature-education'
+  | 'feature-research'
+  | 'feature-connectors'
+  | 'feature-analysis'
   | 'safety'
   | 'governance'
   | 'datacenter'
   | 'ecosystem'
 
-export type UpgradeOverlayFeature = 'mobile' | 'enterprise' | 'education'
+export type UpgradeOverlayFeature = 'mobile' | 'enterprise' | 'education' | 'research' | 'connectors' | 'analysis'
 
 export type UpgradeOverlayCosts = Record<UpgradeOverlayAction, number>
 
@@ -56,6 +62,7 @@ export type UpgradeOverlayProps = {
   ecosystemCooldownDays?: number
   initialTab?: UpgradeOverlayTab
   onAction: (action: UpgradeOverlayAction) => void
+  onCustomFeature: (feature: string) => void
   onClose: () => void
 }
 
@@ -67,6 +74,9 @@ type NodeId =
   | 'product-mobile'
   | 'product-sso'
   | 'product-education'
+  | 'product-research'
+  | 'product-connectors'
+  | 'product-analysis'
   | 'company-safety'
   | 'company-policy'
   | 'company-datacenter'
@@ -142,7 +152,7 @@ const NODES: readonly NodeDefinition[] = [
   {
     id: 'product-mobile', tab: 'product', eyebrow: 'ACCESS', title: 'Mobile SDK',
     summary: 'Reach mobile-first regions with a low-risk distribution feature.',
-    action: 'feature-mobile', actionLabel: 'Ship mobile SDK', icon: Smartphone, x: 22, y: 31,
+    action: 'feature-mobile', actionLabel: 'Ship mobile SDK', icon: Smartphone, x: 14, y: 29,
     effects: [
       { label: 'Regional fit', value: 'Mobile +', tone: 'good' },
       { label: 'Primary reach', value: 'Global South', tone: 'neutral' },
@@ -152,7 +162,7 @@ const NODES: readonly NodeDefinition[] = [
   {
     id: 'product-sso', tab: 'product', eyebrow: 'TRUST', title: 'Enterprise SSO',
     summary: 'Reduce adoption friction for institutions in mature markets.',
-    action: 'feature-enterprise', actionLabel: 'Ship enterprise SSO', icon: KeyRound, x: 24, y: 72,
+    action: 'feature-enterprise', actionLabel: 'Ship enterprise SSO', icon: KeyRound, x: 14, y: 73,
     effects: [
       { label: 'Regional fit', value: 'NA / EU +', tone: 'good' },
       { label: 'Buyer', value: 'Institutions', tone: 'neutral' },
@@ -162,11 +172,41 @@ const NODES: readonly NodeDefinition[] = [
   {
     id: 'product-education', tab: 'product', eyebrow: 'PLAN A', title: 'Education Mode',
     summary: 'Make classroom access the product strategy: broad public benefit with privacy governance kept visible.',
-    action: 'feature-education', actionLabel: 'Release Education Mode', icon: GraduationCap, x: 66, y: 50,
+    action: 'feature-education', actionLabel: 'Release Education Mode', icon: GraduationCap, x: 84, y: 51,
     effects: [
       { label: 'Learning access', value: 'Major +', tone: 'good' },
       { label: 'Regions', value: 'India / Africa', tone: 'good' },
       { label: 'Governance', value: 'Youth data', tone: 'risk' },
+    ],
+  },
+  {
+    id: 'product-research', tab: 'product', eyebrow: 'SYNTHESIS', title: 'Deep Research',
+    summary: 'Synthesize web, files, and connected sources into cited reports. High public value, but slower and compute-intensive.',
+    action: 'feature-research', actionLabel: 'Ship Deep Research', icon: Search, x: 42, y: 22,
+    effects: [
+      { label: 'Knowledge work', value: 'Major +', tone: 'good' },
+      { label: 'Compute load', value: 'High', tone: 'risk' },
+      { label: 'Trust need', value: 'Citations', tone: 'neutral' },
+    ],
+  },
+  {
+    id: 'product-connectors', tab: 'product', eyebrow: 'CONTEXT', title: 'Apps & Connectors',
+    summary: 'Connect permitted workplace data and actions. Adoption grows, while authorization and retention become governance work.',
+    action: 'feature-connectors', actionLabel: 'Ship Apps & Connectors', icon: Blocks, x: 42, y: 73,
+    effects: [
+      { label: 'Workflow fit', value: 'Major +', tone: 'good' },
+      { label: 'Enterprise pull', value: 'Strong', tone: 'good' },
+      { label: 'Data governance', value: 'Required', tone: 'risk' },
+    ],
+  },
+  {
+    id: 'product-analysis', tab: 'product', eyebrow: 'COMPUTE TOOL', title: 'Data Analyst',
+    summary: 'Run code over files to analyze numbers and generate charts. Capability becomes useful to more professions.',
+    action: 'feature-analysis', actionLabel: 'Ship Data Analyst', icon: BarChart3, x: 66, y: 73,
+    effects: [
+      { label: 'Professional use', value: 'Broad +', tone: 'good' },
+      { label: 'Artifacts', value: 'Charts / files', tone: 'good' },
+      { label: 'Tool risk', value: 'Moderate', tone: 'risk' },
     ],
   },
   {
@@ -239,8 +279,11 @@ const LINKS: Record<UpgradeOverlayTab, readonly [NodeId, NodeId][]> = {
     ['model-agents', 'model-frontier'],
   ],
   product: [
-    ['product-mobile', 'product-education'],
-    ['product-sso', 'product-education'],
+    ['product-mobile', 'product-research'],
+    ['product-sso', 'product-connectors'],
+    ['product-research', 'product-education'],
+    ['product-connectors', 'product-analysis'],
+    ['product-analysis', 'product-education'],
   ],
   company: [
     ['company-safety', 'company-datacenter'],
@@ -271,10 +314,12 @@ export function UpgradeOverlay({
   ecosystemCooldownDays = 0,
   initialTab = DEFAULT_TAB,
   onAction,
+  onCustomFeature,
   onClose,
 }: UpgradeOverlayProps) {
   const [activeTab, setActiveTab] = useState<UpgradeOverlayTab>(initialTab)
   const [selectedId, setSelectedId] = useState<NodeId>('model-foundation')
+  const [customFeature, setCustomFeature] = useState('')
   const dialogRef = useRef<HTMLDivElement>(null)
   const titleId = useId()
   const descriptionId = useId()
@@ -343,6 +388,9 @@ export function UpgradeOverlay({
     if (node.action === 'feature-mobile') return enabledFeatures.includes('mobile')
     if (node.action === 'feature-enterprise') return enabledFeatures.includes('enterprise')
     if (node.action === 'feature-education') return enabledFeatures.includes('education')
+    if (node.action === 'feature-research') return enabledFeatures.includes('research')
+    if (node.action === 'feature-connectors') return enabledFeatures.includes('connectors')
+    if (node.action === 'feature-analysis') return enabledFeatures.includes('analysis')
     return false
   }
 
@@ -489,6 +537,26 @@ export function UpgradeOverlay({
                 )
               })}
             </div>
+
+            {activeTab === 'product' && (
+              <form className="upgrade-overlay__custom-feature" onSubmit={(event) => {
+                event.preventDefault()
+                const feature = customFeature.trim()
+                if (!feature) return
+                onCustomFeature(feature)
+                setCustomFeature('')
+              }}>
+                <Sparkles size={15} />
+                <label htmlFor="custom-product-feature">
+                  <span>CUSTOM FEATURE</span>
+                  <span className="upgrade-overlay__custom-input">
+                    <input id="custom-product-feature" value={customFeature} onChange={(event) => setCustomFeature(event.target.value)} maxLength={60} placeholder="Describe a new capability…" />
+                    <small>{customFeature.length}/60</small>
+                  </span>
+                </label>
+                <button type="submit" disabled={customFeature.trim().length < 3 || compute < 90}>SHIP · 90 PF</button>
+              </form>
+            )}
 
             {activeTab === 'model' && (
               <div className={`upgrade-overlay__riskline ${maxGap >= 3 ? 'is-critical' : maxGap >= 1 ? 'is-open' : ''}`}>

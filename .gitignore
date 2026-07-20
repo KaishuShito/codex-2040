@@ -18,6 +18,7 @@ vite.config.d.ts
 # Local Codex GM bridge runtime (keep directory markers only)
 gm-bridge/inbox/*.json
 gm-bridge/inbox/*.tmp
+gm-bridge/inbox/*/
 gm-bridge/processed/*.json
 gm-bridge/processed/*.tmp
 events/*.json

@@ -42,6 +42,15 @@ export type WorldMapRegionIntensity = {
   label?: string
 }
 
+export type WorldMapCompetitiveView = {
+  /** Competitor name shown in the map legend and accessible labels. */
+  label: string
+  /** RGB channels used for the competitor territory heatmap. */
+  color: readonly [red: number, green: number, blue: number]
+  /** Estimated regional share, normalized from 0 to 1. */
+  shares: Readonly<Partial<Record<WorldMapRegionId, number>>>
+}
+
 type MarkerBase = {
   id: string
   label: string
@@ -59,8 +68,10 @@ export type WorldMapProps = {
   regions: Readonly<Partial<Record<WorldMapRegionId, WorldMapRegionIntensity>>>
   selectedRegion?: WorldMapRegionId | null
   onRegionClick: (regionId: WorldMapRegionId) => void
+  onClearSelection?: () => void
   eventMarkers?: readonly WorldMapMarker[]
   onMarkerClick?: (marker: WorldMapMarker) => void
+  competitiveView?: WorldMapCompetitiveView | null
   /** Change this value to replay the synchronized global reset pulse. */
   resetPulse?: number
   className?: string
@@ -145,24 +156,16 @@ const keyboardActivate = (event: KeyboardEvent<SVGElement>, action: () => void) 
   action()
 }
 
-const networkArc = (from: WorldMapRegionId, to: WorldMapRegionId) => {
-  const [x1, y1] = regionPoints[from]
-  const [x2, y2] = regionPoints[to]
-  const distance = Math.hypot(x2 - x1, y2 - y1)
-  const bend = Math.min(76, Math.max(24, distance * 0.18))
-  const midpointX = (x1 + x2) / 2
-  const midpointY = (y1 + y2) / 2 - bend
-  return `M${x1.toFixed(1)},${y1.toFixed(1)} Q${midpointX.toFixed(1)},${midpointY.toFixed(1)} ${x2.toFixed(1)},${y2.toFixed(1)}`
-}
-
 const asLinePath = (coordinates: Position[]) => pathGenerator({ type: 'LineString', coordinates } as LineString) ?? ''
 
 export default function WorldMap({
   regions,
   selectedRegion = null,
   onRegionClick,
+  onClearSelection,
   eventMarkers = [],
   onMarkerClick,
+  competitiveView = null,
   resetPulse = 0,
   className = '',
   ariaLabel = 'Interactive map of global AI access and education networks',
@@ -181,12 +184,23 @@ export default function WorldMap({
       return rightValue - leftValue
     }), [regions])
 
-  const networkOrigin = activeRegions[0]
-  const networkTargets = networkOrigin ? activeRegions.slice(1, 7) : []
-
   return (
-    <figure className={`world-map ${className}`.trim()} aria-label={ariaLabel}>
-      <svg className="world-map__canvas" viewBox={`0 0 ${WIDTH} ${HEIGHT}`} role="group" aria-label={ariaLabel}>
+    <figure
+      className={`world-map${competitiveView ? ' is-competitive' : ''} ${className}`.trim()}
+      aria-label={competitiveView ? `${ariaLabel}. ${competitiveView.label} estimated market territory view.` : ariaLabel}
+      style={competitiveView ? { '--rival-color': competitiveView.color.join(', ') } as CSSProperties : undefined}
+    >
+      <svg
+        className="world-map__canvas"
+        viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
+        role="group"
+        aria-label={ariaLabel}
+        onClick={(event) => {
+          const target = event.target as Element
+          if (target.closest('.world-map__region, .world-map__marker')) return
+          onClearSelection?.()
+        }}
+      >
         <defs>
           <filter id={glowId} x="-120%" y="-120%" width="340%" height="340%">
             <feGaussianBlur stdDeviation="5.5" result="blur" />
@@ -219,10 +233,15 @@ export default function WorldMap({
             const intensity = active ? .16 + Math.sqrt(adoption) * .48 + codexShare * .3 : .06
             const label = value?.label ?? REGION_META[regionId].label
             const isSelected = selectedRegion === regionId
+            const rivalShare = clamp01(competitiveView?.shares[regionId] ?? 0)
             const style = {
               '--region-intensity': intensity.toFixed(3),
               '--region-share': codexShare.toFixed(3),
+              '--rival-share': rivalShare.toFixed(3),
             } as CSSProperties
+            const marketLabel = competitiveView
+              ? `${competitiveView.label} estimated share ${percent(rivalShare)}`
+              : `Codex share ${percent(codexShare)}`
 
             return (
               <path
@@ -233,26 +252,17 @@ export default function WorldMap({
                 role="button"
                 tabIndex={0}
                 aria-pressed={isSelected}
-                aria-label={`${label}. AI access ${percent(adoption)}. Codex share ${percent(codexShare)}.`}
+                aria-label={`${label}. AI access ${percent(adoption)}. ${marketLabel}.`}
                 onClick={() => onRegionClick(regionId)}
                 onKeyDown={(event) => keyboardActivate(event, () => onRegionClick(regionId))}
               >
-                <title>{label}: AI access {percent(adoption)}, Codex share {percent(codexShare)}</title>
+                <title>{label}: AI access {percent(adoption)}, {marketLabel}</title>
               </path>
             )
           })}
         </g>
 
         <path className="world-map__country-lines" d={countriesPath} aria-hidden="true" />
-
-        <g className="world-map__network" aria-hidden="true">
-          {networkOrigin && networkTargets.map((target, index) => (
-            <g key={`${networkOrigin}-${target}`} style={{ '--arc-delay': `${index * -0.72}s` } as CSSProperties}>
-              <path className="world-map__arc-halo" d={networkArc(networkOrigin, target)} />
-              <path className="world-map__arc" d={networkArc(networkOrigin, target)} pathLength={1} />
-            </g>
-          ))}
-        </g>
 
         <g className="world-map__hubs" aria-hidden="true">
           {activeRegions.map((regionId, index) => {
@@ -326,11 +336,10 @@ export default function WorldMap({
       </svg>
 
       <figcaption className="world-map__legend">
-        <span><i className="world-map__legend-access" /> AI access</span>
-        <span><i className="world-map__legend-network" /> Learning network</span>
+        <span><i className="world-map__legend-access" /> {competitiveView ? `${competitiveView.label} estimated share` : 'AI access'}</span>
         <span><i className="world-map__legend-event" /> Scenario event</span>
       </figcaption>
-      <span className="world-map__coordinate" aria-hidden="true">GLOBAL ACCESS NETWORK · 110M</span>
+      <span className="world-map__coordinate" aria-hidden="true">{competitiveView ? `${competitiveView.label} TERRITORY ANALYSIS` : 'GLOBAL ACCESS NETWORK · 110M'}</span>
     </figure>
   )
 }

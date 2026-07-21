@@ -9,7 +9,6 @@ import {
   CirclePlay,
   ChevronsRight,
   Cpu,
-  GraduationCap,
   Network,
   Phone,
   Radio,
@@ -61,7 +60,7 @@ import UpgradeOverlay, {
   type UpgradeOverlayTab,
 } from './components/UpgradeOverlay'
 import ScenarioDecision, { type ScenarioDecisionOptions } from './components/ScenarioDecision'
-import EndingOverlay, { type DecisionDivergences } from './components/EndingOverlay'
+import EndingOverlay, { type AnonymousWorldlineReceipt, type DecisionDivergences } from './components/EndingOverlay'
 import VoiceCallPanel, { type VoiceSubtitle } from './components/VoiceCallPanel'
 import WorldEventPopup, { type WorldEventPopupNotice } from './components/WorldEventPopup'
 import { RealtimeVoiceClient, type MicPermissionStatus, type VoiceConnectionStatus } from './voiceAgent'
@@ -74,6 +73,9 @@ import {
 } from './voiceReset'
 import { GameAudio, type GameSound } from './sound'
 import { decodeSession, encodeSession, SESSION_STORAGE_KEY } from './session'
+import { createBrowserRunTelemetry, type RunTelemetry } from './runTelemetry'
+import { fetchRunReceipt } from './runApi'
+import { getEventSourceUrl } from './sourceLinks'
 import type { StrategyNodeId } from './strategyNodes'
 import { WORLD_EVENTS } from './worldEvents'
 
@@ -217,8 +219,10 @@ function Meter({ label, value, max = 100, danger = false, hint }: { label: strin
   )
 }
 
-function SourceBadge({ source }: { source: SourceLabel }) {
-  const label = source === 'Your Timeline' ? 'あなたの時間軸' : source === 'Live GM' ? 'ライブGM' : source
+function SourceBadge({ source, href }: { source: SourceLabel; href?: string }) {
+  if (source === 'Your Timeline') return null
+  const label = source === 'Live GM' ? 'ライブGM' : source
+  if (href) return <a className="source-badge" data-source={source} href={href} target="_blank" rel="noreferrer" aria-label={`${label}の該当セクションを開く`}>{label}</a>
   return <span className="source-badge" data-source={source}>{label}</span>
 }
 
@@ -267,7 +271,7 @@ export default function App() {
   const [criticalNews, setCriticalNews] = useState<NewsItem | null>(null)
   const [selectedRegionId, setSelectedRegionId] = useState<RegionId | null>('eastAsia')
   const [selectedCompetitor, setSelectedCompetitor] = useState<number | null>(null)
-  const [actionStatus, setActionStatus] = useState('ゲーム内では定義済みの行動だけを選びます。費用とトレードオフは戦略ツリーで確認できます。')
+  const [previewCompetitor, setPreviewCompetitor] = useState<'codex' | number | null>(null)
   const [resetPulse, setResetPulse] = useState(0)
   const [upgradeOpen, setUpgradeOpen] = useState(false)
   const [upgradeTab, setUpgradeTab] = useState<UpgradeOverlayTab>('model')
@@ -280,9 +284,12 @@ export default function App() {
   const [voiceSubtitles, setVoiceSubtitles] = useState<VoiceSubtitle[]>([])
   const [operatorDraft, setOperatorDraft] = useState('')
   const [voiceResetState, setVoiceResetState] = useState(createVoiceResetState)
+  const [worldlineReceipt, setWorldlineReceipt] = useState<AnonymousWorldlineReceipt | null>(null)
+  const [activePlaySeconds, setActivePlaySeconds] = useState<number | null>(null)
 
   const stateRef = useRef(state)
   const hasStartedRef = useRef(hasStarted)
+  const runTelemetryRef = useRef<RunTelemetry | null>(null)
   const persistTimerRef = useRef<number | null>(null)
   const audioRef = useRef<GameAudio | null>(null)
   if (!audioRef.current) audioRef.current = new GameAudio()
@@ -291,7 +298,7 @@ export default function App() {
   const voiceResetRef = useRef(voiceResetState)
   const voiceSubtitleIdRef = useRef(0)
   const observedNewsIdRef = useRef(state.news[0]?.id ?? 0)
-  const actionDockRef = useRef<HTMLElement | null>(null)
+  const lowerCommandRef = useRef<HTMLElement | null>(null)
   const lastBriefSoundIdRef = useRef<number | null>(null)
   const lastDecisionSoundRef = useRef<string | null>(null)
 
@@ -397,6 +404,89 @@ export default function App() {
   }, [])
 
   useEffect(() => {
+    const telemetry = createBrowserRunTelemetry('ja')
+    runTelemetryRef.current = telemetry
+    const visible = () => document.visibilityState === 'visible'
+    const syncActivity = () => telemetry.updateActivity(
+      hasStartedRef.current,
+      stateRef.current.terminal,
+      visible(),
+    )
+    const suspend = () => telemetry.suspend()
+    const retry = () => telemetry.retry()
+    const heartbeat = window.setInterval(() => {
+      telemetry.checkpoint()
+      telemetry.retry()
+    }, 5_000)
+
+    telemetry.start()
+    syncActivity()
+    document.addEventListener('visibilitychange', syncActivity)
+    window.addEventListener('online', retry)
+    window.addEventListener('pagehide', suspend)
+    return () => {
+      document.removeEventListener('visibilitychange', syncActivity)
+      window.removeEventListener('online', retry)
+      window.removeEventListener('pagehide', suspend)
+      window.clearInterval(heartbeat)
+      telemetry.stop()
+      if (runTelemetryRef.current === telemetry) runTelemetryRef.current = null
+    }
+  }, [])
+
+  useEffect(() => {
+    const telemetry = runTelemetryRef.current
+    if (!telemetry) return
+    telemetry.updateActivity(hasStarted, state.terminal, document.visibilityState === 'visible')
+    if (!state.terminal) return
+
+    const snapshot = telemetry.snapshot()
+    setActivePlaySeconds(snapshot.activePlaySeconds)
+    telemetry.complete({
+        final_score: Math.round(ending.score * 100),
+        rank: ending.rank,
+        ending: ending.id,
+        choice_2029: state.choice2029,
+        choice_2035: state.choice2035,
+      })
+
+    let cancelled = false
+    const loadReceipt = async () => {
+      await telemetry.flush()
+      for (const delay of [0, 1_000, 3_000]) {
+        if (delay > 0) await new Promise((resolve) => window.setTimeout(resolve, delay))
+        if (cancelled) return
+        const receipt = await fetchRunReceipt(snapshot.playId)
+        if (receipt) {
+          setWorldlineReceipt(receipt)
+          return
+        }
+        telemetry.retry()
+      }
+    }
+    void loadReceipt()
+    return () => { cancelled = true }
+  }, [ending.id, ending.rank, ending.score, hasStarted, state.choice2029, state.choice2035, state.terminal])
+
+  useEffect(() => {
+    if (!state.terminal || worldlineReceipt) return
+    const refresh = async () => {
+      const telemetry = runTelemetryRef.current
+      if (!telemetry) return
+      telemetry.retry()
+      await telemetry.flush()
+      const receipt = await fetchRunReceipt(telemetry.snapshot().playId)
+      if (receipt) setWorldlineReceipt(receipt)
+    }
+    const interval = window.setInterval(() => { void refresh() }, 15_000)
+    window.addEventListener('online', refresh)
+    return () => {
+      window.clearInterval(interval)
+      window.removeEventListener('online', refresh)
+    }
+  }, [state.terminal, worldlineReceipt])
+
+  useEffect(() => {
     if (!criticalNews || lastBriefSoundIdRef.current === criticalNews.id) return
     lastBriefSoundIdRef.current = criticalNews.id
     const crisis = /SAFETY|ALIGNMENT|REGULATORY|MISALIGNMENT|CRITICAL|EMERGENCY/i.test(criticalNews.headline)
@@ -451,15 +541,10 @@ export default function App() {
     const before = stateRef.current
     const next = addFeature(before, input)
     if (next === before || next.features.length === before.features.length) {
-      setActionStatus(before.compute < 90 ? 'この機能の公開には計算資源90 PFが必要です。' : '効果は発生しませんでした。')
       return
     }
     setState(next)
     stateRef.current = next
-    const education = /learn|school|student|teacher|classroom|education|教育|学習|学校|教室/i.test(input)
-    setActionStatus(education
-      ? '効果反映 · 教育アクセスと地域適合度が上昇しました。'
-      : '効果反映 · 定義済みのプロダクト機能を公開しました。')
     playSound('confirm')
   }
 
@@ -468,13 +553,11 @@ export default function App() {
     const current = stateRef.current
     const next = introduceRegion(current, selectedRegionId)
     if (next === current) {
-      setActionStatus(current.compute < 45 ? '地域展開には計算資源45 PFが必要です。' : 'この地域は展開済みです。')
       return
     }
     setState(next)
     stateRef.current = next
     playSound('confirm')
-    setActionStatus(`効果反映 · ${REGION_LABELS[selectedRegion.id]}のコミュニティ網を拡大しました。`)
   }
 
   const finishTutorial = () => {
@@ -485,7 +568,7 @@ export default function App() {
     setActionNudge(true)
     const timer = window.setTimeout(() => setActionNudge(false), 4000)
     pendingTimersRef.current.push(timer)
-    window.requestAnimationFrame(() => actionDockRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }))
+    window.requestAnimationFrame(() => lowerCommandRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' }))
   }
 
   const beginWithTutorial = () => {
@@ -503,6 +586,7 @@ export default function App() {
 
   const resetGameToStart = () => {
     const next = initialGame()
+    runTelemetryRef.current?.reset()
     try { window.localStorage.removeItem(SESSION_STORAGE_KEY) } catch { /* Storage may be disabled. */ }
     setState(next)
     stateRef.current = next
@@ -517,6 +601,8 @@ export default function App() {
     setHasStarted(false)
     setActionNudge(false)
     setSelectedCompetitor(null)
+    setWorldlineReceipt(null)
+    setActivePlaySeconds(null)
     playSound('confirm')
   }
 
@@ -816,7 +902,9 @@ export default function App() {
   }, [selectedCompetitor, state.regions, state.rivalShares])
 
   const mapMarkers = useMemo<WorldMapMarker[]>(() => [
-    { id: 'tokyo', regionId: 'eastAsia', label: 'Build Week 東京', kind: 'community', sourceLabel: 'Your Timeline' },
+    ...(date >= '2026-07-18' && date <= '2026-08-01'
+      ? [{ id: 'tokyo', regionId: 'eastAsia' as const, label: 'Build Week 東京', kind: 'community' as const }]
+      : []),
     { id: 'race', regionId: 'na', label: '開発競争', kind: 'source', sourceLabel: 'AI 2027', active: date >= '2027-01-01' },
     { id: 'verification', regionId: 'eu', label: '国際検証会議', kind: 'policy', sourceLabel: 'AI 2040', active: date >= '2029-01-01' },
     ...(state.flags.includes('feature:education') ? [{ id: 'education', regionId: 'india' as const, label: '学校アクセス', kind: 'community' as const, sourceLabel: 'Your Timeline' as const }] : []),
@@ -918,9 +1006,6 @@ export default function App() {
     : 1
   const timelineProgress = clamp(state.day / END_DAY * 100)
   const latestNews = state.news[0]
-  const latestNewsDetail = latestNews?.source === 'Live GM'
-    ? 'ブラウザ内GMブリッジで検証済みイベントを受信。'
-    : 'シミュレーションエンジンが管理する決定論的イベント。'
   const tutorial = tutorialStep === null ? null : TUTORIAL_STEPS[tutorialStep]
   const isCrisisBrief = Boolean(criticalNews && /SAFETY|ALIGNMENT|REGULATORY|MISALIGNMENT|CRITICAL|EMERGENCY/i.test(criticalNews.headline))
   const simulationStatus = showStartScreen
@@ -991,79 +1076,13 @@ export default function App() {
 
       <section className="intel-strip" aria-label="最新シナリオ情報">
         <div className="intel-strip__label"><Radio size={13} /> シナリオ情報</div>
-        {latestNews && <div className="intel-strip__headline"><SourceBadge source={latestNews.source} /><OverflowTicker className="intel-strip__ticker" text={`${latestNews.headline} · ${latestNewsDetail}`} /></div>}
+        {latestNews && <div className="intel-strip__headline"><SourceBadge source={latestNews.source} /><OverflowTicker className="intel-strip__ticker" text={latestNews.headline} /></div>}
         <div className="source-key" aria-label="情報源">
           {(['AI 2027', 'AI 2040', 'Your Timeline'] as SourceLabel[]).map((source) => <SourceBadge source={source} key={source} />)}
         </div>
       </section>
 
       <section className="command-grid">
-        <aside className="telemetry-rail">
-          <div className="section-label"><Activity size={13} /> 世界テレメトリ</div>
-          <div className="primary-counter">
-            <span>CODEX利用者</span>
-            <strong>{fmt(m.codexUsers * 1_000_000)}</strong>
-            <small>AI利用者の {pct(m.codexShare)}</small>
-          </div>
-          <div className="telemetry-pair">
-            <span><small>世界アクセス</small><b>{pct(m.worldAdoption)}</b></span>
-            <span><small>ミッション得点</small><b>{score.rank} · {Math.round(score.score * 100)}</b></span>
-          </div>
-          <div className="mission-breakdown" aria-label="ミッション得点の内訳">
-            <span><small>アクセス</small><b>{Math.round(score.access * 100)}</b></span>
-            <span><small>地域</small><b>{Math.round(score.coverage * 100)}</b></span>
-            <span><small>競争</small><b>{Math.round(score.competition * 100)}</b></span>
-            <span><small>安全</small><b>{Math.round(score.safety * 100)}</b></span>
-          </div>
-          <Meter label="社会的信頼" value={state.trust} danger={state.trust < 45} />
-          <div className="trust-causality" aria-label="社会的信頼の要因">
-            <div><span>信頼目標</span><b>{trustCausality.target.toFixed(0)}</b><strong className={trustCausality.dailyDelta < 0 ? 'is-negative' : 'is-positive'}>{trustCausality.dailyDelta >= 0 ? '+' : ''}{trustCausality.dailyDelta.toFixed(2)}/日</strong></div>
-            {trustFactors.map((factor) => <p key={factor.id} className={factor.value < 0 ? 'is-negative' : 'is-positive'}><span>{TRUST_FACTOR_LABELS[factor.id]}</span><b>{factor.value >= 0 ? '+' : ''}{factor.value.toFixed(0)}</b></p>)}
-          </div>
-          <div className="risk-radar" data-danger={riskRadar.pressure >= 80}>
-            <div><span>制御圧力</span><b>{riskRadar.pressure}%</b></div>
-            {riskRadar.risks.map((risk) => <p key={risk.label}><span>{risk.label}</span><b>{risk.detail}</b></p>)}
-          </div>
-          <Meter label="市場の健全性" value={(1 - m.hhi) * 100} hint={`HHI ${m.hhi.toFixed(2)} · 低いほど健全`} danger={m.hhi > .6} />
-
-          <div className="section-label section-label--sub"><Network size={13} /> 競争環境</div>
-          <div className="market-list">
-            <div className="is-codex"><i /><b>CODEX<small>K{state.capability.toFixed(1)} · P{Math.min(10, 2 + state.features.length * 1.5).toFixed(1)} · C{((state.safety + state.governance) / 2).toFixed(1)}</small></b><strong>{pct(m.codexShare)}</strong></div>
-            {RIVAL_NAMES.map((name, index) => (
-              <button key={name} type="button" className={selectedCompetitor === index ? 'is-selected' : ''} aria-expanded={selectedCompetitor === index} onClick={() => { setSelectedCompetitor((selected) => selected === index ? null : index); playSound('tap') }}>
-                <i /><b>{name}<small>K{state.rivalCapability[index].toFixed(1)} · P{state.rivalProduct[index].toFixed(1)} · C{state.rivalCompany[index].toFixed(1)}</small></b><strong>{pct(state.rivalShares[index])}</strong><ChevronRight size={11} />
-              </button>
-            ))}
-          </div>
-          {selectedCompetitor !== null && (() => {
-            const name = RIVAL_NAMES[selectedCompetitor]
-            const axes = [
-              { label: 'MODEL', displayLabel: 'モデル', value: state.rivalCapability[selectedCompetitor] },
-              { label: 'PRODUCT', displayLabel: '製品', value: state.rivalProduct[selectedCompetitor] },
-              { label: 'COMPANY', displayLabel: '組織', value: state.rivalCompany[selectedCompetitor] },
-            ]
-            const strongest = [...axes].sort((left, right) => right.value - left.value)[0]
-            const shareDelta = state.rivalShares[selectedCompetitor] - m.codexShare
-            return (
-              <section className="competitor-dossier" aria-label={`${name}の競合情報`}>
-                <header><span>競合情報 · 地図表示中</span><button type="button" onClick={() => { setSelectedCompetitor(null); playSound('tap') }} aria-label="競合情報を閉じる">×</button></header>
-                <div><b>{name}</b><strong className={shareDelta > 0 ? 'is-leading' : ''}>{shareDelta > 0 ? '+' : ''}{Math.round(shareDelta * 100)}点 対CODEX</strong></div>
-                <dl>
-                  <div><dt>シェア</dt><dd>{pct(state.rivalShares[selectedCompetitor])}</dd></div>
-                  {axes.map((axis) => <div key={axis.label}><dt>{axis.displayLabel}</dt><dd>{axis.value.toFixed(1)}</dd></div>)}
-                </dl>
-                <p><b>{strongest.displayLabel}が強み</b>{strongest.value >= 8 ? 'フロンティア級の圧力が発生中。' : strongest.value >= 5 ? '急成長中。次段階までに対応を。' : '先行投資で勢いを築いています。'}</p>
-              </section>
-            )
-          })()}
-
-          <div className="gm-watchdog" data-mode="advisor">
-            <div><Radio size={13} /><span><b>助言モード</b><small>相談専用</small></span></div>
-            <strong>100</strong>
-            <p>次の一手やトレードオフをアドバイザーに相談できます。実行するのはあなたです。</p>
-          </div>
-        </aside>
-
         <section className="world-stage">
           <div className="world-stage__header">
             <span><small>作戦マップ</small><b>{competitiveMapView ? `${competitiveMapView.label} 地域分析` : '世界AIアクセス網'}</b></span>
@@ -1149,7 +1168,20 @@ export default function App() {
                 <div><dt>{competitiveMapView ? `${competitiveMapView.label} 推定シェア` : 'CODEXシェア'}</dt><dd>{pct(competitiveMapView?.shares[selectedRegionId] ?? selectedRegion.codexShare)}</dd></div>
                 <div><dt>規制</dt><dd>{pct(selectedRegion.regulation)}</dd></div>
               </dl>
-              <button onClick={deployRegion}>{selectedRegion.introduced ? '交流イベントを開く' : '最初の拠点を開く'}<ChevronRight size={14} /></button>
+              <div className="region-inspector__cost" data-affordable={state.compute >= 45}>
+                <span>必要資源</span>
+                <strong>45 PF</strong>
+                <small>{state.compute >= 45
+                  ? `実行後 ${fmt(state.compute - 45, 1)} PF`
+                  : `不足 · あと ${fmt(45 - state.compute, 1)} PF`}</small>
+              </div>
+              <button
+                onClick={deployRegion}
+                disabled={state.compute < 45}
+                title={state.compute < 45 ? `計算資源があと${fmt(45 - state.compute, 1)} PF必要です` : undefined}
+              >
+                {selectedRegion.introduced ? '交流イベントを開く' : '最初の拠点を開く'}<span>45 PF</span><ChevronRight size={14} />
+              </button>
             </div>}
           </div>
           <div className="timeline-track">
@@ -1184,60 +1216,142 @@ export default function App() {
 
           <div className="event-ledger">
             <div className="section-label section-label--sub"><Radio size={13} /> イベント履歴</div>
-            {state.news.slice(0, 3).map((item) => (
-              <article key={item.id}><SourceBadge source={item.source} /><time>{item.date}</time><b><OverflowTicker text={item.headline} /></b></article>
+            <div className="event-ledger__list">
+            {state.news.map((item) => (
+              <article key={item.id}><SourceBadge source={item.source} href={getEventSourceUrl(item.source, item.date)} /><time>{item.date}</time><b><OverflowTicker text={item.headline} /></b></article>
             ))}
+            </div>
           </div>
         </aside>
       </section>
 
-      <section ref={actionDockRef} className={`action-dock${actionNudge ? ' is-onboarding-target' : ''}`}>
-        <button
-          className="reset-action"
-          disabled={state.resetCooldownSeconds > 0}
-          onClick={activateReset}
-          style={{ '--reset-progress': `${resetProgress * 360}deg` } as CSSProperties}
-        >
-          <span className="reset-action__ring"><RotateCcw size={20} /></span>
-          <span><small>TIBOプロトコル · 世界強化 8秒</small><b>{state.resetCooldownSeconds > 0 ? `トークンリセット · あと${Math.ceil(state.resetCooldownSeconds)}秒` : 'トークンリセット準備完了'}</b></span>
-        </button>
+      <section ref={lowerCommandRef} className={`lower-command-zone${actionNudge ? ' is-onboarding-target' : ''}`}>
+        <section className="telemetry-deck" aria-label="世界テレメトリ">
+          <header className="telemetry-deck__header"><Activity size={13} /><span><b>世界テレメトリ</b><small>作戦マップ因果サマリー</small></span></header>
 
-        <section className="quick-actions" aria-label="Quick gameplay actions">
-          <div className="quick-actions__label"><Sparkles size={15} /><span><small>クイックアクション</small><b>定義済みのプロダクト施策を選択</b></span></div>
-          <div className="quick-actions__buttons">
-            <button
-              type="button"
-              disabled={state.flags.includes('feature:education') || state.compute < 90}
-              onClick={() => shipPredefinedFeature('education')}
-            >
-              <GraduationCap size={13} /> {state.flags.includes('feature:education') ? '教育モード配備済み' : '教育モード · 90 PF'}
-            </button>
-            <button type="button" onClick={() => openStrategy('product')}>
-              プロダクトツリー <ChevronRight size={13} />
-            </button>
-          </div>
-          <p>{actionStatus}</p>
+          <article className="telemetry-card telemetry-card--reach">
+            <header><span>CODEX利用者</span><small>リーチ</small></header>
+            <strong>{fmt(m.codexUsers * 1_000_000)}</strong>
+            <div className="telemetry-card__split"><span><small>AI利用者シェア</small><b>{pct(m.codexShare)}</b></span><span><small>世界アクセス</small><b>{pct(m.worldAdoption)}</b></span></div>
+          </article>
+
+          <article className="telemetry-card telemetry-card--mission">
+            <header><span>ミッション得点</span><small>総合</small></header>
+            <strong>{score.rank} <i>/</i> {Math.round(score.score * 100)}</strong>
+            <div className="mission-breakdown" aria-label="ミッション得点の内訳">
+              <span><small>アクセス</small><b>{Math.round(score.access * 100)}</b></span>
+              <span><small>地域</small><b>{Math.round(score.coverage * 100)}</b></span>
+              <span><small>競争</small><b>{Math.round(score.competition * 100)}</b></span>
+              <span><small>安全</small><b>{Math.round(score.safety * 100)}</b></span>
+            </div>
+          </article>
+
+          <article className="telemetry-card telemetry-card--trust" data-danger={state.trust < 45}>
+            <header><span>社会的信頼</span><strong>{state.trust.toFixed(0)}</strong></header>
+            <div className="telemetry-card__bar" aria-hidden="true"><i style={{ width: `${clamp(state.trust)}%` }} /></div>
+            <div className="trust-causality" aria-label="社会的信頼の要因">
+              <div><span>信頼目標 {trustCausality.target.toFixed(0)}</span><strong className={trustCausality.dailyDelta < 0 ? 'is-negative' : 'is-positive'}>{trustCausality.dailyDelta >= 0 ? '+' : ''}{trustCausality.dailyDelta.toFixed(2)}/日</strong></div>
+              {trustFactors.map((factor) => <p key={factor.id} className={factor.value < 0 ? 'is-negative' : 'is-positive'}><span>{TRUST_FACTOR_LABELS[factor.id]}</span><b>{factor.value >= 0 ? '+' : ''}{factor.value.toFixed(0)}</b></p>)}
+            </div>
+          </article>
+
+          <article className="telemetry-card telemetry-card--pressure" data-danger={riskRadar.pressure >= 80}>
+            <header><span>制御圧力</span><strong>{riskRadar.pressure}%</strong></header>
+            <div className="telemetry-card__bar" aria-hidden="true"><i style={{ width: `${riskRadar.pressure}%` }} /></div>
+            <div className="risk-radar">
+              {riskRadar.risks.map((risk) => <p key={risk.label}><span>{risk.label}</span><b>{risk.detail}</b></p>)}
+            </div>
+          </article>
+
+          <article className="telemetry-card telemetry-card--market" data-danger={m.hhi > .6}>
+            <header><span>市場の健全性</span><strong>{Math.round((1 - m.hhi) * 100)}</strong><small>HHI {m.hhi.toFixed(2)}</small></header>
+            <div className="telemetry-card__bar" aria-hidden="true"><i style={{ width: `${(1 - m.hhi) * 100}%` }} /></div>
+            <div className="market-list" aria-label="競争環境">
+              <button
+                type="button"
+                className={`is-codex${selectedCompetitor === null ? ' is-selected' : ''}`}
+                aria-pressed={selectedCompetitor === null}
+                aria-label="CODEXを選択して通常の世界地図に戻る"
+                onPointerEnter={() => setPreviewCompetitor('codex')}
+                onPointerLeave={() => setPreviewCompetitor(null)}
+                onFocus={() => setPreviewCompetitor('codex')}
+                onBlur={() => setPreviewCompetitor(null)}
+                onClick={() => { setSelectedCompetitor(null); playSound('tap') }}
+              >
+                <i /><b>CODEX<small>K{state.capability.toFixed(1)} · P{Math.min(10, 2 + state.features.length * 1.5).toFixed(1)} · C{((state.safety + state.governance) / 2).toFixed(1)}</small></b><strong>{pct(m.codexShare)}</strong><ChevronRight size={11} />
+              </button>
+              {RIVAL_NAMES.map((name, index) => (
+                <button
+                  key={name}
+                  type="button"
+                  className={selectedCompetitor === index ? 'is-selected' : ''}
+                  aria-pressed={selectedCompetitor === index}
+                  onPointerEnter={() => setPreviewCompetitor(index)}
+                  onPointerLeave={() => setPreviewCompetitor(null)}
+                  onFocus={() => setPreviewCompetitor(index)}
+                  onBlur={() => setPreviewCompetitor(null)}
+                  onClick={() => { setSelectedCompetitor((selected) => selected === index ? null : index); playSound('tap') }}
+                >
+                  <i /><b>{name}<small>K{state.rivalCapability[index].toFixed(1)} · P{state.rivalProduct[index].toFixed(1)} · C{state.rivalCompany[index].toFixed(1)}</small></b><strong>{pct(state.rivalShares[index])}</strong><ChevronRight size={11} />
+                </button>
+              ))}
+            </div>
+            {previewCompetitor !== null && (() => {
+              const index = typeof previewCompetitor === 'number' ? previewCompetitor : null
+              const isCodex = index === null
+              const name = index === null ? 'CODEX' : RIVAL_NAMES[index]
+              const share = index === null ? m.codexShare : state.rivalShares[index]
+              const axes = index === null
+                ? [state.capability, Math.min(10, 2 + state.features.length * 1.5), (state.safety + state.governance) / 2]
+                : [state.rivalCapability[index], state.rivalProduct[index], state.rivalCompany[index]]
+              const shareDelta = share - m.codexShare
+              return (
+                <section className="market-popover" role="status" aria-label={`${name}の市場情報`}>
+                  <header><span>{name}</span><strong className={shareDelta > 0 ? 'is-leading' : ''}>{isCodex ? '基準' : `${shareDelta >= 0 ? '+' : ''}${Math.round(shareDelta * 100)}点 対CODEX`}</strong></header>
+                  <dl>
+                    <div><dt>シェア</dt><dd>{pct(share)}</dd></div>
+                    <div><dt>モデル</dt><dd>{axes[0].toFixed(1)}</dd></div>
+                    <div><dt>製品</dt><dd>{axes[1].toFixed(1)}</dd></div>
+                    <div><dt>組織</dt><dd>{axes[2].toFixed(1)}</dd></div>
+                  </dl>
+                  <small>{isCodex ? 'クリックで通常地図へ戻る' : 'クリックで都市別の利用者分布を表示'}</small>
+                </section>
+              )
+            })()}
+          </article>
         </section>
 
-        <div className="time-controls">
-          <button aria-pressed={paused} className="pause-button" onClick={() => { setPaused((value) => !value); playSound('time') }}>{paused ? <CirclePlay size={16} /> : <CirclePause size={16} />}{paused ? '再開' : '停止'}</button>
-          <div className="speed-modes">
-            {SPEEDS.map((speed) => (
-              <button
-                key={speed}
-                type="button"
-                aria-label={speed === 1 ? '通常速度 — 1秒で1日' : '高速 — 1秒で8日'}
-                aria-pressed={state.speed === speed}
-                className={state.speed === speed ? 'is-active' : ''}
-                onClick={() => setSpeed(speed)}
-              >
-                {speed === 1 ? <CirclePlay size={16} /> : <ChevronsRight size={20} />}
-                <span>{speed === 1 ? '通常' : '高速'}</span>
-              </button>
-            ))}
+        <section className="command-utilities" aria-label="コマンドユーティリティ">
+          <button
+            className="reset-action"
+            disabled={state.resetCooldownSeconds > 0}
+            onClick={activateReset}
+            style={{ '--reset-progress': `${resetProgress * 360}deg` } as CSSProperties}
+          >
+            <span className="reset-action__ring"><RotateCcw size={20} /></span>
+            <span><small>TIBOプロトコル · 世界強化 8秒</small><b>{state.resetCooldownSeconds > 0 ? `トークンリセット · あと${Math.ceil(state.resetCooldownSeconds)}秒` : 'トークンリセット準備完了'}</b></span>
+          </button>
+
+          <div className="time-controls">
+            <button aria-pressed={paused} className="pause-button" onClick={() => { setPaused((value) => !value); playSound('time') }}>{paused ? <CirclePlay size={16} /> : <CirclePause size={16} />}{paused ? '再開' : '停止'}</button>
+            <div className="speed-modes">
+              {SPEEDS.map((speed) => (
+                <button
+                  key={speed}
+                  type="button"
+                  aria-label={speed === 1 ? '通常速度 — 1秒で1日' : '高速 — 1秒で8日'}
+                  aria-pressed={state.speed === speed}
+                  className={state.speed === speed ? 'is-active' : ''}
+                  onClick={() => setSpeed(speed)}
+                >
+                  {speed === 1 ? <CirclePlay size={16} /> : <ChevronsRight size={20} />}
+                  <span>{speed === 1 ? '通常' : '高速'}</span>
+                </button>
+              ))}
+            </div>
+            <small className="speed-readout">{state.speed === 8 ? '高速 · 1秒で8日' : '通常 · 1秒で1日'} · {state.momentumDays > 0 ? `勢い あと${state.momentumDays}日` : 'アクセス成長停止'}</small>
           </div>
-          <small className="speed-readout">{state.speed === 8 ? '高速 · 1秒で8日' : '通常 · 1秒で1日'} · {state.momentumDays > 0 ? `勢い あと${state.momentumDays}日` : 'アクセス成長停止'}</small>
-        </div>
+        </section>
       </section>
 
       <VoiceCallPanel
@@ -1319,6 +1433,9 @@ export default function App() {
         referenceSummary="AI 2027は開発競争の圧力を、AI 2040のPlan Aは検証可能な減速、意図的停止、証拠に基づく再始動を示します。"
         timelineSummary={`シミュレーションは${dateLabel(state.day)}に${state.day < END_DAY ? '終了' : '完了'}。2029年は${state.choice2029 === 'verified-slowdown' ? '国際検証つき減速' : state.choice2029 === 'slowdown' ? '一時減速' : state.choice2029 === 'race' ? '競争続行' : '未到達'}、2035年は${state.choice2035 === 'hold-the-line' ? '上限維持' : state.choice2035 === 'accelerate' ? '再加速' : '未到達'}。最終アクセス ${pct(m.worldAdoption)}、HHI ${m.hhi.toFixed(2)}。`}
         divergences={divergences}
+        localChoices={{ choice_2029: state.choice2029, choice_2035: state.choice2035 }}
+        activePlaySeconds={activePlaySeconds}
+        receipt={worldlineReceipt}
         onClose={() => setEndingVisible(false)}
         onRestart={resetGameToStart}
       />

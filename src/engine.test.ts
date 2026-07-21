@@ -61,6 +61,29 @@ describe('deterministic fixed-step simulation', () => {
     }
   })
 
+  it('keeps background AI adoption visible before Codex enters a region', () => {
+    const initial = createInitialState()
+    const oceania = initial.regions.find((region) => region.id === 'oceania')!
+    expect(oceania.introduced).toBe(false)
+    expect(oceania.users / oceania.population).toBeGreaterThan(.01)
+    expect(oceania.codexShare).toBe(0)
+
+    const next = tickDay(initial).regions.find((region) => region.id === 'oceania')!
+    expect(next.users).toBe(oceania.users)
+    expect(next.codexShare).toBe(0)
+  })
+
+  it('repairs old saves that encoded an unentered region as zero AI adoption', () => {
+    const legacy = createInitialState()
+    const repaired = enforceInvariants({
+      ...legacy,
+      regions: legacy.regions.map((region) => region.id === 'oceania'
+        ? { ...region, users: 0, introduced: false }
+        : region),
+    })
+    expect(repaired.regions.find((region) => region.id === 'oceania')?.users).toBe(1)
+  })
+
   it('keeps passive Normal growth low until a player action creates momentum', () => {
     const initial = createInitialState()
     const idle = runTicks(initial, 180)

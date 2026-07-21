@@ -93,7 +93,10 @@ describe('50-node deterministic strategy engine', () => {
 
     expect(nextLatinAmerica.users - latinAmerica.users).toBeCloseTo(latinAmerica.population * .0004)
     expect(nextLatinAmerica.fit).toBeCloseTo(latinAmerica.fit * 1.04)
-    expect(africa.users).toBe(0)
+    // The product upgrade must not erase or inflate background AI adoption in
+    // a region where Codex has not established a local presence yet.
+    expect(africa.users).toBe(initial.regions.find((region) => region.id === 'africa')!.users)
+    expect(africa.codexShare).toBe(0)
     expect(mobile.features).toContain('Mobile SDK')
 
     const sso = buyStrategyNode(initial, 'product-sso')

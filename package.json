@@ -6,13 +6,15 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b --noEmit && vite build",
+    "build": "tsc -b --noEmit && vite build && vite build --config vite.worker.config.ts",
+    "db:generate": "drizzle-kit generate",
     "test": "vitest run",
     "check": "npm run test && npm run build"
   },
   "dependencies": {
     "@openai/agents": "^0.13.5",
     "d3-geo": "3.1.1",
+    "drizzle-orm": "^0.45.2",
     "lucide-react": "1.25.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
@@ -21,11 +23,13 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260719.1",
     "@types/d3-geo": "3.1.0",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "@types/topojson-client": "3.1.5",
     "@vitejs/plugin-react": "6.0.3",
+    "drizzle-kit": "^0.31.10",
     "typescript": "5.9.3",
     "vite": "8.1.5",
     "vitest": "4.1.10"

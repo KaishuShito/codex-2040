@@ -1,0 +1,169 @@
+{
+  "version": "6",
+  "dialect": "sqlite",
+  "id": "29f7164a-2819-44fd-ad6e-311f56dce6cd",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "tables": {
+    "game_runs": {
+      "name": "game_runs",
+      "columns": {
+        "play_id": {
+          "name": "play_id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "completion_token": {
+          "name": "completion_token",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "ruleset_version": {
+          "name": "ruleset_version",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "language": {
+          "name": "language",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "autoincrement": false
+        },
+        "completed_at": {
+          "name": "completed_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "final_score": {
+          "name": "final_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "rank": {
+          "name": "rank",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "ending": {
+          "name": "ending",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "choice_2029": {
+          "name": "choice_2029",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "choice_2035": {
+          "name": "choice_2035",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        },
+        "active_play_seconds": {
+          "name": "active_play_seconds",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false,
+          "autoincrement": false
+        }
+      },
+      "indexes": {
+        "game_runs_ruleset_completed_idx": {
+          "name": "game_runs_ruleset_completed_idx",
+          "columns": [
+            "ruleset_version",
+            "completed_at"
+          ],
+          "isUnique": false
+        },
+        "game_runs_language_completed_idx": {
+          "name": "game_runs_language_completed_idx",
+          "columns": [
+            "language",
+            "completed_at"
+          ],
+          "isUnique": false
+        },
+        "game_runs_ending_idx": {
+          "name": "game_runs_ending_idx",
+          "columns": [
+            "ending"
+          ],
+          "isUnique": false
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "checkConstraints": {
+        "game_runs_language_check": {
+          "name": "game_runs_language_check",
+          "value": "\"game_runs\".\"language\" IN ('ja', 'en')"
+        },
+        "game_runs_final_score_check": {
+          "name": "game_runs_final_score_check",
+          "value": "\"game_runs\".\"final_score\" IS NULL OR \"game_runs\".\"final_score\" BETWEEN 0 AND 100"
+        },
+        "game_runs_rank_check": {
+          "name": "game_runs_rank_check",
+          "value": "\"game_runs\".\"rank\" IS NULL OR \"game_runs\".\"rank\" IN ('S', 'A', 'B', 'C')"
+        },
+        "game_runs_ending_check": {
+          "name": "game_runs_ending_check",
+          "value": "\"game_runs\".\"ending\" IS NULL OR \"game_runs\".\"ending\" IN ('beneficial-abundance', 'managed-transition', 'fragile-abundance', 'race-future', 'regulatory-freeze', 'safety-incident', 'misalignment', 'pyrrhic-monopoly')"
+        },
+        "game_runs_choice_2029_check": {
+          "name": "game_runs_choice_2029_check",
+          "value": "\"game_runs\".\"choice_2029\" IS NULL OR \"game_runs\".\"choice_2029\" IN ('race', 'slowdown', 'verified-slowdown')"
+        },
+        "game_runs_choice_2035_check": {
+          "name": "game_runs_choice_2035_check",
+          "value": "\"game_runs\".\"choice_2035\" IS NULL OR \"game_runs\".\"choice_2035\" IN ('hold-the-line', 'accelerate')"
+        },
+        "game_runs_active_play_seconds_check": {
+          "name": "game_runs_active_play_seconds_check",
+          "value": "\"game_runs\".\"active_play_seconds\" IS NULL OR \"game_runs\".\"active_play_seconds\" BETWEEN 0 AND 21600"
+        },
+        "game_runs_completion_check": {
+          "name": "game_runs_completion_check",
+          "value": "(\"game_runs\".\"completed_at\" IS NULL AND \"game_runs\".\"final_score\" IS NULL AND \"game_runs\".\"rank\" IS NULL AND \"game_runs\".\"ending\" IS NULL AND \"game_runs\".\"active_play_seconds\" IS NULL) OR (\"game_runs\".\"completed_at\" IS NOT NULL AND \"game_runs\".\"final_score\" IS NOT NULL AND \"game_runs\".\"rank\" IS NOT NULL AND \"game_runs\".\"ending\" IS NOT NULL AND \"game_runs\".\"active_play_seconds\" IS NOT NULL)"
+        }
+      }
+    }
+  },
+  "views": {},
+  "enums": {},
+  "_meta": {
+    "schemas": {},
+    "tables": {},
+    "columns": {}
+  },
+  "internal": {
+    "indexes": {}
+  }
+}

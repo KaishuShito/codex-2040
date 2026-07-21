@@ -92,6 +92,64 @@ const REGION_META: Record<WorldMapRegionId, { label: string; coordinates: readon
   oceania: { label: 'オセアニア', coordinates: [137, -25] },
 }
 
+type CityHub = { name: string; coordinates: readonly [number, number]; weight: number }
+
+const CITY_HUBS: Record<WorldMapRegionId, readonly CityHub[]> = {
+  na: [
+    { name: 'San Francisco', coordinates: [-122.42, 37.77], weight: 1.25 },
+    { name: 'New York', coordinates: [-74.01, 40.71], weight: 1.1 },
+    { name: 'Toronto', coordinates: [-79.38, 43.65], weight: .8 },
+    { name: 'Austin', coordinates: [-97.74, 30.27], weight: .7 },
+  ],
+  latam: [
+    { name: 'São Paulo', coordinates: [-46.63, -23.55], weight: 1.2 },
+    { name: 'Mexico City', coordinates: [-99.13, 19.43], weight: 1 },
+    { name: 'Buenos Aires', coordinates: [-58.38, -34.6], weight: .75 },
+    { name: 'Bogotá', coordinates: [-74.07, 4.71], weight: .7 },
+  ],
+  eu: [
+    { name: 'London', coordinates: [-.13, 51.51], weight: 1.1 },
+    { name: 'Paris', coordinates: [2.35, 48.86], weight: .9 },
+    { name: 'Berlin', coordinates: [13.4, 52.52], weight: .9 },
+    { name: 'Amsterdam', coordinates: [4.9, 52.37], weight: .7 },
+    { name: 'Warsaw', coordinates: [21.01, 52.23], weight: .6 },
+  ],
+  africa: [
+    { name: 'Lagos', coordinates: [3.38, 6.52], weight: 1.15 },
+    { name: 'Nairobi', coordinates: [36.82, -1.29], weight: 1 },
+    { name: 'Johannesburg', coordinates: [28.05, -26.2], weight: .85 },
+    { name: 'Accra', coordinates: [-.19, 5.56], weight: .65 },
+  ],
+  mena: [
+    { name: 'Dubai', coordinates: [55.27, 25.2], weight: 1.1 },
+    { name: 'Riyadh', coordinates: [46.68, 24.71], weight: .9 },
+    { name: 'Istanbul', coordinates: [28.98, 41.01], weight: .85 },
+    { name: 'Cairo', coordinates: [31.24, 30.04], weight: .8 },
+    { name: 'Tel Aviv', coordinates: [34.78, 32.09], weight: .65 },
+  ],
+  india: [
+    { name: 'Bengaluru', coordinates: [77.59, 12.97], weight: 1.25 },
+    { name: 'Mumbai', coordinates: [72.88, 19.08], weight: 1 },
+    { name: 'Delhi', coordinates: [77.1, 28.7], weight: 1 },
+    { name: 'Hyderabad', coordinates: [78.49, 17.39], weight: .85 },
+    { name: 'Chennai', coordinates: [80.27, 13.08], weight: .65 },
+  ],
+  eastAsia: [
+    { name: 'Tokyo', coordinates: [139.69, 35.68], weight: 1.2 },
+    { name: 'Seoul', coordinates: [126.98, 37.57], weight: 1 },
+    { name: 'Shanghai', coordinates: [121.47, 31.23], weight: 1.05 },
+    { name: 'Shenzhen', coordinates: [114.06, 22.54], weight: .95 },
+    { name: 'Singapore', coordinates: [103.82, 1.35], weight: .85 },
+    { name: 'Taipei', coordinates: [121.57, 25.04], weight: .65 },
+  ],
+  oceania: [
+    { name: 'Sydney', coordinates: [151.21, -33.87], weight: 1.15 },
+    { name: 'Melbourne', coordinates: [144.96, -37.81], weight: 1 },
+    { name: 'Auckland', coordinates: [174.76, -36.85], weight: .7 },
+    { name: 'Brisbane', coordinates: [153.03, -27.47], weight: .65 },
+  ],
+}
+
 const NORTH_AMERICA = new Set(['124', '304', '840'])
 const MENA = new Set([
   '004', '012', '048', '275', '364', '368', '376', '400', '414', '422', '434', '504', '512',
@@ -158,6 +216,40 @@ const keyboardActivate = (event: KeyboardEvent<SVGElement>, action: () => void) 
 
 const asLinePath = (coordinates: Position[]) => pathGenerator({ type: 'LineString', coordinates } as LineString) ?? ''
 
+type MarketDot = { id: string; city: string; x: number; y: number; radius: number; delay: number }
+
+const buildMarketDots = (
+  competitiveView: WorldMapCompetitiveView | null,
+  regions: WorldMapProps['regions'],
+): MarketDot[] => {
+  return WORLD_MAP_REGION_IDS.flatMap((regionId) => {
+    const share = clamp01(competitiveView?.shares[regionId] ?? regions[regionId]?.codexShare ?? 0)
+    const adoption = clamp01(regions[regionId]?.adoption ?? 0)
+    if (share <= .005 || adoption <= 0) return []
+    const dotCount = Math.max(1, Math.round(share * 36 + Math.sqrt(adoption) * 14))
+    const hubs = CITY_HUBS[regionId]
+    const weighted = hubs.flatMap((hub, index) => Array.from({ length: Math.max(1, Math.round(hub.weight * 4)) }, () => index))
+    const localCounts = new Array(hubs.length).fill(0) as number[]
+    return Array.from({ length: dotCount }, (_, index) => {
+      const cityIndex = weighted[(index * 7 + regionId.length * 3) % weighted.length]
+      const hub = hubs[cityIndex]
+      const localIndex = localCounts[cityIndex]++
+      const point = projection(hub.coordinates as [number, number]) ?? [0, 0]
+      const angle = localIndex * 2.399963 + cityIndex * .73
+      const spread = 2.2 + share * 7.5
+      const distance = Math.sqrt(localIndex + 1) * spread
+      return {
+        id: `${regionId}-${cityIndex}-${localIndex}`,
+        city: hub.name,
+        x: point[0] + Math.cos(angle) * distance,
+        y: point[1] + Math.sin(angle) * distance * .62,
+        radius: 1.25 + Math.min(.85, share * 1.8),
+        delay: -((index * .17 + cityIndex * .31) % 3.2),
+      }
+    })
+  })
+}
+
 export default function WorldMap({
   regions,
   selectedRegion = null,
@@ -183,6 +275,7 @@ export default function WorldMap({
       const rightValue = clamp01(regions[right]?.adoption ?? 0) + clamp01(regions[right]?.codexShare ?? 0)
       return rightValue - leftValue
     }), [regions])
+  const marketDots = useMemo(() => buildMarketDots(competitiveView, regions), [competitiveView, regions])
 
   return (
     <figure
@@ -279,6 +372,20 @@ export default function WorldMap({
           })}
         </g>
 
+        <g className="world-map__market-dots" aria-hidden="true">
+          {marketDots.map((dot) => (
+            <circle
+              key={dot.id}
+              cx={dot.x}
+              cy={dot.y}
+              r={dot.radius}
+              style={{ '--market-dot-delay': `${dot.delay}s` } as CSSProperties}
+            >
+              <title>{dot.city}</title>
+            </circle>
+          ))}
+        </g>
+
         {selectedRegion && (
           <g className="world-map__selection" transform={`translate(${regionPoints[selectedRegion][0]} ${regionPoints[selectedRegion][1]})`} aria-hidden="true">
             <circle r="46" fill={`url(#${selectedId})`} />
@@ -336,7 +443,8 @@ export default function WorldMap({
       </svg>
 
       <figcaption className="world-map__legend">
-        <span><i className="world-map__legend-access" /> {competitiveView ? `${competitiveView.label}の推定シェア` : 'AI利用率'}</span>
+        <span><i className="world-map__legend-users" /> {competitiveView ? `${competitiveView.label} 利用者` : 'CODEX利用者'}</span>
+        <span><i className="world-map__legend-access" /> AIアクセス</span>
         <span><i className="world-map__legend-event" /> シナリオイベント</span>
       </figcaption>
       <span className="world-map__coordinate" aria-hidden="true">{competitiveView ? `${competitiveView.label} 市場分析` : '世界アクセス網 · 110M'}</span>

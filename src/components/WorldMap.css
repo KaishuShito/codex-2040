@@ -81,14 +81,14 @@
 }
 
 .world-map.is-competitive .world-map__region {
-  fill: rgba(var(--rival-color), calc(.07 + var(--rival-share) * .9));
-  stroke: rgba(var(--rival-color), calc(.24 + var(--rival-share) * .65));
+  fill: rgba(var(--rival-color), calc(.035 + var(--rival-share) * .22));
+  stroke: rgba(var(--rival-color), calc(.2 + var(--rival-share) * .35));
 }
 
 .world-map.is-competitive .world-map__region:hover,
 .world-map.is-competitive .world-map__region:focus-visible,
 .world-map.is-competitive .world-map__region.is-selected {
-  fill: rgba(var(--rival-color), calc(.18 + var(--rival-share) * .82));
+  fill: rgba(var(--rival-color), calc(.09 + var(--rival-share) * .28));
   stroke: rgb(var(--rival-color));
   filter: drop-shadow(0 0 6px rgba(var(--rival-color), .62));
 }
@@ -100,6 +100,16 @@
   border-color: rgb(var(--rival-color));
   background: rgba(var(--rival-color), .58);
 }
+
+.world-map__market-dots circle {
+  fill: var(--wm-accent);
+  opacity: .72;
+  filter: drop-shadow(0 0 2.5px rgba(104, 248, 180, .92));
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: world-map-market-dot 2.7s var(--market-dot-delay) ease-in-out infinite;
+}
+.world-map.is-competitive .world-map__market-dots circle { fill: rgb(var(--rival-color)); filter: drop-shadow(0 0 2.5px rgba(var(--rival-color), .92)); }
 
 .world-map__region:not(.is-active) {
   fill: rgba(33, 72, 58, .17);
@@ -190,16 +200,19 @@
 }
 
 .world-map__marker-label {
-  opacity: 0;
+  opacity: .76;
   pointer-events: none;
-  transition: opacity .16s ease, transform .16s ease;
+  transform: translate(0 25px);
+  transition: opacity .16s ease, transform .16s ease, filter .16s ease;
 }
 
 .world-map__marker:hover .world-map__marker-label,
 .world-map__marker:focus-visible .world-map__marker-label {
   opacity: 1;
   transform: translate(0 27px);
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, .72));
 }
+.world-map__marker.is-muted .world-map__marker-label { opacity: .3; }
 
 .world-map__marker:focus-visible .world-map__marker-ring {
   stroke: #fff;
@@ -207,25 +220,26 @@
 }
 
 .world-map__marker-label rect {
-  fill: rgba(3, 11, 8, .96);
+  fill: rgba(3, 11, 8, .94);
   stroke: currentColor;
-  stroke-opacity: .45;
-  stroke-width: .7;
+  stroke-opacity: .72;
+  stroke-width: .9;
 }
 
 .world-map__marker-label text {
-  fill: currentColor;
+  fill: #e6fff2;
   font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
-  font-size: 6px;
+  font-size: 7.4px;
   font-weight: 700;
   text-anchor: middle;
   letter-spacing: .08em;
 }
 
 .world-map__marker-label .world-map__marker-source {
-  fill: rgba(206, 229, 218, .62);
-  font-size: 4.8px;
-  font-weight: 500;
+  fill: currentColor;
+  opacity: .84;
+  font-size: 5.8px;
+  font-weight: 650;
 }
 
 .world-map__legend,
@@ -256,6 +270,8 @@
   border-radius: 50%;
 }
 
+.world-map__legend-users { background: var(--wm-accent); box-shadow: 0 0 5px var(--wm-accent); }
+.world-map.is-competitive .world-map__legend-users { border-color: rgb(var(--rival-color)); background: rgb(var(--rival-color)); box-shadow: 0 0 5px rgb(var(--rival-color)); }
 .world-map__legend-access { background: rgba(85, 232, 159, .38); }
 .world-map__legend-event { transform: rotate(45deg); border-radius: 0 !important; }
 
@@ -282,6 +298,11 @@
   50% { stroke-opacity: .45; transform: scale(1.2); }
 }
 
+@keyframes world-map-market-dot {
+  0%, 100% { opacity: .5; transform: scale(.82); }
+  50% { opacity: 1; transform: scale(1.22); }
+}
+
 @media (max-width: 720px) {
   .world-map {
     aspect-ratio: 4 / 3;
@@ -301,7 +322,8 @@
   .world-map__hub-wave,
   .world-map__selection path,
   .world-map__reset circle,
-  .world-map__marker-ring {
+  .world-map__marker-ring,
+  .world-map__market-dots circle {
     animation: none;
   }
 

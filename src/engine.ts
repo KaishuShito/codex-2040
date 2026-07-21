@@ -333,15 +333,24 @@ const activateMomentum = (state: GameState, days: number, countIntervention = tr
   interventions: state.interventions + (countIntervention ? 1 : 0),
 })
 
+// `introduced` means Codex has established a local presence. It does not mean
+// that a region has no AI users at all. These conservative 2026 baselines keep
+// the world believable while leaving meaningful room for the player to enter.
+const backgroundAiUsers: Partial<Record<RegionId, number>> = {
+  africa: 3,
+  mena: 2,
+  oceania: 1,
+}
+
 const baseRegions: Region[] = [
   { id: 'na', name: '北米', population: 620, users: 17, codexShare: .36, introduced: true, regulation: .15, mobileAffinity: .62, fit: 1 },
   { id: 'latam', name: '中南米', population: 660, users: 3, codexShare: .22, introduced: true, regulation: .08, mobileAffinity: .91, fit: 1 },
   { id: 'eu', name: '欧州', population: 750, users: 9, codexShare: .31, introduced: true, regulation: .32, mobileAffinity: .65, fit: 1 },
-  { id: 'africa', name: 'アフリカ', population: 1500, users: 0, codexShare: 0, introduced: false, regulation: .06, mobileAffinity: .96, fit: 1 },
-  { id: 'mena', name: '中東', population: 510, users: 0, codexShare: 0, introduced: false, regulation: .18, mobileAffinity: .86, fit: 1 },
+  { id: 'africa', name: 'アフリカ', population: 1500, users: backgroundAiUsers.africa!, codexShare: 0, introduced: false, regulation: .06, mobileAffinity: .96, fit: 1 },
+  { id: 'mena', name: '中東', population: 510, users: backgroundAiUsers.mena!, codexShare: 0, introduced: false, regulation: .18, mobileAffinity: .86, fit: 1 },
   { id: 'india', name: 'インド', population: 1460, users: 5, codexShare: .24, introduced: true, regulation: .1, mobileAffinity: .94, fit: 1 },
   { id: 'eastAsia', name: '東アジア', population: 1670, users: 12, codexShare: .19, introduced: true, regulation: .2, mobileAffinity: .88, fit: 1 },
-  { id: 'oceania', name: 'オセアニア', population: 46, users: 0, codexShare: 0, introduced: false, regulation: .13, mobileAffinity: .73, fit: 1 },
+  { id: 'oceania', name: 'オセアニア', population: 46, users: backgroundAiUsers.oceania!, codexShare: 0, introduced: false, regulation: .13, mobileAffinity: .73, fit: 1 },
 ]
 
 export const createInitialState = (options: { seed?: number } = {}): GameState => ({
@@ -430,7 +439,10 @@ export const enforceInvariants = (state: GameState): GameState => {
     return {
       ...region,
       population,
-      users: introduced ? clamp(finite(region.users), 0, population) : 0,
+      users: clamp(Math.max(
+        finite(region.users),
+        introduced ? 0 : backgroundAiUsers[region.id] ?? 0,
+      ), 0, population),
       codexShare: clamp(finite(region.codexShare)),
       regulation: clamp(finite(region.regulation)),
       mobileAffinity: clamp(finite(region.mobileAffinity)),
@@ -728,7 +740,9 @@ export const tickDay = (input: GameState): GameState => {
   const activeEffects = state.activeEffects.filter((effect) => effect.expiresDay > state.day)
 
   let regions = state.regions.map((region) => {
-    if (!region.introduced) return { ...region, users: 0 }
+    // Rival and independent AI adoption already exists before Codex enters.
+    // Keep that market visible; Codex capture remains zero via `codexShare`.
+    if (!region.introduced) return { ...region, codexShare: 0 }
     const eventGrowth = activeEffects
       .filter((effect) => effect.region === 'global' || effect.region === region.id)
       .reduce((sum, effect) => sum + effect.growthRateDelta, 0)
@@ -860,7 +874,7 @@ export const openEcosystem = (state: GameState) => {
   if (state.ecosystemCooldownSeconds > 0) return state
   const regions = state.regions.map((region) => ({
     ...region,
-    users: region.introduced ? clamp(region.users + region.population * .0004, 0, region.population) : 0,
+    users: region.introduced ? clamp(region.users + region.population * .0004, 0, region.population) : region.users,
     codexShare: clamp(region.codexShare * .70),
   }))
   return withNews(enforceInvariants(syncRealtimeAliases(activateMomentum({
@@ -1109,7 +1123,7 @@ export const addFeature = (state: GameState, raw: string) => {
     const affinity = mobile ? region.mobileAffinity : education ? educationAffinity[region.id] : enterprise ? (region.id === 'na' || region.id === 'eu' ? .9 : .55) : .45
     const users = region.introduced
       ? clamp(region.users + region.population * .0006 * affinity, 0, region.population)
-      : 0
+      : region.users
     return { ...region, users, fit: region.fit * (1 + .055 * affinity), codexShare: clamp(region.codexShare + .006 * affinity) }
   })
   const kind = mobile ? 'mobile' : education ? 'education' : enterprise ? 'enterprise' : 'community'

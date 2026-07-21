@@ -1,0 +1,22 @@
+{
+  "compilerOptions": {
+    "composite": true,
+    "target": "ES2022",
+    "lib": ["ES2022", "WebWorker"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "types": ["@cloudflare/workers-types"]
+  },
+  "include": [
+    "build/**/*.ts",
+    "server/d1.ts",
+    "server/runsApi.ts",
+    "worker/**/*.ts",
+    "vite.worker.config.ts",
+    "drizzle.config.ts",
+    "db/schema.ts"
+  ]
+}

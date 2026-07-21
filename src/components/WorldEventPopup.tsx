@@ -1,4 +1,5 @@
 import { useEffect, useId, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import './WorldEventPopup.css'
 
 export type WorldEventEffectTone = 'positive' | 'negative' | 'neutral'
@@ -70,7 +71,7 @@ export function WorldEventPopup({
 
   if (!open) return null
 
-  return (
+  return createPortal((
     <div className="world-event-overlay" role="presentation">
       <dialog
         className="world-event-popup"
@@ -145,7 +146,7 @@ export function WorldEventPopup({
         </footer>
       </dialog>
     </div>
-  )
+  ), document.body)
 }
 
 export default WorldEventPopup

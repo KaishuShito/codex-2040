@@ -1,6 +1,6 @@
 # GOAL — Codex 2040 AGI Pill Mode
 
-Status: verified; awaiting durable-packet commit and branch push  
+Status: complete; implementation, independent verification, evidence packet, atomic commits, and branch-only push are complete
 Baseline: `b583df1c5484efb7a9c74a3ee83d54b4a907772b` (`codex/sites-d1`)  
 Primary verifier: independent real-browser E2E for Standard and AGI Pill modes
 

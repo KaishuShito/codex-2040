@@ -1,6 +1,6 @@
 # RESULT — AGI Pill Mode
 
-Status: implementation, browser verification, and fresh-context independent re-audit complete; durable-packet commit and branch push are the remaining sequenced gates.
+Status: complete — implementation, browser verification, fresh-context independent re-audit, durable evidence, clean frozen-HEAD verification, and branch-only push are complete.
 
 ## Active goal
 
@@ -65,8 +65,9 @@ Status: implementation, browser verification, and fresh-context independent re-a
 - Branch: `codex/agi-pill-mode`
 - Baseline: `b583df1c5484efb7a9c74a3ee83d54b4a907772b`
 - Atomic implementation and regression commits: `732b5ef`, `2075de7`, `7de4c9b`, `1d2a03c`, `d56bf0c`, `6b8f7a6`, `daa5d74`, `92506df`, `e26a149`, `8370965`, `9f41a7c`, `b8bba6e`.
+- Durable verification commits: `7401999`, `45fd02f`.
 - Fresh-context final audit: PASS at implementation HEAD `9f41a7c` plus the audit-authored fallback regression committed as `b8bba6e`; P0/P1/P2 product findings: 0/0/0.
-- Branch-only push: pending durable-packet commit.
+- Branch-only push: successful to `origin/codex/agi-pill-mode`. No PR, merge, deployment, or production D1 migration was performed.
 
 ## Remaining risks and publication boundary
 

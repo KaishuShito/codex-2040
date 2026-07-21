@@ -20,6 +20,7 @@ describe('WorldMap collectible bubbles', () => {
           regionId: 'eastAsia',
           reward: 7,
           placement: .42,
+          remainingSeconds: 7,
           source: 'token-reset',
         }]}
         onRewardBubbleClick={() => undefined}
@@ -30,5 +31,27 @@ describe('WorldMap collectible bubbles', () => {
     expect(html).toContain('計算資源を回収、プラス7 PF。Collect plus 7 PF')
     expect(html).toContain('role="button"')
     expect(html).toContain('+7')
+  })
+
+  it('signals an expiring bubble before it disappears', () => {
+    const html = renderToStaticMarkup(
+      <WorldMap
+        regions={regions}
+        onRegionClick={() => undefined}
+        rewardBubbles={[{
+          id: 'pf-bubble-expiring',
+          regionId: 'eastAsia',
+          reward: 5,
+          placement: .2,
+          remainingSeconds: .8,
+          source: 'community',
+        }]}
+        onRewardBubbleClick={() => undefined}
+      />,
+    )
+
+    expect(html).toContain('is-expiring')
+    expect(html).toContain('is-critical')
+    expect(html).toContain('opacity:0.')
   })
 })

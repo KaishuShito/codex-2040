@@ -16,6 +16,13 @@ const isObject = (value: unknown): value is Record<string, unknown> => Boolean(v
 const isStringArray = (value: unknown): value is string[] => Array.isArray(value) && value.every((item) => typeof item === 'string')
 const isFiniteNumberRecord = (value: unknown) => isObject(value)
   && Object.values(value).every((item) => typeof item === 'number' && Number.isFinite(item))
+const isRivalStrategyArray = (value: unknown) => Array.isArray(value) && value.length === 3 && value.every((portfolio) => (
+  isObject(portfolio)
+  && typeof portfolio.compute === 'number' && Number.isFinite(portfolio.compute)
+  && isStringArray(portfolio.acquiredNodes)
+  && typeof portfolio.nextDecisionDay === 'number' && Number.isFinite(portfolio.nextDecisionDay)
+  && (portfolio.lastNodeId === null || typeof portfolio.lastNodeId === 'string')
+))
 const REGION_IDS = new Set(['na', 'latam', 'eu', 'africa', 'mena', 'india', 'eastAsia', 'oceania'])
 const isRewardBubbleArray = (value: unknown) => Array.isArray(value) && value.every((bubble) => (
   isObject(bubble)
@@ -52,6 +59,7 @@ export const decodeSession = (raw: string | null): PersistedSession | null => {
       || ('bubbleSeed' in state && (typeof state.bubbleSeed !== 'number' || !Number.isFinite(state.bubbleSeed)))
       || ('nextBubbleId' in state && (typeof state.nextBubbleId !== 'number' || !Number.isFinite(state.nextBubbleId) || state.nextBubbleId < 1))
       || ('rewardBubbles' in state && !isRewardBubbleArray(state.rewardBubbles))
+      || ('rivalStrategies' in state && !isRivalStrategyArray(state.rivalStrategies))
       || ('acquiredStrategyNodes' in state && !isStringArray(state.acquiredStrategyNodes))
       || ('strategyNodePurchaseCounts' in state && !isFiniteNumberRecord(state.strategyNodePurchaseCounts))) return null
     const hydratedState = enforceInvariants(state as GameState)

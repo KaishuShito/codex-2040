@@ -1,4 +1,4 @@
-import { type CSSProperties, type KeyboardEvent, useId, useMemo } from 'react'
+import { type CSSProperties, type KeyboardEvent, useEffect, useId, useMemo, useRef, useState } from 'react'
 import {
   geoCentroid,
   geoGraticule10,
@@ -69,7 +69,16 @@ export type WorldMapRewardBubble = {
   regionId: WorldMapRegionId
   reward: number
   placement: number
+  remainingSeconds: number
   source: 'token-reset' | 'community'
+}
+
+type RewardBurst = {
+  id: string
+  reward: number
+  source: WorldMapRewardBubble['source']
+  x: number
+  y: number
 }
 
 export type WorldMapProps = {
@@ -279,6 +288,30 @@ export default function WorldMap({
   const softGlowId = `world-map-soft-glow-${rawId}`
   const gridId = `world-map-grid-${rawId}`
   const selectedId = `world-map-selected-${rawId}`
+  const [rewardBursts, setRewardBursts] = useState<RewardBurst[]>([])
+  const rewardBurstTimers = useRef<number[]>([])
+
+  useEffect(() => () => {
+    rewardBurstTimers.current.forEach((timer) => window.clearTimeout(timer))
+  }, [])
+
+  const collectWithBurst = (bubble: WorldMapRewardBubble, x: number, y: number) => {
+    if (!onRewardBubbleClick) return
+    const burstId = `${bubble.id}-burst`
+    setRewardBursts((current) => [...current.filter((burst) => burst.id !== burstId), {
+      id: burstId,
+      reward: bubble.reward,
+      source: bubble.source,
+      x,
+      y,
+    }])
+    const timer = window.setTimeout(() => {
+      setRewardBursts((current) => current.filter((burst) => burst.id !== burstId))
+      rewardBurstTimers.current = rewardBurstTimers.current.filter((pending) => pending !== timer)
+    }, 900)
+    rewardBurstTimers.current.push(timer)
+    onRewardBubbleClick(bubble.id)
+  }
 
   const activeRegions = useMemo(() => WORLD_MAP_REGION_IDS
     .filter((regionId) => regions[regionId]?.active !== false && clamp01(regions[regionId]?.adoption ?? 0) > 0)
@@ -415,12 +448,16 @@ export default function WorldMap({
 
         <g className="world-map__reward-bubbles">
           {bubblePoints.map(({ bubble, city, x, y }) => {
-            const collect = () => onRewardBubbleClick?.(bubble.id)
+            const collect = () => collectWithBurst(bubble, x, y)
+            const fade = bubble.remainingSeconds >= 2.5
+              ? 1
+              : Math.max(.22, .22 + (bubble.remainingSeconds / 2.5) * .78)
             return (
               <g
                 key={bubble.id}
-                className={`world-map__reward-bubble world-map__reward-bubble--${bubble.source}`}
+                className={`world-map__reward-bubble world-map__reward-bubble--${bubble.source}${bubble.remainingSeconds <= 2.5 ? ' is-expiring' : ''}${bubble.remainingSeconds <= 1.1 ? ' is-critical' : ''}`}
                 transform={`translate(${x} ${y})`}
+                style={{ opacity: fade }}
                 role="button"
                 tabIndex={0}
                 aria-label={`計算資源を回収、プラス${bubble.reward} PF。Collect plus ${bubble.reward} PF near ${city}.`}
@@ -438,6 +475,31 @@ export default function WorldMap({
               </g>
             )
           })}
+        </g>
+
+        <g className="world-map__reward-bursts" aria-hidden="true">
+          {rewardBursts.map((burst) => (
+            <g
+              key={burst.id}
+              className={`world-map__reward-burst world-map__reward-burst--${burst.source}`}
+              transform={`translate(${burst.x} ${burst.y})`}
+            >
+              <circle className="world-map__reward-burst-flash" r="8" />
+              <circle className="world-map__reward-burst-ring" r="9" />
+              <circle className="world-map__reward-burst-shock" r="6" />
+              <g className="world-map__reward-burst-sparks">
+                {Array.from({ length: 8 }, (_, index) => (
+                  <line key={index} x1="10" y1="0" x2={17 + index % 3} y2="0" transform={`rotate(${index * 45})`} />
+                ))}
+              </g>
+              <g className="world-map__reward-burst-arcs">
+                {[12, 132, 252].map((angle) => (
+                  <path key={angle} d="M4-3 10-6 8-10 17-13" transform={`rotate(${angle})`} />
+                ))}
+              </g>
+              <text className="world-map__reward-burst-label" y="-11">+{burst.reward} PF</text>
+            </g>
+          ))}
         </g>
 
         {selectedRegion && (

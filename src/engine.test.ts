@@ -113,7 +113,7 @@ describe('deterministic fixed-step simulation', () => {
     expect(future.rivalProduct.every((value, index) => value > initial.rivalProduct[index] + 3)).toBe(true)
     expect(future.rivalCompany.every((value, index) => value > initial.rivalCompany[index] + 3)).toBe(true)
     expect(metrics(future).codexShare).toBeLessThan(metrics(initial).codexShare)
-    expect(future.news.some((item) => /競争圧力が上昇/.test(item.headline))).toBe(true)
+    expect(future.news.some((item) => /が「.+」を導入/.test(item.headline) && item.source === 'Your Timeline')).toBe(true)
   })
 
   it('makes Frontier autonomy a real late-game requirement instead of preserving passive share', () => {
@@ -180,7 +180,7 @@ describe('deterministic fixed-step simulation', () => {
     expect(first.rewardBubbles.every((bubble) => bubble.source === 'token-reset')).toBe(true)
     expect(first.rewardBubbles.every((bubble) => bubble.reward >= 5 && bubble.reward <= 8)).toBe(true)
     expect(first.rewardBubbles.reduce((sum, bubble) => sum + bubble.reward, 0)).toBeLessThanOrEqual(24)
-    expect(first.rewardBubbles.every((bubble) => bubble.remainingSeconds >= 2.5 && bubble.remainingSeconds <= 3.5)).toBe(true)
+    expect(first.rewardBubbles.every((bubble) => bubble.remainingSeconds >= 6 && bubble.remainingSeconds <= 8)).toBe(true)
     expect(first.rewardBubbles.every((bubble) => first.regions.find((region) => region.id === bubble.region)?.introduced)).toBe(true)
   })
 
@@ -200,7 +200,7 @@ describe('deterministic fixed-step simulation', () => {
   it('expires missed bubbles without a penalty and rejects late collection (AC bubble)', () => {
     const reset = triggerReset(createInitialState({ seed: 18 }))
     const compute = reset.compute
-    const expired = advanceRealtime(reset, 3.5)
+    const expired = advanceRealtime(reset, 8.1)
 
     expect(expired.rewardBubbles).toEqual([])
     expect(expired.compute).toBe(compute)

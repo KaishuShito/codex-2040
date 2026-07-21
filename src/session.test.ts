@@ -22,6 +22,7 @@ describe('persisted game session', () => {
     expect(restored?.state.features).toEqual(['Education Mode'])
     expect(restored?.state.acquiredStrategyNodes).toEqual(['model-foundation'])
     expect(restored?.state.strategyNodePurchaseCounts).toEqual({ 'model-foundation': 1 })
+    expect(restored?.state.rivalStrategies).toEqual(state.rivalStrategies)
   })
 
   it('rejects stale or malformed sessions instead of breaking startup', () => {
@@ -62,10 +63,16 @@ describe('persisted game session', () => {
       ...base,
       state: { ...base.state, strategyNodePurchaseCounts: { 'model-foundation': 'one' } },
     }))).toBeNull()
+    expect(decodeSession(JSON.stringify({
+      ...base,
+      state: { ...base.state, rivalStrategies: [{ compute: 'free' }] },
+    }))).toBeNull()
 
     delete base.state.acquiredStrategyNodes
     delete base.state.strategyNodePurchaseCounts
+    delete base.state.rivalStrategies
     expect(decodeSession(JSON.stringify(base))).not.toBeNull()
+    expect(decodeSession(JSON.stringify(base))?.state.rivalStrategies).toHaveLength(3)
   })
 
   it('validates extinction progress and flags while hydrating legacy omissions', () => {

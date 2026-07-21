@@ -17,6 +17,13 @@ import {
   type StrategyNodeId,
   type StrategyPrerequisite,
 } from './strategyNodes'
+import {
+  advanceRivalStrategies,
+  createInitialRivalStrategies,
+  normalizeRivalStrategies,
+  RIVAL_NAMES,
+  type RivalStrategyPortfolio,
+} from './rivalStrategy'
 
 export type ScenarioSource = SourceLabel
 export type RegionId = 'na' | 'latam' | 'eu' | 'africa' | 'mena' | 'india' | 'eastAsia' | 'oceania'
@@ -41,6 +48,8 @@ export type NewsItem = {
   headline: string
   /** Canonical provenance; the UI must render this field, never infer it from copy. */
   source: ScenarioSource
+  /** Structural classification for ledger filtering. Missing means a major timeline event. */
+  kind?: 'rival-strategy'
 }
 export type Choice2029 = 'race' | 'slowdown' | 'verified-slowdown'
 export type Choice2035 = 'hold-the-line' | 'accelerate'
@@ -105,6 +114,8 @@ export type GameState = {
   /** Rival strategy axes mirror the player's Model / Product / Company choices. */
   rivalProduct: [number, number, number]
   rivalCompany: [number, number, number]
+  /** Each competitor buys authored nodes with its own budget and deterministic cadence. */
+  rivalStrategies?: [RivalStrategyPortfolio, RivalStrategyPortfolio, RivalStrategyPortfolio]
   speed: Speed
   /** Simulated days of player-created growth momentum remaining. */
   momentumDays: number
@@ -175,7 +186,7 @@ export const constants = Object.freeze({
   resetCooldownSeconds: 45,
   resetDurationSeconds: 8,
   resetMultiplier: 4.2,
-  rewardBubble: Object.freeze({ minReward: 5, maxReward: 8, minLifetimeSeconds: 2.5, maxLifetimeSeconds: 3.5 }),
+  rewardBubble: Object.freeze({ minReward: 5, maxReward: 8, minLifetimeSeconds: 6, maxLifetimeSeconds: 8 }),
   idleGrowthMultiplier: 0.06,
   accessTarget: 0.175,
   lifelineCompute: 320,
@@ -248,6 +259,15 @@ export const acquiredStrategyNodeIds = (state: GameState): readonly StrategyNode
   if (hasFlag(state, 'open-ecosystem') || hasFlag(state, 'ecosystem:open')) acquired.add('ecosystem-open')
   return [...acquired]
 }
+
+/** Shared Product axis used by both market appeal and the competitor comparison UI. */
+export const productStrategyLevel = (state: GameState) => clamp(
+  2 + acquiredStrategyNodeIds(state)
+    .filter((id) => STRATEGY_NODES_BY_ID.get(id)?.category === 'product')
+    .length * .55,
+  0,
+  10,
+)
 
 const normalizedStrategyPurchaseCounts = (state: GameState): Partial<Record<StrategyNodeId, number>> => {
   const counts: Partial<Record<StrategyNodeId, number>> = {}
@@ -391,6 +411,7 @@ export const createInitialState = (options: { seed?: number } = {}): GameState =
   rivalCapability: [2.1, 2.4, 1.9],
   rivalProduct: [2.0, 2.6, 1.8],
   rivalCompany: [2.6, 2.0, 2.2],
+  rivalStrategies: createInitialRivalStrategies(),
   speed: 1,
   momentumDays: 0,
   interventions: 0,
@@ -517,6 +538,7 @@ export const enforceInvariants = (state: GameState): GameState => {
     rivalCapability: state.rivalCapability.map((value) => clamp(finite(value), 0, 10)) as [number, number, number],
     rivalProduct: state.rivalProduct.map((value) => clamp(finite(value), 0, 10)) as [number, number, number],
     rivalCompany: state.rivalCompany.map((value) => clamp(finite(value), 0, 10)) as [number, number, number],
+    rivalStrategies: normalizeRivalStrategies(state.rivalStrategies, Math.max(0, Math.floor(finite(state.day)))),
     momentumDays: Math.max(0, Math.floor(finite(state.momentumDays))),
     interventions: Math.max(0, Math.floor(finite(state.interventions))),
     safetyIncidentCooldownDays: Math.max(0, Math.floor(finite(state.safetyIncidentCooldownDays))),
@@ -610,39 +632,17 @@ export const extinctionRiskDailyDelta = (state: GameState) => {
   return Math.min(3.5, capabilityPressure + (safetyGap >= 5 ? .5 : 0))
 }
 
-const withNews = (state: GameState, headline: string, source: ScenarioSource, tone: NewsItem['tone'] = 'good', shownDate = dateLabel(state.day)): GameState => ({
-  ...state,
-  nextNewsId: state.nextNewsId + 1,
-  news: [{ id: state.nextNewsId, date: shownDate, tone, headline: sanitizeOutput(headline), source }, ...state.news].slice(0, 12),
-})
-
-const RIVAL_NAMES = ['ANTHRO', 'GOO', 'QI'] as const
-const RIVAL_AXES = [
-  { key: 'rivalCapability', label: 'モデル' },
-  { key: 'rivalProduct', label: 'プロダクト' },
-  { key: 'rivalCompany', label: '組織' },
-] as const
-const RIVAL_THRESHOLDS = [4, 6, 8, 10] as const
-
-/** Emits one readable competitive move at a time as autonomous rival strategies cross stages. */
-const announceRivalStrategy = (state: GameState): GameState => {
-  for (let rival = 0; rival < RIVAL_NAMES.length; rival += 1) {
-    for (const axis of RIVAL_AXES) {
-      for (const threshold of RIVAL_THRESHOLDS) {
-        const flag = `rival:${rival}:${axis.key}:${threshold}`
-        if (state[axis.key][rival] >= threshold && !hasFlag(state, flag)) {
-          const source: ScenarioSource = state.day < dayFor('2029-01-01') ? 'AI 2027' : 'AI 2040'
-          return withNews(
-            { ...state, flags: addFlag(state.flags, flag) },
-            `${RIVAL_NAMES[rival]}の${axis.label}戦略が${threshold}に到達 // 競争圧力が上昇`,
-            source,
-            'warn',
-          )
-        }
-      }
-    }
+const withNews = (state: GameState, headline: string, source: ScenarioSource, tone: NewsItem['tone'] = 'good', shownDate = dateLabel(state.day), kind?: NewsItem['kind']): GameState => {
+  const item: NewsItem = { id: state.nextNewsId, date: shownDate, tone, headline: sanitizeOutput(headline), source, kind }
+  const candidates = [item, ...state.news]
+  // Rival investments are high-frequency. Keep them useful without letting them evict the authored timeline.
+  const major = candidates.filter((candidate) => candidate.kind !== 'rival-strategy').slice(0, 30)
+  const rivals = candidates.filter((candidate) => candidate.kind === 'rival-strategy').slice(0, 18)
+  return {
+    ...state,
+    nextNewsId: state.nextNewsId + 1,
+    news: [...major, ...rivals].sort((left, right) => right.id - left.id),
   }
-  return state
 }
 
 const dayFor = (iso: string) => Math.round((Date.parse(`${iso}T00:00:00Z`) - START_DATE) / 86_400_000)
@@ -857,17 +857,27 @@ export const tickDay = (input: GameState): GameState => {
   // post-growth regions or the displayed PF delta will diverge from the tick.
   const economy = computeEconomy(state)
   const kEff = effectiveCapability(state)
-  const raceMultiplier = state.day < dayFor('2027-01-01') ? .55 : state.day < dayFor('2030-01-01') ? 1.35 : 1
-  const responseMultiplier = 1 + Math.max(0, state.capability - Math.max(...state.rivalCapability)) * .08
-  const advanceAxis = (values: [number, number, number], rates: [number, number, number]) => values
-    .map((value, index) => clamp(value + rates[index] * raceMultiplier * responseMultiplier, 0, 10)) as [number, number, number]
-  const rivalCapability = advanceAxis(state.rivalCapability, [.00155, .0017, .00185])
-  const rivalProduct = advanceAxis(state.rivalProduct, [.0013, .0019, .0015])
-  const rivalCompany = advanceAxis(state.rivalCompany, [.0018, .00125, .0015])
-  const rivalTotal = Math.max(.001, state.rivalShares.reduce((a, b) => a + b, 0))
-  const avgRivalCapability = rivalCapability.reduce((sum, k, index) => sum + k * state.rivalShares[index], 0) / rivalTotal
+  const rivalProgress = advanceRivalStrategies({
+    day: state.day + 1,
+    portfolios: state.rivalStrategies ?? createInitialRivalStrategies(state.day),
+    axes: {
+      capability: state.rivalCapability,
+      product: state.rivalProduct,
+      company: state.rivalCompany,
+      shares: state.rivalShares,
+    },
+    playerCapability: kEff,
+    playerProduct: productStrategyLevel(state),
+    playerCompany: (state.safety + state.governance) / 2,
+  })
+  const rivalCapability = rivalProgress.axes.capability
+  const rivalProduct = rivalProgress.axes.product
+  const rivalCompany = rivalProgress.axes.company
+  const progressedRivalShares = rivalProgress.axes.shares
+  const rivalTotal = Math.max(.001, progressedRivalShares.reduce((a, b) => a + b, 0))
+  const avgRivalCapability = rivalCapability.reduce((sum, k, index) => sum + k * progressedRivalShares[index], 0) / rivalTotal
   const rivalStrategyAppeal = rivalCapability.map((capability, index) => 1 + .14 * capability + .08 * rivalProduct[index] + .05 * rivalCompany[index]) as [number, number, number]
-  const avgRivalAppeal = rivalStrategyAppeal.reduce((sum, appeal, index) => sum + appeal * state.rivalShares[index], 0) / rivalTotal
+  const avgRivalAppeal = rivalStrategyAppeal.reduce((sum, appeal, index) => sum + appeal * progressedRivalShares[index], 0) / rivalTotal
   const avgCapability = kEff * before.codexShare + avgRivalCapability * (1 - before.codexShare)
   const resetMultiplier = state.resetBoostSeconds > 0 ? constants.resetMultiplier : 1
   const activityMultiplier = state.momentumDays > 0 || state.brownout ? 1 : constants.idleGrowthMultiplier
@@ -886,7 +896,7 @@ export const tickDay = (input: GameState): GameState => {
       * clamp(1 + eventGrowth, .25, 2.5) * (1 - region.regulation) * resetMultiplier
       * state.policyGrowthMultiplier * freezeCap * activityMultiplier)
     const users = clamp(region.users + momentum * region.users * (1 - region.users / region.population), 0, region.population)
-    const codexProduct = Math.min(10, 2 + state.features.length * 1.5)
+    const codexProduct = productStrategyLevel(state)
     const codexCompany = (state.safety + state.governance) / 2
     const codexStrategyAppeal = 1 + .14 * kEff + .08 * codexProduct + .05 * codexCompany
     // In the AI 2027 race, a passive product rapidly loses distribution even while
@@ -908,7 +918,7 @@ export const tickDay = (input: GameState): GameState => {
   }
 
   const mid = metrics({ ...state, regions })
-  const normalizedRivals = normalizeRivals(state.rivalShares, mid.codexShare)
+  const normalizedRivals = normalizeRivals(progressedRivalShares, mid.codexShare)
   const strategicRivalWeights = normalizedRivals.map((share, index) => share * Math.exp(.004 * (rivalStrategyAppeal[index] - avgRivalAppeal))) as [number, number, number]
   const rivalShares = normalizeRivals(strategicRivalWeights, mid.codexShare)
   const hhi = mid.codexShare ** 2 + rivalShares.reduce((sum, share) => sum + share ** 2, 0)
@@ -931,6 +941,7 @@ export const tickDay = (input: GameState): GameState => {
     rivalCapability,
     rivalProduct,
     rivalCompany,
+    rivalStrategies: rivalProgress.portfolios,
     momentumDays: Math.max(0, state.momentumDays - 1),
     safetyIncidentCooldownDays: Math.max(0, state.safetyIncidentCooldownDays - 1),
     regulatoryIncidentCooldownDays: Math.max(0, state.regulatoryIncidentCooldownDays - 1),
@@ -938,7 +949,16 @@ export const tickDay = (input: GameState): GameState => {
     activeEffects,
     brownout,
   })
-  next = announceRivalStrategy(next)
+  for (const move of rivalProgress.moves) {
+    next = withNews(
+      next,
+      `${RIVAL_NAMES[move.rival]}が「${move.node.title.ja}」を導入 // ${move.node.summary.ja} ${move.playerImpact}`,
+      'Your Timeline',
+      'warn',
+      dateLabel(next.day),
+      'rival-strategy',
+    )
+  }
   next = applyMilestones(next)
   next = branchStep(next)
   if (!next.terminal && next.nextNewsId === input.nextNewsId) {

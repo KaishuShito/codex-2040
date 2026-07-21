@@ -44,6 +44,7 @@ import {
   humanExtinctionRisk,
   introduceRegion,
   metrics,
+  productStrategyLevel,
   openEcosystem,
   requestComputeLifeline,
   runFrame,
@@ -59,6 +60,7 @@ import {
   type Speed,
   type Upgrade,
 } from './engine'
+import { getStrategyNode } from './strategyNodes'
 import { AI_2040_URL, getDecisionMilestones, type SourceLabel } from './scenario'
 import WorldMap, { type WorldMapCompetitiveView, type WorldMapMarker, type WorldMapRegionIntensity, type WorldMapRewardBubble } from './components/WorldMap'
 import UpgradeOverlay, {
@@ -118,6 +120,8 @@ export const formatExtinctionRiskRate = (dailyRiskPoints: number, thresholdDays:
   const percentagePoints = dailyRiskPoints / Math.max(1, thresholdDays) * 100
   return `${percentagePoints >= 0 ? '+' : ''}${percentagePoints.toFixed(1)}pt/日`
 }
+
+type NewsFilter = 'major' | 'rivals' | 'all'
 
 const ENDING_CONTEXT: Record<EndingId, string> = {
   'beneficial-abundance': '検証可能な減速と意図的な停止が、安全で多元的な再始動につながりました。',
@@ -307,6 +311,7 @@ export default function App() {
   const [actionNudge, setActionNudge] = useState(false)
   const [paused, setPaused] = useState(false)
   const [criticalNews, setCriticalNews] = useState<NewsItem | null>(null)
+  const [newsFilter, setNewsFilter] = useState<NewsFilter>('major')
   const [selectedRegionId, setSelectedRegionId] = useState<RegionId | null>('eastAsia')
   const [selectedCompetitor, setSelectedCompetitor] = useState<number | null>(null)
   const [previewCompetitor, setPreviewCompetitor] = useState<'codex' | number | null>(null)
@@ -1050,6 +1055,7 @@ export default function App() {
       regionId: bubble.region,
       reward: bubble.reward,
       placement: bubble.placement,
+      remainingSeconds: bubble.remainingSeconds,
       source: bubble.source,
     })), [simulationBlocked, state.rewardBubbles])
 
@@ -1149,6 +1155,9 @@ export default function App() {
     : 1
   const timelineProgress = clamp(state.day / END_DAY * 100)
   const latestNews = state.news[0]
+  const majorNews = state.news.filter((item) => item.kind !== 'rival-strategy')
+  const rivalNews = state.news.filter((item) => item.kind === 'rival-strategy')
+  const visibleNews = newsFilter === 'major' ? majorNews : newsFilter === 'rivals' ? rivalNews : state.news
   const tutorial = tutorialStep === null ? null : TUTORIAL_STEPS[tutorialStep]
   const isCrisisBrief = Boolean(criticalNews && isCrisisHeadline(criticalNews.headline))
   const isExtinctionBrief = Boolean(criticalNews && /EXTINCTION(?: RISK)?/i.test(criticalNews.headline))
@@ -1406,10 +1415,16 @@ export default function App() {
 
           <div className="event-ledger">
             <div className="section-label section-label--sub"><Radio size={13} /> イベント履歴</div>
+            <div className="event-ledger__filters" role="group" aria-label="イベント履歴の表示">
+              <button type="button" aria-pressed={newsFilter === 'major'} onClick={() => setNewsFilter('major')}>主要 <span>{majorNews.length}</span></button>
+              <button type="button" aria-pressed={newsFilter === 'rivals'} onClick={() => setNewsFilter('rivals')}>競合 <span>{rivalNews.length}</span></button>
+              <button type="button" aria-pressed={newsFilter === 'all'} onClick={() => setNewsFilter('all')}>すべて <span>{state.news.length}</span></button>
+            </div>
             <div className="event-ledger__list">
-            {state.news.map((item) => (
+            {visibleNews.map((item) => (
               <article key={item.id}><SourceBadge source={item.source} href={getEventSourceUrl(item.source, item.date)} /><time>{item.date}</time><b><OverflowTicker text={item.headline} /></b></article>
             ))}
+            {visibleNews.length === 0 && <p className="event-ledger__empty">まだ該当するニュースはありません</p>}
             </div>
           </div>
         </aside>
@@ -1478,7 +1493,7 @@ export default function App() {
                 onBlur={() => setPreviewCompetitor(null)}
                 onClick={() => { setSelectedCompetitor(null); playSound('tap') }}
               >
-                <i /><b>CODEX<small>K{state.capability.toFixed(1)} · P{Math.min(10, 2 + state.features.length * 1.5).toFixed(1)} · C{((state.safety + state.governance) / 2).toFixed(1)}</small></b><strong>{pct(m.codexShare)}</strong><ChevronRight size={11} />
+                <i /><b>CODEX<small>K{state.capability.toFixed(1)} · P{productStrategyLevel(state).toFixed(1)} · C{((state.safety + state.governance) / 2).toFixed(1)}</small></b><strong>{pct(m.codexShare)}</strong><ChevronRight size={11} />
               </button>
               {RIVAL_NAMES.map((name, index) => (
                 <button
@@ -1502,9 +1517,11 @@ export default function App() {
               const name = index === null ? 'CODEX' : RIVAL_NAMES[index]
               const share = index === null ? m.codexShare : state.rivalShares[index]
               const axes = index === null
-                ? [state.capability, Math.min(10, 2 + state.features.length * 1.5), (state.safety + state.governance) / 2]
+                ? [state.capability, productStrategyLevel(state), (state.safety + state.governance) / 2]
                 : [state.rivalCapability[index], state.rivalProduct[index], state.rivalCompany[index]]
               const shareDelta = share - m.codexShare
+              const rivalPortfolio = index === null ? null : state.rivalStrategies?.[index]
+              const latestRivalNode = rivalPortfolio?.lastNodeId ? getStrategyNode(rivalPortfolio.lastNodeId) : null
               return (
                 <section className="market-popover" role="status" aria-label={`${name}の市場情報`}>
                   <header><span>{name}</span><strong className={shareDelta > 0 ? 'is-leading' : ''}>{isCodex ? '基準' : `${shareDelta >= 0 ? '+' : ''}${Math.round(shareDelta * 100)}点 対CODEX`}</strong></header>
@@ -1514,6 +1531,13 @@ export default function App() {
                     <div><dt>製品</dt><dd>{axes[1].toFixed(1)}</dd></div>
                     <div><dt>組織</dt><dd>{axes[2].toFixed(1)}</dd></div>
                   </dl>
+                  {!isCodex && rivalPortfolio && (
+                    <p className="market-popover__strategy">
+                      <span>最新戦略</span>
+                      <b>{latestRivalNode?.title.ja ?? '投資準備中'}</b>
+                      <em>{rivalPortfolio.acquiredNodes.length}ノード取得</em>
+                    </p>
+                  )}
                   <small>{isCodex ? 'クリックで通常地図へ戻る' : 'クリックで都市別の利用者分布を表示'}</small>
                 </section>
               )

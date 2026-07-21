@@ -1215,6 +1215,45 @@
   }
 }
 
+@media (orientation: landscape) and (max-width: 1024px) and (max-height: 520px) {
+  .upgrade-overlay { padding: 4px max(4px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left)); }
+  .upgrade-overlay__dialog { grid-template-rows: 44px 38px minmax(0, 1fr) 40px; }
+  .upgrade-overlay__header { min-height: 44px; grid-template-columns: minmax(180px, 1fr) auto 32px; gap: 8px; padding: 4px 8px; }
+  .upgrade-overlay__header > p { display: none; }
+  .upgrade-overlay__mark { width: 28px; height: 28px; transform: none; }
+  .upgrade-overlay__identity { gap: 7px; }
+  .upgrade-overlay__identity span { display: none; }
+  .upgrade-overlay__identity h2 { margin: 0; font-size: 15px; }
+  .upgrade-overlay__resources > span { font-size: 6px; }
+  .upgrade-overlay__resources strong { font-size: 15px; }
+  .upgrade-overlay__close { width: 30px; height: 30px; }
+  .upgrade-overlay__tabs { padding-inline: 5px; }
+  .upgrade-overlay__tabs button { min-height: 38px; justify-content: center; gap: 4px; padding: 3px 5px; }
+  .upgrade-overlay__tabs button > span { font-size: 8px; }
+  .upgrade-overlay__tabs button small, .upgrade-overlay__tabs button > i { display: none; }
+  .upgrade-overlay__content { grid-template-columns: minmax(0, 1fr) 230px; }
+  .upgrade-overlay__graph { min-height: 0; }
+  .upgrade-overlay__graph-heading { top: 7px; right: 8px; left: 8px; }
+  .upgrade-overlay__graph-heading span, .upgrade-overlay__graph-heading p { display: none; }
+  .upgrade-overlay__graph-heading h3 { margin: 0; font-size: 15px; }
+  .upgrade-overlay__network-frame { inset: 29px 0 4px; }
+  .upgrade-overlay__detail { padding: 8px 10px; }
+  .upgrade-overlay__detail-index { padding-bottom: 5px; font-size: 6px; }
+  .upgrade-overlay__detail-icon { width: 30px; height: 30px; margin-top: 7px; }
+  .upgrade-overlay__detail > h3 { margin-top: 6px; font-size: 17px; }
+  .upgrade-overlay__detail > p { margin-top: 5px; font-size: 8px; line-height: 1.35; }
+  .upgrade-overlay__route, .upgrade-overlay__forecast, .upgrade-overlay__learning-note, .upgrade-overlay__effects, .upgrade-overlay__combo { margin-top: 7px; }
+  .upgrade-overlay__route { gap: 3px; padding: 5px 0; }
+  .upgrade-overlay__route > span { grid-template-columns: 48px 1fr; gap: 4px; }
+  .upgrade-overlay__commit { grid-template-columns: auto 1fr; gap: 6px; margin-top: 8px; }
+  .upgrade-overlay__commit button { min-height: 32px; }
+  .upgrade-overlay__footer { min-height: 40px; }
+  .upgrade-overlay__metric { gap: 3px; padding: 4px 8px; }
+  .upgrade-overlay__metric span { font-size: 6px; }
+  .upgrade-overlay__metric b { font-size: 10px; }
+  .upgrade-overlay__world-state { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .upgrade-overlay,
   .upgrade-overlay::after,

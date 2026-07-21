@@ -1186,6 +1186,11 @@ export default function App() {
   return (
     <main className={`command-shell${state.resetBoostSeconds > 0 ? ' is-boosting' : ''}`}>
       <div className="command-shell__grain" aria-hidden="true" />
+      <aside className="mobile-orientation-hint" role="status">
+        <Phone size={26} aria-hidden="true" />
+        <strong>端末を横向きにしてください</strong>
+        <span>Codex 2040は横向きの画面でプレーできます。</span>
+      </aside>
 
       <header className="command-header">
         <div className="command-brand">

@@ -63,6 +63,8 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.82' numOctaves='3' stitchTiles='stitchTiles'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.28'/%3E%3C/svg%3E");
 }
 
+.mobile-orientation-hint { display: none; }
+
 .command-shell.is-boosting::after {
   position: fixed;
   z-index: 18;
@@ -868,6 +870,124 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
   .region-inspector dl { display: none; }
   .region-inspector h2 { margin-bottom: 6px; }
   .lower-command-zone, .command-grid { gap: 7px; }
+}
+
+/* Phones play as a compact command deck in landscape. The map and the three
+   investment axes stay primary; dense explanatory detail remains available in
+   the full-screen strategy and event surfaces. */
+@media (orientation: landscape) and (max-width: 1024px) and (max-height: 520px) {
+  html, body, #root { width: 100%; height: 100%; overflow: hidden; overscroll-behavior: none; }
+  .command-shell {
+    display: grid;
+    width: 100%;
+    height: 100svh;
+    min-height: 0;
+    grid-template-rows: 46px 28px minmax(0, 1fr) auto;
+    padding: 0 max(6px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
+    overflow: hidden;
+  }
+  .command-header { grid-template-columns: minmax(170px, 1fr) auto minmax(210px, 1fr); min-height: 46px; }
+  .command-brand { gap: 7px; }
+  .command-brand__mark { width: 29px; height: 29px; }
+  .command-brand b { font-size: 11px; }
+  .command-brand small, .simulation-clock > span { display: none; }
+  .command-header__center { gap: 4px; }
+  .tutorial-launcher, .new-game-launcher { min-height: 29px; padding-inline: 8px; font-size: 7px; }
+  .tutorial-launcher { grid-column: auto; grid-row: auto; margin-bottom: 0; }
+  .simulation-clock { grid-column: auto; grid-row: auto; }
+  .simulation-clock__actions { gap: 4px; margin-bottom: 0; }
+  .voice-call-launcher, .sound-toggle { width: 31px; min-width: 31px; min-height: 29px; justify-content: center; padding: 0; font-size: 0; }
+  .voice-call-launcher svg, .sound-toggle svg { width: 14px; height: 14px; }
+  .simulation-clock strong { margin-top: 1px; font-size: 10px; }
+  .intel-strip { grid-template-columns: 118px minmax(0, 1fr); min-height: 28px; gap: 7px; padding: 0; }
+  .intel-strip__label { display: flex; font-size: 8px; }
+  .intel-strip__ticker { font-size: 9px; }
+  .intel-strip .source-key { display: none; }
+  .command-grid { height: 100%; grid-template-columns: minmax(0, 1fr) 176px; gap: 5px; padding: 4px 0; overflow: hidden; }
+  .world-stage { height: 100%; grid-row: auto; grid-template-rows: 28px minmax(0, 1fr) 17px; }
+  .world-stage__header { padding-inline: 7px; }
+  .world-stage__header small { display: none; }
+  .world-stage__header b, .world-stage__status { margin: 0; font-size: 7px; }
+  .world-stage__map { min-height: 0; padding: 2px; }
+  .world-stage__map .world-map { min-height: 0; aspect-ratio: auto; }
+  .timeline-track { padding-inline: 5px; font-size: 6px; }
+  .region-inspector { top: 6px; right: 6px; width: 150px; padding: 7px; }
+  .region-inspector > span, .region-inspector dt { font-size: 6px; }
+  .region-inspector h2 { margin: 3px 0 5px; font-size: 11px; }
+  .region-inspector dl div { padding: 4px 3px; }
+  .region-inspector dd { margin-top: 2px; font-size: 8px; }
+  .region-inspector__cost { margin-top: 4px; }
+  .region-inspector button { min-height: 28px; margin-top: 4px; padding: 4px; font-size: 7px; }
+  .strategy-rail { display: flex; height: 100%; flex-direction: column; padding: 5px 6px; overflow: hidden; }
+  .strategy-rail > .section-label, .strategy-rail .control-envelope, .strategy-rail .event-ledger { display: none; }
+  .strategy-rail .compute-counter { flex: 0 0 auto; padding: 0 0 3px; }
+  .strategy-rail .compute-counter > span, .strategy-rail .compute-counter__currency { display: none; }
+  .strategy-rail .compute-counter > strong { font-size: 16px; }
+  .compute-flow { margin-top: 2px; }
+  .compute-flow > span { padding: 2px 3px; }
+  .compute-flow small { font-size: 5px; }
+  .compute-flow b { font-size: 7px; }
+  .strategy-rail .strategy-axis { min-height: 31px; flex: 0 0 auto; margin: 0; }
+  .strategy-axis > span { grid-template-columns: 20px 1fr; }
+  .strategy-axis > span b, .strategy-axis > strong { font-size: 8px; }
+  .strategy-axis > span small { display: none; }
+  .strategy-rail .open-ecosystem { min-height: 31px; flex: 0 0 auto; margin-top: 3px; padding-inline: 6px; }
+  .open-ecosystem b { font-size: 7px; }
+  .open-ecosystem small { display: none; }
+  .strategy-rail .open-strategy { min-height: 27px; flex: 0 0 auto; margin-top: 3px; font-size: 7px; }
+  .compute-lifeline { min-height: 28px; margin-top: 2px; padding: 3px 5px; }
+  .compute-lifeline small { display: none; }
+  .lower-command-zone { gap: 4px; }
+  .telemetry-deck { grid-template-columns: repeat(5, minmax(0, 1fr)); min-height: 48px; }
+  .telemetry-deck__header { display: none; }
+  .telemetry-card { min-height: 48px; padding: 4px 5px; }
+  .telemetry-card > header { min-height: 10px; font-size: 6px; }
+  .telemetry-card > header strong { font-size: 13px; }
+  .telemetry-card > strong { margin-top: 3px; font-size: 14px; }
+  .telemetry-card__split, .telemetry-card .mission-breakdown, .telemetry-card .trust-causality,
+  .telemetry-card .risk-radar, .extinction-readout { display: none; }
+  .telemetry-card .market-list { margin-top: 1px; }
+  .telemetry-card .market-list > div, .telemetry-card .market-list > button { min-height: 10px; font-size: 6px; }
+  .telemetry-card .market-list b small { display: none; }
+  .telemetry-card .market-list strong { font-size: 8px; }
+  .telemetry-dossier { display: none; }
+  .command-utilities { grid-template-columns: 190px minmax(0, 1fr); gap: 4px; }
+  .command-utilities .gm-watchdog { display: none; }
+  .reset-action, .command-utilities .time-controls { min-height: 40px; }
+  .reset-action { grid-template-columns: 30px 1fr; gap: 5px; padding: 3px 6px; }
+  .reset-action__ring { width: 27px; height: 27px; }
+  .reset-action__ring::before { width: 21px; height: 21px; }
+  .reset-action small { font-size: 6px; }
+  .reset-action b { margin-top: 1px; font-size: 7px; }
+  .command-utilities .time-controls { grid-column: auto; grid-template-columns: 84px minmax(140px, 1fr); padding: 3px 5px; }
+  .time-controls button { min-height: 30px; font-size: 7px; }
+  .speed-readout { display: none; }
+  .start-brief, .tutorial-brief, .critical-brief, .restart-confirm { width: min(540px, calc(100% - 16px)); max-height: calc(100% - 12px); padding: 13px 15px; overflow-y: auto; }
+  .start-brief h1 { margin: 7px 0 5px; font-size: 20px; }
+  .start-brief > p { font-size: 9px; line-height: 1.45; }
+  .start-brief__sources { margin-top: 7px; }
+  .start-brief footer { margin-top: 9px; }
+  .start-brief footer button { min-height: 32px; }
+  .voice-call { right: max(5px, env(safe-area-inset-right)); bottom: max(5px, env(safe-area-inset-bottom)); width: min(430px, calc(100vw - 10px)); max-height: calc(100svh - 10px); }
+}
+
+@media (orientation: portrait) and (max-width: 740px) {
+  .mobile-orientation-hint {
+    position: fixed;
+    z-index: 3000;
+    inset: 0;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 10px;
+    padding: 30px;
+    color: var(--green-bright);
+    background: radial-gradient(circle at center, #10281d, #020706 68%);
+    text-align: center;
+  }
+  .mobile-orientation-hint svg { color: var(--green); transform: rotate(90deg); }
+  .mobile-orientation-hint strong { font: 700 15px var(--mono); letter-spacing: .05em; }
+  .mobile-orientation-hint span { max-width: 280px; color: var(--muted); font-size: 11px; line-height: 1.6; }
 }
 
 @media (prefers-reduced-motion: reduce) {

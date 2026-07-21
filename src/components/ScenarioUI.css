@@ -1199,6 +1199,27 @@
   }
 }
 
+@media (orientation: landscape) and (max-width: 1024px) and (max-height: 520px) {
+  .scenario-overlay { place-items: stretch; padding: 4px max(4px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left)); }
+  .scenario-dialog { width: 100%; max-height: calc(100svh - 8px); }
+  .scenario-decision__header { grid-template-columns: 104px 1fr; }
+  .scenario-year { min-height: 82px; padding: 10px 14px; }
+  .scenario-year span { font-size: 28px; }
+  .scenario-year small { margin-top: 5px; font-size: 7px; }
+  .scenario-decision__heading { padding: 10px 14px; }
+  .scenario-decision__heading h1 { margin-block: 8px 4px; font-size: 22px; }
+  .scenario-decision__heading p { font-size: 9px; }
+  .scenario-decision__body { padding: 10px 14px; }
+  .scenario-decision__prompt { margin-bottom: 8px; }
+  .scenario-options { gap: 7px; }
+  .scenario-option { min-height: 0; padding: 10px; }
+  .scenario-option h2 { font-size: 11px; }
+  .scenario-option p { font-size: 8px; line-height: 1.35; }
+  .scenario-learning { margin-top: 8px; padding: 8px 10px; }
+  .scenario-decision__footer { padding: 8px 14px; }
+  .scenario-primary-action { min-height: 34px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .scenario-overlay,
   .scenario-dialog,

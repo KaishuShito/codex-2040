@@ -164,6 +164,7 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
 }
 .sound-toggle:hover { color: var(--green-bright); border-color: rgba(103, 246, 174, .42); }
 .sound-toggle[aria-pressed="true"] { color: var(--faint); opacity: .7; }
+.music-toggle { min-width: 62px; color: #91cbb0; }
 .simulation-clock span { display: flex; align-items: center; gap: 7px; margin: 0; }
 .simulation-clock span i, .world-stage__status i {
   width: 5px;

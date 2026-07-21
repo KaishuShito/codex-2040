@@ -9,6 +9,7 @@ import {
   CirclePlay,
   ChevronsRight,
   Cpu,
+  Music2,
   Network,
   Phone,
   Radio,
@@ -266,6 +267,10 @@ export default function App() {
   const [tutorialStep, setTutorialStep] = useState<number | null>(null)
   const [hasStarted, setHasStarted] = useState(initialSession.hasStarted)
   const [soundEnabled, setSoundEnabled] = useState(true)
+  const [musicEnabled, setMusicEnabled] = useState(() => {
+    try { return window.localStorage.getItem('codex-2040:bgm') !== 'off' } catch { return true }
+  })
+  const [musicPlaying, setMusicPlaying] = useState(false)
   const [actionNudge, setActionNudge] = useState(false)
   const [paused, setPaused] = useState(false)
   const [criticalNews, setCriticalNews] = useState<NewsItem | null>(null)
@@ -292,6 +297,7 @@ export default function App() {
   const runTelemetryRef = useRef<RunTelemetry | null>(null)
   const persistTimerRef = useRef<number | null>(null)
   const audioRef = useRef<GameAudio | null>(null)
+  const musicRef = useRef<HTMLAudioElement | null>(null)
   if (!audioRef.current) audioRef.current = new GameAudio()
   const pendingTimersRef = useRef<number[]>([])
   const voiceClientRef = useRef<RealtimeVoiceClient | null>(null)
@@ -386,6 +392,36 @@ export default function App() {
     audioRef.current?.preload()
     audioRef.current?.setEnabled(soundEnabled)
   }, [soundEnabled])
+
+  useEffect(() => {
+    const music = new Audio('/audio/pondering-the-cosmos.m4a')
+    music.loop = true
+    music.preload = 'auto'
+    music.volume = .15
+    const markPlaying = () => setMusicPlaying(true)
+    const markPaused = () => setMusicPlaying(false)
+    music.addEventListener('play', markPlaying)
+    music.addEventListener('pause', markPaused)
+    musicRef.current = music
+    return () => {
+      music.pause()
+      music.removeEventListener('play', markPlaying)
+      music.removeEventListener('pause', markPaused)
+      musicRef.current = null
+    }
+  }, [])
+
+  useEffect(() => {
+    const music = musicRef.current
+    if (!music) return
+    music.volume = simulationBlocked ? .08 : .15
+    try { window.localStorage.setItem('codex-2040:bgm', musicEnabled ? 'on' : 'off') } catch { /* Preference remains session-local. */ }
+    if (!musicEnabled) {
+      music.pause()
+      return
+    }
+    if (hasStarted || tutorialStep !== null) void music.play().catch(() => setMusicPlaying(false))
+  }, [hasStarted, musicEnabled, simulationBlocked, tutorialStep])
 
   useEffect(() => {
     const persistNow = () => {
@@ -564,6 +600,7 @@ export default function App() {
     setShowStartScreen(false)
     setTutorialStep(null)
     setHasStarted(true)
+    if (musicEnabled) void musicRef.current?.play().catch(() => setMusicPlaying(false))
     playSound('confirm')
     setActionNudge(true)
     const timer = window.setTimeout(() => setActionNudge(false), 4000)
@@ -574,6 +611,7 @@ export default function App() {
   const beginWithTutorial = () => {
     setShowStartScreen(false)
     setTutorialStep(0)
+    if (musicEnabled) void musicRef.current?.play().catch(() => setMusicPlaying(false))
     playSound('tap')
   }
 
@@ -581,6 +619,7 @@ export default function App() {
     setShowStartScreen(false)
     setTutorialStep(null)
     setHasStarted(true)
+    if (musicEnabled) void musicRef.current?.play().catch(() => setMusicPlaying(false))
     playSound('confirm')
   }
 
@@ -1067,6 +1106,21 @@ export default function App() {
               }}
             >
               {soundEnabled ? <Volume2 size={13} /> : <VolumeX size={13} />} {soundEnabled ? '効果音 オン' : '効果音 オフ'}
+            </button>
+            <button
+              className="sound-toggle music-toggle"
+              type="button"
+              aria-label={musicEnabled ? 'BGMをオフ' : 'BGMをオン'}
+              aria-pressed={!musicEnabled}
+              title={musicEnabled ? 'BGMをオフ' : 'BGMをオン'}
+              onClick={() => {
+                const enabled = !musicEnabled
+                setMusicEnabled(enabled)
+                if (enabled) void musicRef.current?.play().catch(() => setMusicPlaying(false))
+                else musicRef.current?.pause()
+              }}
+            >
+              <Music2 size={13} /> BGM {musicEnabled && musicPlaying ? 'オン' : musicEnabled ? '待機' : 'オフ'}
             </button>
           </div>
           <span><i /> 決定論エンジン</span>

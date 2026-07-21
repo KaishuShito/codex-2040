@@ -64,6 +64,17 @@ export type ActiveEffect = {
   source: ScenarioSource
 }
 
+export type RewardBubble = {
+  id: string
+  region: RegionId
+  reward: number
+  /** Stable 0..1 placement hint interpreted by the world map. */
+  placement: number
+  /** Wall-clock lifetime. Simulation speed never changes this value. */
+  remainingSeconds: number
+  source: 'token-reset' | 'community'
+}
+
 export type WorldEventNotice = {
   eventId: string
   category: WorldEventCategory
@@ -112,6 +123,10 @@ export type GameState = {
   nextNewsId: number
   /** Current uint32 state for mulberry32. */
   seed: number
+  /** Independent deterministic stream so collectible VFX never perturb simulation rolls. */
+  bubbleSeed: number
+  nextBubbleId: number
+  rewardBubbles: RewardBubble[]
   /** Stable seed and history for the independent authored-world-event stream. */
   worldEventSeed: number
   firedWorldEventIds: string[]
@@ -160,10 +175,19 @@ export const constants = Object.freeze({
   resetCooldownSeconds: 45,
   resetDurationSeconds: 8,
   resetMultiplier: 4.2,
+  rewardBubble: Object.freeze({ minReward: 5, maxReward: 8, minLifetimeSeconds: 2.5, maxLifetimeSeconds: 3.5 }),
   idleGrowthMultiplier: 0.06,
-  accessTarget: 0.05,
+  accessTarget: 0.175,
+  lifelineCompute: 320,
+  brownoutCapabilityRatio: 0.75,
+  brownoutCapabilityFloor: 2,
+  brownoutOpexMultiplier: 0.25,
+  brownoutStabilityDays: 30,
+  treasuryFreeAllowance: 1_000,
+  treasuryCarryRate: 0.005,
   pyrrhicAdoptionThreshold: 0.04,
   unsafeCapabilityThreshold: 6,
+  misalignmentThresholdDays: 120,
   safetyIncidentCooldownDays: 180,
   regulatoryIncidentCooldownDays: 365,
   momentumDays: Object.freeze({ reset: 90, region: 180, upgrade: 120, feature: 240, ecosystem: 240, decision: 180 }),
@@ -285,6 +309,7 @@ export const metrics = (state: GameState) => {
   const rivals = normalizeRivals(state.rivalShares, codexShare)
   const hhi = codexShare ** 2 + rivals.reduce((sum, share) => sum + share ** 2, 0)
   const controlRelief = strategyPersistentEffects(state).controlRelief
+  const kEff = effectiveCapability(state)
   return {
     adoption,
     population,
@@ -292,9 +317,9 @@ export const metrics = (state: GameState) => {
     worldAdoption: population > 0 ? adoption / population : 0,
     codexShare,
     hhi,
-    safetyGap: Math.max(0, state.capability - state.safety - controlRelief),
-    governanceGap: Math.max(0, state.capability - state.governance - controlRelief),
-    effectiveCapability: effectiveCapability(state),
+    safetyGap: Math.max(0, kEff - state.safety - controlRelief),
+    governanceGap: Math.max(0, kEff - state.governance - controlRelief),
+    effectiveCapability: kEff,
   }
 }
 
@@ -382,6 +407,9 @@ export const createInitialState = (options: { seed?: number } = {}): GameState =
   ],
   nextNewsId: 3,
   seed: (options.seed ?? 2040) >>> 0,
+  bubbleSeed: ((options.seed ?? 2040) ^ 0x51ed270b) >>> 0,
+  nextBubbleId: 1,
+  rewardBubbles: [],
   worldEventSeed: ((options.seed ?? 2040) ^ 0x9e3779b9) >>> 0,
   firedWorldEventIds: [],
   lastWorldEventDay: null,
@@ -433,6 +461,9 @@ const syncRealtimeAliases = (state: GameState): GameState => ({
 
 /** Applies every invariant at an engine boundary, including rival share normalization. */
 export const enforceInvariants = (state: GameState): GameState => {
+  const normalizedFlags = Array.isArray(state.flags)
+    ? [...new Set(state.flags.filter((flag): flag is string => typeof flag === 'string'))]
+    : []
   const regions = state.regions.map((region) => {
     const population = Math.max(Number.EPSILON, finite(region.population, 1))
     const introduced = Boolean(region.introduced)
@@ -449,8 +480,27 @@ export const enforceInvariants = (state: GameState): GameState => {
       fit: clamp(finite(region.fit, 1), .2, 4),
     }
   })
-  const interim = { ...state, regions }
+  const interim = { ...state, regions, flags: normalizedFlags }
   const codexShare = metrics(interim).codexShare
+  const seenBubbleIds = new Set<string>()
+  const rewardBubbles = (Array.isArray(state.rewardBubbles) ? state.rewardBubbles : [])
+    .flatMap((bubble): RewardBubble[] => {
+      if (!bubble || typeof bubble !== 'object') return []
+      const id = typeof bubble.id === 'string' ? bubble.id : ''
+      const region = bubble.region
+      const validRegion = baseRegions.some((candidate) => candidate.id === region)
+      const remainingSeconds = finite(bubble.remainingSeconds)
+      if (!id || seenBubbleIds.has(id) || !validRegion || remainingSeconds <= 0) return []
+      seenBubbleIds.add(id)
+      return [{
+        id,
+        region,
+        reward: Math.round(clamp(finite(bubble.reward, constants.rewardBubble.minReward), constants.rewardBubble.minReward, constants.rewardBubble.maxReward)),
+        placement: clamp(finite(bubble.placement), 0, 1),
+        remainingSeconds,
+        source: bubble.source === 'community' ? 'community' : 'token-reset',
+      }]
+    })
   const next = {
     ...interim,
     day: Math.max(0, Math.floor(finite(state.day))),
@@ -461,6 +511,8 @@ export const enforceInvariants = (state: GameState): GameState => {
     efficiency: clamp(finite(state.efficiency, 1), .5, 3),
     trust: clamp(finite(state.trust), 0, 100),
     brand: clamp(finite(state.brand, 1), .25, 10),
+    flags: normalizedFlags,
+    safetyGapDays: Math.max(0, finite(state.safetyGapDays)),
     rivalShares: normalizeRivals(state.rivalShares, codexShare),
     rivalCapability: state.rivalCapability.map((value) => clamp(finite(value), 0, 10)) as [number, number, number],
     rivalProduct: state.rivalProduct.map((value) => clamp(finite(value), 0, 10)) as [number, number, number],
@@ -474,6 +526,9 @@ export const enforceInvariants = (state: GameState): GameState => {
     ecosystemCooldownSeconds: Math.max(0, finite(state.ecosystemCooldownSeconds)),
     policyGrowthMultiplier: clamp(finite(state.policyGrowthMultiplier, 1), .25, 2),
     seed: state.seed >>> 0,
+    bubbleSeed: finite(state.bubbleSeed, state.seed ^ 0x51ed270b) >>> 0,
+    nextBubbleId: Math.max(1, Math.floor(finite(state.nextBubbleId, 1))),
+    rewardBubbles,
     worldEventSeed: finite(state.worldEventSeed, state.seed ^ 0x9e3779b9) >>> 0,
     firedWorldEventIds: Array.isArray(state.firedWorldEventIds) ? [...new Set(state.firedWorldEventIds.filter((id): id is string => typeof id === 'string'))] : [],
     lastWorldEventDay: typeof state.lastWorldEventDay === 'number' ? Math.max(0, Math.floor(state.lastWorldEventDay)) : null,
@@ -483,15 +538,77 @@ export const enforceInvariants = (state: GameState): GameState => {
     lastWorldPopupDay: typeof state.lastWorldPopupDay === 'number' ? Math.max(0, Math.floor(state.lastWorldPopupDay)) : null,
     worldEventPopupCooldownSeconds: Math.max(0, finite(state.worldEventPopupCooldownSeconds)),
     pendingWorldEvent: state.pendingWorldEvent ?? null,
-    acquiredStrategyNodes: state.acquiredStrategyNodes === undefined ? undefined : [...acquiredStrategyNodeIds(state)],
+    acquiredStrategyNodes: state.acquiredStrategyNodes === undefined ? undefined : [...acquiredStrategyNodeIds(interim)],
     strategyNodePurchaseCounts: state.strategyNodePurchaseCounts === undefined ? undefined : normalizedStrategyPurchaseCounts(state),
   }
   return syncRealtimeAliases(next)
 }
 
 export const effectiveCapability = (state: GameState) => state.brownout
-  ? Math.min(state.capability, .8)
+  ? Math.min(state.capability, Math.max(constants.brownoutCapabilityFloor, state.capability * constants.brownoutCapabilityRatio))
   : state.capability
+
+const BROWNOUT_ACTION_RESERVE = 45
+
+const computeEconomyForMode = (state: GameState, brownout: boolean) => {
+  const modeState = state.brownout === brownout ? state : { ...state, brownout }
+  const m = metrics(modeState)
+  const activityMultiplier = modeState.momentumDays > 0 || brownout ? 1 : constants.idleGrowthMultiplier
+  const strategyEffects = strategyPersistentEffects(modeState)
+  const kEff = effectiveCapability(modeState)
+  const income = (m.codexUsers * constants.revenue * modeState.efficiency * activityMultiplier + (brownout ? .45 : 0))
+    * strategyEffects.incomeMultiplier
+  const operatingCost = (.3 * (1 + .12 * kEff ** 1.5) + m.codexUsers * .012 * kEff)
+    * strategyEffects.opexMultiplier
+    * (brownout ? constants.brownoutOpexMultiplier : 1)
+  const treasuryCarry = Math.max(0, modeState.compute - constants.treasuryFreeAllowance) * constants.treasuryCarryRate
+  const runningCost = operatingCost + treasuryCarry
+  return { income, runningCost, net: income - runningCost }
+}
+
+/**
+ * Brownout only releases after it has rebuilt one ordinary action plus enough
+ * reserve to absorb a bounded runway of the currently projected full-power
+ * deficit. This restores meaningful actions without trapping the player in a
+ * multi-year safety-exploit brownout.
+ */
+const brownoutRecoveryReserve = (state: GameState) => {
+  const fullPower = computeEconomyForMode(state, false)
+  return BROWNOUT_ACTION_RESERVE + Math.max(0, -fullPower.net) * constants.brownoutStabilityDays
+}
+
+const brownoutForNextDay = (state: GameState) => state.brownout
+  ? state.compute < brownoutRecoveryReserve(state)
+  : state.compute <= 0
+
+/** Daily PF budget, exposed so the UI and simulation always explain the same next-day economy. */
+export const computeEconomy = (state: GameState) => {
+  const brownout = brownoutForNextDay(state)
+  return computeEconomyForMode(state, brownout)
+}
+
+/** A deterministic progress meter: reaching 100% immediately triggers misalignment. */
+export const humanExtinctionRisk = (state: GameState) => clamp(
+  state.safetyGapDays / constants.misalignmentThresholdDays,
+)
+
+/**
+ * Deterministic danger points accrued per simulated day. Frontier capability
+ * compresses the time available to close an otherwise identical safety gap.
+ */
+export const extinctionRiskDailyDelta = (state: GameState) => {
+  const safetyGap = metrics(state).safetyGap
+  const kEff = effectiveCapability(state)
+  if (kEff < constants.unsafeCapabilityThreshold || safetyGap < constants.gapThreshold) return -2
+  const capabilityPressure = kEff >= 9
+    ? 3
+    : kEff >= 8
+      ? 2.5
+      : kEff >= 7
+        ? 2
+        : 1
+  return Math.min(3.5, capabilityPressure + (safetyGap >= 5 ? .5 : 0))
+}
 
 const withNews = (state: GameState, headline: string, source: ScenarioSource, tone: NewsItem['tone'] = 'good', shownDate = dateLabel(state.day)): GameState => ({
   ...state,
@@ -690,10 +807,26 @@ const branchStep = (state: GameState): GameState => {
     : 0
   if (next.safetyIncidentCooldownDays === 0 && safetyRoll.value < incidentChance) next = applyIncident(next, 'safety-incident')
 
-  const unsafe = m.safetyGap >= constants.gapThreshold && state.capability >= constants.unsafeCapabilityThreshold
-  const safetyGapDays = unsafe ? state.safetyGapDays + 1 : Math.max(0, state.safetyGapDays - 2)
+  const extinctionDelta = extinctionRiskDailyDelta(state)
+  const safetyGapDays = extinctionDelta > 0
+    ? state.safetyGapDays + extinctionDelta
+    : Math.max(0, state.safetyGapDays + extinctionDelta)
   next = { ...next, safetyGapDays }
-  if (safetyGapDays >= 90 && !next.terminal) return applyIncident(next, 'misalignment')
+  const extinctionRisk = humanExtinctionRisk(next)
+  // Rearm warnings only after a meaningful recovery. This avoids daily spam
+  // near a threshold while allowing a later relapse to warn the player again.
+  if (extinctionRisk < .4) next = { ...next, flags: next.flags.filter((flag) => flag !== 'warning:extinction-50') }
+  if (extinctionRisk < .7) next = { ...next, flags: next.flags.filter((flag) => flag !== 'warning:extinction-80') }
+  const extinctionWarnings = [
+    { ratio: .5, flag: 'warning:extinction-50', headline: 'EXTINCTION RISK 50% // 人類絶滅リスク上昇、安全投資で能力差を縮めよ' },
+    { ratio: .8, flag: 'warning:extinction-80', headline: 'EXTINCTION RISK 80% // 人類絶滅リスク危険域、統制喪失が目前' },
+  ] as const
+  for (const warning of extinctionWarnings) {
+    if (humanExtinctionRisk(next) >= warning.ratio && !hasFlag(next, warning.flag)) {
+      next = withNews({ ...next, flags: addFlag(next.flags, warning.flag) }, warning.headline, 'Your Timeline', 'warn')
+    }
+  }
+  if (safetyGapDays >= constants.misalignmentThresholdDays && !next.terminal) return applyIncident(next, 'misalignment')
 
   const afterSafety = metrics(next)
   const monopolyPressure = Math.max(0, afterSafety.codexShare - .68) + Math.max(0, afterSafety.hhi - .55)
@@ -717,10 +850,12 @@ const branchStep = (state: GameState): GameState => {
 export const tickDay = (input: GameState): GameState => {
   if (input.terminal) return input
   let state = enforceInvariants(input)
-  const before = metrics(state)
-  const enteringBrownout = state.compute <= 0
-  const brownout = state.brownout ? state.compute < 12 : enteringBrownout
+  const brownout = brownoutForNextDay(state)
   state = { ...state, brownout }
+  const before = metrics(state)
+  // This exact projection is also rendered by App. Do not recompute it from
+  // post-growth regions or the displayed PF delta will diverge from the tick.
+  const economy = computeEconomy(state)
   const kEff = effectiveCapability(state)
   const raceMultiplier = state.day < dayFor('2027-01-01') ? .55 : state.day < dayFor('2030-01-01') ? 1.35 : 1
   const responseMultiplier = 1 + Math.max(0, state.capability - Math.max(...state.rivalCapability)) * .08
@@ -784,11 +919,7 @@ export const tickDay = (input: GameState): GameState => {
   const trustOffset = clamp(activeEffects.reduce((sum, effect) => sum + effect.trustDelta, 0), -12, 12)
   const trustTarget = clamp(.25 + constants.diversityWeight * (1 - hhi) + .25 * (state.safety / 10) + .25 * (state.governance / 10) - monopolyPenalty - gapPenalty) * 100 + trustOffset
   const trust = clamp(state.trust + (trustTarget - state.trust) / constants.trustTau, 0, 100)
-  const income = (mid.codexUsers * constants.revenue * state.efficiency * activityMultiplier + (brownout ? .45 : 0))
-    * strategyEffects.incomeMultiplier
-  const runningCost = (.3 * (1 + .12 * kEff ** 1.5) + mid.codexUsers * .012 * kEff)
-    * strategyEffects.opexMultiplier
-  const compute = Math.max(0, state.compute + income - runningCost)
+  const compute = Math.max(0, state.compute + economy.net)
 
   let next = enforceInvariants({
     ...state,
@@ -849,6 +980,60 @@ export const advanceRealtime = (state: GameState, elapsedSeconds: number): GameS
     resetCooldownSeconds: Math.max(0, state.resetCooldownSeconds - elapsed),
     ecosystemCooldownSeconds: Math.max(0, state.ecosystemCooldownSeconds - elapsed),
     worldEventPopupCooldownSeconds: Math.max(0, state.worldEventPopupCooldownSeconds - elapsed),
+    rewardBubbles: state.rewardBubbles
+      .map((bubble) => ({ ...bubble, remainingSeconds: bubble.remainingSeconds - elapsed }))
+      .filter((bubble) => bubble.remainingSeconds > 0),
+  })
+}
+
+const spawnRewardBubbles = (
+  state: GameState,
+  regions: readonly RegionId[],
+  count: number,
+  source: RewardBubble['source'],
+): GameState => {
+  if (regions.length === 0 || count <= 0) return state
+  let bubbleSeed = state.bubbleSeed
+  let nextBubbleId = state.nextBubbleId
+  const rewardBubbles = [...state.rewardBubbles]
+  for (let index = 0; index < count; index += 1) {
+    const regionRoll = mulberry32(bubbleSeed)
+    bubbleSeed = regionRoll.seed
+    const rewardRoll = mulberry32(bubbleSeed)
+    bubbleSeed = rewardRoll.seed
+    const lifetimeRoll = mulberry32(bubbleSeed)
+    bubbleSeed = lifetimeRoll.seed
+    const placementRoll = mulberry32(bubbleSeed)
+    bubbleSeed = placementRoll.seed
+    rewardBubbles.push({
+      id: `pf-bubble-${nextBubbleId}`,
+      region: regions[Math.min(regions.length - 1, Math.floor(regionRoll.value * regions.length))],
+      reward: constants.rewardBubble.minReward
+        + Math.floor(rewardRoll.value * (constants.rewardBubble.maxReward - constants.rewardBubble.minReward + 1)),
+      placement: placementRoll.value,
+      remainingSeconds: constants.rewardBubble.minLifetimeSeconds
+        + lifetimeRoll.value * (constants.rewardBubble.maxLifetimeSeconds - constants.rewardBubble.minLifetimeSeconds),
+      source,
+    })
+    nextBubbleId += 1
+  }
+  return enforceInvariants({ ...state, bubbleSeed, nextBubbleId, rewardBubbles })
+}
+
+/** Removes blocked-screen collectibles without changing cooldowns or simulation state. */
+export const discardRewardBubbles = (state: GameState): GameState => state.rewardBubbles.length > 0
+  ? { ...state, rewardBubbles: [] }
+  : state
+
+/** Collecting is intentionally a tiny PF action, not strategic momentum or an intervention. */
+export const collectRewardBubble = (state: GameState, bubbleId: string): GameState => {
+  if (state.terminal) return state
+  const bubble = state.rewardBubbles.find((candidate) => candidate.id === bubbleId && candidate.remainingSeconds > 0)
+  if (!bubble) return state
+  return enforceInvariants({
+    ...state,
+    compute: state.compute + bubble.reward,
+    rewardBubbles: state.rewardBubbles.filter((candidate) => candidate.id !== bubbleId),
   })
 }
 
@@ -858,17 +1043,25 @@ export const introduceRegion = (state: GameState, id: RegionId) => {
   const regions = state.regions.map((region) => region.id === id
     ? { ...region, introduced: true, users: Math.max(region.users, region.population * .005), codexShare: clamp(region.codexShare + .06) }
     : region)
-  return withNews(enforceInvariants(activateMomentum(
+  const introduced = enforceInvariants(activateMomentum(
     { ...state, regions, compute: state.compute - 45, brand: state.brand + .015 },
     constants.momentumDays.region,
-  )), `${target.name}でコミュニティ導入を開始`, 'Your Timeline')
+  ))
+  return withNews(spawnRewardBubbles(introduced, [id], 1, 'community'), `${target.name}でコミュニティ導入を開始`, 'Your Timeline')
 }
 
-export const triggerReset = (state: GameState) => state.resetCooldownSeconds > 0 ? state : withNews(syncRealtimeAliases(activateMomentum({
-  ...state,
-  resetBoostSeconds: constants.resetDurationSeconds,
-  resetCooldownSeconds: constants.resetCooldownSeconds,
-}, constants.momentumDays.reset)), 'TOKEN RESETで世界の開発力を解放', 'Your Timeline', 'good')
+export const triggerReset = (state: GameState) => {
+  if (state.resetCooldownSeconds > 0) return state
+  const activeRegions = state.regions
+    .filter((region) => region.introduced && region.users > 0)
+    .map((region) => region.id)
+  const reset = syncRealtimeAliases(activateMomentum({
+    ...state,
+    resetBoostSeconds: constants.resetDurationSeconds,
+    resetCooldownSeconds: constants.resetCooldownSeconds,
+  }, constants.momentumDays.reset))
+  return withNews(spawnRewardBubbles(reset, activeRegions, 3, 'token-reset'), 'TOKEN RESETで世界の開発力を解放', 'Your Timeline', 'good')
+}
 
 export const openEcosystem = (state: GameState) => {
   if (state.ecosystemCooldownSeconds > 0) return state
@@ -886,6 +1079,21 @@ export const openEcosystem = (state: GameState) => {
     brand: Math.max(.65, state.brand * .90),
     ecosystemCooldownSeconds: 30,
   }, constants.momentumDays.ecosystem))), 'OPEN ECOSYSTEM宣言でAI市場全体が拡大', 'Your Timeline')
+}
+
+/** One costly escape hatch for a player who spent the PF budget too early. */
+export const requestComputeLifeline = (state: GameState) => {
+  if (state.terminal || state.compute >= 45 || hasFlag(state, 'lifeline:used')) return state
+  const regions = state.regions.map((region) => region.introduced
+    ? { ...region, codexShare: region.codexShare * .90 }
+    : region)
+  return withNews(enforceInvariants(activateMomentum({
+    ...state,
+    regions,
+    compute: state.compute + constants.lifelineCompute,
+    trust: state.trust - 8,
+    flags: addFlag(state.flags, 'lifeline:used'),
+  }, constants.momentumDays.reset)), `緊急計算協定 // ${constants.lifelineCompute} PFを確保、信頼とシェアを譲歩`, 'Your Timeline', 'warn')
 }
 
 export type Upgrade = 'model' | 'safety' | 'governance' | 'datacenter'
@@ -1254,16 +1462,35 @@ export const scoreState = (state: GameState) => {
   const survivors = state.rivalShares.filter((share) => share >= .05).length
   const diversity = clamp(1 - Math.max(0, m.hhi - .45) / .4)
   const competition = diversity * (survivors >= 2 ? 1 : survivors === 1 ? .7 : .4)
-  const safety = hasFlag(state, 'misalignment') || state.ending === 'misalignment' ? 0 : state.trust / 100
+  const controlParity = Math.min(
+    1,
+    state.safety / Math.max(1, state.capability),
+    state.governance / Math.max(1, state.capability),
+  )
+  const safety = hasFlag(state, 'misalignment') || state.ending === 'misalignment'
+    ? 0
+    : Math.min(state.trust / 100, controlParity, 1 - humanExtinctionRisk(state))
   let score = .25 * (coverage + access + competition + safety)
-  if (state.interventions < 2) score = Math.min(score, .849)
-  const rank = score >= .85 ? 'S' : score >= .7 ? 'A' : score >= .5 ? 'B' : 'C'
+  if (m.worldAdoption < .10) score = Math.min(score, .694)
+  else if (m.worldAdoption < constants.accessTarget) score = Math.min(score, .844)
+  if (state.interventions < 2) score = Math.min(score, .494)
+  const rank = rankForScore(score)
   return { score, rank: rank as 'S' | 'A' | 'B' | 'C', coverage, access, competition, safety }
 }
+
+const rankForScore = (score: number): 'S' | 'A' | 'B' | 'C' => score >= .85 ? 'S' : score >= .7 ? 'A' : score >= .5 ? 'B' : 'C'
 
 export type EndingResult = ReturnType<typeof endingResult>
 const endingResult = (id: EndingId, state: GameState, planA: boolean) => {
   const scored = scoreState(state)
+  const endingCap = id === 'misalignment'
+    ? .494
+    : id === 'regulatory-freeze' || id === 'safety-incident' || id === 'pyrrhic-monopoly'
+      ? .694
+    : id === 'race-future' && humanExtinctionRisk(state) >= .5
+      ? .694
+      : 1
+  const score = Math.min(scored.score, endingCap)
   return {
     id,
     title: ({
@@ -1277,6 +1504,8 @@ const endingResult = (id: EndingId, state: GameState, planA: boolean) => {
       'pyrrhic-monopoly': '代償の大きい独占',
     } satisfies Record<EndingId, string>)[id],
     ...scored,
+    score,
+    rank: rankForScore(score),
     planA,
   }
 }
@@ -1307,6 +1536,8 @@ export type GameAction =
   | { type: 'elapsed'; seconds: number }
   | { type: 'set-speed'; speed: Speed }
   | { type: 'reset' }
+  | { type: 'collect-bubble'; bubbleId: string }
+  | { type: 'compute-lifeline' }
   | { type: 'open-ecosystem' }
   | { type: 'introduce'; region: RegionId }
   | { type: 'upgrade'; upgrade: Upgrade }
@@ -1321,6 +1552,8 @@ export const transition = (state: GameState, action: GameAction): GameState => {
   if (action.type === 'elapsed') return advanceRealtime(state, action.seconds)
   if (action.type === 'set-speed') return { ...state, speed: action.speed }
   if (action.type === 'reset') return triggerReset(state)
+  if (action.type === 'collect-bubble') return collectRewardBubble(state, action.bubbleId)
+  if (action.type === 'compute-lifeline') return requestComputeLifeline(state)
   if (action.type === 'open-ecosystem') return openEcosystem(state)
   if (action.type === 'introduce') return introduceRegion(state, action.region)
   if (action.type === 'upgrade') return buyUpgrade(state, action.upgrade)

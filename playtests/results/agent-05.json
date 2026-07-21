@@ -1,0 +1,2993 @@
+[
+  {
+    "policyId": "agent-05-governance-institution-builder",
+    "policyDescription": "Trust/governance institution builder: safety and public accountability first, plural open ecosystem, restrained model scaling, verified slowdown in 2029 and hold-the-line in 2035.",
+    "run": 1,
+    "seed": 15001,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "managed-transition",
+    "score": 0.844,
+    "rank": "A",
+    "worldAdoption": 0.16549341725945618,
+    "codexShare": 0.38618971036664795,
+    "hhi": 0.40431406110060997,
+    "trust": 99.62959031460049,
+    "compute": 250.72865287784748,
+    "capability": 3,
+    "safety": 7.5,
+    "governance": 9,
+    "extinctionRisk": 0,
+    "interventions": 57,
+    "brownoutDays": 26,
+    "zeroComputeDays": 12,
+    "actionCount": 59,
+    "acceptedActionCount": 59,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.035554312850903845,
+      0.4973555948737976,
+      0.08090038190865058
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 940.0248611191588,
+        "computeAfter": 745.0248611191588
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 745.0563172669856,
+        "computeAfter": 550.0563172669856
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 550.0943671076843,
+        "computeAfter": 505.0943671076843
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 505.1572608166558,
+        "computeAfter": 460.1572608166558
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 460.23498713626054,
+        "computeAfter": 415.23498713626054
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 415.32444572706333,
+        "computeAfter": 325.32444572706333
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 325.4284402924465,
+        "computeAfter": 235.4284402924465
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 235.58667200467056,
+        "computeAfter": 115.58667200467056
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 115.73865556160743,
+        "computeAfter": 25.73865556160743
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 25.91335024433848,
+        "computeAfter": 245.9133502443385
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 246.04355175402236,
+        "computeAfter": 116.04355175402236
+      },
+      {
+        "day": 12,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 116.18679569068739,
+        "computeAfter": 116.18679569068739
+      },
+      {
+        "day": 107,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-developer-grants"
+        },
+        "accepted": true,
+        "computeBefore": 200.40608906963342,
+        "computeAfter": 50.406089069633424
+      },
+      {
+        "day": 240,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 182.26296740229665,
+        "computeAfter": 182.26296740229665
+      },
+      {
+        "day": 292,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 220.33522251212744,
+        "computeAfter": 50.335222512127444
+      },
+      {
+        "day": 372,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 129.02459912952915,
+        "computeAfter": 129.02459912952915
+      },
+      {
+        "day": 442,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 240.74608708301577,
+        "computeAfter": 50.746087083015766
+      },
+      {
+        "day": 480,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 119.44608571020666,
+        "computeAfter": 119.44608571020666
+      },
+      {
+        "day": 579,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 240.52376310260414,
+        "computeAfter": 50.523763102604136
+      },
+      {
+        "day": 732,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 224.40796526830468,
+        "computeAfter": 224.40796526830468
+      },
+      {
+        "day": 746,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 244.66081123682238,
+        "computeAfter": 244.66081123682238
+      },
+      {
+        "day": 759,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 260.81125616797596,
+        "computeAfter": 50.811256167975955
+      },
+      {
+        "day": 875,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 270.45577662868607,
+        "computeAfter": 50.45577662868607
+      },
+      {
+        "day": 1092,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 120.20593692948133,
+        "computeAfter": 120.20593692948133
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 124.26377267482316,
+        "computeAfter": 124.26377267482316
+      },
+      {
+        "day": 1126,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 171.60080703408303,
+        "computeAfter": 171.60080703408303
+      },
+      {
+        "day": 1178,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-crisis-mesh"
+        },
+        "accepted": true,
+        "computeBefore": 270.78194504524805,
+        "computeAfter": 50.78194504524805
+      },
+      {
+        "day": 1299,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 281.26828319700263,
+        "computeAfter": 51.26828319700263
+      },
+      {
+        "day": 1434,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-compute-fund"
+        },
+        "accepted": true,
+        "computeBefore": 311.09472058231097,
+        "computeAfter": 51.09472058231097
+      },
+      {
+        "day": 1452,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 81.77255566888327,
+        "computeAfter": 81.77255566888327
+      },
+      {
+        "day": 1474,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 126.87607161688044,
+        "computeAfter": 126.87607161688044
+      },
+      {
+        "day": 1567,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 341.40828853129483,
+        "computeAfter": 51.40828853129483
+      },
+      {
+        "day": 1812,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 173.66356357494774,
+        "computeAfter": 173.66356357494774
+      },
+      {
+        "day": 1862,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 281.3188191199967,
+        "computeAfter": 281.3188191199967
+      },
+      {
+        "day": 1891,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 351.8052679159395,
+        "computeAfter": 51.80526791593951
+      },
+      {
+        "day": 2029,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 370.36825484588695,
+        "computeAfter": 50.36825484588695
+      },
+      {
+        "day": 2172,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 340.78512648411754,
+        "computeAfter": 340.78512648411754
+      },
+      {
+        "day": 2189,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 381.99445309295055,
+        "computeAfter": 51.99445309295055
+      },
+      {
+        "day": 2205,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 97.04442960373181,
+        "computeAfter": 97.04442960373181
+      },
+      {
+        "day": 2312,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-charter"
+        },
+        "accepted": true,
+        "computeBefore": 390.6670515288091,
+        "computeAfter": 50.66705152880911
+      },
+      {
+        "day": 2510,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 500.0975930252155,
+        "computeAfter": 430.0975930252155
+      },
+      {
+        "day": 2532,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 438.3596506562664,
+        "computeAfter": 438.3596506562664
+      },
+      {
+        "day": 2563,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 457.49297758686794,
+        "computeAfter": 457.49297758686794
+      },
+      {
+        "day": 2892,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 194.99417055991708,
+        "computeAfter": 194.99417055991708
+      },
+      {
+        "day": 2943,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 229.70906783883362,
+        "computeAfter": 229.70906783883362
+      },
+      {
+        "day": 3252,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 128.70003397286234,
+        "computeAfter": 128.70003397286234
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 157.86783076599912,
+        "computeAfter": 157.86783076599912
+      },
+      {
+        "day": 3300,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 174.55557706766652,
+        "computeAfter": 174.55557706766652
+      },
+      {
+        "day": 3612,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3.7689651731707086,
+        "computeAfter": 3.7689651731707086
+      },
+      {
+        "day": 3666,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 69.82730766154826,
+        "computeAfter": 69.82730766154826
+      },
+      {
+        "day": 3972,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 0,
+        "computeAfter": 0
+      },
+      {
+        "day": 4027,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 95.55583165401822,
+        "computeAfter": 95.55583165401822
+      },
+      {
+        "day": 4332,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 13.951645739017993,
+        "computeAfter": 13.951645739017993
+      },
+      {
+        "day": 4389,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 126.41530880455511,
+        "computeAfter": 126.41530880455511
+      },
+      {
+        "day": 4692,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 7.5940504712240156,
+        "computeAfter": 7.5940504712240156
+      },
+      {
+        "day": 4751,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 153.8649475807396,
+        "computeAfter": 153.8649475807396
+      },
+      {
+        "day": 5052,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 63.59972360575619,
+        "computeAfter": 63.59972360575619
+      },
+      {
+        "day": 5109,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 239.0687970540875,
+        "computeAfter": 239.0687970540875
+      }
+    ]
+  },
+  {
+    "policyId": "agent-05-governance-institution-builder",
+    "policyDescription": "Trust/governance institution builder: safety and public accountability first, plural open ecosystem, restrained model scaling, verified slowdown in 2029 and hold-the-line in 2035.",
+    "run": 2,
+    "seed": 119730,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "managed-transition",
+    "score": 0.844,
+    "rank": "A",
+    "worldAdoption": 0.16705855933622107,
+    "codexShare": 0.37031725006357297,
+    "hhi": 0.41357599810758067,
+    "trust": 99.77856000473105,
+    "compute": 203.73136689676423,
+    "capability": 3,
+    "safety": 7.5,
+    "governance": 9,
+    "extinctionRisk": 0,
+    "interventions": 57,
+    "brownoutDays": 61,
+    "zeroComputeDays": 22,
+    "actionCount": 59,
+    "acceptedActionCount": 59,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.03451853089245539,
+      0.5190989030420823,
+      0.07606531600188934
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 940.0248611191588,
+        "computeAfter": 745.0248611191588
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 745.0563172669856,
+        "computeAfter": 550.0563172669856
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 550.0943671076843,
+        "computeAfter": 505.0943671076843
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 505.1572608166558,
+        "computeAfter": 460.1572608166558
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 460.23498713626054,
+        "computeAfter": 415.23498713626054
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 415.32444572706333,
+        "computeAfter": 325.32444572706333
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 325.4284402924465,
+        "computeAfter": 235.4284402924465
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 235.58667200467056,
+        "computeAfter": 115.58667200467056
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 115.73865556160743,
+        "computeAfter": 25.73865556160743
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 25.91335024433848,
+        "computeAfter": 245.9133502443385
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 246.04355175402236,
+        "computeAfter": 116.04355175402236
+      },
+      {
+        "day": 12,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 116.18679569068739,
+        "computeAfter": 116.18679569068739
+      },
+      {
+        "day": 107,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-developer-grants"
+        },
+        "accepted": true,
+        "computeBefore": 200.40608906963342,
+        "computeAfter": 50.406089069633424
+      },
+      {
+        "day": 240,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 178.75328459085728,
+        "computeAfter": 178.75328459085728
+      },
+      {
+        "day": 297,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 220.46603364630187,
+        "computeAfter": 50.46603364630187
+      },
+      {
+        "day": 372,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 133.02820409361505,
+        "computeAfter": 133.02820409361505
+      },
+      {
+        "day": 435,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 240.5516716752274,
+        "computeAfter": 50.5516716752274
+      },
+      {
+        "day": 480,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 135.14842672172117,
+        "computeAfter": 135.14842672172117
+      },
+      {
+        "day": 563,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 240.8139410496927,
+        "computeAfter": 50.81394104969269
+      },
+      {
+        "day": 706,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 261.11435668900316,
+        "computeAfter": 51.11435668900316
+      },
+      {
+        "day": 732,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 91.4709853109801,
+        "computeAfter": 91.4709853109801
+      },
+      {
+        "day": 739,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 103.17747114726635,
+        "computeAfter": 103.17747114726635
+      },
+      {
+        "day": 821,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 270.5310130978041,
+        "computeAfter": 50.53101309780408
+      },
+      {
+        "day": 942,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-crisis-mesh"
+        },
+        "accepted": true,
+        "computeBefore": 271.046973802942,
+        "computeAfter": 51.04697380294198
+      },
+      {
+        "day": 1068,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 280.6414459161202,
+        "computeAfter": 50.641445916120176
+      },
+      {
+        "day": 1092,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 102.53760938983314,
+        "computeAfter": 102.53760938983314
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 111.501631732845,
+        "computeAfter": 111.501631732845
+      },
+      {
+        "day": 1103,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 128.441036339598,
+        "computeAfter": 128.441036339598
+      },
+      {
+        "day": 1171,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-compute-fund"
+        },
+        "accepted": true,
+        "computeBefore": 311.6345505340952,
+        "computeAfter": 51.63455053409518
+      },
+      {
+        "day": 1304,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 340.5948706205724,
+        "computeAfter": 50.59487062057241
+      },
+      {
+        "day": 1452,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 234.6191299786552,
+        "computeAfter": 234.6191299786552
+      },
+      {
+        "day": 1483,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 303.1268196425793,
+        "computeAfter": 303.1268196425793
+      },
+      {
+        "day": 1505,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 352.39749757089936,
+        "computeAfter": 52.39749757089936
+      },
+      {
+        "day": 1639,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 370.64602100036774,
+        "computeAfter": 50.64602100036774
+      },
+      {
+        "day": 1812,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 372.72124609853125,
+        "computeAfter": 372.72124609853125
+      },
+      {
+        "day": 1816,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 380.57642638249496,
+        "computeAfter": 50.57642638249496
+      },
+      {
+        "day": 1841,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 106.91629908083881,
+        "computeAfter": 106.91629908083881
+      },
+      {
+        "day": 1962,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-charter"
+        },
+        "accepted": true,
+        "computeBefore": 391.125354590294,
+        "computeAfter": 51.12535459029402
+      },
+      {
+        "day": 2172,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 456.73127215371363,
+        "computeAfter": 456.73127215371363
+      },
+      {
+        "day": 2191,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 503.35390995799486,
+        "computeAfter": 433.35390995799486
+      },
+      {
+        "day": 2200,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 438.741281867506,
+        "computeAfter": 438.741281867506
+      },
+      {
+        "day": 2532,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 167.50267181209625,
+        "computeAfter": 167.50267181209625
+      },
+      {
+        "day": 2579,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 193.17830170809356,
+        "computeAfter": 193.17830170809356
+      },
+      {
+        "day": 2892,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 11.023492327148961,
+        "computeAfter": 11.023492327148961
+      },
+      {
+        "day": 2940,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 47.92145661250747,
+        "computeAfter": 47.92145661250747
+      },
+      {
+        "day": 3252,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 14.632535887891184,
+        "computeAfter": 14.632535887891184
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 47.02283261937436,
+        "computeAfter": 47.02283261937436
+      },
+      {
+        "day": 3301,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 66.49874128044061,
+        "computeAfter": 66.49874128044061
+      },
+      {
+        "day": 3612,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 5.467847152543876,
+        "computeAfter": 5.467847152543876
+      },
+      {
+        "day": 3666,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 81.75410015209508,
+        "computeAfter": 81.75410015209508
+      },
+      {
+        "day": 3972,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 0,
+        "computeAfter": 0
+      },
+      {
+        "day": 4027,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 96.43733438424307,
+        "computeAfter": 96.43733438424307
+      },
+      {
+        "day": 4332,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 18.488020900831042,
+        "computeAfter": 18.488020900831042
+      },
+      {
+        "day": 4388,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 128.42607255107137,
+        "computeAfter": 128.42607255107137
+      },
+      {
+        "day": 4692,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 15.436093234985172,
+        "computeAfter": 15.436093234985172
+      },
+      {
+        "day": 4751,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 153.11775436996697,
+        "computeAfter": 153.11775436996697
+      },
+      {
+        "day": 5052,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 18.272795171115458,
+        "computeAfter": 18.272795171115458
+      },
+      {
+        "day": 5112,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 200.850421223391,
+        "computeAfter": 200.850421223391
+      }
+    ]
+  },
+  {
+    "policyId": "agent-05-governance-institution-builder",
+    "policyDescription": "Trust/governance institution builder: safety and public accountability first, plural open ecosystem, restrained model scaling, verified slowdown in 2029 and hold-the-line in 2035.",
+    "run": 3,
+    "seed": 224459,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "managed-transition",
+    "score": 0.844,
+    "rank": "A",
+    "worldAdoption": 0.187198283940294,
+    "codexShare": 0.3707175766314945,
+    "hhi": 0.4052964440220208,
+    "trust": 99.89925888994495,
+    "compute": 242.75968220912762,
+    "capability": 3,
+    "safety": 7.5,
+    "governance": 9,
+    "extinctionRisk": 0,
+    "interventions": 57,
+    "brownoutDays": 34,
+    "zeroComputeDays": 17,
+    "actionCount": 59,
+    "acceptedActionCount": 59,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.04296842866710061,
+      0.5101092805203128,
+      0.07620471418109215
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 940.0248611191588,
+        "computeAfter": 745.0248611191588
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 745.0563172669856,
+        "computeAfter": 550.0563172669856
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 550.0943671076843,
+        "computeAfter": 505.0943671076843
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 505.1572608166558,
+        "computeAfter": 460.1572608166558
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 460.23498713626054,
+        "computeAfter": 415.23498713626054
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 415.32444572706333,
+        "computeAfter": 325.32444572706333
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 325.4284402924465,
+        "computeAfter": 235.4284402924465
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 235.58667200467056,
+        "computeAfter": 115.58667200467056
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 115.73865556160743,
+        "computeAfter": 25.73865556160743
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 25.91335024433848,
+        "computeAfter": 245.9133502443385
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 246.04355175402236,
+        "computeAfter": 116.04355175402236
+      },
+      {
+        "day": 12,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 116.18679569068739,
+        "computeAfter": 116.18679569068739
+      },
+      {
+        "day": 107,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-developer-grants"
+        },
+        "accepted": true,
+        "computeBefore": 200.40608906963342,
+        "computeAfter": 50.406089069633424
+      },
+      {
+        "day": 240,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 186.41787124801286,
+        "computeAfter": 186.41787124801286
+      },
+      {
+        "day": 284,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 220.21213591150388,
+        "computeAfter": 50.21213591150388
+      },
+      {
+        "day": 372,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 140.24484935841565,
+        "computeAfter": 140.24484935841565
+      },
+      {
+        "day": 435,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 240.45866290714477,
+        "computeAfter": 50.45866290714477
+      },
+      {
+        "day": 480,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 129.9469037237042,
+        "computeAfter": 129.9469037237042
+      },
+      {
+        "day": 571,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 240.86199571606957,
+        "computeAfter": 50.86199571606957
+      },
+      {
+        "day": 720,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 260.2776875225631,
+        "computeAfter": 50.2776875225631
+      },
+      {
+        "day": 732,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 67.82430741331213,
+        "computeAfter": 67.82430741331213
+      },
+      {
+        "day": 739,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 78.78724141172536,
+        "computeAfter": 78.78724141172536
+      },
+      {
+        "day": 836,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 270.5967036091952,
+        "computeAfter": 50.596703609195174
+      },
+      {
+        "day": 960,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-crisis-mesh"
+        },
+        "accepted": true,
+        "computeBefore": 270.8726202311075,
+        "computeAfter": 50.872620231107476
+      },
+      {
+        "day": 1078,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 280.5895890656965,
+        "computeAfter": 50.58958906569649
+      },
+      {
+        "day": 1092,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 78.92923287914827,
+        "computeAfter": 78.92923287914827
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 87.38929374253007,
+        "computeAfter": 87.38929374253007
+      },
+      {
+        "day": 1105,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 108.30160950221442,
+        "computeAfter": 108.30160950221442
+      },
+      {
+        "day": 1182,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-compute-fund"
+        },
+        "accepted": true,
+        "computeBefore": 310.9509395740059,
+        "computeAfter": 50.95093957400587
+      },
+      {
+        "day": 1305,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 341.8767967453778,
+        "computeAfter": 51.87679674537782
+      },
+      {
+        "day": 1452,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 262.85920404554827,
+        "computeAfter": 262.85920404554827
+      },
+      {
+        "day": 1483,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 339.5221927280673,
+        "computeAfter": 339.5221927280673
+      },
+      {
+        "day": 1488,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 350.2836981051974,
+        "computeAfter": 50.2836981051974
+      },
+      {
+        "day": 1603,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 371.9545405100905,
+        "computeAfter": 51.95454051009051
+      },
+      {
+        "day": 1753,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 381.7681976501417,
+        "computeAfter": 51.7681976501417
+      },
+      {
+        "day": 1812,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 174.63745238126052,
+        "computeAfter": 174.63745238126052
+      },
+      {
+        "day": 1838,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 242.6992554744012,
+        "computeAfter": 242.6992554744012
+      },
+      {
+        "day": 1889,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-charter"
+        },
+        "accepted": true,
+        "computeBefore": 391.8658144330129,
+        "computeAfter": 51.86581443301287
+      },
+      {
+        "day": 2172,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 490.9601217789998,
+        "computeAfter": 490.9601217789998
+      },
+      {
+        "day": 2191,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 530.9103194088052,
+        "computeAfter": 460.9103194088052
+      },
+      {
+        "day": 2212,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 473.555609233616,
+        "computeAfter": 473.555609233616
+      },
+      {
+        "day": 2532,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 232.46737676511069,
+        "computeAfter": 232.46737676511069
+      },
+      {
+        "day": 2578,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 262.49157075830556,
+        "computeAfter": 262.49157075830556
+      },
+      {
+        "day": 2892,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 37.59204627872719,
+        "computeAfter": 37.59204627872719
+      },
+      {
+        "day": 2942,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 81.10949441752261,
+        "computeAfter": 81.10949441752261
+      },
+      {
+        "day": 3252,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 15.591692927796489,
+        "computeAfter": 15.591692927796489
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 52.265070520476016,
+        "computeAfter": 52.265070520476016
+      },
+      {
+        "day": 3302,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 76.55071600022941,
+        "computeAfter": 76.55071600022941
+      },
+      {
+        "day": 3612,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 6.285128002759432,
+        "computeAfter": 6.285128002759432
+      },
+      {
+        "day": 3661,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 89.23036675540922,
+        "computeAfter": 89.23036675540922
+      },
+      {
+        "day": 3972,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 6.675271012790889,
+        "computeAfter": 6.675271012790889
+      },
+      {
+        "day": 4027,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 113.30839509324319,
+        "computeAfter": 113.30839509324319
+      },
+      {
+        "day": 4332,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 15.537426616254578,
+        "computeAfter": 15.537426616254578
+      },
+      {
+        "day": 4389,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 146.22813880945358,
+        "computeAfter": 146.22813880945358
+      },
+      {
+        "day": 4692,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 0,
+        "computeAfter": 0
+      },
+      {
+        "day": 4752,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 190.60998136539416,
+        "computeAfter": 190.60998136539416
+      },
+      {
+        "day": 5052,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 31.998170081745293,
+        "computeAfter": 31.998170081745293
+      },
+      {
+        "day": 5112,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 239.46192519934118,
+        "computeAfter": 239.46192519934118
+      }
+    ]
+  },
+  {
+    "policyId": "agent-05-governance-institution-builder",
+    "policyDescription": "Trust/governance institution builder: safety and public accountability first, plural open ecosystem, restrained model scaling, verified slowdown in 2029 and hold-the-line in 2035.",
+    "run": 4,
+    "seed": 329188,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "managed-transition",
+    "score": 0.844,
+    "rank": "A",
+    "worldAdoption": 0.19788243753430465,
+    "codexShare": 0.386622577550062,
+    "hhi": 0.40675287737237364,
+    "trust": 99.23552739921013,
+    "compute": 438.41439212888463,
+    "capability": 3,
+    "safety": 7.5,
+    "governance": 9,
+    "extinctionRisk": 0,
+    "interventions": 57,
+    "brownoutDays": 35,
+    "zeroComputeDays": 15,
+    "actionCount": 59,
+    "acceptedActionCount": 59,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.03427219919116234,
+      0.49981417071797046,
+      0.0792910525408052
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 940.0248611191588,
+        "computeAfter": 745.0248611191588
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 745.0563172669856,
+        "computeAfter": 550.0563172669856
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 550.0943671076843,
+        "computeAfter": 505.0943671076843
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 505.1572608166558,
+        "computeAfter": 460.1572608166558
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 460.23498713626054,
+        "computeAfter": 415.23498713626054
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 415.32444572706333,
+        "computeAfter": 325.32444572706333
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 325.4284402924465,
+        "computeAfter": 235.4284402924465
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 235.58667200467056,
+        "computeAfter": 115.58667200467056
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 115.73865556160743,
+        "computeAfter": 25.73865556160743
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 25.91335024433848,
+        "computeAfter": 245.9133502443385
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 246.04355175402236,
+        "computeAfter": 116.04355175402236
+      },
+      {
+        "day": 12,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 116.18679569068739,
+        "computeAfter": 116.18679569068739
+      },
+      {
+        "day": 107,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-developer-grants"
+        },
+        "accepted": true,
+        "computeBefore": 200.1336112625212,
+        "computeAfter": 50.133611262521214
+      },
+      {
+        "day": 240,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 182.21976703902573,
+        "computeAfter": 182.21976703902573
+      },
+      {
+        "day": 291,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 220.25735418625874,
+        "computeAfter": 50.25735418625874
+      },
+      {
+        "day": 372,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 132.54364990489904,
+        "computeAfter": 132.54364990489904
+      },
+      {
+        "day": 441,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 241.54991684337313,
+        "computeAfter": 51.549916843373126
+      },
+      {
+        "day": 480,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 117.00956747138756,
+        "computeAfter": 117.00956747138756
+      },
+      {
+        "day": 585,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 240.3771640639132,
+        "computeAfter": 50.3771640639132
+      },
+      {
+        "day": 732,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 218.91697952700804,
+        "computeAfter": 218.91697952700804
+      },
+      {
+        "day": 746,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 239.62050031632822,
+        "computeAfter": 239.62050031632822
+      },
+      {
+        "day": 762,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 260.6511600670794,
+        "computeAfter": 50.65116006707939
+      },
+      {
+        "day": 875,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 271.5947394381434,
+        "computeAfter": 51.59473943814339
+      },
+      {
+        "day": 1006,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-crisis-mesh"
+        },
+        "accepted": true,
+        "computeBefore": 271.64048950342124,
+        "computeAfter": 51.640489503421236
+      },
+      {
+        "day": 1092,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 206.19234800552624,
+        "computeAfter": 206.19234800552624
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 213.8019439711995,
+        "computeAfter": 213.8019439711995
+      },
+      {
+        "day": 1106,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 234.91165850497643,
+        "computeAfter": 234.91165850497643
+      },
+      {
+        "day": 1130,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 280.98719618283474,
+        "computeAfter": 50.98719618283474
+      },
+      {
+        "day": 1225,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-compute-fund"
+        },
+        "accepted": true,
+        "computeBefore": 311.19153716313247,
+        "computeAfter": 51.191537163132466
+      },
+      {
+        "day": 1370,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 341.73482494804483,
+        "computeAfter": 51.73482494804483
+      },
+      {
+        "day": 1452,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 213.10228287104817,
+        "computeAfter": 213.10228287104817
+      },
+      {
+        "day": 1473,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 262.3952977831892,
+        "computeAfter": 262.3952977831892
+      },
+      {
+        "day": 1510,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 352.6750809152019,
+        "computeAfter": 52.675080915201875
+      },
+      {
+        "day": 1635,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 371.5160130893788,
+        "computeAfter": 51.516013089378816
+      },
+      {
+        "day": 1802,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 380.58815076228285,
+        "computeAfter": 50.58815076228285
+      },
+      {
+        "day": 1812,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 69.1163915636498,
+        "computeAfter": 69.1163915636498
+      },
+      {
+        "day": 1840,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 135.0129022795545,
+        "computeAfter": 135.0129022795545
+      },
+      {
+        "day": 1939,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-charter"
+        },
+        "accepted": true,
+        "computeBefore": 390.0404961077622,
+        "computeAfter": 50.04049610776218
+      },
+      {
+        "day": 2172,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 511.69170608185414,
+        "computeAfter": 511.69170608185414
+      },
+      {
+        "day": 2191,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 557.6932268517901,
+        "computeAfter": 487.6932268517901
+      },
+      {
+        "day": 2201,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 493.62305489033423,
+        "computeAfter": 493.62305489033423
+      },
+      {
+        "day": 2532,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 216.45459146992152,
+        "computeAfter": 216.45459146992152
+      },
+      {
+        "day": 2579,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 243.32768339291303,
+        "computeAfter": 243.32768339291303
+      },
+      {
+        "day": 2892,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 18.8083730066855,
+        "computeAfter": 18.8083730066855
+      },
+      {
+        "day": 2941,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 58.21175061554587,
+        "computeAfter": 58.21175061554587
+      },
+      {
+        "day": 3252,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 9.575450476708848,
+        "computeAfter": 9.575450476708848
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 43.60950139374577,
+        "computeAfter": 43.60950139374577
+      },
+      {
+        "day": 3301,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 64.47696534043027,
+        "computeAfter": 64.47696534043027
+      },
+      {
+        "day": 3612,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 24.13052356720668,
+        "computeAfter": 24.13052356720668
+      },
+      {
+        "day": 3661,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 92.25974234660742,
+        "computeAfter": 92.25974234660742
+      },
+      {
+        "day": 3972,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 5.654402277307901,
+        "computeAfter": 5.654402277307901
+      },
+      {
+        "day": 4028,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 102.55618887533319,
+        "computeAfter": 102.55618887533319
+      },
+      {
+        "day": 4332,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 0,
+        "computeAfter": 0
+      },
+      {
+        "day": 4390,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 148.49250778675577,
+        "computeAfter": 148.49250778675577
+      },
+      {
+        "day": 4692,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 8.51850465886407,
+        "computeAfter": 8.51850465886407
+      },
+      {
+        "day": 4752,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 179.29130910669872,
+        "computeAfter": 179.29130910669872
+      },
+      {
+        "day": 5052,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 206.21751552787475,
+        "computeAfter": 206.21751552787475
+      },
+      {
+        "day": 5109,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 424.02702914777944,
+        "computeAfter": 424.02702914777944
+      }
+    ]
+  },
+  {
+    "policyId": "agent-05-governance-institution-builder",
+    "policyDescription": "Trust/governance institution builder: safety and public accountability first, plural open ecosystem, restrained model scaling, verified slowdown in 2029 and hold-the-line in 2035.",
+    "run": 5,
+    "seed": 433917,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "managed-transition",
+    "score": 0.844,
+    "rank": "A",
+    "worldAdoption": 0.19015716457255236,
+    "codexShare": 0.5164530136385271,
+    "hhi": 0.43275205305988196,
+    "trust": 97.28674820717971,
+    "compute": 271.6123241423447,
+    "capability": 3,
+    "safety": 7.5,
+    "governance": 9,
+    "extinctionRisk": 0,
+    "interventions": 56,
+    "brownoutDays": 23,
+    "zeroComputeDays": 9,
+    "actionCount": 58,
+    "acceptedActionCount": 58,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.03218590487824805,
+      0.4033445387151473,
+      0.048016542768077514
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 940.0248611191588,
+        "computeAfter": 745.0248611191588
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 745.0563172669856,
+        "computeAfter": 550.0563172669856
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 550.0943671076843,
+        "computeAfter": 505.0943671076843
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 505.1572608166558,
+        "computeAfter": 460.1572608166558
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 460.23498713626054,
+        "computeAfter": 415.23498713626054
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 415.32444572706333,
+        "computeAfter": 325.32444572706333
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 325.4284402924465,
+        "computeAfter": 235.4284402924465
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 235.58667200467056,
+        "computeAfter": 115.58667200467056
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 115.73865556160743,
+        "computeAfter": 25.73865556160743
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 25.91335024433848,
+        "computeAfter": 245.9133502443385
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 246.04355175402236,
+        "computeAfter": 116.04355175402236
+      },
+      {
+        "day": 12,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 116.18679569068739,
+        "computeAfter": 116.18679569068739
+      },
+      {
+        "day": 107,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-developer-grants"
+        },
+        "accepted": true,
+        "computeBefore": 200.40608906963342,
+        "computeAfter": 50.406089069633424
+      },
+      {
+        "day": 240,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 180.99122353823896,
+        "computeAfter": 180.99122353823896
+      },
+      {
+        "day": 295,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 220.50634744953334,
+        "computeAfter": 50.50634744953334
+      },
+      {
+        "day": 372,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 124.3066081043504,
+        "computeAfter": 124.3066081043504
+      },
+      {
+        "day": 448,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 240.11880367132466,
+        "computeAfter": 50.118803671324656
+      },
+      {
+        "day": 480,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 101.54334185334467,
+        "computeAfter": 101.54334185334467
+      },
+      {
+        "day": 601,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 241.0807860873286,
+        "computeAfter": 51.08078608732859
+      },
+      {
+        "day": 732,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 197.17549999692798,
+        "computeAfter": 197.17549999692798
+      },
+      {
+        "day": 745,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 216.1413451949126,
+        "computeAfter": 216.1413451949126
+      },
+      {
+        "day": 775,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 260.20276448759535,
+        "computeAfter": 50.202764487595346
+      },
+      {
+        "day": 886,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 270.43631892825476,
+        "computeAfter": 50.436318928254764
+      },
+      {
+        "day": 1009,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-crisis-mesh"
+        },
+        "accepted": true,
+        "computeBefore": 270.2440862957447,
+        "computeAfter": 50.244086295744694
+      },
+      {
+        "day": 1092,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 207.512080893179,
+        "computeAfter": 207.512080893179
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 215.80612994810772,
+        "computeAfter": 215.80612994810772
+      },
+      {
+        "day": 1106,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 238.768152013981,
+        "computeAfter": 238.768152013981
+      },
+      {
+        "day": 1127,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 281.5172184800759,
+        "computeAfter": 51.51721848007588
+      },
+      {
+        "day": 1221,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-compute-fund"
+        },
+        "accepted": true,
+        "computeBefore": 310.22782290220533,
+        "computeAfter": 50.22782290220533
+      },
+      {
+        "day": 1370,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 340.5032718341922,
+        "computeAfter": 50.50327183419222
+      },
+      {
+        "day": 1452,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 217.35973357006912,
+        "computeAfter": 217.35973357006912
+      },
+      {
+        "day": 1473,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 268.75374767360256,
+        "computeAfter": 268.75374767360256
+      },
+      {
+        "day": 1506,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 350.4472009802822,
+        "computeAfter": 50.44720098028222
+      },
+      {
+        "day": 1626,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 370.53990692877403,
+        "computeAfter": 50.53990692877403
+      },
+      {
+        "day": 1788,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 381.2598881748792,
+        "computeAfter": 51.25988817487922
+      },
+      {
+        "day": 1812,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 97.35195179959612,
+        "computeAfter": 97.35195179959612
+      },
+      {
+        "day": 1839,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 162.96703944945665,
+        "computeAfter": 162.96703944945665
+      },
+      {
+        "day": 1923,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-charter"
+        },
+        "accepted": true,
+        "computeBefore": 392.6123954667884,
+        "computeAfter": 52.61239546678843
+      },
+      {
+        "day": 2172,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 530.1914938892664,
+        "computeAfter": 530.1914938892664
+      },
+      {
+        "day": 2191,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 577.1048335278725,
+        "computeAfter": 507.10483352787253
+      },
+      {
+        "day": 2204,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 515.4007866543762,
+        "computeAfter": 515.4007866543762
+      },
+      {
+        "day": 2532,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 253.73633484824725,
+        "computeAfter": 253.73633484824725
+      },
+      {
+        "day": 2580,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 281.9246778237752,
+        "computeAfter": 281.9246778237752
+      },
+      {
+        "day": 2892,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 170.73835169364145,
+        "computeAfter": 170.73835169364145
+      },
+      {
+        "day": 2936,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 212.87984153565577,
+        "computeAfter": 212.87984153565577
+      },
+      {
+        "day": 3252,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 9.351294362139539,
+        "computeAfter": 9.351294362139539
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 46.33881062434405,
+        "computeAfter": 46.33881062434405
+      },
+      {
+        "day": 3304,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 71.95722644795259,
+        "computeAfter": 71.95722644795259
+      },
+      {
+        "day": 3612,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 17.74631973715398,
+        "computeAfter": 17.74631973715398
+      },
+      {
+        "day": 3664,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 94.63005793942025,
+        "computeAfter": 94.63005793942025
+      },
+      {
+        "day": 3972,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 20.146577268481217,
+        "computeAfter": 20.146577268481217
+      },
+      {
+        "day": 4027,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 118.72961809947603,
+        "computeAfter": 118.72961809947603
+      },
+      {
+        "day": 4332,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 15.19987536671869,
+        "computeAfter": 15.19987536671869
+      },
+      {
+        "day": 4390,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 145.84509435005828,
+        "computeAfter": 145.84509435005828
+      },
+      {
+        "day": 4692,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 17.27776743202757,
+        "computeAfter": 17.27776743202757
+      },
+      {
+        "day": 4751,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 176.19740728785422,
+        "computeAfter": 176.19740728785422
+      },
+      {
+        "day": 5052,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 59.42412841815175,
+        "computeAfter": 59.42412841815175
+      }
+    ]
+  }
+]

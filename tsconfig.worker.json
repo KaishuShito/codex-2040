@@ -12,6 +12,7 @@
   },
   "include": [
     "build/**/*.ts",
+    "shared/**/*.ts",
     "server/d1.ts",
     "server/runsApi.ts",
     "worker/**/*.ts",

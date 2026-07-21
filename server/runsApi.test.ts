@@ -12,9 +12,9 @@ import {
   type WriteResult,
 } from './d1'
 import { handleRunsApi } from './runsApi'
+import { RULESET_VERSION } from '../shared/ruleset'
 
 const PLAY_ID = '11111111-1111-4111-8111-111111111111'
-const RULESET_VERSION = 'codex-2040-rules-v1'
 const STARTED_AT = '2026-07-21T00:00:00.000Z'
 
 const emptyAggregate = (): RunAggregate => ({
@@ -98,12 +98,15 @@ class MemoryRepository implements RunsRepository {
     }
   }
 
-  async stats(language: RunLanguage | null): Promise<RunStats> {
-    const runs = [...this.runs.values()].filter((run) => language === null || run.language === language)
+  async stats(language: RunLanguage | null, rulesetVersion: string): Promise<RunStats> {
+    const runs = [...this.runs.values()].filter((run) =>
+      run.ruleset_version === rulesetVersion
+      && (language === null || run.language === language))
     const completed = runs.filter((run) => run.completed_at !== null)
     const suppressed = completed.length < MINIMUM_COHORT_SIZE
     return {
       minimum_cohort_size: MINIMUM_COHORT_SIZE,
+      ruleset_version: rulesetVersion,
       language,
       total_started: suppressed ? null : runs.length,
       total_completed: suppressed ? null : completed.length,
@@ -245,7 +248,35 @@ describe('runs API', () => {
     const stats = await call(repository, '/api/runs/stats?language=ja')
     expect(await stats?.json()).toMatchObject({
       ok: true,
-      stats: { language: 'ja', total_completed: 5, average_score: 72 },
+      stats: { ruleset_version: RULESET_VERSION, language: 'ja', total_completed: 5, average_score: 72 },
+    })
+  })
+
+  it('keeps stats cohorts separate across scoring rulesets', async () => {
+    const repository = new MemoryRepository()
+    const createCohort = async (rulesetVersion: string, score: number, prefix: string) => {
+      for (let index = 0; index < 5; index += 1) {
+        const playId = `${prefix}${String(index + 1).padStart(12, '0')}`
+        const started = await call(repository, '/api/runs/start', post({
+          ...startBody(playId),
+          ruleset_version: rulesetVersion,
+        }))
+        const { completion_token: completionToken } = await started!.json() as { completion_token: string }
+        await call(repository, `/api/runs/${playId}/complete`, post(completionBody(completionToken, score)))
+      }
+    }
+
+    await createCohort('codex-2040-rules-v1', 90, '77777777-7777-4777-8777-')
+    await createCohort(RULESET_VERSION, 60, '88888888-8888-4888-8888-')
+
+    const current = await call(repository, '/api/runs/stats?language=ja')
+    expect(await current?.json()).toMatchObject({
+      stats: { ruleset_version: RULESET_VERSION, total_completed: 5, average_score: 60 },
+    })
+
+    const legacy = await call(repository, '/api/runs/stats?language=ja&ruleset_version=codex-2040-rules-v1')
+    expect(await legacy?.json()).toMatchObject({
+      stats: { ruleset_version: 'codex-2040-rules-v1', total_completed: 5, average_score: 90 },
     })
   })
 

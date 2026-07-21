@@ -1,12 +1,14 @@
 export const RESET_TOOL_NAME = 'trigger_token_reset'
 
 export type VoiceResetSource = 'realtime' | 'scripted-fallback'
+export type VoiceLanguage = 'ja' | 'en'
 
 export type VoiceResetRequest = {
   id: string
   callId: string
   playerRequest: string
   source: VoiceResetSource
+  language: VoiceLanguage
 }
 
 export type VoiceResetState = {
@@ -39,6 +41,8 @@ export const createVoiceResetState = (): VoiceResetState => ({
 const resetIntent = /(?:reset|リセット).{0,18}(?:limit|token|tibo|リミット|トークン)|(?:limit|token|tibo|リミット|トークン).{0,18}(?:reset|リセット)/iu
 const confirmationDenial = /(?:やらない|しないで|やめて|止めて|キャンセル|取り消|待って|だめ|ダメ|いや|いいえ|不要|(?:do\s+not|don't|dont|never|cancel|stop|wait|no|nope|not)\b)/iu
 const confirmationIntent = /(?:やって|実行して|進めて|リセットして|お願い(?:します)?|どうぞ|いいよ|オッケー|はい|うん|ええ|(?:do\s+it|go\s+ahead|proceed|execute\s+it|reset\s+it|yes|yeah|yep|sure|confirm|approve|ok|okay)\b)/iu
+
+export const detectVoiceLanguage = (text: string): VoiceLanguage => /[\u3040-\u30ff\u3400-\u9fff]/u.test(text) ? 'ja' : 'en'
 
 export const isExplicitResetConfirmation = (utterance: string) => {
   const normalized = utterance.normalize('NFKC').trim().slice(0, 120)
@@ -90,6 +94,7 @@ export const requestRealtimeReset = (state: VoiceResetState, raw: RealtimeFuncti
     return { ...state, notice: '重複したリセット要求を無視しました。' }
   }
   if (state.pending) return { ...state, notice: '別のリセット承認が保留中です。' }
+  const language = detectVoiceLanguage(parsed.playerRequest)
   return {
     ...state,
     pending: {
@@ -97,8 +102,11 @@ export const requestRealtimeReset = (state: VoiceResetState, raw: RealtimeFuncti
       callId: parsed.callId,
       playerRequest: parsed.playerRequest,
       source: 'realtime',
+      language,
     },
-    notice: 'ボイス・オペレーターがゲーム内リセットを要求しました。別の発話で明示的に承認してください。',
+    notice: language === 'en'
+      ? 'The voice operator requested an in-game reset. Approve explicitly in a new utterance.'
+      : 'ボイス・オペレーターがゲーム内リセットを要求しました。別の発話で明示的に承認してください。',
   }
 }
 
@@ -136,11 +144,14 @@ export const handleRealtimeResetToolCall = (
     return { state: { ...state, notice: '音声確認のapproval_idが保留中の承認と一致しません。' }, outcome: 'invalid', request: pending, replyCallId: parsed.callId, shouldExecute: false }
   }
   if (resetCooldownSeconds > 0) {
+    const seconds = Math.ceil(resetCooldownSeconds)
     return {
       state: {
         pending: null,
         completedCallIds: [...state.completedCallIds, pending.callId, parsed.callId],
-        notice: `リセットのクールダウン中です。${Math.ceil(resetCooldownSeconds)}秒後にもう一度依頼してください。`,
+        notice: pending.language === 'en'
+          ? `Reset is cooling down. Ask again in ${seconds} seconds.`
+          : `リセットのクールダウン中です。${seconds}秒後にもう一度依頼してください。`,
       },
       outcome: 'cooldown', request: pending, replyCallId: parsed.callId, shouldExecute: false,
     }
@@ -149,13 +160,15 @@ export const handleRealtimeResetToolCall = (
     state: {
       pending: null,
       completedCallIds: [...state.completedCallIds, pending.callId, parsed.callId],
-      notice: '音声での承認を受け付け、ゲーム内Tiboリセットを1回実行しました。',
+      notice: pending.language === 'en'
+        ? 'Voice approval accepted. The in-game Tibo reset ran once.'
+        : '音声での承認を受け付け、ゲーム内Tiboリセットを1回実行しました。',
     },
     outcome: 'executed', request: pending, replyCallId: parsed.callId, shouldExecute: true,
   }
 }
 
-export const requestFallbackReset = (state: VoiceResetState, id: string): VoiceResetState => {
+export const requestFallbackReset = (state: VoiceResetState, id: string, language: VoiceLanguage = 'ja'): VoiceResetState => {
   const callId = `fallback-${id.replace(/[^A-Za-z0-9_-]/gu, '').slice(0, 80)}`
   if (!callId || state.pending || state.completedCallIds.includes(callId)) {
     return { ...state, notice: state.pending ? '別のリセット承認が保留中です。' : '重複した台本モードの要求を無視しました。' }
@@ -165,10 +178,15 @@ export const requestFallbackReset = (state: VoiceResetState, id: string): VoiceR
     pending: {
       id: callId,
       callId,
-      playerRequest: 'ゲーム内Tiboトークンのリミットをリセットして',
+      playerRequest: language === 'en'
+        ? 'Please reset my in-game Tibo token limit.'
+        : 'ゲーム内Tiboトークンのリミットをリセットして',
       source: 'scripted-fallback',
+      language,
     },
-    notice: '台本モードがゲーム内リセットを要求しました。プレイヤーの承認が必要です。',
+    notice: language === 'en'
+      ? 'Scripted mode requested an in-game reset. Player approval is required.'
+      : '台本モードがゲーム内リセットを要求しました。プレイヤーの承認が必要です。',
   }
 }
 
@@ -190,16 +208,30 @@ export const resolveVoiceReset = (
     return { state: { ...state, pending: null, notice: '重複したリセット実行をブロックしました。' }, outcome: 'duplicate', request, shouldExecute: false }
   }
   if (!approved) {
-    return { state: { ...state, pending: null, completedCallIds: [...state.completedCallIds, request.callId], notice: 'プレイヤーがゲーム内リセットを拒否しました。' }, outcome: 'rejected', request, shouldExecute: false }
+    return {
+      state: {
+        ...state,
+        pending: null,
+        completedCallIds: [...state.completedCallIds, request.callId],
+        notice: request.language === 'en' ? 'The player rejected the in-game reset.' : 'プレイヤーがゲーム内リセットを拒否しました。',
+      },
+      outcome: 'rejected', request, shouldExecute: false,
+    }
   }
   if (resetCooldownSeconds > 0) {
-    return { state: { ...state, notice: `リセットのクールダウン中です。残り${Math.ceil(resetCooldownSeconds)}秒です。` }, outcome: 'cooldown', request, shouldExecute: false }
+    const seconds = Math.ceil(resetCooldownSeconds)
+    return {
+      state: { ...state, notice: request.language === 'en' ? `Reset is cooling down. Try again in ${seconds} seconds.` : `リセットのクールダウン中です。残り${seconds}秒です。` },
+      outcome: 'cooldown', request, shouldExecute: false,
+    }
   }
   return {
     state: {
       pending: null,
       completedCallIds: [...state.completedCallIds, request.callId],
-      notice: 'プレイヤーが承認し、ゲーム内Tiboリセットを1回実行しました。',
+      notice: request.language === 'en'
+        ? 'The player approved and the in-game Tibo reset ran once.'
+        : 'プレイヤーが承認し、ゲーム内Tiboリセットを1回実行しました。',
     },
     outcome: 'executed',
     request,

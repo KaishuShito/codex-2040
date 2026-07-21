@@ -1,4 +1,5 @@
 import { z } from 'zod'
+import { RULESET_VERSION } from '../shared/ruleset'
 import {
   createRunsRepository,
   type AuthorizedCompleteRunInput,
@@ -154,17 +155,22 @@ export async function handleRunsApi(
 
     if (url.pathname === '/api/runs/stats') {
       if (request.method !== 'GET') return methodNotAllowed('GET')
-      const unexpectedQuery = [...url.searchParams.keys()].some((key) => key !== 'language')
+      const unexpectedQuery = [...url.searchParams.keys()].some((key) => key !== 'language' && key !== 'ruleset_version')
       const languageValues = url.searchParams.getAll('language')
-      if (unexpectedQuery || languageValues.length > 1) {
-        return errorResponse(400, 'invalid_query', 'Only one language query parameter is supported.')
+      const rulesetValues = url.searchParams.getAll('ruleset_version')
+      if (unexpectedQuery || languageValues.length > 1 || rulesetValues.length > 1) {
+        return errorResponse(400, 'invalid_query', 'Only one language and ruleset_version query parameter is supported.')
       }
       const languageValue = languageValues[0] ?? null
       if (languageValue !== null && languageValue !== 'ja' && languageValue !== 'en') {
         return errorResponse(400, 'invalid_language', 'language must be ja or en.')
       }
+      const requestedRuleset = rulesetValues[0] ?? RULESET_VERSION
+      if (!rulesetVersionSchema.safeParse(requestedRuleset).success) {
+        return errorResponse(400, 'invalid_ruleset_version', 'ruleset_version is invalid.')
+      }
 
-      const stats = await repository.stats(languageValue as RunLanguage | null)
+      const stats = await repository.stats(languageValue as RunLanguage | null, requestedRuleset)
       return json({ ok: true, stats }, 200, { 'cache-control': 'public, max-age=30' })
     }
 

@@ -64,6 +64,14 @@ export type WorldMapMarker = MarkerBase & (
   | { regionId: WorldMapRegionId; coordinates?: never }
 )
 
+export type WorldMapRewardBubble = {
+  id: string
+  regionId: WorldMapRegionId
+  reward: number
+  placement: number
+  source: 'token-reset' | 'community'
+}
+
 export type WorldMapProps = {
   regions: Readonly<Partial<Record<WorldMapRegionId, WorldMapRegionIntensity>>>
   selectedRegion?: WorldMapRegionId | null
@@ -74,6 +82,8 @@ export type WorldMapProps = {
   competitiveView?: WorldMapCompetitiveView | null
   /** Change this value to replay the synchronized global reset pulse. */
   resetPulse?: number
+  rewardBubbles?: readonly WorldMapRewardBubble[]
+  onRewardBubbleClick?: (bubbleId: string) => void
   className?: string
   ariaLabel?: string
 }
@@ -259,6 +269,8 @@ export default function WorldMap({
   onMarkerClick,
   competitiveView = null,
   resetPulse = 0,
+  rewardBubbles = [],
+  onRewardBubbleClick,
   className = '',
   ariaLabel = '世界のAI利用と教育ネットワークの操作マップ',
 }: WorldMapProps) {
@@ -276,6 +288,21 @@ export default function WorldMap({
       return rightValue - leftValue
     }), [regions])
   const marketDots = useMemo(() => buildMarketDots(competitiveView, regions), [competitiveView, regions])
+  const bubblePoints = useMemo(() => rewardBubbles.map((bubble) => {
+    const hubs = CITY_HUBS[bubble.regionId]
+    const scaled = clamp01(bubble.placement) * hubs.length
+    const hubIndex = Math.min(hubs.length - 1, Math.floor(scaled))
+    const hub = hubs[hubIndex]
+    const point = projection(hub.coordinates as [number, number]) ?? [0, 0]
+    const angle = bubble.placement * Math.PI * 4 + hubIndex * .83
+    const distance = 8 + (scaled - Math.floor(scaled)) * 10
+    return {
+      bubble,
+      city: hub.name,
+      x: point[0] + Math.cos(angle) * distance,
+      y: point[1] + Math.sin(angle) * distance * .7,
+    }
+  }), [rewardBubbles])
 
   return (
     <figure
@@ -384,6 +411,33 @@ export default function WorldMap({
               <title>{dot.city}</title>
             </circle>
           ))}
+        </g>
+
+        <g className="world-map__reward-bubbles">
+          {bubblePoints.map(({ bubble, city, x, y }) => {
+            const collect = () => onRewardBubbleClick?.(bubble.id)
+            return (
+              <g
+                key={bubble.id}
+                className={`world-map__reward-bubble world-map__reward-bubble--${bubble.source}`}
+                transform={`translate(${x} ${y})`}
+                role="button"
+                tabIndex={0}
+                aria-label={`計算資源を回収、プラス${bubble.reward} PF。Collect plus ${bubble.reward} PF near ${city}.`}
+                onClick={(event) => { event.stopPropagation(); collect() }}
+                onKeyDown={(event) => {
+                  if (event.key !== 'Enter' && event.key !== ' ') return
+                  event.stopPropagation()
+                  keyboardActivate(event, collect)
+                }}
+              >
+                <title>計算資源 +{bubble.reward} PF / Collect +{bubble.reward} PF — {city}</title>
+                <circle className="world-map__reward-bubble-wave" r="11" />
+                <circle className="world-map__reward-bubble-core" r="7" />
+                <text y="2.4">+{bubble.reward}</text>
+              </g>
+            )
+          })}
         </g>
 
         {selectedRegion && (

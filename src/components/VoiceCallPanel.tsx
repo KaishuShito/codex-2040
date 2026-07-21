@@ -38,7 +38,7 @@ type VoiceCallPanelProps = {
   onEnd: () => void
   onClose: () => void
   onToggleMute: () => void
-  onScriptedRequest: () => void
+  onScriptedRequest: (language: 'ja' | 'en') => void
   onApproveReset: () => void
   onRejectReset: () => void
 }
@@ -63,6 +63,7 @@ export default function VoiceCallPanel({
 }: VoiceCallPanelProps) {
   if (!open) return null
   const active = status === 'connecting' || status === 'connected' || status === 'fallback'
+  const approvalInEnglish = pendingReset?.language === 'en'
   return (
     <aside className="voice-call" role="dialog" aria-modal="false" aria-labelledby="voice-call-title">
       <header>
@@ -87,19 +88,26 @@ export default function VoiceCallPanel({
       </div>
 
       {status === 'fallback' && !pendingReset && (
-        <button className="voice-call__script" onClick={onScriptedRequest}>台本で依頼 · 「リミットをリセットして」</button>
+        <div className="voice-call__scripts" aria-label="台本の言語を選択">
+          <button className="voice-call__script" onClick={() => onScriptedRequest('ja')}>日本語で依頼</button>
+          <button className="voice-call__script" lang="en" onClick={() => onScriptedRequest('en')}>Request in English</button>
+        </div>
       )}
 
       {pendingReset && (
-        <section className="voice-call__approval" aria-label="ゲーム内リセットの承認">
-          <small>ツール要求 · {pendingReset.source === 'realtime' ? 'リアルタイム' : '台本モード'}</small>
+        <section className="voice-call__approval" lang={approvalInEnglish ? 'en' : 'ja'} aria-label={approvalInEnglish ? 'Approve in-game reset' : 'ゲーム内リセットの承認'}>
+          <small>{approvalInEnglish ? 'Tool request' : 'ツール要求'} · {pendingReset.source === 'realtime' ? (approvalInEnglish ? 'Realtime' : 'リアルタイム') : (approvalInEnglish ? 'Scripted fallback' : '台本モード')}</small>
           <b>trigger_token_reset</b>
           <p>“{pendingReset.playerRequest}”</p>
-          <strong>{pendingReset.source === 'realtime' ? '「やって！」「お願い」など、実行の意思を声で伝えてください。ボタンでも操作できます。' : '承認すると、既存のゲーム内Tiboリセットを1回だけ実行します。'}</strong>
+          <strong>{approvalInEnglish
+            ? (pendingReset.source === 'realtime' ? 'Say “Do it” or another explicit approval. You can also use the buttons.' : 'Approval runs the existing in-game Tibo reset exactly once.')
+            : (pendingReset.source === 'realtime' ? '「やって！」「お願い」など、実行の意思を声で伝えてください。ボタンでも操作できます。' : '承認すると、既存のゲーム内Tiboリセットを1回だけ実行します。')}</strong>
           <div>
-            <button onClick={onRejectReset}><X size={14} /> 拒否</button>
+            <button onClick={onRejectReset}><X size={14} /> {approvalInEnglish ? 'Reject' : '拒否'}</button>
             <button className="is-confirm" onClick={onApproveReset} disabled={resetCooldownSeconds > 0}>
-              <Check size={14} /> {resetCooldownSeconds > 0 ? `再実行まで ${Math.ceil(resetCooldownSeconds)}秒` : 'ゲーム内リセットを承認'}
+              <Check size={14} /> {resetCooldownSeconds > 0
+                ? (approvalInEnglish ? `Retry in ${Math.ceil(resetCooldownSeconds)}s` : `再実行まで ${Math.ceil(resetCooldownSeconds)}秒`)
+                : (approvalInEnglish ? 'Approve in-game reset' : 'ゲーム内リセットを承認')}
             </button>
           </div>
         </section>

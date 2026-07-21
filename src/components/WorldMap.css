@@ -171,6 +171,51 @@
   animation: world-map-reset 1.05s ease-out both;
 }
 
+.world-map__reward-bubble {
+  color: #f7ff85;
+  cursor: pointer;
+  outline: none;
+  filter: drop-shadow(0 0 8px rgba(228, 255, 102, .78));
+}
+
+.world-map__reward-bubble--community { color: #75ffd0; }
+
+.world-map__reward-bubble-wave {
+  fill: rgba(244, 255, 142, .1);
+  stroke: currentColor;
+  stroke-width: 1.25;
+  vector-effect: non-scaling-stroke;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: world-map-reward-wave .72s ease-in-out infinite alternate;
+}
+
+.world-map__reward-bubble-core {
+  fill: rgba(4, 13, 10, .94);
+  stroke: currentColor;
+  stroke-width: 1.6;
+  vector-effect: non-scaling-stroke;
+}
+
+.world-map__reward-bubble text {
+  fill: currentColor;
+  font-family: ui-monospace, 'SFMono-Regular', Consolas, monospace;
+  font-size: 5.4px;
+  font-weight: 900;
+  text-anchor: middle;
+  pointer-events: none;
+}
+
+.world-map__reward-bubble:hover .world-map__reward-bubble-core,
+.world-map__reward-bubble:focus-visible .world-map__reward-bubble-core {
+  fill: currentColor;
+  stroke: #fff;
+  stroke-width: 2.2;
+}
+
+.world-map__reward-bubble:hover text,
+.world-map__reward-bubble:focus-visible text { fill: #06100c; }
+
 .world-map__marker {
   cursor: default;
   color: #82ffbc;
@@ -294,6 +339,11 @@
   100% { opacity: 0; transform: scale(11); }
 }
 
+@keyframes world-map-reward-wave {
+  from { opacity: .52; transform: scale(.78); }
+  to { opacity: 1; transform: scale(1.22); }
+}
+
 @keyframes world-map-marker {
   50% { stroke-opacity: .45; transform: scale(1.2); }
 }
@@ -322,6 +372,7 @@
   .world-map__hub-wave,
   .world-map__selection path,
   .world-map__reset circle,
+  .world-map__reward-bubble-wave,
   .world-map__marker-ring,
   .world-map__market-dots circle {
     animation: none;
@@ -334,6 +385,8 @@
 @media (forced-colors: active) {
   .world-map__region,
   .world-map__country-lines,
+  .world-map__reward-bubble-core,
+  .world-map__reward-bubble-wave,
   .world-map__marker-ring { stroke: CanvasText; }
   .world-map__region:focus-visible { stroke: Highlight; }
 }

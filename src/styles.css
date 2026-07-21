@@ -163,7 +163,8 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
   cursor: pointer;
 }
 .sound-toggle:hover { color: var(--green-bright); border-color: rgba(103, 246, 174, .42); }
-.sound-toggle[aria-pressed="true"] { color: var(--faint); opacity: .7; }
+.sound-toggle[aria-pressed="true"] { color: #91cbb0; opacity: 1; }
+.sound-toggle[aria-pressed="false"] { color: var(--faint); opacity: .62; }
 .music-toggle { min-width: 62px; color: #91cbb0; }
 .simulation-clock span { display: flex; align-items: center; gap: 7px; margin: 0; }
 .simulation-clock span i, .world-stage__status i {
@@ -239,7 +240,7 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
 .section-label { display: flex; align-items: center; gap: 8px; min-height: 24px; color: #8aa095; border-bottom: 1px solid var(--line); font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: .14em; }
 .section-label--sub { margin-top: 17px; }
 
-.compute-counter span { display: block; color: var(--muted); font-family: var(--mono); font-size: 9px; letter-spacing: .14em; }
+.compute-counter > span { display: block; color: var(--muted); font-family: var(--mono); font-size: 9px; letter-spacing: .14em; }
 
 .mission-breakdown { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1px; margin: -8px 0 13px; background: rgba(106, 170, 139, .13); }
 .mission-breakdown span { min-width: 0; padding: 6px 4px; text-align: center; background: #07100d; font-family: var(--mono); }
@@ -379,7 +380,7 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
   transform: translate(-50%, -50%);
 }
 .start-brief__eyebrow { color: var(--green); font-family: var(--mono); font-size: 8px; letter-spacing: .17em; }
-.start-brief h1 { margin: 15px 0 11px; color: var(--green-bright); font-family: var(--mono); font-size: clamp(24px, 3vw, 37px); line-height: 1.06; letter-spacing: .025em; }
+.start-brief h1 { max-width: 460px; margin: 15px 0 11px; color: var(--green-bright); font-family: var(--mono); font-size: clamp(24px, 3vw, 35px); line-height: 1.12; letter-spacing: .015em; }
 .start-brief > p { max-width: 440px; margin: 0; color: #a8bcb1; font-size: 12px; line-height: 1.65; }
 .start-brief__sources { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 17px; }
 .start-brief footer { display: grid; grid-template-columns: 1.5fr .8fr; gap: 7px; margin-top: 20px; }
@@ -458,6 +459,18 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
 .compute-counter > small.is-active { color: var(--green); }
 .compute-counter > small.is-stalled { color: var(--amber); }
 .compute-counter .overflow-ticker, .compute-counter .overflow-ticker__copy { color: inherit; font-size: inherit; letter-spacing: inherit; }
+.compute-counter > small.compute-counter__currency { margin-top: 2px; color: #718a7d; font-size: 7px; letter-spacing: .025em; }
+.compute-flow { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 1px; margin-top: 5px; background: rgba(106, 170, 139, .16); }
+.compute-flow > span { min-width: 0; padding: 4px 3px; background: #07100d; font-family: var(--mono); text-align: center; }
+.compute-flow small { display: block; overflow: hidden; color: var(--faint); font-size: 6px; text-overflow: ellipsis; white-space: nowrap; }
+.compute-flow b { display: block; margin-top: 2px; color: var(--green); font-size: 8px; line-height: 1.05; font-variant-numeric: tabular-nums lining-nums; }
+.compute-flow > span[data-negative="true"] b { color: var(--red); }
+.compute-lifeline { display: grid; width: 100%; min-height: 36px; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 5px; margin-top: 6px; padding: 5px 7px; color: var(--amber); border: 1px solid rgba(255, 201, 120, .36); background: rgba(70, 43, 11, .3); text-align: left; cursor: pointer; }
+.compute-lifeline:hover { color: #ffe3ae; border-color: rgba(255, 201, 120, .62); background: rgba(82, 51, 14, .45); }
+.compute-lifeline span { display: flex; min-width: 0; flex-direction: column; }
+.compute-lifeline b { font-family: var(--mono); font-size: 8px; letter-spacing: .04em; }
+.compute-lifeline small { margin-top: 2px; overflow: hidden; color: #b99a69; font-family: var(--mono); font-size: 7px; text-overflow: ellipsis; white-space: nowrap; }
+.compute-counter > small.compute-lifeline__used { color: var(--faint); }
 .strategy-axis { display: grid; width: 100%; grid-template-columns: 1fr auto 13px; align-items: center; min-height: 51px; padding: 0; border: 0; border-bottom: 1px solid var(--line); background: transparent; text-align: left; cursor: pointer; }
 .strategy-axis:hover { background: rgba(48, 106, 78, .12); }
 .strategy-axis > span { display: grid; grid-template-columns: 25px 1fr; align-items: center; }
@@ -526,6 +539,12 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
 .telemetry-card__bar i { display: block; height: 100%; background: linear-gradient(90deg, #267c55, var(--green)); box-shadow: 0 0 7px rgba(97, 255, 176, .55); }
 .telemetry-card[data-danger="true"] > header strong { color: var(--red); }
 .telemetry-card[data-danger="true"] .telemetry-card__bar i { background: linear-gradient(90deg, #762d25, var(--red)); box-shadow: 0 0 7px rgba(255, 100, 83, .5); }
+.telemetry-card--pressure:not([data-danger="true"]) .telemetry-card__bar i { background: linear-gradient(90deg, #6d5424, var(--amber)); box-shadow: 0 0 7px rgba(255, 201, 120, .32); }
+.extinction-readout { display: grid; grid-template-columns: 1fr auto; align-items: baseline; gap: 2px 7px; margin-top: 5px; font-family: var(--mono); }
+.extinction-readout b { grid-column: 1 / -1; color: var(--red); font-size: 8px; line-height: 1.2; letter-spacing: .01em; }
+.extinction-readout span { overflow: hidden; color: #8ba095; font-size: 7px; text-overflow: ellipsis; white-space: nowrap; }
+.extinction-readout span[data-danger="true"] { color: var(--red); }
+.extinction-readout small { color: var(--faint); font-size: 7px; font-variant-numeric: tabular-nums; white-space: nowrap; }
 .telemetry-card .trust-causality, .telemetry-card .risk-radar { margin-top: 5px; padding: 0; border: 0; background: transparent; }
 .telemetry-card .trust-causality > div { grid-template-columns: 1fr auto; }
 .telemetry-card .trust-causality p, .telemetry-card .risk-radar p { margin-top: 3px; font-size: 8px; letter-spacing: 0; }
@@ -643,7 +662,8 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
 .voice-call__transcript p[data-speaker="player"] b { color: var(--green); }
 .voice-call__transcript p[data-speaker="system"] b { color: var(--amber); }
 .voice-call__empty { display: block !important; color: var(--muted); font-family: var(--mono); font-size: 9px; line-height: 1.5; }
-.voice-call__script { margin: 0 11px 9px; min-height: 36px; padding: 6px 9px; color: var(--amber); border: 1px solid rgba(255, 201, 120, .35); background: rgba(70, 43, 11, .34); font-family: var(--mono); font-size: 9px; cursor: pointer; }
+.voice-call__scripts { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin: 0 11px 9px; }
+.voice-call__script { min-height: 36px; padding: 6px 9px; color: var(--amber); border: 1px solid rgba(255, 201, 120, .35); background: rgba(70, 43, 11, .34); font-family: var(--mono); font-size: 8px; cursor: pointer; }
 .voice-call__approval { margin: 0 11px 9px; padding: 10px; border: 1px solid rgba(255, 201, 120, .38); background: rgba(59, 38, 14, .28); }
 .voice-call__approval > small { display: block; color: var(--amber); font-family: var(--mono); font-size: 8px; letter-spacing: .08em; }
 .voice-call__approval > b { display: block; margin-top: 4px; color: #ffe7c4; font-family: var(--mono); font-size: 11px; }
@@ -764,6 +784,10 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
   .world-stage__header small { font-size: 7px; }
   .world-stage__header b { margin-top: 2px; font-size: 9px; }
   .timeline-track { font-size: 7px; }
+  .strategy-rail .compute-counter__currency { display: none; }
+  .strategy-rail .compute-flow { margin-top: 3px; }
+  .strategy-rail .compute-flow > span { padding-block: 2px; }
+  .strategy-rail .compute-lifeline { min-height: 30px; margin-top: 3px; padding-block: 3px; }
   .strategy-rail .strategy-axis { min-height: 36px; }
   .strategy-axis > span small, .open-ecosystem small { font-size: 7px; }
   .control-envelope .meter small { display: none; }

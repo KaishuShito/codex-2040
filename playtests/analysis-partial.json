@@ -1,0 +1,338 @@
+{
+  "generatedAt": "2026-07-21T03:03:19.175Z",
+  "evidence": {
+    "files": [
+      "agent-01.json",
+      "agent-02.json",
+      "agent-03.json",
+      "agent-04.json",
+      "agent-05.json",
+      "agent-06.json",
+      "agent-07.json",
+      "agent-08.json",
+      "agent-09.json"
+    ],
+    "policyCount": 9,
+    "runCount": 45,
+    "allCompleted": true,
+    "minimumSatisfied": false
+  },
+  "overall": {
+    "runs": 45,
+    "completed": 45,
+    "meanScore": 0.7450375244585331,
+    "meanWorldAdoption": 0.14277140185900658,
+    "meanCodexShare": 0.4316691992761476,
+    "meanTrust": 73.9273826220953,
+    "meanExtinctionRisk": 0.1111111111111111,
+    "meanBrownoutDays": 556.6444444444444,
+    "meanZeroComputeDays": 144.24444444444444,
+    "meanAcceptedActions": 64.04444444444445,
+    "meanRejectedActions": 11.28888888888889,
+    "endings": {
+      "fragile-abundance": 4,
+      "managed-transition": 26,
+      "misalignment": 5,
+      "pyrrhic-monopoly": 2,
+      "race-future": 8
+    },
+    "ranks": {
+      "A": 20,
+      "B": 14,
+      "C": 5,
+      "S": 6
+    }
+  },
+  "byPolicy": {
+    "agent-01-safety-plan-a": {
+      "runs": 5,
+      "completed": 5,
+      "meanScore": 0.8140000000000001,
+      "meanWorldAdoption": 0.11608503751799218,
+      "meanCodexShare": 0.42667631090393454,
+      "meanTrust": 99.59979189456973,
+      "meanExtinctionRisk": 0,
+      "meanBrownoutDays": 12.6,
+      "meanZeroComputeDays": 20.6,
+      "meanAcceptedActions": 65,
+      "meanRejectedActions": 0,
+      "endings": {
+        "managed-transition": 5
+      },
+      "ranks": {
+        "A": 4,
+        "B": 1
+      }
+    },
+    "agent-02-reckless-capability-race": {
+      "runs": 5,
+      "completed": 5,
+      "meanScore": 0.49033743834803045,
+      "meanWorldAdoption": 0.017269950678424368,
+      "meanCodexShare": 0.3803945970850823,
+      "meanTrust": 19.974676416558385,
+      "meanExtinctionRisk": 1,
+      "meanBrownoutDays": 1687.6,
+      "meanZeroComputeDays": 370.8,
+      "meanAcceptedActions": 22,
+      "meanRejectedActions": 0,
+      "endings": {
+        "misalignment": 5
+      },
+      "ranks": {
+        "C": 5
+      }
+    },
+    "agent-03-adaptive-balanced": {
+      "runs": 5,
+      "completed": 5,
+      "meanScore": 0.694,
+      "meanWorldAdoption": 0.07945084058451571,
+      "meanCodexShare": 0.3413274383587611,
+      "meanTrust": 81.55715423444894,
+      "meanExtinctionRisk": 0,
+      "meanBrownoutDays": 1592.4,
+      "meanZeroComputeDays": 532.6,
+      "meanAcceptedActions": 24,
+      "meanRejectedActions": 0,
+      "endings": {
+        "managed-transition": 5
+      },
+      "ranks": {
+        "B": 5
+      }
+    },
+    "agent-04-global-access": {
+      "runs": 5,
+      "completed": 5,
+      "meanScore": 0.8738040383252506,
+      "meanWorldAdoption": 0.3002280308180142,
+      "meanCodexShare": 0.6091828777996253,
+      "meanTrust": 61.16485672377528,
+      "meanExtinctionRisk": 0,
+      "meanBrownoutDays": 0,
+      "meanZeroComputeDays": 0,
+      "meanAcceptedActions": 63,
+      "meanRejectedActions": 0,
+      "endings": {
+        "fragile-abundance": 4,
+        "managed-transition": 1
+      },
+      "ranks": {
+        "A": 1,
+        "S": 4
+      }
+    },
+    "agent-05-governance-institution-builder": {
+      "runs": 5,
+      "completed": 5,
+      "meanScore": 0.844,
+      "meanWorldAdoption": 0.18155797252856568,
+      "meanCodexShare": 0.40606002565006094,
+      "meanTrust": 99.16593696313325,
+      "meanExtinctionRisk": 0,
+      "meanBrownoutDays": 35.8,
+      "meanZeroComputeDays": 15,
+      "meanAcceptedActions": 58.8,
+      "meanRejectedActions": 0,
+      "endings": {
+        "managed-transition": 5
+      },
+      "ranks": {
+        "A": 5
+      }
+    },
+    "agent-06-passive-control": {
+      "runs": 5,
+      "completed": 5,
+      "meanScore": 0.5218613456646597,
+      "meanWorldAdoption": 0.034326956838840565,
+      "meanCodexShare": 0.19647781731300232,
+      "meanTrust": 38.7566863487365,
+      "meanExtinctionRisk": 0,
+      "meanBrownoutDays": 1681.4,
+      "meanZeroComputeDays": 359,
+      "meanAcceptedActions": 2,
+      "meanRejectedActions": 0,
+      "endings": {
+        "race-future": 5
+      },
+      "ranks": {
+        "B": 5
+      }
+    },
+    "agent-07-frugal-compute-survivor": {
+      "runs": 5,
+      "completed": 5,
+      "meanScore": 0.8140000000000001,
+      "meanWorldAdoption": 0.10664393511012535,
+      "meanCodexShare": 0.4623155670660055,
+      "meanTrust": 89.13565728713095,
+      "meanExtinctionRisk": 0,
+      "meanBrownoutDays": 0,
+      "meanZeroComputeDays": 0,
+      "meanAcceptedActions": 84,
+      "meanRejectedActions": 0,
+      "endings": {
+        "managed-transition": 5
+      },
+      "ranks": {
+        "A": 4,
+        "B": 1
+      }
+    },
+    "agent-08-chaotic-reactive-explorer": {
+      "runs": 5,
+      "completed": 5,
+      "meanScore": 0.8093348977888561,
+      "meanWorldAdoption": 0.2721689154160237,
+      "meanCodexShare": 0.7270620656079918,
+      "meanTrust": 79.48658714266233,
+      "meanExtinctionRisk": 0,
+      "meanBrownoutDays": 0,
+      "meanZeroComputeDays": 0.2,
+      "meanAcceptedActions": 158.6,
+      "meanRejectedActions": 101.6,
+      "endings": {
+        "pyrrhic-monopoly": 2,
+        "race-future": 3
+      },
+      "ranks": {
+        "A": 1,
+        "B": 2,
+        "S": 2
+      }
+    },
+    "agent-09-open-ecosystem-pluralist": {
+      "runs": 5,
+      "completed": 5,
+      "meanScore": 0.844,
+      "meanWorldAdoption": 0.1772109772385575,
+      "meanCodexShare": 0.3355260937008654,
+      "meanTrust": 96.50509658784199,
+      "meanExtinctionRisk": 0,
+      "meanBrownoutDays": 0,
+      "meanZeroComputeDays": 0,
+      "meanAcceptedActions": 99,
+      "meanRejectedActions": 0,
+      "endings": {
+        "managed-transition": 5
+      },
+      "ranks": {
+        "A": 5
+      }
+    }
+  },
+  "suspicious": {
+    "highRankLowAccess": [],
+    "computeDeadlocks": [
+      {
+        "policyId": "agent-02-reckless-capability-race",
+        "run": 1,
+        "zeroComputeDays": 370,
+        "brownoutDays": 1685,
+        "ending": "misalignment"
+      },
+      {
+        "policyId": "agent-02-reckless-capability-race",
+        "run": 2,
+        "zeroComputeDays": 381,
+        "brownoutDays": 1703,
+        "ending": "misalignment"
+      },
+      {
+        "policyId": "agent-02-reckless-capability-race",
+        "run": 3,
+        "zeroComputeDays": 363,
+        "brownoutDays": 1706,
+        "ending": "misalignment"
+      },
+      {
+        "policyId": "agent-02-reckless-capability-race",
+        "run": 4,
+        "zeroComputeDays": 384,
+        "brownoutDays": 1644,
+        "ending": "misalignment"
+      },
+      {
+        "policyId": "agent-02-reckless-capability-race",
+        "run": 5,
+        "zeroComputeDays": 356,
+        "brownoutDays": 1700,
+        "ending": "misalignment"
+      },
+      {
+        "policyId": "agent-03-adaptive-balanced",
+        "run": 1,
+        "zeroComputeDays": 549,
+        "brownoutDays": 1640,
+        "ending": "managed-transition"
+      },
+      {
+        "policyId": "agent-03-adaptive-balanced",
+        "run": 2,
+        "zeroComputeDays": 513,
+        "brownoutDays": 1669,
+        "ending": "managed-transition"
+      },
+      {
+        "policyId": "agent-03-adaptive-balanced",
+        "run": 3,
+        "zeroComputeDays": 543,
+        "brownoutDays": 1639,
+        "ending": "managed-transition"
+      },
+      {
+        "policyId": "agent-03-adaptive-balanced",
+        "run": 4,
+        "zeroComputeDays": 532,
+        "brownoutDays": 1509,
+        "ending": "managed-transition"
+      },
+      {
+        "policyId": "agent-03-adaptive-balanced",
+        "run": 5,
+        "zeroComputeDays": 526,
+        "brownoutDays": 1505,
+        "ending": "managed-transition"
+      },
+      {
+        "policyId": "agent-06-passive-control",
+        "run": 1,
+        "zeroComputeDays": 349,
+        "brownoutDays": 1660,
+        "ending": "race-future"
+      },
+      {
+        "policyId": "agent-06-passive-control",
+        "run": 2,
+        "zeroComputeDays": 363,
+        "brownoutDays": 1698,
+        "ending": "race-future"
+      },
+      {
+        "policyId": "agent-06-passive-control",
+        "run": 3,
+        "zeroComputeDays": 357,
+        "brownoutDays": 1684,
+        "ending": "race-future"
+      },
+      {
+        "policyId": "agent-06-passive-control",
+        "run": 4,
+        "zeroComputeDays": 364,
+        "brownoutDays": 1691,
+        "ending": "race-future"
+      },
+      {
+        "policyId": "agent-06-passive-control",
+        "run": 5,
+        "zeroComputeDays": 362,
+        "brownoutDays": 1674,
+        "ending": "race-future"
+      }
+    ],
+    "terminalBeforeChoices": [],
+    "excessiveRejectedActions": []
+  }
+}

@@ -1,0 +1,307 @@
+[
+  {
+    "policyId": "agent-06-passive-control",
+    "policyDescription": "完全放置の対照群。裁量行動・救済・Token Resetを使わず、2029年は競争続行、2035年は再加速だけを選ぶ。",
+    "run": 1,
+    "seed": 16001,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "race-future",
+    "score": 0.5122362584102018,
+    "rank": "B",
+    "worldAdoption": 0.03838557561567322,
+    "codexShare": 0.19502198435747473,
+    "hhi": 0.5028654661797601,
+    "trust": 36.418082101184154,
+    "compute": 11.543919445198352,
+    "capability": 3.5,
+    "safety": 2,
+    "governance": 2,
+    "extinctionRisk": 0,
+    "interventions": 0,
+    "brownoutDays": 1660,
+    "zeroComputeDays": 349,
+    "actionCount": 2,
+    "acceptedActionCount": 2,
+    "rejectedActionCount": 0,
+    "choice2029": "race",
+    "choice2035": "accelerate",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.042874579911216674,
+      0.6748142399968285,
+      0.08728919573448005
+    ],
+    "actionLog": [
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "race"
+        },
+        "accepted": true,
+        "computeBefore": 214.0431534124362,
+        "computeAfter": 214.0431534124362
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "accelerate"
+        },
+        "accepted": true,
+        "computeBefore": 10.52522812029871,
+        "computeAfter": 10.52522812029871
+      }
+    ]
+  },
+  {
+    "policyId": "agent-06-passive-control",
+    "policyDescription": "完全放置の対照群。裁量行動・救済・Token Resetを使わず、2029年は競争続行、2035年は再加速だけを選ぶ。",
+    "run": 2,
+    "seed": 120730,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "race-future",
+    "score": 0.527405303602098,
+    "rank": "B",
+    "worldAdoption": 0.03427491858316634,
+    "codexShare": 0.20429410116959631,
+    "hhi": 0.47964943153873874,
+    "trust": 38.73702003394072,
+    "compute": 6.897751120140379,
+    "capability": 3.5,
+    "safety": 2,
+    "governance": 2,
+    "extinctionRisk": 0,
+    "interventions": 0,
+    "brownoutDays": 1698,
+    "zeroComputeDays": 363,
+    "actionCount": 2,
+    "acceptedActionCount": 2,
+    "rejectedActionCount": 0,
+    "choice2029": "race",
+    "choice2035": "accelerate",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.05609520812410857,
+      0.6537548941184493,
+      0.08585579658784569
+    ],
+    "actionLog": [
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "race"
+        },
+        "accepted": true,
+        "computeBefore": 219.2181544990199,
+        "computeAfter": 219.2181544990199
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "accelerate"
+        },
+        "accepted": true,
+        "computeBefore": 0,
+        "computeAfter": 0
+      }
+    ]
+  },
+  {
+    "policyId": "agent-06-passive-control",
+    "policyDescription": "完全放置の対照群。裁量行動・救済・Token Resetを使わず、2029年は競争続行、2035年は再加速だけを選ぶ。",
+    "run": 3,
+    "seed": 225459,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "race-future",
+    "score": 0.5222229316728526,
+    "rank": "B",
+    "worldAdoption": 0.029423908167779247,
+    "codexShare": 0.19413893303721008,
+    "hhi": 0.48570165121924624,
+    "trust": 40.60263139006298,
+    "compute": 2.574942715506811,
+    "capability": 3.5,
+    "safety": 2,
+    "governance": 2,
+    "extinctionRisk": 0,
+    "interventions": 0,
+    "brownoutDays": 1684,
+    "zeroComputeDays": 357,
+    "actionCount": 2,
+    "acceptedActionCount": 2,
+    "rejectedActionCount": 0,
+    "choice2029": "race",
+    "choice2035": "accelerate",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.04141820498211399,
+      0.6598090870360239,
+      0.10463377494465204
+    ],
+    "actionLog": [
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "race"
+        },
+        "accepted": true,
+        "computeBefore": 225.14121164055626,
+        "computeAfter": 225.14121164055626
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "accelerate"
+        },
+        "accepted": true,
+        "computeBefore": 2.7662977293798363,
+        "computeAfter": 2.7662977293798363
+      }
+    ]
+  },
+  {
+    "policyId": "agent-06-passive-control",
+    "policyDescription": "完全放置の対照群。裁量行動・救済・Token Resetを使わず、2029年は競争続行、2035年は再加速だけを選ぶ。",
+    "run": 4,
+    "seed": 330188,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "race-future",
+    "score": 0.5217120784842711,
+    "rank": "B",
+    "worldAdoption": 0.033224302445908696,
+    "codexShare": 0.19500832224486195,
+    "hhi": 0.4876462199889639,
+    "trust": 38.98423516799508,
+    "compute": 7.406127820354152,
+    "capability": 3.5,
+    "safety": 2,
+    "governance": 2,
+    "extinctionRisk": 0,
+    "interventions": 0,
+    "brownoutDays": 1691,
+    "zeroComputeDays": 364,
+    "actionCount": 2,
+    "acceptedActionCount": 2,
+    "rejectedActionCount": 0,
+    "choice2029": "race",
+    "choice2035": "accelerate",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.044275437943888746,
+      0.661705823897324,
+      0.09901041591392529
+    ],
+    "actionLog": [
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "race"
+        },
+        "accepted": true,
+        "computeBefore": 211.6286973932426,
+        "computeAfter": 211.6286973932426
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "accelerate"
+        },
+        "accepted": true,
+        "computeBefore": 0.2604105246276067,
+        "computeAfter": 0.2604105246276067
+      }
+    ]
+  },
+  {
+    "policyId": "agent-06-passive-control",
+    "policyDescription": "完全放置の対照群。裁量行動・救済・Token Resetを使わず、2029年は競争続行、2035年は再加速だけを選ぶ。",
+    "run": 5,
+    "seed": 434917,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "race-future",
+    "score": 0.5257301561538748,
+    "rank": "B",
+    "worldAdoption": 0.03632607938167534,
+    "codexShare": 0.19392574575586846,
+    "hhi": 0.48764976111914937,
+    "trust": 39.04146305049958,
+    "compute": 5.359469534898732,
+    "capability": 3.5,
+    "safety": 2,
+    "governance": 2,
+    "extinctionRisk": 0,
+    "interventions": 0,
+    "brownoutDays": 1674,
+    "zeroComputeDays": 362,
+    "actionCount": 2,
+    "acceptedActionCount": 2,
+    "rejectedActionCount": 0,
+    "choice2029": "race",
+    "choice2035": "accelerate",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.0503105274316349,
+      0.6624183388351231,
+      0.09334538797737343
+    ],
+    "actionLog": [
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "race"
+        },
+        "accepted": true,
+        "computeBefore": 220.6467096486623,
+        "computeAfter": 220.6467096486623
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "accelerate"
+        },
+        "accepted": true,
+        "computeBefore": 3.0440401174948386,
+        "computeAfter": 3.0440401174948386
+      }
+    ]
+  }
+]

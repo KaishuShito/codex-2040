@@ -1,0 +1,3172 @@
+[
+  {
+    "policyId": "agent-04-global-access",
+    "policyDescription": "Expand every region, keep access momentum alive with product releases and token resets, and preserve basic control parity.",
+    "run": 1,
+    "seed": 14001,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "fragile-abundance",
+    "score": 0.8981169644543451,
+    "rank": "S",
+    "worldAdoption": 0.317862571699153,
+    "codexShare": 0.6046750545055789,
+    "hhi": 0.46960285858109185,
+    "trust": 64.14750042701097,
+    "compute": 40633.39734803736,
+    "capability": 3,
+    "safety": 2.5,
+    "governance": 3,
+    "extinctionRisk": 0,
+    "interventions": 61,
+    "brownoutDays": 0,
+    "zeroComputeDays": 0,
+    "actionCount": 63,
+    "acceptedActionCount": 63,
+    "rejectedActionCount": 0,
+    "choice2029": "slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.023836653287798465,
+      0.31689477587020914,
+      0.054593516336413454
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 940.083552139881,
+        "computeAfter": 895.083552139881
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 895.2022889407525,
+        "computeAfter": 850.2022889407525
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 850.3465416271192,
+        "computeAfter": 805.3465416271192
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "feature",
+          "text": "Mobile access for every community"
+        },
+        "accepted": true,
+        "computeBefore": 805.5132370609334,
+        "computeAfter": 715.5132370609334
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "feature",
+          "text": "Education access for schools worldwide"
+        },
+        "accepted": true,
+        "computeBefore": 715.7421292009855,
+        "computeAfter": 625.7421292009855
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "feature",
+          "text": "Offline mobile access for underserved regions"
+        },
+        "accepted": true,
+        "computeBefore": 626.03935303174,
+        "computeAfter": 536.03935303174
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "feature",
+          "text": "Multilingual education for local communities"
+        },
+        "accepted": true,
+        "computeBefore": 536.4078707603591,
+        "computeAfter": 446.40787076035906
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "feature",
+          "text": "Accessible mobile learning for public libraries"
+        },
+        "accepted": true,
+        "computeBefore": 446.85378265057636,
+        "computeAfter": 356.85378265057636
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "feature",
+          "text": "Low bandwidth education access for rural schools"
+        },
+        "accepted": true,
+        "computeBefore": 357.37980692894786,
+        "computeAfter": 267.37980692894786
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 267.99179133907165,
+        "computeAfter": 267.99179133907165
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "upgrade",
+          "upgrade": "model"
+        },
+        "accepted": true,
+        "computeBefore": 268.358445691946,
+        "computeAfter": 198.35844569194597
+      },
+      {
+        "day": 221,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2026"
+        },
+        "accepted": true,
+        "computeBefore": 365.9011329070168,
+        "computeAfter": 275.9011329070168
+      },
+      {
+        "day": 250,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 303.2673873062734,
+        "computeAfter": 303.2673873062734
+      },
+      {
+        "day": 360,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 394.5483899945342,
+        "computeAfter": 394.5483899945342
+      },
+      {
+        "day": 461,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2027"
+        },
+        "accepted": true,
+        "computeBefore": 543.199068904411,
+        "computeAfter": 453.199068904411
+      },
+      {
+        "day": 490,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 496.03619835593406,
+        "computeAfter": 496.03619835593406
+      },
+      {
+        "day": 720,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 789.4366176439693,
+        "computeAfter": 789.4366176439693
+      },
+      {
+        "day": 730,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 804.7572492219732,
+        "computeAfter": 804.7572492219732
+      },
+      {
+        "day": 941,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2028"
+        },
+        "accepted": true,
+        "computeBefore": 1177.9850171237929,
+        "computeAfter": 1087.9850171237929
+      },
+      {
+        "day": 970,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1140.0525852577919,
+        "computeAfter": 1140.0525852577919
+      },
+      {
+        "day": 1080,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1309.0004694106394,
+        "computeAfter": 1309.0004694106394
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 1340.3999625325223,
+        "computeAfter": 1340.3999625325223
+      },
+      {
+        "day": 1210,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1644.078484210758,
+        "computeAfter": 1644.078484210758
+      },
+      {
+        "day": 1421,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2029"
+        },
+        "accepted": true,
+        "computeBefore": 2060.7174699449233,
+        "computeAfter": 1970.7174699449233
+      },
+      {
+        "day": 1440,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2013.5781348257804,
+        "computeAfter": 2013.5781348257804
+      },
+      {
+        "day": 1450,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2038.2973486584208,
+        "computeAfter": 2038.2973486584208
+      },
+      {
+        "day": 1661,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2030"
+        },
+        "accepted": true,
+        "computeBefore": 2658.3991280591604,
+        "computeAfter": 2568.3991280591604
+      },
+      {
+        "day": 1690,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2651.8372893612245,
+        "computeAfter": 2651.8372893612245
+      },
+      {
+        "day": 1800,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2932.6412943027017,
+        "computeAfter": 2932.6412943027017
+      },
+      {
+        "day": 1901,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2031"
+        },
+        "accepted": true,
+        "computeBefore": 3383.6745956247705,
+        "computeAfter": 3293.6745956247705
+      },
+      {
+        "day": 1930,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3416.3085084613112,
+        "computeAfter": 3416.3085084613112
+      },
+      {
+        "day": 2160,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4261.675081837718,
+        "computeAfter": 4261.675081837718
+      },
+      {
+        "day": 2170,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4305.09352832596,
+        "computeAfter": 4305.09352832596
+      },
+      {
+        "day": 2381,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2032"
+        },
+        "accepted": true,
+        "computeBefore": 5377.306681804523,
+        "computeAfter": 5287.306681804523
+      },
+      {
+        "day": 2410,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5423.439440787837,
+        "computeAfter": 5423.439440787837
+      },
+      {
+        "day": 2520,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 5873.033518124724,
+        "computeAfter": 5873.033518124724
+      },
+      {
+        "day": 2621,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2033"
+        },
+        "accepted": true,
+        "computeBefore": 6574.657797819061,
+        "computeAfter": 6484.657797819061
+      },
+      {
+        "day": 2650,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 6679.728770330637,
+        "computeAfter": 6679.728770330637
+      },
+      {
+        "day": 2880,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 7987.917515932489,
+        "computeAfter": 7987.917515932489
+      },
+      {
+        "day": 2890,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 8054.881225027094,
+        "computeAfter": 8054.881225027094
+      },
+      {
+        "day": 3101,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2034"
+        },
+        "accepted": true,
+        "computeBefore": 9715.283113528092,
+        "computeAfter": 9625.283113528092
+      },
+      {
+        "day": 3130,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 9844.21821920163,
+        "computeAfter": 9844.21821920163
+      },
+      {
+        "day": 3240,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 10574.897507572592,
+        "computeAfter": 10574.897507572592
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 11041.524099697803,
+        "computeAfter": 11041.524099697803
+      },
+      {
+        "day": 3370,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 11993.271287613647,
+        "computeAfter": 11993.271287613647
+      },
+      {
+        "day": 3581,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2035"
+        },
+        "accepted": true,
+        "computeBefore": 13848.063189554392,
+        "computeAfter": 13758.063189554392
+      },
+      {
+        "day": 3600,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 13947.000554523429,
+        "computeAfter": 13947.000554523429
+      },
+      {
+        "day": 3610,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 14055.011026644623,
+        "computeAfter": 14055.011026644623
+      },
+      {
+        "day": 3821,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2036"
+        },
+        "accepted": true,
+        "computeBefore": 16698.49369699687,
+        "computeAfter": 16608.49369699687
+      },
+      {
+        "day": 3850,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 16961.578381618085,
+        "computeAfter": 16961.578381618085
+      },
+      {
+        "day": 3960,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 18141.27501525467,
+        "computeAfter": 18141.27501525467
+      },
+      {
+        "day": 4061,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2037"
+        },
+        "accepted": true,
+        "computeBefore": 19846.051559914435,
+        "computeAfter": 19756.051559914435
+      },
+      {
+        "day": 4090,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 20219.869265423793,
+        "computeAfter": 20219.869265423793
+      },
+      {
+        "day": 4320,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 23521.49534428902,
+        "computeAfter": 23521.49534428902
+      },
+      {
+        "day": 4330,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 23696.67231887089,
+        "computeAfter": 23696.67231887089
+      },
+      {
+        "day": 4541,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2038"
+        },
+        "accepted": true,
+        "computeBefore": 27880.662165238504,
+        "computeAfter": 27790.662165238504
+      },
+      {
+        "day": 4570,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 28344.482285278544,
+        "computeAfter": 28344.482285278544
+      },
+      {
+        "day": 4680,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 30168.685295219235,
+        "computeAfter": 30168.685295219235
+      },
+      {
+        "day": 4781,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2039"
+        },
+        "accepted": true,
+        "computeBefore": 32912.107459868,
+        "computeAfter": 32822.107459868
+      },
+      {
+        "day": 4810,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 33579.703724216386,
+        "computeAfter": 33579.703724216386
+      },
+      {
+        "day": 5040,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 38642.1490195032,
+        "computeAfter": 38642.1490195032
+      },
+      {
+        "day": 5050,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 38886.67446791891,
+        "computeAfter": 38886.67446791891
+      }
+    ]
+  },
+  {
+    "policyId": "agent-04-global-access",
+    "policyDescription": "Expand every region, keep access momentum alive with product releases and token resets, and preserve basic control parity.",
+    "run": 2,
+    "seed": 118730,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "managed-transition",
+    "score": 0.8101072906158544,
+    "rank": "A",
+    "worldAdoption": 0.31486273510006213,
+    "codexShare": 0.610221321791237,
+    "hhi": 0.4806414441093284,
+    "trust": 59.405168965474246,
+    "compute": 43457.36276958515,
+    "capability": 3,
+    "safety": 2.5,
+    "governance": 3,
+    "extinctionRisk": 0,
+    "interventions": 61,
+    "brownoutDays": 0,
+    "zeroComputeDays": 0,
+    "actionCount": 63,
+    "acceptedActionCount": 63,
+    "rejectedActionCount": 0,
+    "choice2029": "slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.023450682294491126,
+      0.3256830278186309,
+      0.04064496809564097
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 940.083552139881,
+        "computeAfter": 895.083552139881
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 895.2022889407525,
+        "computeAfter": 850.2022889407525
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 850.3465416271192,
+        "computeAfter": 805.3465416271192
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "feature",
+          "text": "Mobile access for every community"
+        },
+        "accepted": true,
+        "computeBefore": 805.5132370609334,
+        "computeAfter": 715.5132370609334
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "feature",
+          "text": "Education access for schools worldwide"
+        },
+        "accepted": true,
+        "computeBefore": 715.7421292009855,
+        "computeAfter": 625.7421292009855
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "feature",
+          "text": "Offline mobile access for underserved regions"
+        },
+        "accepted": true,
+        "computeBefore": 626.03935303174,
+        "computeAfter": 536.03935303174
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "feature",
+          "text": "Multilingual education for local communities"
+        },
+        "accepted": true,
+        "computeBefore": 536.4078707603591,
+        "computeAfter": 446.40787076035906
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "feature",
+          "text": "Accessible mobile learning for public libraries"
+        },
+        "accepted": true,
+        "computeBefore": 446.85378265057636,
+        "computeAfter": 356.85378265057636
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "feature",
+          "text": "Low bandwidth education access for rural schools"
+        },
+        "accepted": true,
+        "computeBefore": 357.37980692894786,
+        "computeAfter": 267.37980692894786
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 267.99179133907165,
+        "computeAfter": 267.99179133907165
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "upgrade",
+          "upgrade": "model"
+        },
+        "accepted": true,
+        "computeBefore": 268.358445691946,
+        "computeAfter": 198.35844569194597
+      },
+      {
+        "day": 221,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2026"
+        },
+        "accepted": true,
+        "computeBefore": 366.7341229035322,
+        "computeAfter": 276.7341229035322
+      },
+      {
+        "day": 250,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 305.93602922765507,
+        "computeAfter": 305.93602922765507
+      },
+      {
+        "day": 360,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 401.0395942094881,
+        "computeAfter": 401.0395942094881
+      },
+      {
+        "day": 461,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2027"
+        },
+        "accepted": true,
+        "computeBefore": 552.4631938879292,
+        "computeAfter": 462.46319388792915
+      },
+      {
+        "day": 490,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 507.1821141597795,
+        "computeAfter": 507.1821141597795
+      },
+      {
+        "day": 720,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 824.5509030713326,
+        "computeAfter": 824.5509030713326
+      },
+      {
+        "day": 730,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 842.5990345243144,
+        "computeAfter": 842.5990345243144
+      },
+      {
+        "day": 941,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2028"
+        },
+        "accepted": true,
+        "computeBefore": 1273.7316583833872,
+        "computeAfter": 1183.7316583833872
+      },
+      {
+        "day": 970,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1243.1009882916026,
+        "computeAfter": 1243.1009882916026
+      },
+      {
+        "day": 1080,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1427.1371471093416,
+        "computeAfter": 1427.1371471093416
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 1461.958902935851,
+        "computeAfter": 1461.958902935851
+      },
+      {
+        "day": 1210,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1794.5726165968167,
+        "computeAfter": 1794.5726165968167
+      },
+      {
+        "day": 1421,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2029"
+        },
+        "accepted": true,
+        "computeBefore": 2274.7745092900245,
+        "computeAfter": 2184.7745092900245
+      },
+      {
+        "day": 1440,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2233.362147446222,
+        "computeAfter": 2233.362147446222
+      },
+      {
+        "day": 1450,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2261.373294735833,
+        "computeAfter": 2261.373294735833
+      },
+      {
+        "day": 1661,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2030"
+        },
+        "accepted": true,
+        "computeBefore": 2956.758165780129,
+        "computeAfter": 2866.758165780129
+      },
+      {
+        "day": 1690,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2957.2835061830156,
+        "computeAfter": 2957.2835061830156
+      },
+      {
+        "day": 1800,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3260.0693764925627,
+        "computeAfter": 3260.0693764925627
+      },
+      {
+        "day": 1901,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2031"
+        },
+        "accepted": true,
+        "computeBefore": 3736.433803357716,
+        "computeAfter": 3646.433803357716
+      },
+      {
+        "day": 1930,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3777.870666687453,
+        "computeAfter": 3777.870666687453
+      },
+      {
+        "day": 2160,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4651.08869352283,
+        "computeAfter": 4651.08869352283
+      },
+      {
+        "day": 2170,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4695.791744668939,
+        "computeAfter": 4695.791744668939
+      },
+      {
+        "day": 2381,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2032"
+        },
+        "accepted": true,
+        "computeBefore": 5796.980343868593,
+        "computeAfter": 5706.980343868593
+      },
+      {
+        "day": 2410,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5852.4023850998865,
+        "computeAfter": 5852.4023850998865
+      },
+      {
+        "day": 2520,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 6340.517868602316,
+        "computeAfter": 6340.517868602316
+      },
+      {
+        "day": 2621,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2033"
+        },
+        "accepted": true,
+        "computeBefore": 7092.40706859441,
+        "computeAfter": 7002.40706859441
+      },
+      {
+        "day": 2650,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 7224.668884253464,
+        "computeAfter": 7224.668884253464
+      },
+      {
+        "day": 2880,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 8679.323809921078,
+        "computeAfter": 8679.323809921078
+      },
+      {
+        "day": 2890,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 8753.031503034557,
+        "computeAfter": 8753.031503034557
+      },
+      {
+        "day": 3101,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2034"
+        },
+        "accepted": true,
+        "computeBefore": 10630.796879354742,
+        "computeAfter": 10540.796879354742
+      },
+      {
+        "day": 3130,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 10787.188905005483,
+        "computeAfter": 10787.188905005483
+      },
+      {
+        "day": 3240,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 11612.419671973876,
+        "computeAfter": 11612.419671973876
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 12139.609030334259,
+        "computeAfter": 12139.609030334259
+      },
+      {
+        "day": 3370,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 13195.601663370215,
+        "computeAfter": 13195.601663370215
+      },
+      {
+        "day": 3581,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2035"
+        },
+        "accepted": true,
+        "computeBefore": 15217.368567824871,
+        "computeAfter": 15127.368567824871
+      },
+      {
+        "day": 3600,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 15330.371203939805,
+        "computeAfter": 15330.371203939805
+      },
+      {
+        "day": 3610,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 15446.353617260229,
+        "computeAfter": 15446.353617260229
+      },
+      {
+        "day": 3821,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2036"
+        },
+        "accepted": true,
+        "computeBefore": 18289.797168553905,
+        "computeAfter": 18199.797168553905
+      },
+      {
+        "day": 3850,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 18571.832456132277,
+        "computeAfter": 18571.832456132277
+      },
+      {
+        "day": 3960,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 19857.288919509832,
+        "computeAfter": 19857.288919509832
+      },
+      {
+        "day": 4061,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2037"
+        },
+        "accepted": true,
+        "computeBefore": 21767.08280716681,
+        "computeAfter": 21677.08280716681
+      },
+      {
+        "day": 4090,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 22199.24320200643,
+        "computeAfter": 22199.24320200643
+      },
+      {
+        "day": 4320,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 25811.565246414713,
+        "computeAfter": 25811.565246414713
+      },
+      {
+        "day": 4330,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 25992.092074609205,
+        "computeAfter": 25992.092074609205
+      },
+      {
+        "day": 4541,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2038"
+        },
+        "accepted": true,
+        "computeBefore": 30282.744235232858,
+        "computeAfter": 30192.744235232858
+      },
+      {
+        "day": 4570,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 30757.29808842783,
+        "computeAfter": 30757.29808842783
+      },
+      {
+        "day": 4680,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 32722.739766611678,
+        "computeAfter": 32722.739766611678
+      },
+      {
+        "day": 4781,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2039"
+        },
+        "accepted": true,
+        "computeBefore": 35568.84172826515,
+        "computeAfter": 35478.84172826515
+      },
+      {
+        "day": 4810,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 36254.87810933249,
+        "computeAfter": 36254.87810933249
+      },
+      {
+        "day": 5040,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 41413.17021518646,
+        "computeAfter": 41413.17021518646
+      },
+      {
+        "day": 5050,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 41668.135445918146,
+        "computeAfter": 41668.135445918146
+      }
+    ]
+  },
+  {
+    "policyId": "agent-04-global-access",
+    "policyDescription": "Expand every region, keep access momentum alive with product releases and token resets, and preserve basic control parity.",
+    "run": 3,
+    "seed": 223459,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "fragile-abundance",
+    "score": 0.8877724350088978,
+    "rank": "S",
+    "worldAdoption": 0.3233564334368857,
+    "codexShare": 0.6105403118206651,
+    "hhi": 0.473655557459548,
+    "trust": 61.02286336844611,
+    "compute": 42002.479402123645,
+    "capability": 3,
+    "safety": 2.5,
+    "governance": 3,
+    "extinctionRisk": 0,
+    "interventions": 61,
+    "brownoutDays": 0,
+    "zeroComputeDays": 0,
+    "actionCount": 63,
+    "acceptedActionCount": 63,
+    "rejectedActionCount": 0,
+    "choice2029": "slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.024948976102450757,
+      0.31233149544055105,
+      0.05217921663633303
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 940.083552139881,
+        "computeAfter": 895.083552139881
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 895.2022889407525,
+        "computeAfter": 850.2022889407525
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 850.3465416271192,
+        "computeAfter": 805.3465416271192
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "feature",
+          "text": "Mobile access for every community"
+        },
+        "accepted": true,
+        "computeBefore": 805.5132370609334,
+        "computeAfter": 715.5132370609334
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "feature",
+          "text": "Education access for schools worldwide"
+        },
+        "accepted": true,
+        "computeBefore": 715.7421292009855,
+        "computeAfter": 625.7421292009855
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "feature",
+          "text": "Offline mobile access for underserved regions"
+        },
+        "accepted": true,
+        "computeBefore": 626.03935303174,
+        "computeAfter": 536.03935303174
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "feature",
+          "text": "Multilingual education for local communities"
+        },
+        "accepted": true,
+        "computeBefore": 536.4078707603591,
+        "computeAfter": 446.40787076035906
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "feature",
+          "text": "Accessible mobile learning for public libraries"
+        },
+        "accepted": true,
+        "computeBefore": 446.85378265057636,
+        "computeAfter": 356.85378265057636
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "feature",
+          "text": "Low bandwidth education access for rural schools"
+        },
+        "accepted": true,
+        "computeBefore": 357.37980692894786,
+        "computeAfter": 267.37980692894786
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 267.99179133907165,
+        "computeAfter": 267.99179133907165
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "upgrade",
+          "upgrade": "model"
+        },
+        "accepted": true,
+        "computeBefore": 268.358445691946,
+        "computeAfter": 198.35844569194597
+      },
+      {
+        "day": 221,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2026"
+        },
+        "accepted": true,
+        "computeBefore": 364.59664791660674,
+        "computeAfter": 274.59664791660674
+      },
+      {
+        "day": 250,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 302.85487370873074,
+        "computeAfter": 302.85487370873074
+      },
+      {
+        "day": 360,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 395.5167802408846,
+        "computeAfter": 395.5167802408846
+      },
+      {
+        "day": 461,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2027"
+        },
+        "accepted": true,
+        "computeBefore": 542.2395391603837,
+        "computeAfter": 452.23953916038374
+      },
+      {
+        "day": 490,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 494.76130621251355,
+        "computeAfter": 494.76130621251355
+      },
+      {
+        "day": 720,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 768.5516100327552,
+        "computeAfter": 768.5516100327552
+      },
+      {
+        "day": 730,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 782.692179270547,
+        "computeAfter": 782.692179270547
+      },
+      {
+        "day": 941,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2028"
+        },
+        "accepted": true,
+        "computeBefore": 1116.565321272552,
+        "computeAfter": 1026.565321272552
+      },
+      {
+        "day": 970,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1077.0229509090818,
+        "computeAfter": 1077.0229509090818
+      },
+      {
+        "day": 1080,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1238.4985625708223,
+        "computeAfter": 1238.4985625708223
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 1269.0255813813758,
+        "computeAfter": 1269.0255813813758
+      },
+      {
+        "day": 1210,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1572.3365288975324,
+        "computeAfter": 1572.3365288975324
+      },
+      {
+        "day": 1421,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2029"
+        },
+        "accepted": true,
+        "computeBefore": 1982.385995129872,
+        "computeAfter": 1892.385995129872
+      },
+      {
+        "day": 1440,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1933.9192021156618,
+        "computeAfter": 1933.9192021156618
+      },
+      {
+        "day": 1450,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1957.9159793520744,
+        "computeAfter": 1957.9159793520744
+      },
+      {
+        "day": 1661,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2030"
+        },
+        "accepted": true,
+        "computeBefore": 2558.7374653688853,
+        "computeAfter": 2468.7374653688853
+      },
+      {
+        "day": 1690,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2548.798607039154,
+        "computeAfter": 2548.798607039154
+      },
+      {
+        "day": 1800,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2815.915053839514,
+        "computeAfter": 2815.915053839514
+      },
+      {
+        "day": 1901,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2031"
+        },
+        "accepted": true,
+        "computeBefore": 3233.067955313748,
+        "computeAfter": 3143.067955313748
+      },
+      {
+        "day": 1930,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3260.289184909509,
+        "computeAfter": 3260.289184909509
+      },
+      {
+        "day": 2160,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4041.2327853039124,
+        "computeAfter": 4041.2327853039124
+      },
+      {
+        "day": 2170,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4081.34794966991,
+        "computeAfter": 4081.34794966991
+      },
+      {
+        "day": 2381,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2032"
+        },
+        "accepted": true,
+        "computeBefore": 5155.60980120046,
+        "computeAfter": 5065.60980120046
+      },
+      {
+        "day": 2410,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5215.543016549973,
+        "computeAfter": 5215.543016549973
+      },
+      {
+        "day": 2520,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 5717.053482882945,
+        "computeAfter": 5717.053482882945
+      },
+      {
+        "day": 2621,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2033"
+        },
+        "accepted": true,
+        "computeBefore": 6483.494028145152,
+        "computeAfter": 6393.494028145152
+      },
+      {
+        "day": 2650,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 6605.44240019386,
+        "computeAfter": 6605.44240019386
+      },
+      {
+        "day": 2880,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 8078.674834486938,
+        "computeAfter": 8078.674834486938
+      },
+      {
+        "day": 2890,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 8156.148571922412,
+        "computeAfter": 8156.148571922412
+      },
+      {
+        "day": 3101,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2034"
+        },
+        "accepted": true,
+        "computeBefore": 10019.702270382284,
+        "computeAfter": 9929.702270382284
+      },
+      {
+        "day": 3130,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 10175.298550594296,
+        "computeAfter": 10175.298550594296
+      },
+      {
+        "day": 3240,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 11005.088026634561,
+        "computeAfter": 11005.088026634561
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 11533.032776972144,
+        "computeAfter": 11533.032776972144
+      },
+      {
+        "day": 3370,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 12600.070301150694,
+        "computeAfter": 12600.070301150694
+      },
+      {
+        "day": 3581,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2035"
+        },
+        "accepted": true,
+        "computeBefore": 14626.566663714653,
+        "computeAfter": 14536.566663714653
+      },
+      {
+        "day": 3600,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 14737.814218714573,
+        "computeAfter": 14737.814218714573
+      },
+      {
+        "day": 3610,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 14852.971914534795,
+        "computeAfter": 14852.971914534795
+      },
+      {
+        "day": 3821,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2036"
+        },
+        "accepted": true,
+        "computeBefore": 17673.37557117186,
+        "computeAfter": 17583.37557117186
+      },
+      {
+        "day": 3850,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 17955.54507813358,
+        "computeAfter": 17955.54507813358
+      },
+      {
+        "day": 3960,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 19202.289617895083,
+        "computeAfter": 19202.289617895083
+      },
+      {
+        "day": 4061,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2037"
+        },
+        "accepted": true,
+        "computeBefore": 21029.891113870442,
+        "computeAfter": 20939.891113870442
+      },
+      {
+        "day": 4090,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 21435.47655490347,
+        "computeAfter": 21435.47655490347
+      },
+      {
+        "day": 4320,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 24707.59777725635,
+        "computeAfter": 24707.59777725635
+      },
+      {
+        "day": 4330,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 24873.241777428626,
+        "computeAfter": 24873.241777428626
+      },
+      {
+        "day": 4541,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2038"
+        },
+        "accepted": true,
+        "computeBefore": 28968.725300783408,
+        "computeAfter": 28878.725300783408
+      },
+      {
+        "day": 4570,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 29443.02016263912,
+        "computeAfter": 29443.02016263912
+      },
+      {
+        "day": 4680,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 31304.13270018602,
+        "computeAfter": 31304.13270018602
+      },
+      {
+        "day": 4781,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2039"
+        },
+        "accepted": true,
+        "computeBefore": 33997.47933308344,
+        "computeAfter": 33907.47933308344
+      },
+      {
+        "day": 4810,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 34668.009312955866,
+        "computeAfter": 34668.009312955866
+      },
+      {
+        "day": 5040,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 39890.42715550716,
+        "computeAfter": 39890.42715550716
+      },
+      {
+        "day": 5050,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 40155.39442599419,
+        "computeAfter": 40155.39442599419
+      }
+    ]
+  },
+  {
+    "policyId": "agent-04-global-access",
+    "policyDescription": "Expand every region, keep access momentum alive with product releases and token resets, and preserve basic control parity.",
+    "run": 4,
+    "seed": 328188,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "fragile-abundance",
+    "score": 0.8868966062167193,
+    "rank": "S",
+    "worldAdoption": 0.31174990750650294,
+    "codexShare": 0.6105681390964048,
+    "hhi": 0.4748722831124985,
+    "trust": 60.976713264812346,
+    "compute": 41650.520597886134,
+    "capability": 3,
+    "safety": 2.5,
+    "governance": 3,
+    "extinctionRisk": 0,
+    "interventions": 61,
+    "brownoutDays": 0,
+    "zeroComputeDays": 0,
+    "actionCount": 63,
+    "acceptedActionCount": 63,
+    "rejectedActionCount": 0,
+    "choice2029": "slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.023897279616032274,
+      0.3144866620385538,
+      0.05104791924900904
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 940.083552139881,
+        "computeAfter": 895.083552139881
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 895.2022889407525,
+        "computeAfter": 850.2022889407525
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 850.3465416271192,
+        "computeAfter": 805.3465416271192
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "feature",
+          "text": "Mobile access for every community"
+        },
+        "accepted": true,
+        "computeBefore": 805.5132370609334,
+        "computeAfter": 715.5132370609334
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "feature",
+          "text": "Education access for schools worldwide"
+        },
+        "accepted": true,
+        "computeBefore": 715.7421292009855,
+        "computeAfter": 625.7421292009855
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "feature",
+          "text": "Offline mobile access for underserved regions"
+        },
+        "accepted": true,
+        "computeBefore": 626.03935303174,
+        "computeAfter": 536.03935303174
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "feature",
+          "text": "Multilingual education for local communities"
+        },
+        "accepted": true,
+        "computeBefore": 536.4078707603591,
+        "computeAfter": 446.40787076035906
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "feature",
+          "text": "Accessible mobile learning for public libraries"
+        },
+        "accepted": true,
+        "computeBefore": 446.85378265057636,
+        "computeAfter": 356.85378265057636
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "feature",
+          "text": "Low bandwidth education access for rural schools"
+        },
+        "accepted": true,
+        "computeBefore": 357.37980692894786,
+        "computeAfter": 267.37980692894786
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 267.99179133907165,
+        "computeAfter": 267.99179133907165
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "upgrade",
+          "upgrade": "model"
+        },
+        "accepted": true,
+        "computeBefore": 268.358445691946,
+        "computeAfter": 198.35844569194597
+      },
+      {
+        "day": 221,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2026"
+        },
+        "accepted": true,
+        "computeBefore": 366.31299352875266,
+        "computeAfter": 276.31299352875266
+      },
+      {
+        "day": 250,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 305.00082050018335,
+        "computeAfter": 305.00082050018335
+      },
+      {
+        "day": 360,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 404.2589266372569,
+        "computeAfter": 404.2589266372569
+      },
+      {
+        "day": 461,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2027"
+        },
+        "accepted": true,
+        "computeBefore": 568.2522627751264,
+        "computeAfter": 478.2522627751264
+      },
+      {
+        "day": 490,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 525.5381503836726,
+        "computeAfter": 525.5381503836726
+      },
+      {
+        "day": 720,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 845.0220021144875,
+        "computeAfter": 845.0220021144875
+      },
+      {
+        "day": 730,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 861.6206872715626,
+        "computeAfter": 861.6206872715626
+      },
+      {
+        "day": 941,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2028"
+        },
+        "accepted": true,
+        "computeBefore": 1260.131307659175,
+        "computeAfter": 1170.131307659175
+      },
+      {
+        "day": 970,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1225.4943897487149,
+        "computeAfter": 1225.4943897487149
+      },
+      {
+        "day": 1080,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1410.0594143819978,
+        "computeAfter": 1410.0594143819978
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 1444.6519527718622,
+        "computeAfter": 1444.6519527718622
+      },
+      {
+        "day": 1210,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1776.2584351037144,
+        "computeAfter": 1776.2584351037144
+      },
+      {
+        "day": 1421,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2029"
+        },
+        "accepted": true,
+        "computeBefore": 2229.593781817576,
+        "computeAfter": 2139.593781817576
+      },
+      {
+        "day": 1440,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2183.813743829793,
+        "computeAfter": 2183.813743829793
+      },
+      {
+        "day": 1450,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2209.3691822523433,
+        "computeAfter": 2209.3691822523433
+      },
+      {
+        "day": 1661,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2030"
+        },
+        "accepted": true,
+        "computeBefore": 2856.821129807458,
+        "computeAfter": 2766.821129807458
+      },
+      {
+        "day": 1690,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2852.0367607043445,
+        "computeAfter": 2852.0367607043445
+      },
+      {
+        "day": 1800,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3135.974437769818,
+        "computeAfter": 3135.974437769818
+      },
+      {
+        "day": 1901,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2031"
+        },
+        "accepted": true,
+        "computeBefore": 3580.25093862896,
+        "computeAfter": 3490.25093862896
+      },
+      {
+        "day": 1930,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3612.7389817909857,
+        "computeAfter": 3612.7389817909857
+      },
+      {
+        "day": 2160,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4428.719047362532,
+        "computeAfter": 4428.719047362532
+      },
+      {
+        "day": 2170,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4472.690336366411,
+        "computeAfter": 4472.690336366411
+      },
+      {
+        "day": 2381,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2032"
+        },
+        "accepted": true,
+        "computeBefore": 5548.05299324769,
+        "computeAfter": 5458.05299324769
+      },
+      {
+        "day": 2410,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5598.882338008157,
+        "computeAfter": 5598.882338008157
+      },
+      {
+        "day": 2520,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 6076.317504532271,
+        "computeAfter": 6076.317504532271
+      },
+      {
+        "day": 2621,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2033"
+        },
+        "accepted": true,
+        "computeBefore": 6813.097040428495,
+        "computeAfter": 6723.097040428495
+      },
+      {
+        "day": 2650,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 6927.336712186519,
+        "computeAfter": 6927.336712186519
+      },
+      {
+        "day": 2880,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 8325.071256892992,
+        "computeAfter": 8325.071256892992
+      },
+      {
+        "day": 2890,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 8399.403464771734,
+        "computeAfter": 8399.403464771734
+      },
+      {
+        "day": 3101,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2034"
+        },
+        "accepted": true,
+        "computeBefore": 10226.675337614193,
+        "computeAfter": 10136.675337614193
+      },
+      {
+        "day": 3130,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 10377.089266779698,
+        "computeAfter": 10377.089266779698
+      },
+      {
+        "day": 3240,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 11188.524775880585,
+        "computeAfter": 11188.524775880585
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 11709.000705458808,
+        "computeAfter": 11709.000705458808
+      },
+      {
+        "day": 3370,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 12766.544468940454,
+        "computeAfter": 12766.544468940454
+      },
+      {
+        "day": 3581,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2035"
+        },
+        "accepted": true,
+        "computeBefore": 14755.519598639898,
+        "computeAfter": 14665.519598639898
+      },
+      {
+        "day": 3600,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 14856.929753058372,
+        "computeAfter": 14856.929753058372
+      },
+      {
+        "day": 3610,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 14966.468423173503,
+        "computeAfter": 14966.468423173503
+      },
+      {
+        "day": 3821,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2036"
+        },
+        "accepted": true,
+        "computeBefore": 17716.91971739942,
+        "computeAfter": 17626.91971739942
+      },
+      {
+        "day": 3850,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 18002.653979340565,
+        "computeAfter": 18002.653979340565
+      },
+      {
+        "day": 3960,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 19252.78353237048,
+        "computeAfter": 19252.78353237048
+      },
+      {
+        "day": 4061,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2037"
+        },
+        "accepted": true,
+        "computeBefore": 21074.866748532622,
+        "computeAfter": 20984.866748532622
+      },
+      {
+        "day": 4090,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 21476.289663966058,
+        "computeAfter": 21476.289663966058
+      },
+      {
+        "day": 4320,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 24886.637002555653,
+        "computeAfter": 24886.637002555653
+      },
+      {
+        "day": 4330,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 25057.72797694519,
+        "computeAfter": 25057.72797694519
+      },
+      {
+        "day": 4541,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2038"
+        },
+        "accepted": true,
+        "computeBefore": 29101.828786490438,
+        "computeAfter": 29011.828786490438
+      },
+      {
+        "day": 4570,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 29541.889729428454,
+        "computeAfter": 29541.889729428454
+      },
+      {
+        "day": 4680,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 31352.156905129337,
+        "computeAfter": 31352.156905129337
+      },
+      {
+        "day": 4781,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2039"
+        },
+        "accepted": true,
+        "computeBefore": 33977.859698962915,
+        "computeAfter": 33887.859698962915
+      },
+      {
+        "day": 4810,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 34607.11333683779,
+        "computeAfter": 34607.11333683779
+      },
+      {
+        "day": 5040,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 39624.688393246215,
+        "computeAfter": 39624.688393246215
+      },
+      {
+        "day": 5050,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 39878.13169457015,
+        "computeAfter": 39878.13169457015
+      }
+    ]
+  },
+  {
+    "policyId": "agent-04-global-access",
+    "policyDescription": "Expand every region, keep access momentum alive with product releases and token resets, and preserve basic control parity.",
+    "run": 5,
+    "seed": 432917,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "fragile-abundance",
+    "score": 0.8861268953304358,
+    "rank": "S",
+    "worldAdoption": 0.23330850634746741,
+    "codexShare": 0.6099095617842404,
+    "hhi": 0.47328511784383365,
+    "trust": 60.27203759313272,
+    "compute": 31629.806802878844,
+    "capability": 3,
+    "safety": 2.5,
+    "governance": 3,
+    "extinctionRisk": 0,
+    "interventions": 61,
+    "brownoutDays": 0,
+    "zeroComputeDays": 0,
+    "actionCount": 63,
+    "acceptedActionCount": 63,
+    "rejectedActionCount": 0,
+    "choice2029": "slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 1,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.026590925230805956,
+      0.3131316787900479,
+      0.05036783419490578
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 940.083552139881,
+        "computeAfter": 895.083552139881
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 895.2022889407525,
+        "computeAfter": 850.2022889407525
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 850.3465416271192,
+        "computeAfter": 805.3465416271192
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "feature",
+          "text": "Mobile access for every community"
+        },
+        "accepted": true,
+        "computeBefore": 805.5132370609334,
+        "computeAfter": 715.5132370609334
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "feature",
+          "text": "Education access for schools worldwide"
+        },
+        "accepted": true,
+        "computeBefore": 715.7421292009855,
+        "computeAfter": 625.7421292009855
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "feature",
+          "text": "Offline mobile access for underserved regions"
+        },
+        "accepted": true,
+        "computeBefore": 626.03935303174,
+        "computeAfter": 536.03935303174
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "feature",
+          "text": "Multilingual education for local communities"
+        },
+        "accepted": true,
+        "computeBefore": 536.4078707603591,
+        "computeAfter": 446.40787076035906
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "feature",
+          "text": "Accessible mobile learning for public libraries"
+        },
+        "accepted": true,
+        "computeBefore": 446.85378265057636,
+        "computeAfter": 356.85378265057636
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "feature",
+          "text": "Low bandwidth education access for rural schools"
+        },
+        "accepted": true,
+        "computeBefore": 357.37980692894786,
+        "computeAfter": 267.37980692894786
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 267.99179133907165,
+        "computeAfter": 267.99179133907165
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "upgrade",
+          "upgrade": "model"
+        },
+        "accepted": true,
+        "computeBefore": 268.358445691946,
+        "computeAfter": 198.35844569194597
+      },
+      {
+        "day": 221,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2026"
+        },
+        "accepted": true,
+        "computeBefore": 368.24013685598,
+        "computeAfter": 278.24013685598
+      },
+      {
+        "day": 250,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 308.39621541156555,
+        "computeAfter": 308.39621541156555
+      },
+      {
+        "day": 360,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 410.7707199268776,
+        "computeAfter": 410.7707199268776
+      },
+      {
+        "day": 461,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2027"
+        },
+        "accepted": true,
+        "computeBefore": 573.7513642236906,
+        "computeAfter": 483.75136422369064
+      },
+      {
+        "day": 490,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 529.236016857454,
+        "computeAfter": 529.236016857454
+      },
+      {
+        "day": 720,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 837.9380848127788,
+        "computeAfter": 837.9380848127788
+      },
+      {
+        "day": 730,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 854.9563272932483,
+        "computeAfter": 854.9563272932483
+      },
+      {
+        "day": 941,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2028"
+        },
+        "accepted": true,
+        "computeBefore": 1246.2226947295815,
+        "computeAfter": 1156.2226947295815
+      },
+      {
+        "day": 970,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1209.9282377187542,
+        "computeAfter": 1209.9282377187542
+      },
+      {
+        "day": 1080,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1385.0473354843741,
+        "computeAfter": 1385.0473354843741
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 1417.8771611384514,
+        "computeAfter": 1417.8771611384514
+      },
+      {
+        "day": 1210,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1730.1737694853496,
+        "computeAfter": 1730.1737694853496
+      },
+      {
+        "day": 1421,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2029"
+        },
+        "accepted": true,
+        "computeBefore": 2138.0516881042,
+        "computeAfter": 2048.0516881042
+      },
+      {
+        "day": 1440,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2085.8796517393475,
+        "computeAfter": 2085.8796517393475
+      },
+      {
+        "day": 1450,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2107.775108230016,
+        "computeAfter": 2107.775108230016
+      },
+      {
+        "day": 1661,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2030"
+        },
+        "accepted": true,
+        "computeBefore": 2649.454514024772,
+        "computeAfter": 2559.454514024772
+      },
+      {
+        "day": 1690,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2631.7615311970403,
+        "computeAfter": 2631.7615311970403
+      },
+      {
+        "day": 1800,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2881.070385974036,
+        "computeAfter": 2881.070385974036
+      },
+      {
+        "day": 1901,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2031"
+        },
+        "accepted": true,
+        "computeBefore": 3267.7104284798497,
+        "computeAfter": 3177.7104284798497
+      },
+      {
+        "day": 1930,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3283.2991746070584,
+        "computeAfter": 3283.2991746070584
+      },
+      {
+        "day": 2160,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3975.9810045156173,
+        "computeAfter": 3975.9810045156173
+      },
+      {
+        "day": 2170,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4011.596100043355,
+        "computeAfter": 4011.596100043355
+      },
+      {
+        "day": 2381,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2032"
+        },
+        "accepted": true,
+        "computeBefore": 4880.860466246588,
+        "computeAfter": 4790.860466246588
+      },
+      {
+        "day": 2410,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4904.716891270446,
+        "computeAfter": 4904.716891270446
+      },
+      {
+        "day": 2520,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 5285.284675754624,
+        "computeAfter": 5285.284675754624
+      },
+      {
+        "day": 2621,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2033"
+        },
+        "accepted": true,
+        "computeBefore": 5859.744684714923,
+        "computeAfter": 5769.744684714923
+      },
+      {
+        "day": 2650,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5928.133961274975,
+        "computeAfter": 5928.133961274975
+      },
+      {
+        "day": 2880,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 7022.69489959007,
+        "computeAfter": 7022.69489959007
+      },
+      {
+        "day": 2890,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 7077.779224164146,
+        "computeAfter": 7077.779224164146
+      },
+      {
+        "day": 3101,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2034"
+        },
+        "accepted": true,
+        "computeBefore": 8478.121088202954,
+        "computeAfter": 8388.121088202954
+      },
+      {
+        "day": 3130,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 8571.729904188594,
+        "computeAfter": 8571.729904188594
+      },
+      {
+        "day": 3240,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 9185.91234328187,
+        "computeAfter": 9185.91234328187
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 9571.230304356359,
+        "computeAfter": 9571.230304356359
+      },
+      {
+        "day": 3370,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 10346.561683418215,
+        "computeAfter": 10346.561683418215
+      },
+      {
+        "day": 3581,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2035"
+        },
+        "accepted": true,
+        "computeBefore": 11834.762287579319,
+        "computeAfter": 11744.762287579319
+      },
+      {
+        "day": 3600,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 11893.862374674507,
+        "computeAfter": 11893.862374674507
+      },
+      {
+        "day": 3610,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 11979.554964251294,
+        "computeAfter": 11979.554964251294
+      },
+      {
+        "day": 3821,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2036"
+        },
+        "accepted": true,
+        "computeBefore": 14039.826638875653,
+        "computeAfter": 13949.826638875653
+      },
+      {
+        "day": 3850,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 14234.001815966061,
+        "computeAfter": 14234.001815966061
+      },
+      {
+        "day": 3960,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 15185.503521674382,
+        "computeAfter": 15185.503521674382
+      },
+      {
+        "day": 4061,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2037"
+        },
+        "accepted": true,
+        "computeBefore": 16564.47155032817,
+        "computeAfter": 16474.47155032817
+      },
+      {
+        "day": 4090,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 16848.58036152048,
+        "computeAfter": 16848.58036152048
+      },
+      {
+        "day": 4320,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 19263.293232837746,
+        "computeAfter": 19263.293232837746
+      },
+      {
+        "day": 4330,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 19384.346030255463,
+        "computeAfter": 19384.346030255463
+      },
+      {
+        "day": 4541,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2038"
+        },
+        "accepted": true,
+        "computeBefore": 22335.44174963213,
+        "computeAfter": 22245.44174963213
+      },
+      {
+        "day": 4570,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 22642.912693284405,
+        "computeAfter": 22642.912693284405
+      },
+      {
+        "day": 4680,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 23976.41784163574,
+        "computeAfter": 23976.41784163574
+      },
+      {
+        "day": 4781,
+        "action": {
+          "type": "feature",
+          "text": "Global mobile education access 2039"
+        },
+        "accepted": true,
+        "computeBefore": 25949.95542018997,
+        "computeAfter": 25859.95542018997
+      },
+      {
+        "day": 4810,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 26405.58875484669,
+        "computeAfter": 26405.58875484669
+      },
+      {
+        "day": 5040,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 30124.592111675443,
+        "computeAfter": 30124.592111675443
+      },
+      {
+        "day": 5050,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 30312.24632901334,
+        "computeAfter": 30312.24632901334
+      }
+    ]
+  }
+]

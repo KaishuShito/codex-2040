@@ -139,4 +139,40 @@ describe('voice reset tool approval contract', () => {
     expect(rejected.shouldExecute).toBe(false)
     expect(rejected.outcome).toBe('rejected')
   })
+
+  it('keeps English scripted fallback localized through approval, cooldown, rejection, and completion', () => {
+    const requested = requestFallbackReset(createVoiceResetState(), 'demo-en', 'en')
+    expect(requested.pending).toMatchObject({
+      language: 'en',
+      playerRequest: 'Please reset my in-game Tibo token limit.',
+      source: 'scripted-fallback',
+    })
+    expect(requested.notice).toBe('Scripted mode requested an in-game reset. Player approval is required.')
+
+    const cooldown = resolveVoiceReset(requested, true, 4.2)
+    expect(cooldown.outcome).toBe('cooldown')
+    expect(cooldown.state.notice).toBe('Reset is cooling down. Try again in 5 seconds.')
+
+    const rejected = resolveVoiceReset(requested, false, 0)
+    expect(rejected.state.notice).toBe('The player rejected the in-game reset.')
+
+    const completed = resolveVoiceReset(requested, true, 0)
+    expect(completed.shouldExecute).toBe(true)
+    expect(completed.state.notice).toBe('The player approved and the in-game Tibo reset ran once.')
+  })
+
+  it('detects an English realtime request and keeps its confirmation notice in English', () => {
+    const englishCall = {
+      ...validCall('call_en'),
+      arguments: JSON.stringify({
+        player_request: 'Please reset my in-game Tibo token limit.',
+        confirmed: false,
+        approval_id: null,
+        confirmation_utterance: null,
+      }),
+    }
+    const requested = handleRealtimeResetToolCall(createVoiceResetState(), englishCall, 0)
+    expect(requested.request?.language).toBe('en')
+    expect(requested.state.notice).toBe('The voice operator requested an in-game reset. Approve explicitly in a new utterance.')
+  })
 })

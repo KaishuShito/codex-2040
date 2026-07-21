@@ -60,6 +60,7 @@ export type RunAggregate = {
 
 export type RunStats = {
   minimum_cohort_size: number
+  ruleset_version: string
   language: RunLanguage | null
   total_started: number | null
   total_completed: number | null
@@ -80,7 +81,7 @@ export interface RunsRepository {
   complete(playId: string, input: AuthorizedCompleteRunInput): Promise<WriteResult | { status: 'not_found' } | { status: 'unauthorized' }>
   get(playId: string): Promise<RunRecord | null>
   aggregateFor(run: RunRecord): Promise<RunAggregate>
-  stats(language: RunLanguage | null): Promise<RunStats>
+  stats(language: RunLanguage | null, rulesetVersion: string): Promise<RunStats>
 }
 
 const RUN_COLUMNS = `
@@ -231,9 +232,11 @@ export function createRunsRepository(db: D1Database): RunsRepository {
       }
     },
 
-    async stats(language) {
-      const languageClause = language ? 'AND language = ?1' : ''
-      const bind = (statement: D1PreparedStatement) => language ? statement.bind(language) : statement
+    async stats(language, rulesetVersion) {
+      const languageClause = language ? 'AND language = ?2' : ''
+      const bind = (statement: D1PreparedStatement) => language
+        ? statement.bind(rulesetVersion, language)
+        : statement.bind(rulesetVersion)
       const [overview, endings, choices2029, choices2035] = await db.batch([
         bind(db.prepare(`
           SELECT COUNT(*) AS total_started,
@@ -241,11 +244,11 @@ export function createRunsRepository(db: D1Database): RunsRepository {
                  AVG(CASE WHEN completed_at IS NOT NULL THEN final_score END) AS average_score,
                  AVG(CASE WHEN completed_at IS NOT NULL THEN active_play_seconds END) AS average_active_play_seconds
           FROM game_runs
-          WHERE 1 = 1 ${languageClause}
+          WHERE ruleset_version = ?1 ${languageClause}
         `)),
-        bind(db.prepare(`SELECT ending AS value, COUNT(*) AS count FROM game_runs WHERE completed_at IS NOT NULL ${languageClause} GROUP BY ending`)),
-        bind(db.prepare(`SELECT choice_2029 AS value, COUNT(*) AS count FROM game_runs WHERE completed_at IS NOT NULL ${languageClause} GROUP BY choice_2029`)),
-        bind(db.prepare(`SELECT choice_2035 AS value, COUNT(*) AS count FROM game_runs WHERE completed_at IS NOT NULL ${languageClause} GROUP BY choice_2035`)),
+        bind(db.prepare(`SELECT ending AS value, COUNT(*) AS count FROM game_runs WHERE completed_at IS NOT NULL AND ruleset_version = ?1 ${languageClause} GROUP BY ending`)),
+        bind(db.prepare(`SELECT choice_2029 AS value, COUNT(*) AS count FROM game_runs WHERE completed_at IS NOT NULL AND ruleset_version = ?1 ${languageClause} GROUP BY choice_2029`)),
+        bind(db.prepare(`SELECT choice_2035 AS value, COUNT(*) AS count FROM game_runs WHERE completed_at IS NOT NULL AND ruleset_version = ?1 ${languageClause} GROUP BY choice_2035`)),
       ])
 
       const summary = overview.results[0] as {
@@ -258,6 +261,7 @@ export function createRunsRepository(db: D1Database): RunsRepository {
 
       return {
         minimum_cohort_size: MINIMUM_COHORT_SIZE,
+        ruleset_version: rulesetVersion,
         language,
         total_started: suppressed ? null : summary.total_started,
         total_completed: suppressed ? null : summary.total_completed,

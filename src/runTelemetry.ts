@@ -7,10 +7,11 @@ import {
   type RunOutboxStorage,
 } from './runApi'
 
-export const RUN_TELEMETRY_STORAGE_KEY = 'codex-2040:run-telemetry:v1'
+export const RUN_TELEMETRY_STORAGE_KEY = 'codex-2040:run-telemetry:v2'
 
 type PersistedRun = {
-  version: 1
+  version: 2
+  rulesetVersion: typeof RULESET_VERSION
   playId: string
   createdAt: string
   startedAt: string | null
@@ -48,7 +49,8 @@ const decodeRun = (raw: string | null): PersistedRun | null => {
   try {
     const parsed: unknown = JSON.parse(raw)
     if (!isObject(parsed)
-      || parsed.version !== 1
+      || parsed.version !== 2
+      || parsed.rulesetVersion !== RULESET_VERSION
       || typeof parsed.playId !== 'string'
       || typeof parsed.createdAt !== 'string'
       || !(typeof parsed.startedAt === 'string' || parsed.startedAt === null)
@@ -168,7 +170,8 @@ export class RunTelemetry {
 
   private newRun(): PersistedRun {
     return {
-      version: 1,
+      version: 2,
+      rulesetVersion: RULESET_VERSION,
       playId: this.createPlayId(),
       createdAt: new Date(this.now()).toISOString(),
       startedAt: null,

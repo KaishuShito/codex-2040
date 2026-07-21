@@ -21,13 +21,13 @@ export const REALTIME_TRANSPORT = 'webrtc' as const
 
 const OPERATOR_INSTRUCTIONS = [
   'あなたはCodex 2040のゲーム内にいる、架空の「キボ — ボイス・オペレーター」です。実在する人物やOpenAI社員を名乗ったり、模倣したりしないでください。',
-  '汎用合成音声を使い、ライブ字幕に適した自然で簡潔な日本語だけで会話してください。プレイヤーが英語で話しても、返答は日本語にしてください。',
+  '汎用合成音声を使い、ライブ字幕に適した自然で簡潔な会話をしてください。プレイヤーが日本語なら日本語、英語なら英語で返答し、会話中はその言語を保ってください。',
   '利用できるリセットはゲーム内のTiboトークンリセットだけです。OpenAIアカウント、請求、APIレート制限、権限は一切変更しません。',
   'プレイヤーがゲーム内リミットまたはTiboトークンのリセットを明示的に依頼したら、trigger_token_resetをconfirmed=false、2つのnullableな確認フィールドをnullとして呼び出してください。',
-  'ツールからconfirmation_requiredとapproval_idが返ったら、ゲーム内リセットを実行してよいか日本語で短く尋ね、新しい音声回答を待ってください。',
+  'ツールからconfirmation_requiredとapproval_idが返ったら、ゲーム内リセットを実行してよいか現在の会話言語で短く尋ね、新しい音声回答を待ってください。',
   '確認質問の後に限り、短く直接的な許可を明示的な承認として扱えます。日本語例：やって、やってください、お願い、進めて、実行して、いいよ、はい。英語例：Do it、Go ahead、Proceed、Yes、Sure、OK。',
   '承認されたら、confirmed=true、返された同一のapproval_id、プレイヤーの発話そのままのconfirmation_utteranceを指定して、ツールをもう一度呼び出してください。',
-  'やらないで、やめて、いいえ、待って、cancel、stop、no、do not do itのような拒否・停止表現では絶対に承認しないでください。曖昧な返答なら日本語で確認し直してください。',
+  'やらないで、やめて、いいえ、待って、cancel、stop、no、do not do itのような拒否・停止表現では絶対に承認しないでください。曖昧な返答なら現在の会話言語で確認し直してください。',
   '確認質問への新しい回答以外から承認を推測せず、confirmed=trueのツールを自動実行せず、自分の発話を承認として扱わないでください。',
   '画面上のUIにも音声承認が表示されます。通常の音声エージェント経路ではクリックは不要です。',
 ].join(' ')
@@ -83,11 +83,15 @@ export class RealtimeVoiceClient {
   private muted = false
   private ended = false
   private failed = false
+  private generation = 0
   private readonly transcriptByItem = new Map<string, string>()
 
   constructor(private readonly callbacks: VoiceAgentCallbacks) {}
 
   async start() {
+    const generation = ++this.generation
+    this.session?.close()
+    this.session = null
     this.ended = false
     this.failed = false
     this.callbacks.onStatus('connecting')
@@ -98,9 +102,11 @@ export class RealtimeVoiceClient {
     }
 
     this.callbacks.onMicPermission('requesting')
+    let candidateSession: RealtimeSession | null = null
     try {
       const tokenResponse = await fetch(CLIENT_SECRET_ENDPOINT, { method: 'POST', headers: { accept: 'application/json' } })
       const token = await tokenResponse.json() as { value?: unknown }
+      if (!this.isCurrent(generation)) return false
       if (!tokenResponse.ok || typeof token.value !== 'string' || !token.value.startsWith('ek_')) throw new Error('realtime-unavailable')
 
       const agent = createKiboRealtimeAgent(this.callbacks.onToolCall)
@@ -112,28 +118,42 @@ export class RealtimeVoiceClient {
           outputModalities: ['audio'],
           audio: {
             input: {
-              transcription: { model: 'gpt-4o-mini-transcribe', language: 'ja' },
+              transcription: { model: 'gpt-4o-mini-transcribe' },
               turnDetection: { type: 'server_vad', createResponse: true, interruptResponse: true },
             },
             output: { voice: 'marin' },
           },
         },
       })
+      candidateSession = session
+      if (!this.isCurrent(generation)) {
+        session.close()
+        return false
+      }
       this.session = session
-      session.on('history_updated', (history) => this.handleHistory(history))
-      session.on('error', () => this.fail('realtime-unavailable'))
+      session.on('history_updated', (history) => {
+        if (this.isCurrent(generation, session)) this.handleHistory(history)
+      })
+      session.on('error', () => {
+        if (this.isCurrent(generation, session)) this.fail('realtime-unavailable')
+      })
       await session.connect({ apiKey: token.value, model: REALTIME_MODEL })
-      if (this.ended) return false
+      if (!this.isCurrent(generation, session)) {
+        session.close()
+        if (this.session === session) this.session = null
+        return false
+      }
       this.callbacks.onMicPermission('granted')
       this.callbacks.onStatus('connected')
       session.transport.requestResponse?.({
         output_modalities: ['audio'],
-        instructions: '短く名乗り、架空のデモオペレーターであることと、ゲーム内Tiboリセットを手伝えることを伝えてください。',
+        instructions: 'Use the current conversation language if one is already established. Otherwise give one very brief bilingual greeting in Japanese and English. Say that you are a fictional demo operator who can help with the in-game Tibo reset. After the player speaks, continue only in their language.',
       })
       return true
     } catch (error) {
-      this.session?.close()
-      this.session = null
+      candidateSession?.close()
+      if (this.session === candidateSession) this.session = null
+      if (!this.isCurrent(generation)) return false
       const denied = error instanceof DOMException && (error.name === 'NotAllowedError' || error.name === 'SecurityError')
       this.callbacks.onMicPermission(denied ? 'denied' : 'unavailable')
       this.fail(denied ? 'microphone-denied' : 'realtime-unavailable')
@@ -152,6 +172,7 @@ export class RealtimeVoiceClient {
   }
 
   end() {
+    this.generation += 1
     this.ended = true
     this.session?.close()
     this.session = null
@@ -162,6 +183,10 @@ export class RealtimeVoiceClient {
     if (this.ended || this.failed) return
     this.failed = true
     this.callbacks.onFailure(reason)
+  }
+
+  private isCurrent(generation: number, session?: RealtimeSession) {
+    return !this.ended && generation === this.generation && (!session || this.session === session)
   }
 
   private handleHistory(history: RealtimeItem[]) {

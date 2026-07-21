@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import {
   RULESET_VERSION,
   RUN_OUTBOX_STORAGE_KEY,
+  RUN_TOKEN_STORAGE_KEY,
   RunApiOutbox,
   type RunOutboxStorage,
 } from './runApi'
@@ -163,6 +164,19 @@ describe('run API outbox', () => {
     }]))
 
     const outbox = new RunApiOutbox({ storage, fetch: vi.fn<typeof fetch>(ok) })
+    expect(outbox.pendingCount()).toBe(0)
+  })
+
+  it('isolates v2 requests and tokens from unfinished v1 outbox state', () => {
+    const storage = memoryStorage()
+    storage.setItem('codex-2040:run-outbox:v1', JSON.stringify([{ id: 'legacy-start' }]))
+    storage.setItem('codex-2040:run-tokens:v1', JSON.stringify({ legacy: 'legacy-token' }))
+
+    const outbox = new RunApiOutbox({ storage, fetch: vi.fn<typeof fetch>(ok) })
+
+    expect(RUN_OUTBOX_STORAGE_KEY).toBe('codex-2040:run-outbox:v2')
+    expect(RUN_TOKEN_STORAGE_KEY).toBe('codex-2040:run-tokens:v2')
+    expect(RULESET_VERSION).toBe('codex-2040-rules-v2')
     expect(outbox.pendingCount()).toBe(0)
   })
 })

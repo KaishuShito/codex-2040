@@ -1,6 +1,8 @@
-export const RUN_OUTBOX_STORAGE_KEY = 'codex-2040:run-outbox:v1'
-export const RUN_TOKEN_STORAGE_KEY = 'codex-2040:run-tokens:v1'
-export const RULESET_VERSION = 'codex-2040-rules-v1'
+export { RULESET_VERSION } from '../shared/ruleset'
+import { RULESET_VERSION } from '../shared/ruleset'
+
+export const RUN_OUTBOX_STORAGE_KEY = 'codex-2040:run-outbox:v2'
+export const RUN_TOKEN_STORAGE_KEY = 'codex-2040:run-tokens:v2'
 export const MAX_REPORTED_ACTIVE_PLAY_SECONDS = 21_600
 
 export type RunLanguage = 'ja' | 'en'

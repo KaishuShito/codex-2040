@@ -1,0 +1,5008 @@
+[
+  {
+    "policyId": "agent-09-open-ecosystem-pluralist",
+    "policyDescription": "Open-ecosystem pluralist: share power when concentration rises, invest in regional access and federated safeguards, and preserve a healthy multi-provider market.",
+    "run": 1,
+    "seed": 19001,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "beneficial-abundance",
+    "score": 0.9897727527983642,
+    "rank": "S",
+    "worldAdoption": 0.17557728955389487,
+    "codexShare": 0.3891130072497837,
+    "hhi": 0.40192397121678525,
+    "trust": 95.90910111934568,
+    "compute": 7940.053772985651,
+    "capability": 3,
+    "safety": 7.5,
+    "governance": 9,
+    "extinctionRisk": 0,
+    "interventions": 60,
+    "brownoutDays": 0,
+    "maxBrownoutStreak": 0,
+    "zeroComputeDays": 0,
+    "actionCount": 95,
+    "acceptedActionCount": 95,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.034936924110753796,
+      0.49222391357809303,
+      0.08372615506136943
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-1"
+        },
+        "accepted": true,
+        "computeBefore": 940.0679766235091,
+        "computeAfter": 945.0679766235091
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-2"
+        },
+        "accepted": true,
+        "computeBefore": 945.1515287633902,
+        "computeAfter": 952.1515287633902
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-3"
+        },
+        "accepted": true,
+        "computeBefore": 952.2504305021538,
+        "computeAfter": 957.2504305021538
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 957.3644596845828,
+        "computeAfter": 912.3644596845828
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-4"
+        },
+        "accepted": true,
+        "computeBefore": 912.5095978478165,
+        "computeAfter": 918.5095978478165
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 918.6730653411629,
+        "computeAfter": 873.6730653411629
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-5"
+        },
+        "accepted": true,
+        "computeBefore": 873.8601057649819,
+        "computeAfter": 881.8601057649819
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 882.0662499622712,
+        "computeAfter": 837.0662499622712
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-6"
+        },
+        "accepted": true,
+        "computeBefore": 837.293382625951,
+        "computeAfter": 843.293382625951
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 843.5396386390044,
+        "computeAfter": 843.5396386390044
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 843.7423194641394,
+        "computeAfter": 673.7423194641394
+      },
+      {
+        "day": 12,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-developer-grants"
+        },
+        "accepted": true,
+        "computeBefore": 673.9759399830401,
+        "computeAfter": 523.9759399830401
+      },
+      {
+        "day": 13,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 524.2058881095552,
+        "computeAfter": 314.2058881095552
+      },
+      {
+        "day": 14,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 314.4563269744588,
+        "computeAfter": 119.45632697445882
+      },
+      {
+        "day": 127,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 210.00564926261052,
+        "computeAfter": 120.00564926261052
+      },
+      {
+        "day": 230,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 210.47997519906815,
+        "computeAfter": 120.47997519906815
+      },
+      {
+        "day": 250,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 141.45796326668184,
+        "computeAfter": 141.45796326668184
+      },
+      {
+        "day": 324,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 210.0087915499003,
+        "computeAfter": 120.00879154990031
+      },
+      {
+        "day": 421,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 240.56038023566515,
+        "computeAfter": 110.56038023566515
+      },
+      {
+        "day": 490,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 201.58736917480041,
+        "computeAfter": 201.58736917480041
+      },
+      {
+        "day": 555,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 271.18696225039673,
+        "computeAfter": 121.18696225039673
+      },
+      {
+        "day": 641,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 302.0831389493415,
+        "computeAfter": 112.0831389493415
+      },
+      {
+        "day": 728,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 307.9325544448037,
+        "computeAfter": 90.43255444480371
+      },
+      {
+        "day": 784,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 221.24913539984388,
+        "computeAfter": 151.24913539984388
+      },
+      {
+        "day": 833,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 230.89818346782087,
+        "computeAfter": 110.89818346782087
+      },
+      {
+        "day": 933,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 276.5198847119554,
+        "computeAfter": 276.5198847119554
+      },
+      {
+        "day": 944,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-distillation"
+        },
+        "accepted": true,
+        "computeBefore": 290.6037405306975,
+        "computeAfter": 120.60374053069751
+      },
+      {
+        "day": 1002,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-offline-lite"
+        },
+        "accepted": true,
+        "computeBefore": 261.20827040742375,
+        "computeAfter": 121.20827040742375
+      },
+      {
+        "day": 1065,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 300.3258165011968,
+        "computeAfter": 110.32581650119681
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 201.75921952146203,
+        "computeAfter": 201.75921952146203
+      },
+      {
+        "day": 1136,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-crisis-response"
+        },
+        "accepted": true,
+        "computeBefore": 322.3039043223236,
+        "computeAfter": 122.3039043223236
+      },
+      {
+        "day": 1199,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-crisis-mesh"
+        },
+        "accepted": true,
+        "computeBefore": 321.4820923981927,
+        "computeAfter": 101.48209239819272
+      },
+      {
+        "day": 1268,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 332.8485366744559,
+        "computeAfter": 112.84853667445589
+      },
+      {
+        "day": 1336,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-grid-partnership"
+        },
+        "accepted": true,
+        "computeBefore": 331.97952386166776,
+        "computeAfter": 121.97952386166776
+      },
+      {
+        "day": 1388,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-efficient-inference"
+        },
+        "accepted": true,
+        "computeBefore": 340.26873640406853,
+        "computeAfter": 120.26873640406853
+      },
+      {
+        "day": 1431,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 355.039300524,
+        "computeAfter": 125.039300524
+      },
+      {
+        "day": 1473,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-compute-fund"
+        },
+        "accepted": true,
+        "computeBefore": 363.0008294541568,
+        "computeAfter": 103.00082945415681
+      },
+      {
+        "day": 1530,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 402.66038391119196,
+        "computeAfter": 112.66038391119196
+      },
+      {
+        "day": 1584,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 400.497268306033,
+        "computeAfter": 100.49726830603299
+      },
+      {
+        "day": 1643,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 420.9853836009242,
+        "computeAfter": 100.9853836009242
+      },
+      {
+        "day": 1709,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 441.5546372806216,
+        "computeAfter": 111.55463728062159
+      },
+      {
+        "day": 1773,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-universal-access"
+        },
+        "accepted": true,
+        "computeBefore": 442.32495811684146,
+        "computeAfter": 122.32495811684146
+      },
+      {
+        "day": 1839,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-charter"
+        },
+        "accepted": true,
+        "computeBefore": 440.79872542839456,
+        "computeAfter": 100.79872542839456
+      },
+      {
+        "day": 2060,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1100.322588531349,
+        "computeAfter": 1100.322588531349
+      },
+      {
+        "day": 2061,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-7"
+        },
+        "accepted": true,
+        "computeBefore": 1104.4451758211108,
+        "computeAfter": 1109.4451758211108
+      },
+      {
+        "day": 2062,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-8"
+        },
+        "accepted": true,
+        "computeBefore": 1113.5930362733848,
+        "computeAfter": 1120.5930362733848
+      },
+      {
+        "day": 2063,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-9"
+        },
+        "accepted": true,
+        "computeBefore": 1124.7550365195666,
+        "computeAfter": 1129.7550365195666
+      },
+      {
+        "day": 2066,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1142.4500352235837,
+        "computeAfter": 1142.4500352235837
+      },
+      {
+        "day": 2306,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1861.7916562316727,
+        "computeAfter": 1569.2916562316727
+      },
+      {
+        "day": 2420,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1961.2431184353202,
+        "computeAfter": 1961.2431184353202
+      },
+      {
+        "day": 2421,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-10"
+        },
+        "accepted": true,
+        "computeBefore": 1963.8652417014912,
+        "computeAfter": 1970.8652417014912
+      },
+      {
+        "day": 2422,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-11"
+        },
+        "accepted": true,
+        "computeBefore": 1973.5618774592588,
+        "computeAfter": 1981.5618774592588
+      },
+      {
+        "day": 2423,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-12"
+        },
+        "accepted": true,
+        "computeBefore": 1984.3258998787128,
+        "computeAfter": 1989.3258998787128
+      },
+      {
+        "day": 2431,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2014.851035249607,
+        "computeAfter": 2014.851035249607
+      },
+      {
+        "day": 2671,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 2528.650186177246,
+        "computeAfter": 2198.650186177246
+      },
+      {
+        "day": 2780,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2506.3312267851975,
+        "computeAfter": 2506.3312267851975
+      },
+      {
+        "day": 2781,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-13"
+        },
+        "accepted": true,
+        "computeBefore": 2508.3641261402986,
+        "computeAfter": 2516.3641261402986
+      },
+      {
+        "day": 2782,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-14"
+        },
+        "accepted": true,
+        "computeBefore": 2518.524194337647,
+        "computeAfter": 2525.524194337647
+      },
+      {
+        "day": 2783,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-15"
+        },
+        "accepted": true,
+        "computeBefore": 2527.813262241111,
+        "computeAfter": 2535.813262241111
+      },
+      {
+        "day": 2792,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2564.0570081338656,
+        "computeAfter": 2564.0570081338656
+      },
+      {
+        "day": 3032,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 3219.076720903686,
+        "computeAfter": 2851.576720903686
+      },
+      {
+        "day": 3140,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3270.9083229674975,
+        "computeAfter": 3270.9083229674975
+      },
+      {
+        "day": 3141,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-16"
+        },
+        "accepted": true,
+        "computeBefore": 3274.0845449979774,
+        "computeAfter": 3279.0845449979774
+      },
+      {
+        "day": 3142,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-17"
+        },
+        "accepted": true,
+        "computeBefore": 3282.487766114952,
+        "computeAfter": 3290.487766114952
+      },
+      {
+        "day": 3143,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-18"
+        },
+        "accepted": true,
+        "computeBefore": 3294.098096904988,
+        "computeAfter": 3300.098096904988
+      },
+      {
+        "day": 3152,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3342.6672619137535,
+        "computeAfter": 3342.6672619137535
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 4145.262996291213,
+        "computeAfter": 4145.262996291213
+      },
+      {
+        "day": 3467,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 4319.690926249424,
+        "computeAfter": 3914.6909262494237
+      },
+      {
+        "day": 3568,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4316.85640783427,
+        "computeAfter": 4316.85640783427
+      },
+      {
+        "day": 3569,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-19"
+        },
+        "accepted": true,
+        "computeBefore": 4320.068516032531,
+        "computeAfter": 4328.068516032531
+      },
+      {
+        "day": 3570,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-20"
+        },
+        "accepted": true,
+        "computeBefore": 4331.599326919297,
+        "computeAfter": 4337.599326919297
+      },
+      {
+        "day": 3571,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-21"
+        },
+        "accepted": true,
+        "computeBefore": 4341.451757343897,
+        "computeAfter": 4348.451757343897
+      },
+      {
+        "day": 3583,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4419.2240310037105,
+        "computeAfter": 4419.2240310037105
+      },
+      {
+        "day": 3823,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 5435.543972496463,
+        "computeAfter": 4993.043972496463
+      },
+      {
+        "day": 3928,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 5234.850705668199,
+        "computeAfter": 5234.850705668199
+      },
+      {
+        "day": 3929,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-22"
+        },
+        "accepted": true,
+        "computeBefore": 5236.201202396783,
+        "computeAfter": 5242.201202396783
+      },
+      {
+        "day": 3930,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-23"
+        },
+        "accepted": true,
+        "computeBefore": 5243.958115055395,
+        "computeAfter": 5251.958115055395
+      },
+      {
+        "day": 3931,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-24"
+        },
+        "accepted": true,
+        "computeBefore": 5254.102931544648,
+        "computeAfter": 5262.102931544648
+      },
+      {
+        "day": 3945,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5331.519065883864,
+        "computeAfter": 5331.519065883864
+      },
+      {
+        "day": 4288,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4065.6913225681083,
+        "computeAfter": 4065.6913225681083
+      },
+      {
+        "day": 4289,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-25"
+        },
+        "accepted": true,
+        "computeBefore": 4067.65794589614,
+        "computeAfter": 4075.65794589614
+      },
+      {
+        "day": 4290,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-26"
+        },
+        "accepted": true,
+        "computeBefore": 4078.2977948899284,
+        "computeAfter": 4083.2977948899284
+      },
+      {
+        "day": 4291,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-27"
+        },
+        "accepted": true,
+        "computeBefore": 4086.6117358785514,
+        "computeAfter": 4094.6117358785514
+      },
+      {
+        "day": 4324,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4515.23885559732,
+        "computeAfter": 4515.23885559732
+      },
+      {
+        "day": 4648,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 5014.450711052116,
+        "computeAfter": 5014.450711052116
+      },
+      {
+        "day": 4649,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-28"
+        },
+        "accepted": true,
+        "computeBefore": 5019.642785268443,
+        "computeAfter": 5025.642785268443
+      },
+      {
+        "day": 4650,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-29"
+        },
+        "accepted": true,
+        "computeBefore": 5031.6427126237795,
+        "computeAfter": 5036.6427126237795
+      },
+      {
+        "day": 4651,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-30"
+        },
+        "accepted": true,
+        "computeBefore": 5043.438507765962,
+        "computeAfter": 5048.438507765962
+      },
+      {
+        "day": 4680,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5534.927987432549,
+        "computeAfter": 5534.927987432549
+      },
+      {
+        "day": 5008,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 5411.0492486435905,
+        "computeAfter": 5411.0492486435905
+      },
+      {
+        "day": 5009,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-31"
+        },
+        "accepted": true,
+        "computeBefore": 5415.280926017231,
+        "computeAfter": 5423.280926017231
+      },
+      {
+        "day": 5010,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-32"
+        },
+        "accepted": true,
+        "computeBefore": 5428.5051478704045,
+        "computeAfter": 5436.5051478704045
+      },
+      {
+        "day": 5011,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-33"
+        },
+        "accepted": true,
+        "computeBefore": 5442.70101475174,
+        "computeAfter": 5450.70101475174
+      },
+      {
+        "day": 5041,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 6034.409075714114,
+        "computeAfter": 6034.409075714114
+      }
+    ]
+  },
+  {
+    "policyId": "agent-09-open-ecosystem-pluralist",
+    "policyDescription": "Open-ecosystem pluralist: share power when concentration rises, invest in regional access and federated safeguards, and preserve a healthy multi-provider market.",
+    "run": 2,
+    "seed": 123730,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "beneficial-abundance",
+    "score": 0.9898776395681327,
+    "rank": "S",
+    "worldAdoption": 0.18359392467437963,
+    "codexShare": 0.3347964780640125,
+    "hhi": 0.40639385814763473,
+    "trust": 95.95105582725309,
+    "compute": 9512.151865402575,
+    "capability": 3,
+    "safety": 7.5,
+    "governance": 9,
+    "extinctionRisk": 0,
+    "interventions": 61,
+    "brownoutDays": 0,
+    "maxBrownoutStreak": 0,
+    "zeroComputeDays": 0,
+    "actionCount": 99,
+    "acceptedActionCount": 99,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.043078056442283186,
+      0.5334693536789236,
+      0.08865611181478084
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-1"
+        },
+        "accepted": true,
+        "computeBefore": 940.0679766235091,
+        "computeAfter": 945.0679766235091
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-2"
+        },
+        "accepted": true,
+        "computeBefore": 945.1515287633902,
+        "computeAfter": 951.1515287633902
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-3"
+        },
+        "accepted": true,
+        "computeBefore": 951.2504305021538,
+        "computeAfter": 959.2504305021538
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 959.3644596845828,
+        "computeAfter": 914.3644596845828
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-4"
+        },
+        "accepted": true,
+        "computeBefore": 914.5095978478165,
+        "computeAfter": 919.5095978478165
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 919.6730653411629,
+        "computeAfter": 874.6730653411629
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-5"
+        },
+        "accepted": true,
+        "computeBefore": 874.8601057649819,
+        "computeAfter": 881.8601057649819
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 882.0662499622712,
+        "computeAfter": 837.0662499622712
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-6"
+        },
+        "accepted": true,
+        "computeBefore": 837.293382625951,
+        "computeAfter": 844.293382625951
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 844.5396386390044,
+        "computeAfter": 844.5396386390044
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 844.7423194641394,
+        "computeAfter": 674.7423194641394
+      },
+      {
+        "day": 12,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-developer-grants"
+        },
+        "accepted": true,
+        "computeBefore": 674.9759399830401,
+        "computeAfter": 524.9759399830401
+      },
+      {
+        "day": 13,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 525.2058881095552,
+        "computeAfter": 315.2058881095552
+      },
+      {
+        "day": 14,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 315.4563269744588,
+        "computeAfter": 120.45632697445882
+      },
+      {
+        "day": 127,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 210.82137732823375,
+        "computeAfter": 120.82137732823375
+      },
+      {
+        "day": 227,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 210.43386420690666,
+        "computeAfter": 120.43386420690666
+      },
+      {
+        "day": 250,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 145.33861661375374,
+        "computeAfter": 145.33861661375374
+      },
+      {
+        "day": 319,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 210.64266623495544,
+        "computeAfter": 120.64266623495544
+      },
+      {
+        "day": 415,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 240.7008975913039,
+        "computeAfter": 110.70089759130391
+      },
+      {
+        "day": 490,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 211.32469598911356,
+        "computeAfter": 211.32469598911356
+      },
+      {
+        "day": 546,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 270.5305358014469,
+        "computeAfter": 120.53053580144689
+      },
+      {
+        "day": 632,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 302.1637115713788,
+        "computeAfter": 112.16371157137883
+      },
+      {
+        "day": 718,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 308.9493875185188,
+        "computeAfter": 91.44938751851879
+      },
+      {
+        "day": 773,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 222.1926860392879,
+        "computeAfter": 152.1926860392879
+      },
+      {
+        "day": 820,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 230.3512415767137,
+        "computeAfter": 110.3512415767137
+      },
+      {
+        "day": 921,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 280.6783807933723,
+        "computeAfter": 280.6783807933723
+      },
+      {
+        "day": 922,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-7"
+        },
+        "accepted": true,
+        "computeBefore": 282.41963515636735,
+        "computeAfter": 290.41963515636735
+      },
+      {
+        "day": 923,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-8"
+        },
+        "accepted": true,
+        "computeBefore": 292.19009463749006,
+        "computeAfter": 300.19009463749006
+      },
+      {
+        "day": 924,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-9"
+        },
+        "accepted": true,
+        "computeBefore": 301.9893853657981,
+        "computeAfter": 307.9893853657981
+      },
+      {
+        "day": 925,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 309.8171392275134,
+        "computeAfter": 119.8171392275134
+      },
+      {
+        "day": 926,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 121.67299379244248,
+        "computeAfter": 121.67299379244248
+      },
+      {
+        "day": 1000,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-distillation"
+        },
+        "accepted": true,
+        "computeBefore": 290.84918108080166,
+        "computeAfter": 120.84918108080166
+      },
+      {
+        "day": 1034,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-offline-lite"
+        },
+        "accepted": true,
+        "computeBefore": 262.019963701943,
+        "computeAfter": 122.01996370194303
+      },
+      {
+        "day": 1087,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-crisis-response"
+        },
+        "accepted": true,
+        "computeBefore": 323.62586068536194,
+        "computeAfter": 123.62586068536194
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 156.9234100855056,
+        "computeAfter": 156.9234100855056
+      },
+      {
+        "day": 1141,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-crisis-mesh"
+        },
+        "accepted": true,
+        "computeBefore": 322.8124273215192,
+        "computeAfter": 102.81242732151918
+      },
+      {
+        "day": 1200,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 330.57072483176665,
+        "computeAfter": 110.57072483176665
+      },
+      {
+        "day": 1263,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-grid-partnership"
+        },
+        "accepted": true,
+        "computeBefore": 332.7644105409439,
+        "computeAfter": 122.76441054094391
+      },
+      {
+        "day": 1312,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-efficient-inference"
+        },
+        "accepted": true,
+        "computeBefore": 343.7175548711329,
+        "computeAfter": 123.7175548711329
+      },
+      {
+        "day": 1351,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 350.33411593298746,
+        "computeAfter": 120.33411593298746
+      },
+      {
+        "day": 1392,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-compute-fund"
+        },
+        "accepted": true,
+        "computeBefore": 365.4016770140759,
+        "computeAfter": 105.40167701407591
+      },
+      {
+        "day": 1446,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 402.26546387171584,
+        "computeAfter": 112.26546387171584
+      },
+      {
+        "day": 1498,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 402.78387386079544,
+        "computeAfter": 102.78387386079544
+      },
+      {
+        "day": 1554,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 422.97564110313704,
+        "computeAfter": 102.97564110313704
+      },
+      {
+        "day": 1616,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 442.35306433409437,
+        "computeAfter": 112.35306433409437
+      },
+      {
+        "day": 1677,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-universal-access"
+        },
+        "accepted": true,
+        "computeBefore": 442.9926062388555,
+        "computeAfter": 122.9926062388555
+      },
+      {
+        "day": 1740,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-charter"
+        },
+        "accepted": true,
+        "computeBefore": 441.4242472125507,
+        "computeAfter": 101.42424721255071
+      },
+      {
+        "day": 1961,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1163.9373438555644,
+        "computeAfter": 1163.9373438555644
+      },
+      {
+        "day": 1962,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-10"
+        },
+        "accepted": true,
+        "computeBefore": 1168.1342046539064,
+        "computeAfter": 1173.1342046539064
+      },
+      {
+        "day": 1963,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-11"
+        },
+        "accepted": true,
+        "computeBefore": 1177.3624946815628,
+        "computeAfter": 1184.3624946815628
+      },
+      {
+        "day": 1964,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-12"
+        },
+        "accepted": true,
+        "computeBefore": 1188.6109512814887,
+        "computeAfter": 1196.6109512814887
+      },
+      {
+        "day": 1967,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1209.5554463643828,
+        "computeAfter": 1209.5554463643828
+      },
+      {
+        "day": 2207,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1952.5628082590993,
+        "computeAfter": 1660.0628082590993
+      },
+      {
+        "day": 2321,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2036.5247105019598,
+        "computeAfter": 2036.5247105019598
+      },
+      {
+        "day": 2322,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-13"
+        },
+        "accepted": true,
+        "computeBefore": 2039.0136503770955,
+        "computeAfter": 2047.0136503770955
+      },
+      {
+        "day": 2323,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-14"
+        },
+        "accepted": true,
+        "computeBefore": 2049.57561570625,
+        "computeAfter": 2055.57561570625
+      },
+      {
+        "day": 2324,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-15"
+        },
+        "accepted": true,
+        "computeBefore": 2058.218449035349,
+        "computeAfter": 2065.218449035349
+      },
+      {
+        "day": 2332,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2089.812444722265,
+        "computeAfter": 2089.812444722265
+      },
+      {
+        "day": 2572,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 2613.3212768310746,
+        "computeAfter": 2283.3212768310746
+      },
+      {
+        "day": 2681,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2594.696305804594,
+        "computeAfter": 2594.696305804594
+      },
+      {
+        "day": 2682,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-16"
+        },
+        "accepted": true,
+        "computeBefore": 2596.8983868876776,
+        "computeAfter": 2604.8983868876776
+      },
+      {
+        "day": 2683,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-17"
+        },
+        "accepted": true,
+        "computeBefore": 2607.2321822745057,
+        "computeAfter": 2613.2321822745057
+      },
+      {
+        "day": 2684,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-18"
+        },
+        "accepted": true,
+        "computeBefore": 2615.704412061179,
+        "computeAfter": 2623.704412061179
+      },
+      {
+        "day": 2696,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2664.8645847157277,
+        "computeAfter": 2664.8645847157277
+      },
+      {
+        "day": 2936,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 3282.2832707263015,
+        "computeAfter": 2914.7832707263015
+      },
+      {
+        "day": 3041,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3261.6483455606667,
+        "computeAfter": 3261.6483455606667
+      },
+      {
+        "day": 3042,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-19"
+        },
+        "accepted": true,
+        "computeBefore": 3264.277702654762,
+        "computeAfter": 3271.277702654762
+      },
+      {
+        "day": 3043,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-20"
+        },
+        "accepted": true,
+        "computeBefore": 3274.1162501876347,
+        "computeAfter": 3282.1162501876347
+      },
+      {
+        "day": 3044,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-21"
+        },
+        "accepted": true,
+        "computeBefore": 3285.154222089212,
+        "computeAfter": 3293.154222089212
+      },
+      {
+        "day": 3053,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3330.1520894692235,
+        "computeAfter": 3330.1520894692235
+      },
+      {
+        "day": 3213,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 4140.898001493321,
+        "computeAfter": 3735.8980014933213
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 3981.8860182217863,
+        "computeAfter": 3981.8860182217863
+      },
+      {
+        "day": 3448,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4386.113870740738,
+        "computeAfter": 4386.113870740738
+      },
+      {
+        "day": 3449,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-22"
+        },
+        "accepted": true,
+        "computeBefore": 4388.103074373853,
+        "computeAfter": 4394.103074373853
+      },
+      {
+        "day": 3450,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-23"
+        },
+        "accepted": true,
+        "computeBefore": 4396.407657877249,
+        "computeAfter": 4402.407657877249
+      },
+      {
+        "day": 3451,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-24"
+        },
+        "accepted": true,
+        "computeBefore": 4405.020839967457,
+        "computeAfter": 4410.020839967457
+      },
+      {
+        "day": 3462,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4459.835990610375,
+        "computeAfter": 4459.835990610375
+      },
+      {
+        "day": 3463,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 4459.021428649783,
+        "computeAfter": 4016.521428649783
+      },
+      {
+        "day": 3808,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3379.330979842997,
+        "computeAfter": 3379.330979842997
+      },
+      {
+        "day": 3809,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-25"
+        },
+        "accepted": true,
+        "computeBefore": 3382.1155494785294,
+        "computeAfter": 3390.1155494785294
+      },
+      {
+        "day": 3810,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-26"
+        },
+        "accepted": true,
+        "computeBefore": 3393.453356241105,
+        "computeAfter": 3399.453356241105
+      },
+      {
+        "day": 3811,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-27"
+        },
+        "accepted": true,
+        "computeBefore": 3403.231484089015,
+        "computeAfter": 3411.231484089015
+      },
+      {
+        "day": 3842,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3757.8294558619314,
+        "computeAfter": 3757.8294558619314
+      },
+      {
+        "day": 4168,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3908.4200853594652,
+        "computeAfter": 3908.4200853594652
+      },
+      {
+        "day": 4169,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-28"
+        },
+        "accepted": true,
+        "computeBefore": 3912.5199784428332,
+        "computeAfter": 3920.5199784428332
+      },
+      {
+        "day": 4170,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-29"
+        },
+        "accepted": true,
+        "computeBefore": 3925.2977896034645,
+        "computeAfter": 3930.2977896034645
+      },
+      {
+        "day": 4171,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-30"
+        },
+        "accepted": true,
+        "computeBefore": 3935.754156844264,
+        "computeAfter": 3943.754156844264
+      },
+      {
+        "day": 4202,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4391.911255710192,
+        "computeAfter": 4391.911255710192
+      },
+      {
+        "day": 4528,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4622.074296009773,
+        "computeAfter": 4622.074296009773
+      },
+      {
+        "day": 4529,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-31"
+        },
+        "accepted": true,
+        "computeBefore": 4625.154726124863,
+        "computeAfter": 4633.154726124863
+      },
+      {
+        "day": 4530,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-32"
+        },
+        "accepted": true,
+        "computeBefore": 4637.046796595184,
+        "computeAfter": 4643.046796595184
+      },
+      {
+        "day": 4531,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-33"
+        },
+        "accepted": true,
+        "computeBefore": 4647.7435314682925,
+        "computeAfter": 4652.7435314682925
+      },
+      {
+        "day": 4563,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5157.9433125759815,
+        "computeAfter": 5157.9433125759815
+      },
+      {
+        "day": 4888,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 5439.23870733465,
+        "computeAfter": 5439.23870733465
+      },
+      {
+        "day": 4889,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-34"
+        },
+        "accepted": true,
+        "computeBefore": 5444.693945552536,
+        "computeAfter": 5449.693945552536
+      },
+      {
+        "day": 4890,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-35"
+        },
+        "accepted": true,
+        "computeBefore": 5456.193862248614,
+        "computeAfter": 5461.193862248614
+      },
+      {
+        "day": 4891,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-36"
+        },
+        "accepted": true,
+        "computeBefore": 5472.171579052062,
+        "computeAfter": 5479.171579052062
+      },
+      {
+        "day": 4922,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 6242.846201568633,
+        "computeAfter": 6242.846201568633
+      }
+    ]
+  },
+  {
+    "policyId": "agent-09-open-ecosystem-pluralist",
+    "policyDescription": "Open-ecosystem pluralist: share power when concentration rises, invest in regional access and federated safeguards, and preserve a healthy multi-provider market.",
+    "run": 3,
+    "seed": 228459,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "managed-transition",
+    "score": 0.844,
+    "rank": "A",
+    "worldAdoption": 0.15997944978535109,
+    "codexShare": 0.33730247039144046,
+    "hhi": 0.3873403303535225,
+    "trust": 96.99278559206094,
+    "compute": 8220.120793133883,
+    "capability": 3,
+    "safety": 7.5,
+    "governance": 9,
+    "extinctionRisk": 0,
+    "interventions": 61,
+    "brownoutDays": 0,
+    "maxBrownoutStreak": 0,
+    "zeroComputeDays": 0,
+    "actionCount": 99,
+    "acceptedActionCount": 99,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.0519963815342519,
+      0.5107596828895362,
+      0.09994146518477139
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-1"
+        },
+        "accepted": true,
+        "computeBefore": 940.0679766235091,
+        "computeAfter": 948.0679766235091
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-2"
+        },
+        "accepted": true,
+        "computeBefore": 948.1515287633902,
+        "computeAfter": 955.1515287633902
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-3"
+        },
+        "accepted": true,
+        "computeBefore": 955.2504305021538,
+        "computeAfter": 963.2504305021538
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 963.3644596845828,
+        "computeAfter": 918.3644596845828
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-4"
+        },
+        "accepted": true,
+        "computeBefore": 918.5095978478165,
+        "computeAfter": 926.5095978478165
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 926.6730653411629,
+        "computeAfter": 881.6730653411629
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-5"
+        },
+        "accepted": true,
+        "computeBefore": 881.8601057649819,
+        "computeAfter": 887.8601057649819
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 888.0662499622712,
+        "computeAfter": 843.0662499622712
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-6"
+        },
+        "accepted": true,
+        "computeBefore": 843.293382625951,
+        "computeAfter": 850.293382625951
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 850.5396386390044,
+        "computeAfter": 850.5396386390044
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 850.7423194641394,
+        "computeAfter": 680.7423194641394
+      },
+      {
+        "day": 12,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-developer-grants"
+        },
+        "accepted": true,
+        "computeBefore": 680.9759399830401,
+        "computeAfter": 530.9759399830401
+      },
+      {
+        "day": 13,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 531.2058881095552,
+        "computeAfter": 321.2058881095552
+      },
+      {
+        "day": 14,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 321.4563269744588,
+        "computeAfter": 126.45632697445882
+      },
+      {
+        "day": 119,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 210.31687745165559,
+        "computeAfter": 120.31687745165559
+      },
+      {
+        "day": 222,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 210.36599325921782,
+        "computeAfter": 120.36599325921782
+      },
+      {
+        "day": 250,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 148.64557943185852,
+        "computeAfter": 148.64557943185852
+      },
+      {
+        "day": 324,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 210.89789288369596,
+        "computeAfter": 120.89789288369596
+      },
+      {
+        "day": 431,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 240.89327307403133,
+        "computeAfter": 110.89327307403133
+      },
+      {
+        "day": 490,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 183.39268838876217,
+        "computeAfter": 183.39268838876217
+      },
+      {
+        "day": 574,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 270.1033385518975,
+        "computeAfter": 120.10333855189748
+      },
+      {
+        "day": 666,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 301.7685046780368,
+        "computeAfter": 111.76850467803678
+      },
+      {
+        "day": 755,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 308.24482811994056,
+        "computeAfter": 90.74482811994056
+      },
+      {
+        "day": 809,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 221.23495885331138,
+        "computeAfter": 151.23495885331138
+      },
+      {
+        "day": 857,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 231.26079100880273,
+        "computeAfter": 111.26079100880273
+      },
+      {
+        "day": 958,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 278.2271888503739,
+        "computeAfter": 278.2271888503739
+      },
+      {
+        "day": 959,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-7"
+        },
+        "accepted": true,
+        "computeBefore": 279.9247142099562,
+        "computeAfter": 284.9247142099562
+      },
+      {
+        "day": 960,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-8"
+        },
+        "accepted": true,
+        "computeBefore": 286.6512996203797,
+        "computeAfter": 291.6512996203797
+      },
+      {
+        "day": 961,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-9"
+        },
+        "accepted": true,
+        "computeBefore": 293.4065728664078,
+        "computeAfter": 299.4065728664078
+      },
+      {
+        "day": 962,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 301.1901674433281,
+        "computeAfter": 111.19016744332811
+      },
+      {
+        "day": 963,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 113.02219794420898,
+        "computeAfter": 113.02219794420898
+      },
+      {
+        "day": 1042,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-distillation"
+        },
+        "accepted": true,
+        "computeBefore": 290.89210980399736,
+        "computeAfter": 120.89210980399736
+      },
+      {
+        "day": 1080,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-offline-lite"
+        },
+        "accepted": true,
+        "computeBefore": 262.9064712812647,
+        "computeAfter": 122.90647128126471
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 180.57964701874803,
+        "computeAfter": 180.57964701874803
+      },
+      {
+        "day": 1136,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-crisis-response"
+        },
+        "accepted": true,
+        "computeBefore": 320.4747251758338,
+        "computeAfter": 120.47472517583378
+      },
+      {
+        "day": 1194,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-crisis-mesh"
+        },
+        "accepted": true,
+        "computeBefore": 321.2562185145171,
+        "computeAfter": 101.25621851451712
+      },
+      {
+        "day": 1258,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 330.0207136982509,
+        "computeAfter": 110.02071369825092
+      },
+      {
+        "day": 1322,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-grid-partnership"
+        },
+        "accepted": true,
+        "computeBefore": 330.3846874901146,
+        "computeAfter": 120.38468749011457
+      },
+      {
+        "day": 1372,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-efficient-inference"
+        },
+        "accepted": true,
+        "computeBefore": 342.12732152566764,
+        "computeAfter": 122.12732152566764
+      },
+      {
+        "day": 1412,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 353.42445186367485,
+        "computeAfter": 123.42445186367485
+      },
+      {
+        "day": 1451,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-compute-fund"
+        },
+        "accepted": true,
+        "computeBefore": 361.9993443907402,
+        "computeAfter": 101.99934439074019
+      },
+      {
+        "day": 1503,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 403.5393203111977,
+        "computeAfter": 113.53932031119768
+      },
+      {
+        "day": 1552,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 400.41145139395894,
+        "computeAfter": 100.41145139395894
+      },
+      {
+        "day": 1606,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 420.4025144060861,
+        "computeAfter": 100.40251440608608
+      },
+      {
+        "day": 1667,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 440.9183403448744,
+        "computeAfter": 110.91834034487442
+      },
+      {
+        "day": 1726,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-universal-access"
+        },
+        "accepted": true,
+        "computeBefore": 441.8808442980926,
+        "computeAfter": 121.8808442980926
+      },
+      {
+        "day": 1787,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-charter"
+        },
+        "accepted": true,
+        "computeBefore": 443.45447901937496,
+        "computeAfter": 103.45447901937496
+      },
+      {
+        "day": 2008,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1191.8893371589745,
+        "computeAfter": 1191.8893371589745
+      },
+      {
+        "day": 2009,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-10"
+        },
+        "accepted": true,
+        "computeBefore": 1195.8730801274655,
+        "computeAfter": 1201.8730801274655
+      },
+      {
+        "day": 2010,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-11"
+        },
+        "accepted": true,
+        "computeBefore": 1205.8818880144809,
+        "computeAfter": 1212.8818880144809
+      },
+      {
+        "day": 2011,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-12"
+        },
+        "accepted": true,
+        "computeBefore": 1216.9095710371137,
+        "computeAfter": 1222.9095710371137
+      },
+      {
+        "day": 2012,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1226.959986968651,
+        "computeAfter": 1226.959986968651
+      },
+      {
+        "day": 2252,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1887.9271807314992,
+        "computeAfter": 1595.4271807314992
+      },
+      {
+        "day": 2368,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1963.4993307756442,
+        "computeAfter": 1963.4993307756442
+      },
+      {
+        "day": 2369,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-13"
+        },
+        "accepted": true,
+        "computeBefore": 1965.9583484392324,
+        "computeAfter": 1972.9583484392324
+      },
+      {
+        "day": 2370,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-14"
+        },
+        "accepted": true,
+        "computeBefore": 1975.4894399232762,
+        "computeAfter": 1981.4894399232762
+      },
+      {
+        "day": 2371,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-15"
+        },
+        "accepted": true,
+        "computeBefore": 1984.0955374954938,
+        "computeAfter": 1989.0955374954938
+      },
+      {
+        "day": 2376,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2003.5037210802816,
+        "computeAfter": 2003.5037210802816
+      },
+      {
+        "day": 2616,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 2525.1298698255205,
+        "computeAfter": 2195.1298698255205
+      },
+      {
+        "day": 2728,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2502.6174722941087,
+        "computeAfter": 2502.6174722941087
+      },
+      {
+        "day": 2729,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-16"
+        },
+        "accepted": true,
+        "computeBefore": 2504.6482305501063,
+        "computeAfter": 2512.6482305501063
+      },
+      {
+        "day": 2730,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-17"
+        },
+        "accepted": true,
+        "computeBefore": 2514.802378650343,
+        "computeAfter": 2520.802378650343
+      },
+      {
+        "day": 2731,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-18"
+        },
+        "accepted": true,
+        "computeBefore": 2523.086814886147,
+        "computeAfter": 2531.086814886147
+      },
+      {
+        "day": 2738,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2551.0674654364057,
+        "computeAfter": 2551.0674654364057
+      },
+      {
+        "day": 2978,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 3125.0995649524793,
+        "computeAfter": 2757.5995649524793
+      },
+      {
+        "day": 3088,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3099.9764605035084,
+        "computeAfter": 3099.9764605035084
+      },
+      {
+        "day": 3089,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-19"
+        },
+        "accepted": true,
+        "computeBefore": 3102.41509406674,
+        "computeAfter": 3109.41509406674
+      },
+      {
+        "day": 3090,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-20"
+        },
+        "accepted": true,
+        "computeBefore": 3112.0477919359423,
+        "computeAfter": 3117.0477919359423
+      },
+      {
+        "day": 3091,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-21"
+        },
+        "accepted": true,
+        "computeBefore": 3119.88014843609,
+        "computeAfter": 3127.88014843609
+      },
+      {
+        "day": 3100,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3162.4151114569463,
+        "computeAfter": 3162.4151114569463
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 3891.350099913926,
+        "computeAfter": 3891.350099913926
+      },
+      {
+        "day": 3448,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3967.047621937643,
+        "computeAfter": 3967.047621937643
+      },
+      {
+        "day": 3449,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-22"
+        },
+        "accepted": true,
+        "computeBefore": 3967.3492267355323,
+        "computeAfter": 3974.3492267355323
+      },
+      {
+        "day": 3450,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-23"
+        },
+        "accepted": true,
+        "computeBefore": 3974.900161229094,
+        "computeAfter": 3979.900161229094
+      },
+      {
+        "day": 3451,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-24"
+        },
+        "accepted": true,
+        "computeBefore": 3980.7049981354553,
+        "computeAfter": 3987.7049981354553
+      },
+      {
+        "day": 3462,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4013.0884177109983,
+        "computeAfter": 4013.0884177109983
+      },
+      {
+        "day": 3463,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 4011.157447473519,
+        "computeAfter": 3606.157447473519
+      },
+      {
+        "day": 3625,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 4690.9812231541555,
+        "computeAfter": 4248.4812231541555
+      },
+      {
+        "day": 3808,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3430.4506027875564,
+        "computeAfter": 3430.4506027875564
+      },
+      {
+        "day": 3809,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-25"
+        },
+        "accepted": true,
+        "computeBefore": 3431.6038329587973,
+        "computeAfter": 3436.6038329587973
+      },
+      {
+        "day": 3810,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-26"
+        },
+        "accepted": true,
+        "computeBefore": 3438.1968639103025,
+        "computeAfter": 3445.1968639103025
+      },
+      {
+        "day": 3811,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-27"
+        },
+        "accepted": true,
+        "computeBefore": 3447.2104827951184,
+        "computeAfter": 3452.2104827951184
+      },
+      {
+        "day": 3839,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3659.7697923325086,
+        "computeAfter": 3659.7697923325086
+      },
+      {
+        "day": 4168,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3542.0132314028733,
+        "computeAfter": 3542.0132314028733
+      },
+      {
+        "day": 4169,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-28"
+        },
+        "accepted": true,
+        "computeBefore": 3545.7254500498148,
+        "computeAfter": 3550.7254500498148
+      },
+      {
+        "day": 4170,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-29"
+        },
+        "accepted": true,
+        "computeBefore": 3555.029401825086,
+        "computeAfter": 3563.029401825086
+      },
+      {
+        "day": 4171,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-30"
+        },
+        "accepted": true,
+        "computeBefore": 3567.8977234037425,
+        "computeAfter": 3574.8977234037425
+      },
+      {
+        "day": 4202,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3965.180023598585,
+        "computeAfter": 3965.180023598585
+      },
+      {
+        "day": 4528,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4071.900730130601,
+        "computeAfter": 4071.900730130601
+      },
+      {
+        "day": 4529,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-31"
+        },
+        "accepted": true,
+        "computeBefore": 4075.464831445245,
+        "computeAfter": 4080.464831445245
+      },
+      {
+        "day": 4530,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-32"
+        },
+        "accepted": true,
+        "computeBefore": 4084.768815315189,
+        "computeAfter": 4092.768815315189
+      },
+      {
+        "day": 4531,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-33"
+        },
+        "accepted": true,
+        "computeBefore": 4097.782129094161,
+        "computeAfter": 4103.782129094161
+      },
+      {
+        "day": 4563,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4578.638773443394,
+        "computeAfter": 4578.638773443394
+      },
+      {
+        "day": 4888,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4756.372958861772,
+        "computeAfter": 4756.372958861772
+      },
+      {
+        "day": 4889,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-34"
+        },
+        "accepted": true,
+        "computeBefore": 4760.654267050538,
+        "computeAfter": 4767.654267050538
+      },
+      {
+        "day": 4890,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-35"
+        },
+        "accepted": true,
+        "computeBefore": 4772.811427804753,
+        "computeAfter": 4778.811427804753
+      },
+      {
+        "day": 4891,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-36"
+        },
+        "accepted": true,
+        "computeBefore": 4784.831204340008,
+        "computeAfter": 4790.831204340008
+      },
+      {
+        "day": 4924,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5354.633681214949,
+        "computeAfter": 5354.633681214949
+      }
+    ]
+  },
+  {
+    "policyId": "agent-09-open-ecosystem-pluralist",
+    "policyDescription": "Open-ecosystem pluralist: share power when concentration rises, invest in regional access and federated safeguards, and preserve a healthy multi-provider market.",
+    "run": 4,
+    "seed": 333188,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "managed-transition",
+    "score": 0.844,
+    "rank": "A",
+    "worldAdoption": 0.15013035913431844,
+    "codexShare": 0.33334410899471717,
+    "hhi": 0.40713567689078123,
+    "trust": 98.10018437186513,
+    "compute": 7744.859072246526,
+    "capability": 3,
+    "safety": 7.5,
+    "governance": 9,
+    "extinctionRisk": 0,
+    "interventions": 61,
+    "brownoutDays": 0,
+    "maxBrownoutStreak": 0,
+    "zeroComputeDays": 0,
+    "actionCount": 99,
+    "acceptedActionCount": 99,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.04507989129047975,
+      0.5352950415953049,
+      0.08628095811949822
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-1"
+        },
+        "accepted": true,
+        "computeBefore": 940.0679766235091,
+        "computeAfter": 947.0679766235091
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-2"
+        },
+        "accepted": true,
+        "computeBefore": 947.1515287633902,
+        "computeAfter": 952.1515287633902
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-3"
+        },
+        "accepted": true,
+        "computeBefore": 952.2504305021538,
+        "computeAfter": 958.2504305021538
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 958.3644596845828,
+        "computeAfter": 913.3644596845828
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-4"
+        },
+        "accepted": true,
+        "computeBefore": 913.5095978478165,
+        "computeAfter": 918.5095978478165
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 918.6730653411629,
+        "computeAfter": 873.6730653411629
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-5"
+        },
+        "accepted": true,
+        "computeBefore": 873.8601057649819,
+        "computeAfter": 879.8601057649819
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 880.0662499622712,
+        "computeAfter": 835.0662499622712
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-6"
+        },
+        "accepted": true,
+        "computeBefore": 835.293382625951,
+        "computeAfter": 841.293382625951
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 841.5396386390044,
+        "computeAfter": 841.5396386390044
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 841.7423194641394,
+        "computeAfter": 671.7423194641394
+      },
+      {
+        "day": 12,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-developer-grants"
+        },
+        "accepted": true,
+        "computeBefore": 671.9759399830401,
+        "computeAfter": 521.9759399830401
+      },
+      {
+        "day": 13,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 522.2058881095552,
+        "computeAfter": 312.2058881095552
+      },
+      {
+        "day": 14,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 312.4563269744588,
+        "computeAfter": 117.45632697445882
+      },
+      {
+        "day": 129,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 210.1386559720412,
+        "computeAfter": 120.13865597204119
+      },
+      {
+        "day": 233,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 210.86051947481064,
+        "computeAfter": 120.86051947481064
+      },
+      {
+        "day": 250,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 137.8944871514775,
+        "computeAfter": 137.8944871514775
+      },
+      {
+        "day": 328,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 210.14763717886333,
+        "computeAfter": 120.14763717886333
+      },
+      {
+        "day": 425,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 240.69649690910578,
+        "computeAfter": 110.69649690910578
+      },
+      {
+        "day": 490,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 197.59330585241062,
+        "computeAfter": 197.59330585241062
+      },
+      {
+        "day": 557,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 270.3498049474262,
+        "computeAfter": 120.34980494742621
+      },
+      {
+        "day": 642,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 301.63652355627505,
+        "computeAfter": 111.63652355627505
+      },
+      {
+        "day": 729,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 309.44401060619833,
+        "computeAfter": 91.94401060619833
+      },
+      {
+        "day": 783,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 221.00085457986486,
+        "computeAfter": 151.00085457986486
+      },
+      {
+        "day": 832,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 231.11531193416772,
+        "computeAfter": 111.11531193416772
+      },
+      {
+        "day": 933,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 275.78462645340653,
+        "computeAfter": 275.78462645340653
+      },
+      {
+        "day": 934,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-7"
+        },
+        "accepted": true,
+        "computeBefore": 277.49626126585065,
+        "computeAfter": 284.49626126585065
+      },
+      {
+        "day": 935,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-8"
+        },
+        "accepted": true,
+        "computeBefore": 286.237743765312,
+        "computeAfter": 294.237743765312
+      },
+      {
+        "day": 936,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-9"
+        },
+        "accepted": true,
+        "computeBefore": 296.0086891037026,
+        "computeAfter": 303.0086891037026
+      },
+      {
+        "day": 937,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 304.8087184019013,
+        "computeAfter": 114.80871840190127
+      },
+      {
+        "day": 938,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 116.63745867016327,
+        "computeAfter": 116.63745867016327
+      },
+      {
+        "day": 1016,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-distillation"
+        },
+        "accepted": true,
+        "computeBefore": 292.0070801646696,
+        "computeAfter": 122.00708016466962
+      },
+      {
+        "day": 1054,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-offline-lite"
+        },
+        "accepted": true,
+        "computeBefore": 262.3943498881753,
+        "computeAfter": 122.39434988817533
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 268.45762901556304,
+        "computeAfter": 268.45762901556304
+      },
+      {
+        "day": 1112,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-crisis-response"
+        },
+        "accepted": true,
+        "computeBefore": 322.56962916109626,
+        "computeAfter": 122.56962916109626
+      },
+      {
+        "day": 1170,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-crisis-mesh"
+        },
+        "accepted": true,
+        "computeBefore": 320.2256998437472,
+        "computeAfter": 100.22569984374718
+      },
+      {
+        "day": 1234,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 333.5037018013643,
+        "computeAfter": 113.50370180136429
+      },
+      {
+        "day": 1296,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-grid-partnership"
+        },
+        "accepted": true,
+        "computeBefore": 332.37961068071104,
+        "computeAfter": 122.37961068071104
+      },
+      {
+        "day": 1344,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-efficient-inference"
+        },
+        "accepted": true,
+        "computeBefore": 340.94532382973597,
+        "computeAfter": 120.94532382973597
+      },
+      {
+        "day": 1384,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 353.6066470265495,
+        "computeAfter": 123.60664702654952
+      },
+      {
+        "day": 1424,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-compute-fund"
+        },
+        "accepted": true,
+        "computeBefore": 364.3074204531706,
+        "computeAfter": 104.30742045317061
+      },
+      {
+        "day": 1477,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 400.17980545640546,
+        "computeAfter": 110.17980545640546
+      },
+      {
+        "day": 1529,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 403.11848541590086,
+        "computeAfter": 103.11848541590086
+      },
+      {
+        "day": 1585,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 423.6080872317493,
+        "computeAfter": 103.60808723174932
+      },
+      {
+        "day": 1646,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 443.7764552038292,
+        "computeAfter": 113.77645520382919
+      },
+      {
+        "day": 1705,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-universal-access"
+        },
+        "accepted": true,
+        "computeBefore": 445.39537987872444,
+        "computeAfter": 125.39537987872444
+      },
+      {
+        "day": 1766,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-charter"
+        },
+        "accepted": true,
+        "computeBefore": 444.1403672322862,
+        "computeAfter": 104.14036723228622
+      },
+      {
+        "day": 1987,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1199.0573649117368,
+        "computeAfter": 1199.0573649117368
+      },
+      {
+        "day": 1988,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-10"
+        },
+        "accepted": true,
+        "computeBefore": 1203.2263946779442,
+        "computeAfter": 1209.2263946779442
+      },
+      {
+        "day": 1989,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-11"
+        },
+        "accepted": true,
+        "computeBefore": 1213.422614521668,
+        "computeAfter": 1218.422614521668
+      },
+      {
+        "day": 1990,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-12"
+        },
+        "accepted": true,
+        "computeBefore": 1222.6497780913094,
+        "computeAfter": 1228.6497780913094
+      },
+      {
+        "day": 1992,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1237.2069938383663,
+        "computeAfter": 1237.2069938383663
+      },
+      {
+        "day": 2232,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1918.5544836000067,
+        "computeAfter": 1626.0544836000067
+      },
+      {
+        "day": 2347,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1997.2843637353346,
+        "computeAfter": 1997.2843637353346
+      },
+      {
+        "day": 2348,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-13"
+        },
+        "accepted": true,
+        "computeBefore": 1999.7481492966838,
+        "computeAfter": 2007.7481492966838
+      },
+      {
+        "day": 2349,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-14"
+        },
+        "accepted": true,
+        "computeBefore": 2010.2819787990095,
+        "computeAfter": 2015.2819787990095
+      },
+      {
+        "day": 2350,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-15"
+        },
+        "accepted": true,
+        "computeBefore": 2017.8987618964618,
+        "computeAfter": 2022.8987618964618
+      },
+      {
+        "day": 2357,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2043.8854589975629,
+        "computeAfter": 2043.8854589975629
+      },
+      {
+        "day": 2597,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 2550.1693326281893,
+        "computeAfter": 2220.1693326281893
+      },
+      {
+        "day": 2707,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2546.8335760556124,
+        "computeAfter": 2546.8335760556124
+      },
+      {
+        "day": 2708,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-16"
+        },
+        "accepted": true,
+        "computeBefore": 2549.0657261215542,
+        "computeAfter": 2555.0657261215542
+      },
+      {
+        "day": 2709,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-17"
+        },
+        "accepted": true,
+        "computeBefore": 2557.4366861737117,
+        "computeAfter": 2562.4366861737117
+      },
+      {
+        "day": 2710,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-18"
+        },
+        "accepted": true,
+        "computeBefore": 2564.948191714441,
+        "computeAfter": 2572.948191714441
+      },
+      {
+        "day": 2718,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2598.298694683918,
+        "computeAfter": 2598.298694683918
+      },
+      {
+        "day": 2958,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 3175.618566737243,
+        "computeAfter": 2808.118566737243
+      },
+      {
+        "day": 3067,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3132.880133430223,
+        "computeAfter": 3132.880133430223
+      },
+      {
+        "day": 3068,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-19"
+        },
+        "accepted": true,
+        "computeBefore": 3135.0776900457677,
+        "computeAfter": 3141.0776900457677
+      },
+      {
+        "day": 3069,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-20"
+        },
+        "accepted": true,
+        "computeBefore": 3143.4761174025807,
+        "computeAfter": 3149.4761174025807
+      },
+      {
+        "day": 3070,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-21"
+        },
+        "accepted": true,
+        "computeBefore": 3152.070998500304,
+        "computeAfter": 3159.070998500304
+      },
+      {
+        "day": 3079,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3191.5960416902103,
+        "computeAfter": 3191.5960416902103
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 3814.7830308040107,
+        "computeAfter": 3814.7830308040107
+      },
+      {
+        "day": 3448,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3912.216376301483,
+        "computeAfter": 3912.216376301483
+      },
+      {
+        "day": 3449,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-22"
+        },
+        "accepted": true,
+        "computeBefore": 3913.0482819488147,
+        "computeAfter": 3921.0482819488147
+      },
+      {
+        "day": 3450,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-23"
+        },
+        "accepted": true,
+        "computeBefore": 3922.1979204129075,
+        "computeAfter": 3928.1979204129075
+      },
+      {
+        "day": 3451,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-24"
+        },
+        "accepted": true,
+        "computeBefore": 3929.600641290562,
+        "computeAfter": 3934.600641290562
+      },
+      {
+        "day": 3462,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3966.9362616840694,
+        "computeAfter": 3966.9362616840694
+      },
+      {
+        "day": 3463,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 3965.5327411593726,
+        "computeAfter": 3560.5327411593726
+      },
+      {
+        "day": 3702,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 4823.757770151949,
+        "computeAfter": 4381.257770151949
+      },
+      {
+        "day": 3808,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4708.155917723344,
+        "computeAfter": 4708.155917723344
+      },
+      {
+        "day": 3809,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-25"
+        },
+        "accepted": true,
+        "computeBefore": 4710.743776318664,
+        "computeAfter": 4718.743776318664
+      },
+      {
+        "day": 3810,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-26"
+        },
+        "accepted": true,
+        "computeBefore": 4721.687327464378,
+        "computeAfter": 4728.687327464378
+      },
+      {
+        "day": 3811,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-27"
+        },
+        "accepted": true,
+        "computeBefore": 4731.983606017213,
+        "computeAfter": 4737.983606017213
+      },
+      {
+        "day": 3824,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4812.39661220332,
+        "computeAfter": 4812.39661220332
+      },
+      {
+        "day": 4168,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3683.3372353221816,
+        "computeAfter": 3683.3372353221816
+      },
+      {
+        "day": 4169,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-28"
+        },
+        "accepted": true,
+        "computeBefore": 3684.097412871778,
+        "computeAfter": 3690.097412871778
+      },
+      {
+        "day": 4170,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-29"
+        },
+        "accepted": true,
+        "computeBefore": 3691.4333440074633,
+        "computeAfter": 3697.4333440074633
+      },
+      {
+        "day": 4171,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-30"
+        },
+        "accepted": true,
+        "computeBefore": 3699.332870156026,
+        "computeAfter": 3706.332870156026
+      },
+      {
+        "day": 4204,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4033.3447791427407,
+        "computeAfter": 4033.3447791427407
+      },
+      {
+        "day": 4528,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3965.2975584666247,
+        "computeAfter": 3965.2975584666247
+      },
+      {
+        "day": 4529,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-31"
+        },
+        "accepted": true,
+        "computeBefore": 3968.2222256537575,
+        "computeAfter": 3975.2222256537575
+      },
+      {
+        "day": 4530,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-32"
+        },
+        "accepted": true,
+        "computeBefore": 3978.801683231388,
+        "computeAfter": 3986.801683231388
+      },
+      {
+        "day": 4531,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-33"
+        },
+        "accepted": true,
+        "computeBefore": 3991.017194564748,
+        "computeAfter": 3998.017194564748
+      },
+      {
+        "day": 4563,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4416.6349579208745,
+        "computeAfter": 4416.6349579208745
+      },
+      {
+        "day": 4888,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4489.026252955058,
+        "computeAfter": 4489.026252955058
+      },
+      {
+        "day": 4889,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-34"
+        },
+        "accepted": true,
+        "computeBefore": 4493.004003818121,
+        "computeAfter": 4501.004003818121
+      },
+      {
+        "day": 4890,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-35"
+        },
+        "accepted": true,
+        "computeBefore": 4505.78618358393,
+        "computeAfter": 4512.78618358393
+      },
+      {
+        "day": 4891,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-36"
+        },
+        "accepted": true,
+        "computeBefore": 4518.360932252198,
+        "computeAfter": 4526.360932252198
+      },
+      {
+        "day": 4924,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5083.325731798444,
+        "computeAfter": 5083.325731798444
+      }
+    ]
+  },
+  {
+    "policyId": "agent-09-open-ecosystem-pluralist",
+    "policyDescription": "Open-ecosystem pluralist: share power when concentration rises, invest in regional access and federated safeguards, and preserve a healthy multi-provider market.",
+    "run": 5,
+    "seed": 437917,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "beneficial-abundance",
+    "score": 0.9895090053405144,
+    "rank": "S",
+    "worldAdoption": 0.19669092876094704,
+    "codexShare": 0.33419678161398003,
+    "hhi": 0.40954050051835855,
+    "trust": 95.80360213620575,
+    "compute": 9831.815610733805,
+    "capability": 3,
+    "safety": 7.5,
+    "governance": 9,
+    "extinctionRisk": 0,
+    "interventions": 61,
+    "brownoutDays": 0,
+    "maxBrownoutStreak": 0,
+    "zeroComputeDays": 0,
+    "actionCount": 99,
+    "acceptedActionCount": 99,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.042723754139667544,
+      0.5372759533268953,
+      0.08580351091945719
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 940
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-1"
+        },
+        "accepted": true,
+        "computeBefore": 940.0679766235091,
+        "computeAfter": 947.0679766235091
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-2"
+        },
+        "accepted": true,
+        "computeBefore": 947.1515287633902,
+        "computeAfter": 955.1515287633902
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-3"
+        },
+        "accepted": true,
+        "computeBefore": 955.2504305021538,
+        "computeAfter": 962.2504305021538
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 962.3644596845828,
+        "computeAfter": 917.3644596845828
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-4"
+        },
+        "accepted": true,
+        "computeBefore": 917.5095978478165,
+        "computeAfter": 925.5095978478165
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 925.6730653411629,
+        "computeAfter": 880.6730653411629
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-5"
+        },
+        "accepted": true,
+        "computeBefore": 880.8601057649819,
+        "computeAfter": 885.8601057649819
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 886.0662499622712,
+        "computeAfter": 841.0662499622712
+      },
+      {
+        "day": 9,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-6"
+        },
+        "accepted": true,
+        "computeBefore": 841.293382625951,
+        "computeAfter": 847.293382625951
+      },
+      {
+        "day": 10,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 847.5396386390044,
+        "computeAfter": 847.5396386390044
+      },
+      {
+        "day": 11,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 847.7423194641394,
+        "computeAfter": 677.7423194641394
+      },
+      {
+        "day": 12,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-developer-grants"
+        },
+        "accepted": true,
+        "computeBefore": 677.9759399830401,
+        "computeAfter": 527.9759399830401
+      },
+      {
+        "day": 13,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 528.2058881095552,
+        "computeAfter": 318.2058881095552
+      },
+      {
+        "day": 14,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 318.4563269744588,
+        "computeAfter": 123.45632697445882
+      },
+      {
+        "day": 123,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 210.73158376310897,
+        "computeAfter": 120.73158376310897
+      },
+      {
+        "day": 226,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 210.65956716393708,
+        "computeAfter": 120.65956716393708
+      },
+      {
+        "day": 250,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 144.88065340989309,
+        "computeAfter": 144.88065340989309
+      },
+      {
+        "day": 328,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 211.10615906187635,
+        "computeAfter": 121.10615906187635
+      },
+      {
+        "day": 423,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 240.54019006213645,
+        "computeAfter": 110.54019006213645
+      },
+      {
+        "day": 490,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 205.39683757841783,
+        "computeAfter": 205.39683757841783
+      },
+      {
+        "day": 549,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 271.2470900792524,
+        "computeAfter": 121.24709007925242
+      },
+      {
+        "day": 631,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 300.1120100058676,
+        "computeAfter": 110.1120100058676
+      },
+      {
+        "day": 716,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 308.6151477200313,
+        "computeAfter": 91.1151477200313
+      },
+      {
+        "day": 770,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 222.04868152246692,
+        "computeAfter": 152.04868152246692
+      },
+      {
+        "day": 817,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 231.18011909584342,
+        "computeAfter": 111.18011909584342
+      },
+      {
+        "day": 918,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 286.13083200854254,
+        "computeAfter": 286.13083200854254
+      },
+      {
+        "day": 919,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-7"
+        },
+        "accepted": true,
+        "computeBefore": 287.89268143494644,
+        "computeAfter": 294.89268143494644
+      },
+      {
+        "day": 920,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-8"
+        },
+        "accepted": true,
+        "computeBefore": 296.6845885019337,
+        "computeAfter": 301.6845885019337
+      },
+      {
+        "day": 921,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-9"
+        },
+        "accepted": true,
+        "computeBefore": 303.5061683914799,
+        "computeAfter": 309.5061683914799
+      },
+      {
+        "day": 922,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 311.35704215382935,
+        "computeAfter": 121.35704215382935
+      },
+      {
+        "day": 923,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 123.23683663492733,
+        "computeAfter": 123.23683663492733
+      },
+      {
+        "day": 997,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-distillation"
+        },
+        "accepted": true,
+        "computeBefore": 292.5114823385856,
+        "computeAfter": 122.51148233858561
+      },
+      {
+        "day": 1033,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-offline-lite"
+        },
+        "accepted": true,
+        "computeBefore": 262.8398203220499,
+        "computeAfter": 122.83982032204989
+      },
+      {
+        "day": 1088,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-crisis-response"
+        },
+        "accepted": true,
+        "computeBefore": 323.4607009167525,
+        "computeAfter": 123.4607009167525
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 151.85385627988848,
+        "computeAfter": 151.85385627988848
+      },
+      {
+        "day": 1144,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-crisis-mesh"
+        },
+        "accepted": true,
+        "computeBefore": 322.1449341382817,
+        "computeAfter": 102.14493413828171
+      },
+      {
+        "day": 1206,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 330.8090845455746,
+        "computeAfter": 110.80908454557459
+      },
+      {
+        "day": 1268,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-grid-partnership"
+        },
+        "accepted": true,
+        "computeBefore": 331.23514220121183,
+        "computeAfter": 121.23514220121183
+      },
+      {
+        "day": 1317,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-efficient-inference"
+        },
+        "accepted": true,
+        "computeBefore": 342.8733269296629,
+        "computeAfter": 122.87332692966288
+      },
+      {
+        "day": 1357,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 355.6167487419171,
+        "computeAfter": 125.61674874191709
+      },
+      {
+        "day": 1397,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-compute-fund"
+        },
+        "accepted": true,
+        "computeBefore": 363.948698784723,
+        "computeAfter": 103.94869878472298
+      },
+      {
+        "day": 1451,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 400.4879790685466,
+        "computeAfter": 110.48797906854662
+      },
+      {
+        "day": 1502,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 403.81360881687624,
+        "computeAfter": 103.81360881687624
+      },
+      {
+        "day": 1556,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 421.16172716664124,
+        "computeAfter": 101.16172716664124
+      },
+      {
+        "day": 1618,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 445.09580492688286,
+        "computeAfter": 115.09580492688286
+      },
+      {
+        "day": 1676,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-universal-access"
+        },
+        "accepted": true,
+        "computeBefore": 443.555762711109,
+        "computeAfter": 123.55576271110903
+      },
+      {
+        "day": 1736,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-charter"
+        },
+        "accepted": true,
+        "computeBefore": 441.6462767875277,
+        "computeAfter": 101.64627678752771
+      },
+      {
+        "day": 1957,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1224.569208841276,
+        "computeAfter": 1224.569208841276
+      },
+      {
+        "day": 1958,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-10"
+        },
+        "accepted": true,
+        "computeBefore": 1228.9179554558586,
+        "computeAfter": 1234.9179554558586
+      },
+      {
+        "day": 1959,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-11"
+        },
+        "accepted": true,
+        "computeBefore": 1239.2976943714846,
+        "computeAfter": 1244.2976943714846
+      },
+      {
+        "day": 1960,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-12"
+        },
+        "accepted": true,
+        "computeBefore": 1248.712089620041,
+        "computeAfter": 1256.712089620041
+      },
+      {
+        "day": 1961,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1261.1448054424848,
+        "computeAfter": 1261.1448054424848
+      },
+      {
+        "day": 2201,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 2012.1499384947642,
+        "computeAfter": 1719.6499384947642
+      },
+      {
+        "day": 2317,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2175.5356520826945,
+        "computeAfter": 2175.5356520826945
+      },
+      {
+        "day": 2318,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-13"
+        },
+        "accepted": true,
+        "computeBefore": 2178.3298380067363,
+        "computeAfter": 2183.3298380067363
+      },
+      {
+        "day": 2319,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-14"
+        },
+        "accepted": true,
+        "computeBefore": 2186.2260279769175,
+        "computeAfter": 2192.2260279769175
+      },
+      {
+        "day": 2320,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-15"
+        },
+        "accepted": true,
+        "computeBefore": 2195.2166900701586,
+        "computeAfter": 2202.2166900701586
+      },
+      {
+        "day": 2325,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2218.7761734850064,
+        "computeAfter": 2218.7761734850064
+      },
+      {
+        "day": 2565,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 2762.591284302749,
+        "computeAfter": 2432.591284302749
+      },
+      {
+        "day": 2677,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2755.0390667251404,
+        "computeAfter": 2755.0390667251404
+      },
+      {
+        "day": 2678,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-16"
+        },
+        "accepted": true,
+        "computeBefore": 2757.2662474640374,
+        "computeAfter": 2764.2662474640374
+      },
+      {
+        "day": 2679,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-17"
+        },
+        "accepted": true,
+        "computeBefore": 2766.644814644405,
+        "computeAfter": 2773.644814644405
+      },
+      {
+        "day": 2680,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-18"
+        },
+        "accepted": true,
+        "computeBefore": 2776.1711771069913,
+        "computeAfter": 2782.1711771069913
+      },
+      {
+        "day": 2686,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2800.7909226012694,
+        "computeAfter": 2800.7909226012694
+      },
+      {
+        "day": 2926,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 3456.398644585728,
+        "computeAfter": 3088.898644585728
+      },
+      {
+        "day": 3037,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3430.4001285102504,
+        "computeAfter": 3430.4001285102504
+      },
+      {
+        "day": 3038,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-19"
+        },
+        "accepted": true,
+        "computeBefore": 3432.7003160574527,
+        "computeAfter": 3439.7003160574527
+      },
+      {
+        "day": 3039,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-20"
+        },
+        "accepted": true,
+        "computeBefore": 3442.2241706292134,
+        "computeAfter": 3449.2241706292134
+      },
+      {
+        "day": 3040,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-21"
+        },
+        "accepted": true,
+        "computeBefore": 3451.966625643954,
+        "computeAfter": 3456.966625643954
+      },
+      {
+        "day": 3049,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3492.027889192326,
+        "computeAfter": 3492.027889192326
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 4309.676066126063,
+        "computeAfter": 4309.676066126063
+      },
+      {
+        "day": 3448,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4372.181039707947,
+        "computeAfter": 4372.181039707947
+      },
+      {
+        "day": 3449,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-22"
+        },
+        "accepted": true,
+        "computeBefore": 4372.649569312765,
+        "computeAfter": 4380.649569312765
+      },
+      {
+        "day": 3450,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-23"
+        },
+        "accepted": true,
+        "computeBefore": 4381.402194956538,
+        "computeAfter": 4388.402194956538
+      },
+      {
+        "day": 3451,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-24"
+        },
+        "accepted": true,
+        "computeBefore": 4389.437700005419,
+        "computeAfter": 4395.437700005419
+      },
+      {
+        "day": 3462,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4425.639838374089,
+        "computeAfter": 4425.639838374089
+      },
+      {
+        "day": 3463,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 4423.496203713461,
+        "computeAfter": 4018.496203713461
+      },
+      {
+        "day": 3702,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 5363.40929373302,
+        "computeAfter": 4920.90929373302
+      },
+      {
+        "day": 3808,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 5273.490589703326,
+        "computeAfter": 5273.490589703326
+      },
+      {
+        "day": 3809,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-25"
+        },
+        "accepted": true,
+        "computeBefore": 5275.595433560741,
+        "computeAfter": 5283.595433560741
+      },
+      {
+        "day": 3810,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-26"
+        },
+        "accepted": true,
+        "computeBefore": 5286.117284438555,
+        "computeAfter": 5293.117284438555
+      },
+      {
+        "day": 3811,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-27"
+        },
+        "accepted": true,
+        "computeBefore": 5296.052231470913,
+        "computeAfter": 5301.052231470913
+      },
+      {
+        "day": 3825,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5383.165874661093,
+        "computeAfter": 5383.165874661093
+      },
+      {
+        "day": 4168,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4434.241234186293,
+        "computeAfter": 4434.241234186293
+      },
+      {
+        "day": 4169,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-28"
+        },
+        "accepted": true,
+        "computeBefore": 4435.874305237507,
+        "computeAfter": 4440.874305237507
+      },
+      {
+        "day": 4170,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-29"
+        },
+        "accepted": true,
+        "computeBefore": 4443.238218603735,
+        "computeAfter": 4449.238218603735
+      },
+      {
+        "day": 4171,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-30"
+        },
+        "accepted": true,
+        "computeBefore": 4452.313071636296,
+        "computeAfter": 4460.313071636296
+      },
+      {
+        "day": 4203,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 4871.06979476189,
+        "computeAfter": 4871.06979476189
+      },
+      {
+        "day": 4528,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4853.468038824984,
+        "computeAfter": 4853.468038824984
+      },
+      {
+        "day": 4529,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-31"
+        },
+        "accepted": true,
+        "computeBefore": 4857.669813853112,
+        "computeAfter": 4862.669813853112
+      },
+      {
+        "day": 4530,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-32"
+        },
+        "accepted": true,
+        "computeBefore": 4867.759963889729,
+        "computeAfter": 4873.759963889729
+      },
+      {
+        "day": 4531,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-33"
+        },
+        "accepted": true,
+        "computeBefore": 4879.715089187398,
+        "computeAfter": 4884.715089187398
+      },
+      {
+        "day": 4563,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5450.597012188404,
+        "computeAfter": 5450.597012188404
+      },
+      {
+        "day": 4888,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 5659.912220573268,
+        "computeAfter": 5659.912220573268
+      },
+      {
+        "day": 4889,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-34"
+        },
+        "accepted": true,
+        "computeBefore": 5665.418027597717,
+        "computeAfter": 5673.418027597717
+      },
+      {
+        "day": 4890,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-35"
+        },
+        "accepted": true,
+        "computeBefore": 5680.025680369922,
+        "computeAfter": 5687.025680369922
+      },
+      {
+        "day": 4891,
+        "action": {
+          "type": "collect-bubble",
+          "bubbleId": "pf-bubble-36"
+        },
+        "accepted": true,
+        "computeBefore": 5694.716636173619,
+        "computeAfter": 5701.716636173619
+      },
+      {
+        "day": 4924,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 6449.437267458851,
+        "computeAfter": 6449.437267458851
+      }
+    ]
+  }
+]

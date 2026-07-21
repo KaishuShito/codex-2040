@@ -1,0 +1,450 @@
+{
+  "generatedAt": "2026-07-21T03:42:25.958Z",
+  "limitations": [
+    "These are deterministic synthetic behavior models, not observations of real people.",
+    "The underlying strategic intents were authored by agents and can remain more coherent than a first-time human.",
+    "DOM discoverability, pointer travel, reading comprehension, audio, and social context require Browser sessions or real telemetry."
+  ],
+  "evidence": {
+    "runCount": 250,
+    "policyCount": 10,
+    "profileCount": 5,
+    "allCompleted": true,
+    "expectedMatrixSatisfied": true
+  },
+  "overall": {
+    "runs": 250,
+    "completed": 250,
+    "meanScore": 0.7451659401171714,
+    "meanAccess": 0.12242093078174325,
+    "meanTrust": 75.65111199790513,
+    "meanCompute": 20112.91072227907,
+    "p95Compute": 65484.9803072856,
+    "meanBrownoutDays": 556.444,
+    "p95BrownoutDays": 2114,
+    "meanZeroComputeDays": 7.216,
+    "meanAcceptedActions": 108.824,
+    "meanRejectedActions": 5.428,
+    "meanDeferredActions": 17.296,
+    "meanBubbleCatchRate": 0.43186723493635454,
+    "meanRealMinutes": 59.68852499999997,
+    "endings": {
+      "beneficial-abundance": 4,
+      "fragile-abundance": 25,
+      "managed-transition": 146,
+      "misalignment": 3,
+      "race-future": 68,
+      "regulatory-freeze": 2,
+      "safety-incident": 2
+    },
+    "ranks": {
+      "A": 89,
+      "B": 102,
+      "C": 24,
+      "S": 35
+    }
+  },
+  "byProfile": {
+    "cautious": {
+      "runs": 50,
+      "completed": 50,
+      "meanScore": 0.7512548823471777,
+      "meanAccess": 0.13110402690157943,
+      "meanTrust": 75.96117484388614,
+      "meanCompute": 25137.37870020127,
+      "p95Compute": 75185.83254560827,
+      "meanBrownoutDays": 500.88,
+      "p95BrownoutDays": 1847,
+      "meanZeroComputeDays": 7.34,
+      "meanAcceptedActions": 172.04,
+      "meanRejectedActions": 3.66,
+      "meanDeferredActions": 14.86,
+      "meanBubbleCatchRate": 0.507392359635732,
+      "meanRealMinutes": 90.80533333333335,
+      "endings": {
+        "fragile-abundance": 5,
+        "managed-transition": 30,
+        "race-future": 15
+      },
+      "ranks": {
+        "A": 21,
+        "B": 18,
+        "C": 5,
+        "S": 6
+      }
+    },
+    "competitive": {
+      "runs": 50,
+      "completed": 50,
+      "meanScore": 0.774635272041515,
+      "meanAccess": 0.13455960791015473,
+      "meanTrust": 75.57350217031222,
+      "meanCompute": 15778.512062552674,
+      "p95Compute": 43523.522811151255,
+      "meanBrownoutDays": 571.04,
+      "p95BrownoutDays": 3001,
+      "meanZeroComputeDays": 6.58,
+      "meanAcceptedActions": 62.24,
+      "meanRejectedActions": 4.86,
+      "meanDeferredActions": 12.9,
+      "meanBubbleCatchRate": 0.5221145672746456,
+      "meanRealMinutes": 11.997208333333328,
+      "endings": {
+        "beneficial-abundance": 3,
+        "fragile-abundance": 5,
+        "managed-transition": 27,
+        "misalignment": 2,
+        "race-future": 13
+      },
+      "ranks": {
+        "A": 22,
+        "B": 13,
+        "C": 5,
+        "S": 10
+      }
+    },
+    "explorer": {
+      "runs": 50,
+      "completed": 50,
+      "meanScore": 0.775448470279042,
+      "meanAccess": 0.13568473359298813,
+      "meanTrust": 78.12111062603928,
+      "meanCompute": 22109.853168205245,
+      "p95Compute": 65484.9803072856,
+      "meanBrownoutDays": 581.3,
+      "p95BrownoutDays": 2067,
+      "meanZeroComputeDays": 7.16,
+      "meanAcceptedActions": 118.06,
+      "meanRejectedActions": 8.36,
+      "meanDeferredActions": 19.54,
+      "meanBubbleCatchRate": 0.5878080311289565,
+      "meanRealMinutes": 51.266999999999996,
+      "endings": {
+        "beneficial-abundance": 1,
+        "fragile-abundance": 5,
+        "managed-transition": 29,
+        "race-future": 15
+      },
+      "ranks": {
+        "A": 23,
+        "B": 13,
+        "C": 5,
+        "S": 9
+      }
+    },
+    "frugal": {
+      "runs": 50,
+      "completed": 50,
+      "meanScore": 0.7179242526313862,
+      "meanAccess": 0.11345257457323278,
+      "meanTrust": 74.24653133303191,
+      "meanCompute": 23788.10535420795,
+      "p95Compute": 66946.37255492914,
+      "meanBrownoutDays": 534.94,
+      "p95BrownoutDays": 1821,
+      "meanZeroComputeDays": 7.58,
+      "meanAcceptedActions": 133.7,
+      "meanRejectedActions": 2.16,
+      "meanDeferredActions": 8.78,
+      "meanBubbleCatchRate": 0.34416552992921906,
+      "meanRealMinutes": 91.77766666666665,
+      "endings": {
+        "fragile-abundance": 5,
+        "managed-transition": 30,
+        "race-future": 12,
+        "regulatory-freeze": 1,
+        "safety-incident": 2
+      },
+      "ranks": {
+        "A": 12,
+        "B": 29,
+        "C": 4,
+        "S": 5
+      }
+    },
+    "novice": {
+      "runs": 50,
+      "completed": 50,
+      "meanScore": 0.7065668232867472,
+      "meanAccess": 0.09730371093076105,
+      "meanTrust": 74.35324101625605,
+      "meanCompute": 13750.704326228202,
+      "p95Compute": 38670.405836685844,
+      "meanBrownoutDays": 594.06,
+      "p95BrownoutDays": 2250,
+      "meanZeroComputeDays": 7.42,
+      "meanAcceptedActions": 58.08,
+      "meanRejectedActions": 8.1,
+      "meanDeferredActions": 30.4,
+      "meanBubbleCatchRate": 0.19785568671321901,
+      "meanRealMinutes": 52.59541666666668,
+      "endings": {
+        "fragile-abundance": 5,
+        "managed-transition": 30,
+        "misalignment": 1,
+        "race-future": 13,
+        "regulatory-freeze": 1
+      },
+      "ranks": {
+        "A": 11,
+        "B": 29,
+        "C": 5,
+        "S": 5
+      }
+    }
+  },
+  "byPolicy": {
+    "agent-01-safety-plan-a": {
+      "runs": 25,
+      "completed": 25,
+      "meanScore": 0.7645521955950769,
+      "meanAccess": 0.09976441421472909,
+      "meanTrust": 98.28130956210109,
+      "meanCompute": 22900.987415291165,
+      "p95Compute": 35976.60076670153,
+      "meanBrownoutDays": 207.12,
+      "p95BrownoutDays": 472,
+      "meanZeroComputeDays": 5.44,
+      "meanAcceptedActions": 93.48,
+      "meanRejectedActions": 4.88,
+      "meanDeferredActions": 15.28,
+      "meanBubbleCatchRate": 0.43077532065361124,
+      "meanRealMinutes": 59.40808333333334,
+      "endings": {
+        "managed-transition": 25
+      },
+      "ranks": {
+        "A": 12,
+        "B": 13
+      }
+    },
+    "agent-02-reckless-capability-race": {
+      "runs": 25,
+      "completed": 25,
+      "meanScore": 0.7753530018105114,
+      "meanAccess": 0.16316163716727117,
+      "meanTrust": 70.32022783990823,
+      "meanCompute": 2113.93776097588,
+      "p95Compute": 4467.006072156447,
+      "meanBrownoutDays": 2276.96,
+      "p95BrownoutDays": 3072,
+      "meanZeroComputeDays": 26.88,
+      "meanAcceptedActions": 162.72,
+      "meanRejectedActions": 6.8,
+      "meanDeferredActions": 20.32,
+      "meanBubbleCatchRate": 0.43211005095495486,
+      "meanRealMinutes": 59.77741666666667,
+      "endings": {
+        "misalignment": 2,
+        "race-future": 21,
+        "regulatory-freeze": 2
+      },
+      "ranks": {
+        "A": 8,
+        "B": 9,
+        "C": 2,
+        "S": 6
+      }
+    },
+    "agent-03-adaptive-balanced": {
+      "runs": 25,
+      "completed": 25,
+      "meanScore": 0.7046880500177665,
+      "meanAccess": 0.0858075520107377,
+      "meanTrust": 83.78026025571279,
+      "meanCompute": 7608.766280803147,
+      "p95Compute": 16688.934291557187,
+      "meanBrownoutDays": 129.12,
+      "p95BrownoutDays": 510,
+      "meanZeroComputeDays": 1.92,
+      "meanAcceptedActions": 99.08,
+      "meanRejectedActions": 4.16,
+      "meanDeferredActions": 18.2,
+      "meanBubbleCatchRate": 0.5334118033037671,
+      "meanRealMinutes": 60.1375,
+      "endings": {
+        "managed-transition": 25
+      },
+      "ranks": {
+        "A": 2,
+        "B": 23
+      }
+    },
+    "agent-04-global-access": {
+      "runs": 25,
+      "completed": 25,
+      "meanScore": 0.9161581588369881,
+      "meanAccess": 0.3220347311288185,
+      "meanTrust": 67.29059302002366,
+      "meanCompute": 30538.49056758736,
+      "p95Compute": 37600.72648998408,
+      "meanBrownoutDays": 0,
+      "p95BrownoutDays": 0,
+      "meanZeroComputeDays": 0,
+      "meanAcceptedActions": 225.16,
+      "meanRejectedActions": 10.16,
+      "meanDeferredActions": 31.52,
+      "meanBubbleCatchRate": 0.41728886723179337,
+      "meanRealMinutes": 59.74008333333333,
+      "endings": {
+        "fragile-abundance": 25
+      },
+      "ranks": {
+        "S": 25
+      }
+    },
+    "agent-05-governance-institution-builder": {
+      "runs": 25,
+      "completed": 25,
+      "meanScore": 0.8676443032782188,
+      "meanAccess": 0.16764106712642846,
+      "meanTrust": 97.23405336937262,
+      "meanCompute": 2563.5386249262788,
+      "p95Compute": 4287.808383828429,
+      "meanBrownoutDays": 50.96,
+      "p95BrownoutDays": 186,
+      "meanZeroComputeDays": 1.08,
+      "meanAcceptedActions": 176.16,
+      "meanRejectedActions": 7.4,
+      "meanDeferredActions": 21.36,
+      "meanBubbleCatchRate": 0.42297414342545453,
+      "meanRealMinutes": 59.384999999999984,
+      "endings": {
+        "beneficial-abundance": 4,
+        "managed-transition": 21
+      },
+      "ranks": {
+        "A": 21,
+        "S": 4
+      }
+    },
+    "agent-06-passive-control": {
+      "runs": 25,
+      "completed": 25,
+      "meanScore": 0.4925069509931067,
+      "meanAccess": 0.03252576972804128,
+      "meanTrust": 35.22652412952959,
+      "meanCompute": 81.79681285375203,
+      "p95Compute": 130.74478359506347,
+      "meanBrownoutDays": 1643,
+      "p95BrownoutDays": 1663,
+      "meanZeroComputeDays": 21.52,
+      "meanAcceptedActions": 2,
+      "meanRejectedActions": 0,
+      "meanDeferredActions": 0,
+      "meanBubbleCatchRate": 0,
+      "meanRealMinutes": 60.43200000000001,
+      "endings": {
+        "race-future": 25
+      },
+      "ranks": {
+        "B": 5,
+        "C": 20
+      }
+    },
+    "agent-07-frugal-compute-survivor": {
+      "runs": 25,
+      "completed": 25,
+      "meanScore": 0.7792912851728897,
+      "meanAccess": 0.10576594431645991,
+      "meanTrust": 72.9444117683231,
+      "meanCompute": 41865.96494148806,
+      "p95Compute": 64707.3023113094,
+      "meanBrownoutDays": 0,
+      "p95BrownoutDays": 0,
+      "meanZeroComputeDays": 0,
+      "meanAcceptedActions": 124.32,
+      "meanRejectedActions": 4.64,
+      "meanDeferredActions": 20.92,
+      "meanBubbleCatchRate": 0.5154109821876485,
+      "meanRealMinutes": 60.07291666666668,
+      "endings": {
+        "managed-transition": 25
+      },
+      "ranks": {
+        "A": 18,
+        "B": 7
+      }
+    },
+    "agent-08-chaotic-reactive-explorer": {
+      "runs": 25,
+      "completed": 25,
+      "meanScore": 0.6017940099132901,
+      "meanAccess": 0.03553025145078555,
+      "meanTrust": 52.67924494765812,
+      "meanCompute": 347.85095474594056,
+      "p95Compute": 544.33085697985,
+      "meanBrownoutDays": 1253.36,
+      "p95BrownoutDays": 1821,
+      "meanZeroComputeDays": 15.08,
+      "meanAcceptedActions": 16.44,
+      "meanRejectedActions": 6.68,
+      "meanDeferredActions": 4.36,
+      "meanBubbleCatchRate": 0.5333137973137972,
+      "meanRealMinutes": 58.87708333333333,
+      "endings": {
+        "misalignment": 1,
+        "race-future": 22,
+        "safety-incident": 2
+      },
+      "ranks": {
+        "B": 23,
+        "C": 2
+      }
+    },
+    "agent-09-open-ecosystem-pluralist": {
+      "runs": 25,
+      "completed": 25,
+      "meanScore": 0.7779999999999998,
+      "meanAccess": 0.10881828659338119,
+      "meanTrust": 96.41637825227019,
+      "meanCompute": 32942.95552851719,
+      "p95Compute": 51594.7904522401,
+      "meanBrownoutDays": 0.28,
+      "p95BrownoutDays": 0,
+      "meanZeroComputeDays": 0.08,
+      "meanAcceptedActions": 86.32,
+      "meanRejectedActions": 5.08,
+      "meanDeferredActions": 19.8,
+      "meanBubbleCatchRate": 0.5278585206952965,
+      "meanRealMinutes": 59.427249999999994,
+      "endings": {
+        "managed-transition": 25
+      },
+      "ranks": {
+        "A": 14,
+        "B": 11
+      }
+    },
+    "agent-10-product-growth-hacker": {
+      "runs": 25,
+      "completed": 25,
+      "meanScore": 0.7716714455538856,
+      "meanAccess": 0.10315965408077955,
+      "meanTrust": 82.33811683415188,
+      "meanCompute": 60164.81833560192,
+      "p95Compute": 83663.8871773393,
+      "meanBrownoutDays": 3.64,
+      "p95BrownoutDays": 0,
+      "meanZeroComputeDays": 0.16,
+      "meanAcceptedActions": 102.56,
+      "meanRejectedActions": 4.48,
+      "meanDeferredActions": 21.2,
+      "meanBubbleCatchRate": 0.5055288635972205,
+      "meanRealMinutes": 59.62791666666665,
+      "endings": {
+        "managed-transition": 25
+      },
+      "ranks": {
+        "A": 14,
+        "B": 11
+      }
+    }
+  },
+  "redFlags": {
+    "passiveHighRanks": 5,
+    "lowAccessHighRanks": 0,
+    "longDeadlocks": 0,
+    "excessiveTreasuries": 124
+  }
+}

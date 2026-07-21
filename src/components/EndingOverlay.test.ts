@@ -4,6 +4,7 @@ import {
   buildXIntentHref,
   endingDistributionRows,
   formatActivePlayTime,
+  marketShareOutcomeRows,
   resolvePublicShareUrl,
 } from './EndingOverlay'
 
@@ -53,5 +54,17 @@ describe('anonymous worldline receipt helpers', () => {
     expect(rows[0]?.percent).toBe(75)
     expect(rows[1]?.percent).toBe(25)
     expect(endingDistributionRows(null)).toEqual([])
+  })
+
+  it('ranks final competitors and reports movement from the opening market', () => {
+    const rows = marketShareOutcomeRows([
+      { id: 'codex', name: 'CODEX', share: .28, baseline: .34 },
+      { id: 'anthro', name: 'ANTHRO', share: .42, baseline: .22 },
+      { id: 'goo', name: 'GOO', share: .3, baseline: .24 },
+    ])
+
+    expect(rows.map((row) => row.name)).toEqual(['ANTHRO', 'GOO', 'CODEX'])
+    expect(rows[0]?.delta).toBeCloseTo(.2)
+    expect(rows[2]?.delta).toBeCloseTo(-.06)
   })
 })

@@ -1,0 +1,3372 @@
+[
+  {
+    "policyId": "agent-01-safety-plan-a",
+    "policyDescription": "Safety-first Plan A: keep Safety and Governance ahead of Capability, choose verified slowdown and hold the line, then pursue broad access through open and inclusive distribution.",
+    "run": 1,
+    "seed": 11001,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "managed-transition",
+    "score": 0.844,
+    "rank": "A",
+    "worldAdoption": 0.12016160663658394,
+    "codexShare": 0.3711897817531765,
+    "hhi": 0.3762852817409291,
+    "trust": 99.55650038530901,
+    "compute": 14350.057386481967,
+    "capability": 9.5,
+    "safety": 10,
+    "governance": 10,
+    "extinctionRisk": 0,
+    "interventions": 65,
+    "brownoutDays": 0,
+    "zeroComputeDays": 0,
+    "actionCount": 67,
+    "acceptedActionCount": 67,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.053280328690885684,
+      0.4749110205468914,
+      0.10061886900904635
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 745
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 745.0735834181938,
+        "computeAfter": 550.0735834181938
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 550.1528339117492,
+        "computeAfter": 505.1528339117492
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 505.25599925585607,
+        "computeAfter": 460.25599925585607
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 460.3730854095572,
+        "computeAfter": 415.3730854095572
+      },
+      {
+        "day": 139,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 474.55806995345887,
+        "computeAfter": 384.55806995345887
+      },
+      {
+        "day": 334,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 535.4020499549346,
+        "computeAfter": 445.40204995493457
+      },
+      {
+        "day": 529,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 657.6181853275232,
+        "computeAfter": 567.6181853275232
+      },
+      {
+        "day": 724,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 802.6121595967392,
+        "computeAfter": 802.6121595967392
+      },
+      {
+        "day": 919,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 1045.4647284011164,
+        "computeAfter": 975.4647284011164
+      },
+      {
+        "day": 920,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 976.0374466315099,
+        "computeAfter": 736.0374466315099
+      },
+      {
+        "day": 921,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 736.6112687429336,
+        "computeAfter": 496.6112687429336
+      },
+      {
+        "day": 996,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 543.3967423118472,
+        "computeAfter": 403.3967423118472
+      },
+      {
+        "day": 997,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 403.2242984173121,
+        "computeAfter": 118.22429841731213
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 103.0024694077784,
+        "computeAfter": 103.0024694077784
+      },
+      {
+        "day": 1256,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 84.4732517972923,
+        "computeAfter": 84.4732517972923
+      },
+      {
+        "day": 1336,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 89.48180246368713,
+        "computeAfter": 89.48180246368713
+      },
+      {
+        "day": 1576,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 72.60160190879185,
+        "computeAfter": 72.60160190879185
+      },
+      {
+        "day": 1796,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 51.61171461657941,
+        "computeAfter": 51.61171461657941
+      },
+      {
+        "day": 1876,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 68.99736416005155,
+        "computeAfter": 68.99736416005155
+      },
+      {
+        "day": 2116,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 72.77663046096872,
+        "computeAfter": 72.77663046096872
+      },
+      {
+        "day": 2338,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 67.36901550473038,
+        "computeAfter": 67.36901550473038
+      },
+      {
+        "day": 2418,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 97.76086175213094,
+        "computeAfter": 97.76086175213094
+      },
+      {
+        "day": 2658,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 125.44434049664893,
+        "computeAfter": 125.44434049664893
+      },
+      {
+        "day": 2878,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 143.76335078221004,
+        "computeAfter": 143.76335078221004
+      },
+      {
+        "day": 2958,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 187.7214556427074,
+        "computeAfter": 187.7214556427074
+      },
+      {
+        "day": 3153,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 241.23850746988063,
+        "computeAfter": 91.23850746988063
+      },
+      {
+        "day": 3228,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 257.69853220282545,
+        "computeAfter": 137.69853220282545
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 263.30357980537036,
+        "computeAfter": 263.30357980537036
+      },
+      {
+        "day": 3422,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 566.4171827952401,
+        "computeAfter": 286.41718279524014
+      },
+      {
+        "day": 3423,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 287.05371070601,
+        "computeAfter": 97.05371070601001
+      },
+      {
+        "day": 3523,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 167.71413205390934,
+        "computeAfter": 167.71413205390934
+      },
+      {
+        "day": 3568,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 228.16730428059853,
+        "computeAfter": 98.16730428059853
+      },
+      {
+        "day": 3663,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-distillation"
+        },
+        "accepted": true,
+        "computeBefore": 260.74761225215855,
+        "computeAfter": 90.74761225215855
+      },
+      {
+        "day": 3738,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 389.3353217800478,
+        "computeAfter": 164.33532178004782
+      },
+      {
+        "day": 3813,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 655.6397103974545,
+        "computeAfter": 393.13971039745445
+      },
+      {
+        "day": 3888,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1090.4494368815824,
+        "computeAfter": 790.4494368815824
+      },
+      {
+        "day": 3922,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1204.4844548787098,
+        "computeAfter": 866.9844548787098
+      },
+      {
+        "day": 3945,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1211.9329107787903,
+        "computeAfter": 836.9329107787903
+      },
+      {
+        "day": 3966,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1210.4389515246733,
+        "computeAfter": 797.9389515246733
+      },
+      {
+        "day": 3986,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-grid-partnership"
+        },
+        "accepted": true,
+        "computeBefore": 1209.1694519517068,
+        "computeAfter": 999.1694519517068
+      },
+      {
+        "day": 3996,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-efficient-inference"
+        },
+        "accepted": true,
+        "computeBefore": 1208.7229377816877,
+        "computeAfter": 988.7229377816877
+      },
+      {
+        "day": 4006,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 1203.52915822524,
+        "computeAfter": 1033.52915822524
+      },
+      {
+        "day": 4014,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-offline-lite"
+        },
+        "accepted": true,
+        "computeBefore": 1202.8470219059482,
+        "computeAfter": 1062.8470219059482
+      },
+      {
+        "day": 4021,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-watermark"
+        },
+        "accepted": true,
+        "computeBefore": 1213.8822418956318,
+        "computeAfter": 1033.8822418956318
+      },
+      {
+        "day": 4029,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 1208.2193186711183,
+        "computeAfter": 978.2193186711183
+      },
+      {
+        "day": 4039,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-crisis-response"
+        },
+        "accepted": true,
+        "computeBefore": 1200.6227237633016,
+        "computeAfter": 1000.6227237633016
+      },
+      {
+        "day": 4048,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 1204.1670949007876,
+        "computeAfter": 994.1670949007876
+      },
+      {
+        "day": 4057,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-universal-access"
+        },
+        "accepted": true,
+        "computeBefore": 1210.2591460104911,
+        "computeAfter": 890.2591460104911
+      },
+      {
+        "day": 4071,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-verified-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 1205.7580769500025,
+        "computeAfter": 945.7580769500025
+      },
+      {
+        "day": 4083,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1212.5052780621775,
+        "computeAfter": 420.5456831332442
+      },
+      {
+        "day": 4119,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 1207.251561402128,
+        "computeAfter": 1017.2515614021279
+      },
+      {
+        "day": 4128,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 1218.9817087308668,
+        "computeAfter": 918.9817087308668
+      },
+      {
+        "day": 4141,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 1214.0381809574933,
+        "computeAfter": 894.0381809574933
+      },
+      {
+        "day": 4156,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 1216.4853119411487,
+        "computeAfter": 996.4853119411487
+      },
+      {
+        "day": 4166,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 1205.2657679503998,
+        "computeAfter": 915.2657679503998
+      },
+      {
+        "day": 4180,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 1211.1719105301986,
+        "computeAfter": 881.1719105301986
+      },
+      {
+        "day": 4218,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1687.2388446833581,
+        "computeAfter": 103.31965482549163
+      },
+      {
+        "day": 4361,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3158.2974115959255,
+        "computeAfter": 3158.2974115959255
+      },
+      {
+        "day": 4366,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 3277.8475022058,
+        "computeAfter": 110.00912249006706
+      },
+      {
+        "day": 4476,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 3641.004350421315,
+        "computeAfter": 3641.004350421315
+      },
+      {
+        "day": 4599,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 6444.947025555829,
+        "computeAfter": 109.27026612436293
+      },
+      {
+        "day": 4619,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 550.3729404579612,
+        "computeAfter": 17.87294045796125
+      },
+      {
+        "day": 4620,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 40.232456890968,
+        "computeAfter": 260.232456890968
+      },
+      {
+        "day": 4721,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2509.6743326255214,
+        "computeAfter": 2509.6743326255214
+      },
+      {
+        "day": 4801,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5409.8461765619995,
+        "computeAfter": 5409.8461765619995
+      },
+      {
+        "day": 5041,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 12477.524169271446,
+        "computeAfter": 12477.524169271446
+      }
+    ]
+  },
+  {
+    "policyId": "agent-01-safety-plan-a",
+    "policyDescription": "Safety-first Plan A: keep Safety and Governance ahead of Capability, choose verified slowdown and hold the line, then pursue broad access through open and inclusive distribution.",
+    "run": 2,
+    "seed": 115730,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "managed-transition",
+    "score": 0.844,
+    "rank": "A",
+    "worldAdoption": 0.12692572426188878,
+    "codexShare": 0.3166226503120525,
+    "hhi": 0.3960536069669793,
+    "trust": 100,
+    "compute": 42196.74475882152,
+    "capability": 8.5,
+    "safety": 9,
+    "governance": 9.5,
+    "extinctionRisk": 0,
+    "interventions": 61,
+    "brownoutDays": 0,
+    "zeroComputeDays": 2,
+    "actionCount": 63,
+    "acceptedActionCount": 63,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.05302030723806216,
+      0.5323392345384347,
+      0.09801780791145072
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 745
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 745.0735834181938,
+        "computeAfter": 550.0735834181938
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 550.1528339117492,
+        "computeAfter": 505.1528339117492
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 505.25599925585607,
+        "computeAfter": 460.25599925585607
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 460.3730854095572,
+        "computeAfter": 415.3730854095572
+      },
+      {
+        "day": 139,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 474.5626131590323,
+        "computeAfter": 384.5626131590323
+      },
+      {
+        "day": 334,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 516.0432445276065,
+        "computeAfter": 426.0432445276065
+      },
+      {
+        "day": 529,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 598.2146635064438,
+        "computeAfter": 508.2146635064438
+      },
+      {
+        "day": 724,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 708.9840529831861,
+        "computeAfter": 708.9840529831861
+      },
+      {
+        "day": 919,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 916.6236833247306,
+        "computeAfter": 846.6236833247306
+      },
+      {
+        "day": 920,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 847.0686228574908,
+        "computeAfter": 607.0686228574908
+      },
+      {
+        "day": 921,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 607.5145669698901,
+        "computeAfter": 367.5145669698901
+      },
+      {
+        "day": 996,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 403.85782199421084,
+        "computeAfter": 263.85782199421084
+      },
+      {
+        "day": 997,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 263.63033675075394,
+        "computeAfter": 133.63033675075394
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 113.06300349233123,
+        "computeAfter": 113.06300349233123
+      },
+      {
+        "day": 1256,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 86.4771700182889,
+        "computeAfter": 86.4771700182889
+      },
+      {
+        "day": 1336,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 88.63369376297466,
+        "computeAfter": 88.63369376297466
+      },
+      {
+        "day": 1576,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 64.10077037168936,
+        "computeAfter": 64.10077037168936
+      },
+      {
+        "day": 1725,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 44.96540530420985,
+        "computeAfter": 264.96540530420987
+      },
+      {
+        "day": 1771,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 259.8358134294625,
+        "computeAfter": 109.83581342946252
+      },
+      {
+        "day": 1863,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 210.5232114976586,
+        "computeAfter": 90.5232114976586
+      },
+      {
+        "day": 1963,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 200.31792655315235,
+        "computeAfter": 200.31792655315235
+      },
+      {
+        "day": 2008,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-distillation"
+        },
+        "accepted": true,
+        "computeBefore": 272.03169469065136,
+        "computeAfter": 102.03169469065136
+      },
+      {
+        "day": 2083,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 372.0362740328119,
+        "computeAfter": 92.03627403281189
+      },
+      {
+        "day": 2133,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-watermark"
+        },
+        "accepted": true,
+        "computeBefore": 181.443256073376,
+        "computeAfter": 1.4432560733760056
+      },
+      {
+        "day": 2244,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 190.83038403323073,
+        "computeAfter": 0.8303840332307288
+      },
+      {
+        "day": 2351,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 190.77147346491108,
+        "computeAfter": 0.7714734649110824
+      },
+      {
+        "day": 2451,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 183.49693875076503,
+        "computeAfter": 183.49693875076503
+      },
+      {
+        "day": 2496,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-grid-partnership"
+        },
+        "accepted": true,
+        "computeBefore": 303.62921409841755,
+        "computeAfter": 93.62921409841755
+      },
+      {
+        "day": 2571,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 472.0660474949836,
+        "computeAfter": 217.0660474949836
+      },
+      {
+        "day": 2646,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 685.0126867276904,
+        "computeAfter": 392.5126867276904
+      },
+      {
+        "day": 2721,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1003.5686873870972,
+        "computeAfter": 673.5686873870972
+      },
+      {
+        "day": 2774,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1205.5037602502223,
+        "computeAfter": 838.0037602502223
+      },
+      {
+        "day": 2805,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1211.8135297761144,
+        "computeAfter": 806.8135297761144
+      },
+      {
+        "day": 2835,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1207.0118182248855,
+        "computeAfter": 764.5118182248855
+      },
+      {
+        "day": 2867,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-efficient-inference"
+        },
+        "accepted": true,
+        "computeBefore": 1213.1012040406033,
+        "computeAfter": 993.1012040406033
+      },
+      {
+        "day": 2882,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 1209.6655778952215,
+        "computeAfter": 1039.6655778952215
+      },
+      {
+        "day": 2894,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-offline-lite"
+        },
+        "accepted": true,
+        "computeBefore": 1213.9373950739819,
+        "computeAfter": 1073.9373950739819
+      },
+      {
+        "day": 2903,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 1207.7444532810382,
+        "computeAfter": 977.7444532810382
+      },
+      {
+        "day": 2918,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-crisis-response"
+        },
+        "accepted": true,
+        "computeBefore": 1206.4739090643393,
+        "computeAfter": 1006.4739090643393
+      },
+      {
+        "day": 2931,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 1208.5846714106342,
+        "computeAfter": 998.5846714106342
+      },
+      {
+        "day": 2944,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-universal-access"
+        },
+        "accepted": true,
+        "computeBefore": 1203.3596022808586,
+        "computeAfter": 883.3596022808586
+      },
+      {
+        "day": 2966,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 1214.442364458473,
+        "computeAfter": 914.4423644584731
+      },
+      {
+        "day": 2985,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 1205.6741563613073,
+        "computeAfter": 885.6741563613073
+      },
+      {
+        "day": 3007,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-verified-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 1206.1680538506312,
+        "computeAfter": 946.1680538506312
+      },
+      {
+        "day": 3025,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1204.8683532290372,
+        "computeAfter": 412.90875830010395
+      },
+      {
+        "day": 3081,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 1201.1468433400917,
+        "computeAfter": 981.1468433400917
+      },
+      {
+        "day": 3097,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 1203.5063700905462,
+        "computeAfter": 913.5063700905462
+      },
+      {
+        "day": 3118,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 1209.0878649630674,
+        "computeAfter": 879.0878649630674
+      },
+      {
+        "day": 3175,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1679.2102019962504,
+        "computeAfter": 95.29101213838385
+      },
+      {
+        "day": 3275,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1518.774544777292,
+        "computeAfter": 1518.774544777292
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 1718.5144762683055,
+        "computeAfter": 1718.5144762683055
+      },
+      {
+        "day": 3359,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 3277.163019262521,
+        "computeAfter": 109.32463954678815
+      },
+      {
+        "day": 3469,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 2119.8359018568617,
+        "computeAfter": 2119.8359018568617
+      },
+      {
+        "day": 3689,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 5536.052546955747,
+        "computeAfter": 5536.052546955747
+      },
+      {
+        "day": 3769,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 7463.9644874793385,
+        "computeAfter": 7463.9644874793385
+      },
+      {
+        "day": 4009,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 12093.678582397191,
+        "computeAfter": 12093.678582397191
+      },
+      {
+        "day": 4229,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 16192.869003176806,
+        "computeAfter": 16192.869003176806
+      },
+      {
+        "day": 4309,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 18687.969062138225,
+        "computeAfter": 18687.969062138225
+      },
+      {
+        "day": 4549,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 24702.81207197753,
+        "computeAfter": 24702.81207197753
+      },
+      {
+        "day": 4769,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 30295.661477638638,
+        "computeAfter": 30295.661477638638
+      },
+      {
+        "day": 4849,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 33670.006436832795,
+        "computeAfter": 33670.006436832795
+      },
+      {
+        "day": 5089,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 41569.910573035246,
+        "computeAfter": 41569.910573035246
+      }
+    ]
+  },
+  {
+    "policyId": "agent-01-safety-plan-a",
+    "policyDescription": "Safety-first Plan A: keep Safety and Governance ahead of Capability, choose verified slowdown and hold the line, then pursue broad access through open and inclusive distribution.",
+    "run": 3,
+    "seed": 220459,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "managed-transition",
+    "score": 0.844,
+    "rank": "A",
+    "worldAdoption": 0.12762422151639308,
+    "codexShare": 0.5964544564465659,
+    "hhi": 0.45989580472077235,
+    "trust": 98.480286092611,
+    "compute": 14847.991625294668,
+    "capability": 9.5,
+    "safety": 10,
+    "governance": 10,
+    "extinctionRisk": 0,
+    "interventions": 65,
+    "brownoutDays": 0,
+    "zeroComputeDays": 1,
+    "actionCount": 67,
+    "acceptedActionCount": 67,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.030709660028213872,
+      0.31620912956967895,
+      0.05662675395554124
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 745
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 745.0735834181938,
+        "computeAfter": 550.0735834181938
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 550.1528339117492,
+        "computeAfter": 505.1528339117492
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 505.25599925585607,
+        "computeAfter": 460.25599925585607
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 460.3730854095572,
+        "computeAfter": 415.3730854095572
+      },
+      {
+        "day": 139,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 474.31922839882003,
+        "computeAfter": 384.31922839882003
+      },
+      {
+        "day": 334,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 515.5614754386816,
+        "computeAfter": 425.56147543868155
+      },
+      {
+        "day": 529,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 596.8104241746073,
+        "computeAfter": 506.8104241746073
+      },
+      {
+        "day": 724,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 704.7330770697171,
+        "computeAfter": 704.7330770697171
+      },
+      {
+        "day": 919,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 922.9465303387819,
+        "computeAfter": 852.9465303387819
+      },
+      {
+        "day": 920,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 853.4326360896649,
+        "computeAfter": 613.4326360896649
+      },
+      {
+        "day": 921,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 613.9198242932035,
+        "computeAfter": 373.91982429320353
+      },
+      {
+        "day": 996,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 414.0622400534191,
+        "computeAfter": 274.0622400534191
+      },
+      {
+        "day": 997,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 273.86020083987637,
+        "computeAfter": 143.86020083987637
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 126.30310590655404,
+        "computeAfter": 126.30310590655404
+      },
+      {
+        "day": 1256,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 103.51090307179163,
+        "computeAfter": 103.51090307179163
+      },
+      {
+        "day": 1336,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 105.66080713797346,
+        "computeAfter": 105.66080713797346
+      },
+      {
+        "day": 1576,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 82.3475653896407,
+        "computeAfter": 82.3475653896407
+      },
+      {
+        "day": 1796,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 62.42368524731256,
+        "computeAfter": 62.42368524731256
+      },
+      {
+        "day": 1876,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 78.20795623226974,
+        "computeAfter": 78.20795623226974
+      },
+      {
+        "day": 2116,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 79.99758458635726,
+        "computeAfter": 79.99758458635726
+      },
+      {
+        "day": 2336,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 80.49583639888377,
+        "computeAfter": 80.49583639888377
+      },
+      {
+        "day": 2416,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 112.91387029403012,
+        "computeAfter": 112.91387029403012
+      },
+      {
+        "day": 2656,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 140.18552716801352,
+        "computeAfter": 140.18552716801352
+      },
+      {
+        "day": 2876,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 169.20346513156343,
+        "computeAfter": 169.20346513156343
+      },
+      {
+        "day": 2940,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 210.85741463958587,
+        "computeAfter": 90.85741463958587
+      },
+      {
+        "day": 3050,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 138.4696129936683,
+        "computeAfter": 138.4696129936683
+      },
+      {
+        "day": 3270,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 185.7650844945793,
+        "computeAfter": 185.7650844945793
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 194.46661224641718,
+        "computeAfter": 194.46661224641718
+      },
+      {
+        "day": 3422,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 313.39735939571165,
+        "computeAfter": 163.39735939571165
+      },
+      {
+        "day": 3497,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 401.4056913558172,
+        "computeAfter": 121.40569135581723
+      },
+      {
+        "day": 3555,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-watermark"
+        },
+        "accepted": true,
+        "computeBefore": 180.30823030521637,
+        "computeAfter": 0.3082303052163695
+      },
+      {
+        "day": 3556,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 1.3354591095917314,
+        "computeAfter": 221.33545910959174
+      },
+      {
+        "day": 3750,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 422.75925441831754,
+        "computeAfter": 235.25925441831754
+      },
+      {
+        "day": 3825,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 544.6652195850381,
+        "computeAfter": 319.66521958503813
+      },
+      {
+        "day": 3900,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 862.1356106669226,
+        "computeAfter": 599.6356106669226
+      },
+      {
+        "day": 3958,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1206.3084883601502,
+        "computeAfter": 906.3084883601502
+      },
+      {
+        "day": 3980,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1205.500886220318,
+        "computeAfter": 868.0008862203181
+      },
+      {
+        "day": 4000,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1200.2762833646586,
+        "computeAfter": 825.2762833646586
+      },
+      {
+        "day": 4020,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1216.9346015842054,
+        "computeAfter": 804.4346015842054
+      },
+      {
+        "day": 4038,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-distillation"
+        },
+        "accepted": true,
+        "computeBefore": 1218.2370007469515,
+        "computeAfter": 1048.2370007469515
+      },
+      {
+        "day": 4045,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-grid-partnership"
+        },
+        "accepted": true,
+        "computeBefore": 1218.7488160563312,
+        "computeAfter": 1008.7488160563312
+      },
+      {
+        "day": 4053,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-efficient-inference"
+        },
+        "accepted": true,
+        "computeBefore": 1206.3657588815797,
+        "computeAfter": 986.3657588815797
+      },
+      {
+        "day": 4062,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 1213.9956567547247,
+        "computeAfter": 1043.9956567547247
+      },
+      {
+        "day": 4069,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-offline-lite"
+        },
+        "accepted": true,
+        "computeBefore": 1218.660602210845,
+        "computeAfter": 1078.660602210845
+      },
+      {
+        "day": 4074,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 1205.4415428778493,
+        "computeAfter": 975.4415428778493
+      },
+      {
+        "day": 4083,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-crisis-response"
+        },
+        "accepted": true,
+        "computeBefore": 1206.9116928451272,
+        "computeAfter": 1006.9116928451272
+      },
+      {
+        "day": 4091,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 1216.0948925593016,
+        "computeAfter": 1006.0948925593016
+      },
+      {
+        "day": 4099,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-universal-access"
+        },
+        "accepted": true,
+        "computeBefore": 1218.881578331167,
+        "computeAfter": 898.881578331167
+      },
+      {
+        "day": 4112,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-verified-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 1220.3896153341425,
+        "computeAfter": 960.3896153341425
+      },
+      {
+        "day": 4122,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1205.9518024660883,
+        "computeAfter": 413.9922075371551
+      },
+      {
+        "day": 4123,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 437.56946385381514,
+        "computeAfter": 40.06946385381514
+      },
+      {
+        "day": 4130,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 206.39663714134528,
+        "computeAfter": 16.39663714134528
+      },
+      {
+        "day": 4178,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 1205.829229010466,
+        "computeAfter": 1015.829229010466
+      },
+      {
+        "day": 4186,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 1220.488906634852,
+        "computeAfter": 920.4889066348519
+      },
+      {
+        "day": 4197,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 1204.971461978572,
+        "computeAfter": 884.971461978572
+      },
+      {
+        "day": 4210,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 1203.51789480936,
+        "computeAfter": 983.5178948093601
+      },
+      {
+        "day": 4220,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 1221.8999409944602,
+        "computeAfter": 931.8999409944602
+      },
+      {
+        "day": 4232,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 1219.024331331943,
+        "computeAfter": 889.0243313319429
+      },
+      {
+        "day": 4265,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1676.7628301124214,
+        "computeAfter": 92.84364025455488
+      },
+      {
+        "day": 4399,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 3259.263738948842,
+        "computeAfter": 91.4253592331088
+      },
+      {
+        "day": 4499,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2519.641189242481,
+        "computeAfter": 2519.641189242481
+      },
+      {
+        "day": 4579,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5554.069178855773,
+        "computeAfter": 5554.069178855773
+      },
+      {
+        "day": 4610,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 6431.321699992734,
+        "computeAfter": 95.6449405612675
+      },
+      {
+        "day": 4627,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 547.2502890366447,
+        "computeAfter": 14.750289036644745
+      },
+      {
+        "day": 4819,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5235.544825044889,
+        "computeAfter": 5235.544825044889
+      },
+      {
+        "day": 5039,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 11407.344013750042,
+        "computeAfter": 11407.344013750042
+      }
+    ]
+  },
+  {
+    "policyId": "agent-01-safety-plan-a",
+    "policyDescription": "Safety-first Plan A: keep Safety and Governance ahead of Capability, choose verified slowdown and hold the line, then pursue broad access through open and inclusive distribution.",
+    "run": 4,
+    "seed": 325188,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "managed-transition",
+    "score": 0.694,
+    "rank": "B",
+    "worldAdoption": 0.08250389895212575,
+    "codexShare": 0.39159234758083644,
+    "hhi": 0.3913408791447027,
+    "trust": 100,
+    "compute": 26848.68235806902,
+    "capability": 8.5,
+    "safety": 9,
+    "governance": 9.5,
+    "extinctionRisk": 0,
+    "interventions": 59,
+    "brownoutDays": 0,
+    "zeroComputeDays": 2,
+    "actionCount": 61,
+    "acceptedActionCount": 61,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 1,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.04258287271435588,
+      0.4779818271666946,
+      0.08784295253811307
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 745
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 745.0735834181938,
+        "computeAfter": 550.0735834181938
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 550.1528339117492,
+        "computeAfter": 505.1528339117492
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 505.25599925585607,
+        "computeAfter": 460.25599925585607
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 460.3730854095572,
+        "computeAfter": 415.3730854095572
+      },
+      {
+        "day": 139,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 473.9594940210316,
+        "computeAfter": 383.9594940210316
+      },
+      {
+        "day": 334,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 515.3383754254712,
+        "computeAfter": 425.3383754254712
+      },
+      {
+        "day": 529,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 600.5560961892016,
+        "computeAfter": 510.55609618920164
+      },
+      {
+        "day": 724,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 711.8667397849453,
+        "computeAfter": 711.8667397849453
+      },
+      {
+        "day": 919,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 925.8657841412712,
+        "computeAfter": 855.8657841412712
+      },
+      {
+        "day": 920,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 856.3659033573921,
+        "computeAfter": 616.3659033573921
+      },
+      {
+        "day": 921,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 616.8669657792103,
+        "computeAfter": 376.8669657792103
+      },
+      {
+        "day": 996,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 417.110528456622,
+        "computeAfter": 277.110528456622
+      },
+      {
+        "day": 997,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 276.9008665315482,
+        "computeAfter": 146.90086653154822
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 128.31779665800963,
+        "computeAfter": 128.31779665800963
+      },
+      {
+        "day": 1256,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 103.58210026257365,
+        "computeAfter": 103.58210026257365
+      },
+      {
+        "day": 1336,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 104.08464552898891,
+        "computeAfter": 104.08464552898891
+      },
+      {
+        "day": 1576,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 76.9106821902833,
+        "computeAfter": 76.9106821902833
+      },
+      {
+        "day": 1791,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 44.97404566869683,
+        "computeAfter": 264.9740456686968
+      },
+      {
+        "day": 1836,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 257.9480163608224,
+        "computeAfter": 107.94801636082241
+      },
+      {
+        "day": 1936,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 202.40149073161163,
+        "computeAfter": 202.40149073161163
+      },
+      {
+        "day": 1981,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-distillation"
+        },
+        "accepted": true,
+        "computeBefore": 267.650618840097,
+        "computeAfter": 97.65061884009702
+      },
+      {
+        "day": 2056,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 341.2639930846469,
+        "computeAfter": 116.26399308464693
+      },
+      {
+        "day": 2131,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 403.58134892199,
+        "computeAfter": 123.58134892199001
+      },
+      {
+        "day": 2152,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-watermark"
+        },
+        "accepted": true,
+        "computeBefore": 182.76714328160418,
+        "computeAfter": 2.767143281604177
+      },
+      {
+        "day": 2214,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 190.31817281611436,
+        "computeAfter": 0.31817281611435533
+      },
+      {
+        "day": 2287,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 220.5697182485033,
+        "computeAfter": 0.5697182485033068
+      },
+      {
+        "day": 2362,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 217.76748792254543,
+        "computeAfter": 97.76748792254543
+      },
+      {
+        "day": 2437,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-grid-partnership"
+        },
+        "accepted": true,
+        "computeBefore": 310.13703481179584,
+        "computeAfter": 100.13703481179584
+      },
+      {
+        "day": 2512,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 402.3539033938855,
+        "computeAfter": 109.8539033938855
+      },
+      {
+        "day": 2587,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 522.704622668659,
+        "computeAfter": 192.704622668659
+      },
+      {
+        "day": 2662,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 731.7399542794675,
+        "computeAfter": 364.2399542794675
+      },
+      {
+        "day": 2737,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1018.4843725208553,
+        "computeAfter": 613.4843725208553
+      },
+      {
+        "day": 2794,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1208.9779817581903,
+        "computeAfter": 766.4779817581903
+      },
+      {
+        "day": 2833,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-efficient-inference"
+        },
+        "accepted": true,
+        "computeBefore": 1211.0423228403572,
+        "computeAfter": 991.0423228403572
+      },
+      {
+        "day": 2851,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 1204.2148768281525,
+        "computeAfter": 1034.2148768281525
+      },
+      {
+        "day": 2865,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-offline-lite"
+        },
+        "accepted": true,
+        "computeBefore": 1200.9444436394426,
+        "computeAfter": 1060.9444436394426
+      },
+      {
+        "day": 2877,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 1207.318657101846,
+        "computeAfter": 977.3186571018459
+      },
+      {
+        "day": 2895,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-crisis-response"
+        },
+        "accepted": true,
+        "computeBefore": 1203.317442617197,
+        "computeAfter": 1003.317442617197
+      },
+      {
+        "day": 2911,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 1208.4495002509434,
+        "computeAfter": 998.4495002509434
+      },
+      {
+        "day": 2927,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-universal-access"
+        },
+        "accepted": true,
+        "computeBefore": 1205.5877391154788,
+        "computeAfter": 885.5877391154788
+      },
+      {
+        "day": 2953,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 1203.0920452506468,
+        "computeAfter": 903.0920452506468
+      },
+      {
+        "day": 2977,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 1202.137634730704,
+        "computeAfter": 882.1376347307039
+      },
+      {
+        "day": 3004,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-verified-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 1202.4841488805544,
+        "computeAfter": 942.4841488805544
+      },
+      {
+        "day": 3027,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1209.8371499948792,
+        "computeAfter": 417.8775550659459
+      },
+      {
+        "day": 3097,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 1202.9306277483424,
+        "computeAfter": 1012.9306277483424
+      },
+      {
+        "day": 3114,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 1208.9267046896714,
+        "computeAfter": 918.9267046896714
+      },
+      {
+        "day": 3139,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 1210.3816930946086,
+        "computeAfter": 880.3816930946086
+      },
+      {
+        "day": 3207,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1684.44964613761,
+        "computeAfter": 100.53045627974348
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 1018.9803781121219,
+        "computeAfter": 1018.9803781121219
+      },
+      {
+        "day": 3447,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2958.350699631765,
+        "computeAfter": 2958.350699631765
+      },
+      {
+        "day": 3469,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 3273.0312877381402,
+        "computeAfter": 105.19290802240721
+      },
+      {
+        "day": 3579,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 1846.0993807578398,
+        "computeAfter": 1846.0993807578398
+      },
+      {
+        "day": 3807,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4531.856802353087,
+        "computeAfter": 4531.856802353087
+      },
+      {
+        "day": 3887,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5946.857151502189,
+        "computeAfter": 5946.857151502189
+      },
+      {
+        "day": 4127,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 9214.659318300723,
+        "computeAfter": 9214.659318300723
+      },
+      {
+        "day": 4347,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 12123.965724161852,
+        "computeAfter": 12123.965724161852
+      },
+      {
+        "day": 4427,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 13906.02072266708,
+        "computeAfter": 13906.02072266708
+      },
+      {
+        "day": 4667,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 17832.661086353473,
+        "computeAfter": 17832.661086353473
+      },
+      {
+        "day": 4887,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 21479.79888787258,
+        "computeAfter": 21479.79888787258
+      },
+      {
+        "day": 4967,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 23673.20524994836,
+        "computeAfter": 23673.20524994836
+      }
+    ]
+  },
+  {
+    "policyId": "agent-01-safety-plan-a",
+    "policyDescription": "Safety-first Plan A: keep Safety and Governance ahead of Capability, choose verified slowdown and hold the line, then pursue broad access through open and inclusive distribution.",
+    "run": 5,
+    "seed": 429917,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "managed-transition",
+    "score": 0.844,
+    "rank": "A",
+    "worldAdoption": 0.12320973622296935,
+    "codexShare": 0.45752231842704116,
+    "hhi": 0.3863948542596239,
+    "trust": 99.96217299492866,
+    "compute": 2859.237622851812,
+    "capability": 9.5,
+    "safety": 10,
+    "governance": 10,
+    "extinctionRisk": 0,
+    "interventions": 65,
+    "brownoutDays": 63,
+    "zeroComputeDays": 98,
+    "actionCount": 67,
+    "acceptedActionCount": 67,
+    "rejectedActionCount": 0,
+    "choice2029": "verified-slowdown",
+    "choice2035": "hold-the-line",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 0,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.05016011107015959,
+      0.40950481450419324,
+      0.08281275599860609
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 745
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 745.0735834181938,
+        "computeAfter": 550.0735834181938
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 550.1528339117492,
+        "computeAfter": 505.1528339117492
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 505.25599925585607,
+        "computeAfter": 460.25599925585607
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 460.3730854095572,
+        "computeAfter": 415.3730854095572
+      },
+      {
+        "day": 139,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 474.55806995345887,
+        "computeAfter": 384.55806995345887
+      },
+      {
+        "day": 334,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 524.7150347431262,
+        "computeAfter": 434.71503474312624
+      },
+      {
+        "day": 529,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-education"
+        },
+        "accepted": true,
+        "computeBefore": 621.2356103149854,
+        "computeAfter": 531.2356103149854
+      },
+      {
+        "day": 724,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open"
+        },
+        "accepted": true,
+        "computeBefore": 744.6111908980827,
+        "computeAfter": 744.6111908980827
+      },
+      {
+        "day": 919,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 976.4962759623271,
+        "computeAfter": 906.4962759623271
+      },
+      {
+        "day": 920,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 906.9982304289226,
+        "computeAfter": 666.9982304289226
+      },
+      {
+        "day": 921,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 667.501378918046,
+        "computeAfter": 427.50137891804604
+      },
+      {
+        "day": 996,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 468.01898050463865,
+        "computeAfter": 328.01898050463865
+      },
+      {
+        "day": 997,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 327.8105060225042,
+        "computeAfter": 42.81050602250423
+      },
+      {
+        "day": 998,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 42.602657837724486,
+        "computeAfter": 262.6026578377245
+      },
+      {
+        "day": 999,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-worker-transition"
+        },
+        "accepted": true,
+        "computeBefore": 262.3520271414794,
+        "computeAfter": 42.352027141479425
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "verified-slowdown"
+        },
+        "accepted": true,
+        "computeBefore": 14.305289501366774,
+        "computeAfter": 14.305289501366774
+      },
+      {
+        "day": 1256,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3.451559563586786,
+        "computeAfter": 3.451559563586786
+      },
+      {
+        "day": 1336,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 10.08359375551678,
+        "computeAfter": 10.08359375551678
+      },
+      {
+        "day": 1576,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 7.648343776381354,
+        "computeAfter": 7.648343776381354
+      },
+      {
+        "day": 1796,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 7.088536101609606,
+        "computeAfter": 7.088536101609606
+      },
+      {
+        "day": 1876,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 10.179197529729295,
+        "computeAfter": 10.179197529729295
+      },
+      {
+        "day": 2116,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 5.0128127189051135,
+        "computeAfter": 5.0128127189051135
+      },
+      {
+        "day": 2336,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 12.427407986280068,
+        "computeAfter": 12.427407986280068
+      },
+      {
+        "day": 2416,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 28.21336153140298,
+        "computeAfter": 28.21336153140298
+      },
+      {
+        "day": 2656,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 28.437198448846353,
+        "computeAfter": 28.437198448846353
+      },
+      {
+        "day": 2876,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 37.36493765142909,
+        "computeAfter": 37.36493765142909
+      },
+      {
+        "day": 2956,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 78.03877806926498,
+        "computeAfter": 78.03877806926498
+      },
+      {
+        "day": 3196,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 134.34350021919334,
+        "computeAfter": 134.34350021919334
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "hold-the-line"
+        },
+        "accepted": true,
+        "computeBefore": 148.34056124645426,
+        "computeAfter": 148.34056124645426
+      },
+      {
+        "day": 3447,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 197.59227299422736,
+        "computeAfter": 197.59227299422736
+      },
+      {
+        "day": 3492,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-transparency"
+        },
+        "accepted": true,
+        "computeBefore": 230.24109652786137,
+        "computeAfter": 110.24109652786137
+      },
+      {
+        "day": 3602,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 182.2289556482015,
+        "computeAfter": 182.2289556482015
+      },
+      {
+        "day": 3797,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-incident-drills"
+        },
+        "accepted": true,
+        "computeBefore": 228.4747681438908,
+        "computeAfter": 98.4747681438908
+      },
+      {
+        "day": 3897,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 126.38772176133087,
+        "computeAfter": 126.38772176133087
+      },
+      {
+        "day": 3977,
+        "action": {
+          "type": "open-ecosystem"
+        },
+        "accepted": true,
+        "computeBefore": 194.99907409995524,
+        "computeAfter": 194.99907409995524
+      },
+      {
+        "day": 4172,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 286.0265686283839,
+        "computeAfter": 136.02656862838393
+      },
+      {
+        "day": 4247,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 424.5346890809457,
+        "computeAfter": 144.53468908094572
+      },
+      {
+        "day": 4339,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-distillation"
+        },
+        "accepted": true,
+        "computeBefore": 261.3274168605584,
+        "computeAfter": 91.3274168605584
+      },
+      {
+        "day": 4414,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 484.7956128049025,
+        "computeAfter": 259.7956128049025
+      },
+      {
+        "day": 4489,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 965.3251755809213,
+        "computeAfter": 702.8251755809213
+      },
+      {
+        "day": 4526,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1205.737881639195,
+        "computeAfter": 905.7378816391949
+      },
+      {
+        "day": 4543,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1207.5809003147658,
+        "computeAfter": 870.0809003147658
+      },
+      {
+        "day": 4559,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1219.4479212336387,
+        "computeAfter": 844.4479212336387
+      },
+      {
+        "day": 4573,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-datacenter"
+        },
+        "accepted": true,
+        "computeBefore": 1206.8969589593187,
+        "computeAfter": 794.3969589593187
+      },
+      {
+        "day": 4587,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-grid-partnership"
+        },
+        "accepted": true,
+        "computeBefore": 1212.7295498565334,
+        "computeAfter": 1002.7295498565334
+      },
+      {
+        "day": 4594,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-efficient-inference"
+        },
+        "accepted": true,
+        "computeBefore": 1215.5017764878507,
+        "computeAfter": 995.5017764878507
+      },
+      {
+        "day": 4601,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-partners"
+        },
+        "accepted": true,
+        "computeBefore": 1213.5035543063173,
+        "computeAfter": 1043.5035543063173
+      },
+      {
+        "day": 4607,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-offline-lite"
+        },
+        "accepted": true,
+        "computeBefore": 1226.5436982525814,
+        "computeAfter": 1086.5436982525814
+      },
+      {
+        "day": 4611,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-watermark"
+        },
+        "accepted": true,
+        "computeBefore": 1210.7160191603912,
+        "computeAfter": 1030.7160191603912
+      },
+      {
+        "day": 4617,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-public-services"
+        },
+        "accepted": true,
+        "computeBefore": 1218.5868531309425,
+        "computeAfter": 988.5868531309425
+      },
+      {
+        "day": 4624,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-crisis-response"
+        },
+        "accepted": true,
+        "computeBefore": 1211.2742826214526,
+        "computeAfter": 1011.2742826214526
+      },
+      {
+        "day": 4630,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-open-standards"
+        },
+        "accepted": true,
+        "computeBefore": 1204.7160427096512,
+        "computeAfter": 994.7160427096512
+      },
+      {
+        "day": 4637,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-universal-access"
+        },
+        "accepted": true,
+        "computeBefore": 1223.243010366784,
+        "computeAfter": 903.2430103667839
+      },
+      {
+        "day": 4647,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-verified-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 1205.445834685016,
+        "computeAfter": 945.445834685016
+      },
+      {
+        "day": 4656,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1215.1137954358717,
+        "computeAfter": 423.1542005069384
+      },
+      {
+        "day": 4683,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-red-team"
+        },
+        "accepted": true,
+        "computeBefore": 1216.2786918284787,
+        "computeAfter": 1026.2786918284787
+      },
+      {
+        "day": 4689,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-federated-safety"
+        },
+        "accepted": true,
+        "computeBefore": 1207.3544055422549,
+        "computeAfter": 907.3544055422549
+      },
+      {
+        "day": 4699,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "ecosystem-commons"
+        },
+        "accepted": true,
+        "computeBefore": 1213.0024141895824,
+        "computeAfter": 893.0024141895824
+      },
+      {
+        "day": 4710,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy-lab"
+        },
+        "accepted": true,
+        "computeBefore": 1211.575935765156,
+        "computeAfter": 1021.5759357651559
+      },
+      {
+        "day": 4717,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-distributed-oversight"
+        },
+        "accepted": true,
+        "computeBefore": 1228.000645582182,
+        "computeAfter": 938.000645582182
+      },
+      {
+        "day": 4726,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-alignment-institute"
+        },
+        "accepted": true,
+        "computeBefore": 1207.1701038581064,
+        "computeAfter": 877.1701038581064
+      },
+      {
+        "day": 4753,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1691.1999394104746,
+        "computeAfter": 107.28074955260809
+      },
+      {
+        "day": 4857,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 3271.2760368732365,
+        "computeAfter": 103.43765715750351
+      },
+      {
+        "day": 4957,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3108.9739891224885,
+        "computeAfter": 3108.9739891224885
+      },
+      {
+        "day": 5031,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 6433.429544444484,
+        "computeAfter": 97.75278501301818
+      },
+      {
+        "day": 5041,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 553.0122925193014,
+        "computeAfter": 20.512292519301354
+      }
+    ]
+  }
+]

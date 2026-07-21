@@ -31,14 +31,21 @@ import {
   buyStrategyNode,
   choose2029,
   choose2035,
+  collectRewardBubble,
   constants,
   createInitialState,
   dateLabel,
+  discardRewardBubbles,
+  computeEconomy,
+  enforceInvariants,
   evaluateEnding,
+  extinctionRiskDailyDelta,
   getStrategyNodeAvailability,
+  humanExtinctionRisk,
   introduceRegion,
   metrics,
   openEcosystem,
+  requestComputeLifeline,
   runFrame,
   scoreState,
   trustBreakdown,
@@ -53,7 +60,7 @@ import {
   type Upgrade,
 } from './engine'
 import { AI_2040_URL, getDecisionMilestones, type SourceLabel } from './scenario'
-import WorldMap, { type WorldMapCompetitiveView, type WorldMapMarker, type WorldMapRegionIntensity } from './components/WorldMap'
+import WorldMap, { type WorldMapCompetitiveView, type WorldMapMarker, type WorldMapRegionIntensity, type WorldMapRewardBubble } from './components/WorldMap'
 import UpgradeOverlay, {
   type UpgradeOverlayAction,
   type UpgradeOverlayCosts,
@@ -73,7 +80,7 @@ import {
   type VoiceResetState,
 } from './voiceReset'
 import { GameAudio, type GameSound } from './sound'
-import { decodeSession, encodeSession, SESSION_STORAGE_KEY } from './session'
+import { decodeSession, encodeSession, LEGACY_SESSION_STORAGE_KEY, SESSION_STORAGE_KEY } from './session'
 import { createBrowserRunTelemetry, type RunTelemetry } from './runTelemetry'
 import { fetchRunReceipt } from './runApi'
 import { getEventSourceUrl } from './sourceLinks'
@@ -92,6 +99,25 @@ type PredefinedFeatureId = keyof typeof PREDEFINED_FEATURE_PROMPTS
 const dayFor = (iso: string) => Math.round((Date.parse(`${iso}T00:00:00Z`) - START_DATE) / 86_400_000)
 const DECISION_2029_DAY = dayFor('2029-01-01')
 const DECISION_2035_DAY = dayFor('2035-01-01')
+const INITIAL_STATE = enforceInvariants(createInitialState())
+export const INITIAL_MARKET_BASELINE = Object.freeze({
+  codex: metrics(INITIAL_STATE).codexShare,
+  rivals: [...INITIAL_STATE.rivalShares] as [number, number, number],
+})
+const INITIAL_CODEX_SHARE = INITIAL_MARKET_BASELINE.codex
+const INITIAL_RIVAL_SHARES = INITIAL_MARKET_BASELINE.rivals
+const CRISIS_HEADLINE_PATTERN = /SAFETY|ALIGNMENT|REGULATORY|MISALIGNMENT|EXTINCTION(?: RISK)?|CRITICAL|EMERGENCY/i
+const AUTO_PAUSE_WARNING_PATTERN = /SAFETY INCIDENT|REGULATORY FREEZE|MISALIGNMENT|EXTINCTION RISK|CRITICAL|EMERGENCY|DECISION/i
+
+export const isCrisisHeadline = (headline: string) => CRISIS_HEADLINE_PATTERN.test(headline)
+export const shouldAutoPauseForNews = (item: Pick<NewsItem, 'headline' | 'tone'>) => (
+  /BUILD WEEK|AGENTS REACH/i.test(item.headline)
+  || (item.tone === 'warn' && AUTO_PAUSE_WARNING_PATTERN.test(item.headline))
+)
+export const formatExtinctionRiskRate = (dailyRiskPoints: number, thresholdDays: number) => {
+  const percentagePoints = dailyRiskPoints / Math.max(1, thresholdDays) * 100
+  return `${percentagePoints >= 0 ? '+' : ''}${percentagePoints.toFixed(1)}pt/日`
+}
 
 const ENDING_CONTEXT: Record<EndingId, string> = {
   'beneficial-abundance': '検証可能な減速と意図的な停止が、安全で多元的な再始動につながりました。',
@@ -123,6 +149,7 @@ const loadInitialSession = (): InitialSession => {
   if (typeof window !== 'undefined') {
     try {
       const persisted = decodeSession(window.localStorage.getItem(SESSION_STORAGE_KEY))
+        ?? decodeSession(window.localStorage.getItem(LEGACY_SESSION_STORAGE_KEY))
       if (persisted) return { state: persisted.state, hasStarted: persisted.hasStarted, restored: true }
     } catch {
       // Storage can be disabled; the deterministic game still starts normally.
@@ -176,10 +203,16 @@ const TRUST_FACTOR_LABELS = {
 
 const TUTORIAL_STEPS = [
   {
+    eyebrow: 'あなたの役割',
+    title: 'あなたはOpenAIのCEOです。',
+    body: 'Codexの能力、製品、組織、公開戦略を決めます。人間の制御を守りながら役立つAIを広げ、2040年まで会社と社会の未来を導いてください。',
+    cue: 'すべての決定はあなたが行います。開始するまで時間は止まっています。',
+  },
+  {
     eyebrow: 'ミッション',
     title: '人間の制御を守り、役立つAIを広げる。',
     body: '広いアクセス、高い信頼、強い安全と統治、2社以上の有力な競合を保って2040年を迎えます。独占は勝利ではありません。',
-    cue: '開始するまで時間は止まっています。',
+    cue: '能力だけでなく、安全・統治・競争の健全性も評価されます。',
   },
   {
     eyebrow: '勢い',
@@ -311,6 +344,11 @@ export default function App() {
   const m = useMemo(() => metrics(state), [state])
   const trustCausality = useMemo(() => trustBreakdown(state), [state])
   const score = useMemo(() => scoreState(state), [state])
+  const economy = useMemo(() => computeEconomy(state), [state])
+  const extinctionRisk = useMemo(() => humanExtinctionRisk(state), [state])
+  const extinctionRiskDelta = useMemo(() => extinctionRiskDailyDelta(state), [state])
+  const extinctionRiskPct = Math.round(extinctionRisk * 100)
+  const extinctionRiskRising = extinctionRiskDelta > 0
   const ending = useMemo(() => evaluateEnding(state), [state])
   const selectedRegion = selectedRegionId ? state.regions.find((region) => region.id === selectedRegionId) ?? null : null
   const trustFactors = useMemo(() => trustCausality.factors
@@ -324,12 +362,12 @@ export default function App() {
   const riskRadar = useMemo(() => {
     const risks = [
       { label: '安全事故', ratio: m.safetyGap / constants.gapThreshold, detail: `差 ${m.safetyGap.toFixed(1)} / ${constants.gapThreshold}` },
-      { label: '制御喪失', ratio: state.safetyGapDays / 90, detail: `危険日 ${state.safetyGapDays} / 90` },
+      { label: '制御喪失', ratio: extinctionRisk, detail: `危険日 ${state.safetyGapDays} / ${constants.misalignmentThresholdDays}` },
       { label: '規制凍結', ratio: Math.max(m.governanceGap / constants.gapThreshold, m.hhi / .6), detail: `差 ${m.governanceGap.toFixed(1)} · HHI ${m.hhi.toFixed(2)}` },
     ]
     const primary = [...risks].sort((left, right) => right.ratio - left.ratio)[0]
     return { risks, primary, pressure: Math.round(Math.min(1, primary.ratio) * 100) }
-  }, [m.governanceGap, m.hhi, m.safetyGap, state.safetyGapDays])
+  }, [extinctionRisk, m.governanceGap, m.hhi, m.safetyGap, state.safetyGapDays])
   const date = dateLabel(state.day)
   const decisionKind = state.day >= DECISION_2035_DAY && !state.choice2035
     ? '2035'
@@ -337,6 +375,15 @@ export default function App() {
       ? '2029'
       : null
   const simulationBlocked = showStartScreen || restartConfirmOpen || tutorialStep !== null || paused || Boolean(criticalNews) || Boolean(state.pendingWorldEvent) || upgradeOpen || Boolean(decisionKind) || state.terminal
+
+  useEffect(() => {
+    if (!simulationBlocked || state.rewardBubbles.length === 0) return
+    setState((current) => {
+      const next = discardRewardBubbles(current)
+      stateRef.current = next
+      return next
+    })
+  }, [simulationBlocked, state.rewardBubbles.length])
 
   const worldEventPopup = useMemo<WorldEventPopupNotice | null>(() => {
     const notice = state.pendingWorldEvent
@@ -525,7 +572,7 @@ export default function App() {
   useEffect(() => {
     if (!criticalNews || lastBriefSoundIdRef.current === criticalNews.id) return
     lastBriefSoundIdRef.current = criticalNews.id
-    const crisis = /SAFETY|ALIGNMENT|REGULATORY|MISALIGNMENT|CRITICAL|EMERGENCY/i.test(criticalNews.headline)
+    const crisis = isCrisisHeadline(criticalNews.headline)
     playSound(crisis ? 'alert' : 'brief')
   }, [criticalNews])
 
@@ -540,9 +587,7 @@ export default function App() {
     const newestId = state.news.reduce((maximum, item) => Math.max(maximum, item.id), observedNewsIdRef.current)
     const unseen = state.news.filter((item) => item.id > observedNewsIdRef.current)
     observedNewsIdRef.current = newestId
-    const critical = unseen.find((item) => /BUILD WEEK|AGENTS REACH/i.test(item.headline) || (
-      item.tone === 'warn' && /SAFETY INCIDENT|REGULATORY FREEZE|MISALIGNMENT|CRITICAL|EMERGENCY|DECISION/i.test(item.headline)
-    ))
+    const critical = unseen.find(shouldAutoPauseForNews)
     if (critical) setCriticalNews(critical)
   }, [criticalNews, decisionKind, state.news, state.pendingWorldEvent, state.terminal, tutorialStep])
 
@@ -626,7 +671,10 @@ export default function App() {
   const resetGameToStart = () => {
     const next = initialGame()
     runTelemetryRef.current?.reset()
-    try { window.localStorage.removeItem(SESSION_STORAGE_KEY) } catch { /* Storage may be disabled. */ }
+    try {
+      window.localStorage.removeItem(SESSION_STORAGE_KEY)
+      window.localStorage.removeItem(LEGACY_SESSION_STORAGE_KEY)
+    } catch { /* Storage may be disabled. */ }
     setState(next)
     stateRef.current = next
     observedNewsIdRef.current = next.news[0]?.id ?? 0
@@ -647,8 +695,28 @@ export default function App() {
 
   const activateReset = () => {
     if (stateRef.current.resetCooldownSeconds > 0) return
-    setState((current) => triggerReset(current))
+    const next = triggerReset(stateRef.current)
+    stateRef.current = next
+    setState(next)
     setResetPulse((value) => value + 1)
+    playSound('confirm')
+  }
+
+  const collectBubble = (bubbleId: string) => {
+    const before = stateRef.current
+    const next = collectRewardBubble(before, bubbleId)
+    if (next === before) return
+    stateRef.current = next
+    setState(next)
+    playSound('confirm')
+  }
+
+  const activateComputeLifeline = () => {
+    const before = stateRef.current
+    const next = requestComputeLifeline(before)
+    if (next === before) return
+    stateRef.current = next
+    setState(next)
     playSound('confirm')
   }
 
@@ -664,11 +732,11 @@ export default function App() {
     setVoiceResetState(next)
   }
 
-  const speakFallback = (text: string) => {
+  const speakFallback = (text: string, language: 'ja' | 'en' = 'ja') => {
     if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') return
     window.speechSynthesis.cancel()
     const utterance = new SpeechSynthesisUtterance(text)
-    utterance.lang = 'ja-JP'
+    utterance.lang = language === 'en' ? 'en-US' : 'ja-JP'
     utterance.rate = 1
     window.speechSynthesis.speak(utterance)
   }
@@ -687,14 +755,16 @@ export default function App() {
     speakFallback(line)
   }
 
-  const runConfirmedGameReset = () => {
+  const runConfirmedGameReset = (language: 'ja' | 'en' = 'ja') => {
     if (stateRef.current.resetCooldownSeconds > 0) return false
     const next = triggerReset(stateRef.current)
     stateRef.current = next
     setState(next)
     setResetPulse((value) => value + 1)
     playSound('confirm')
-    appendVoiceSubtitle('system', '確認済み: ゲーム内Tiboリセットを1回実行しました。')
+    appendVoiceSubtitle('system', language === 'en'
+      ? 'Confirmed: the in-game Tibo reset ran once.'
+      : '確認済み: ゲーム内Tiboリセットを1回実行しました。')
     return true
   }
 
@@ -722,20 +792,26 @@ export default function App() {
         const result = handleRealtimeResetToolCall(before, call, stateRef.current.resetCooldownSeconds)
         commitVoiceResetState(result.state)
         if (result.outcome === 'confirmation-required' && result.request) {
-          appendVoiceSubtitle('system', '要求を確認しました。「やって！」など、別の音声確認を待っています。')
+          const language = result.request.language
+          appendVoiceSubtitle('system', language === 'en'
+            ? 'Request received. Waiting for a separate spoken confirmation such as “Do it.”'
+            : '要求を確認しました。「やって！」など、別の音声確認を待っています。')
           return {
             status: 'confirmation_required',
             approval_id: result.request.id,
             scope: 'codex-2040-game-only',
-            next_step: 'Ask the player aloud in Japanese whether to execute. Accept a new short direct approval such as やって, お願い, はい, Do it, or Go ahead; reject negative or unclear replies.',
+            next_step: language === 'en'
+              ? 'Ask the player aloud in English whether to execute. Accept a new short direct approval such as Do it, Yes, or Go ahead; reject negative or unclear replies.'
+              : 'Ask the player aloud in Japanese whether to execute. Accept a new short direct approval such as やって, お願い, or はい; reject negative or unclear replies.',
           }
         }
         if (result.outcome === 'executed' && result.shouldExecute) {
-          runConfirmedGameReset()
+          const language = result.request?.language ?? 'ja'
+          runConfirmedGameReset(language)
           return {
             status: 'executed',
             scope: 'codex-2040-game-only',
-            message: 'The in-game Tibo reset ran exactly once and the global map pulse activated. Briefly tell the player in Japanese.',
+            message: `The in-game Tibo reset ran exactly once and the global map pulse activated. Briefly tell the player in ${language === 'en' ? 'English' : 'Japanese'}; do not switch languages.`,
           }
         }
         if (result.outcome === 'cooldown') {
@@ -743,7 +819,7 @@ export default function App() {
             status: 'cooldown',
             retry_after_seconds: Math.ceil(stateRef.current.resetCooldownSeconds),
             scope: 'codex-2040-game-only',
-            message: 'No reset ran. Briefly explain the game cooldown in Japanese.',
+            message: `No reset ran. Briefly explain the game cooldown in ${result.request?.language === 'en' ? 'English' : 'Japanese'}; do not switch languages.`,
           }
         }
         return { status: 'rejected', reason: result.outcome, scope: 'codex-2040-game-only', message: 'No game action ran.' }
@@ -774,34 +850,52 @@ export default function App() {
     setVoiceMuted(next)
   }
 
-  const runScriptedVoiceRequest = () => {
+  const runScriptedVoiceRequest = (language: 'ja' | 'en') => {
     const before = voiceResetRef.current
-    const next = requestFallbackReset(before, String(Date.now()))
+    const next = requestFallbackReset(before, String(Date.now()), language)
     commitVoiceResetState(next)
     if (!next.pending || next.pending === before.pending) return
-    appendVoiceSubtitle('player', 'ゲーム内Tiboトークンのリミットをリセットして')
-    const line = 'trigger_token_resetを要求しました。ゲーム内操作を実行するには、画面で確認してください。'
+    appendVoiceSubtitle('player', next.pending.playerRequest)
+    const line = language === 'en'
+      ? 'I requested trigger token reset. Please confirm on screen to run this in-game action.'
+      : 'trigger_token_resetを要求しました。ゲーム内操作を実行するには、画面で確認してください。'
     appendVoiceSubtitle('operator', line)
-    speakFallback(line)
+    speakFallback(line, language)
   }
 
   const resolveVoiceApproval = (approved: boolean) => {
     const result = resolveVoiceReset(voiceResetRef.current, approved, stateRef.current.resetCooldownSeconds)
     commitVoiceResetState(result.state)
+    const language = result.request?.language ?? 'ja'
     if (result.outcome === 'cooldown') {
-      appendVoiceSubtitle('system', `リセットはあと${Math.ceil(stateRef.current.resetCooldownSeconds)}秒待つ必要があります。`)
+      const line = language === 'en'
+        ? `Reset is cooling down. Try again in ${Math.ceil(stateRef.current.resetCooldownSeconds)} seconds.`
+        : `リセットはあと${Math.ceil(stateRef.current.resetCooldownSeconds)}秒待つ必要があります。`
+      appendVoiceSubtitle('system', line)
+      if (result.request?.source === 'scripted-fallback') speakFallback(line, language)
       return
     }
     if (result.request?.source === 'realtime') {
       voiceClientRef.current?.requestResponse(result.outcome === 'rejected'
-        ? 'The player rejected the visible fallback approval. Briefly acknowledge that no game action ran.'
-        : 'The player used the visible fallback approval. Briefly acknowledge the game-only outcome.')
+        ? `The player rejected the visible fallback approval. Briefly acknowledge in ${language === 'en' ? 'English' : 'Japanese'} that no game action ran; do not switch languages.`
+        : `The player used the visible fallback approval. Briefly acknowledge the game-only outcome in ${language === 'en' ? 'English' : 'Japanese'}; do not switch languages.`)
     }
     if (!result.shouldExecute) {
-      if (result.outcome === 'rejected') appendVoiceSubtitle('system', 'プレイヤーがtrigger_token_resetを拒否しました。操作は実行されていません。')
+      if (result.outcome === 'rejected') {
+        const line = language === 'en'
+          ? 'You rejected trigger_token_reset. No game action ran.'
+          : 'プレイヤーがtrigger_token_resetを拒否しました。操作は実行されていません。'
+        appendVoiceSubtitle('system', line)
+        if (result.request?.source === 'scripted-fallback') speakFallback(line, language)
+      }
       return
     }
-    runConfirmedGameReset()
+    runConfirmedGameReset(language)
+    if (result.request?.source === 'scripted-fallback') {
+      speakFallback(language === 'en'
+        ? 'Confirmed. The in-game Tibo reset ran once.'
+        : '確認しました。ゲーム内Tiboリセットを1回実行しました。', language)
+    }
   }
 
   useEffect(() => {
@@ -949,6 +1043,16 @@ export default function App() {
     ...(state.flags.includes('feature:education') ? [{ id: 'education', regionId: 'india' as const, label: '学校アクセス', kind: 'community' as const, sourceLabel: 'Your Timeline' as const }] : []),
   ], [date, state.flags])
 
+  const mapRewardBubbles = useMemo<WorldMapRewardBubble[]>(() => simulationBlocked
+    ? []
+    : state.rewardBubbles.map((bubble) => ({
+      id: bubble.id,
+      regionId: bubble.region,
+      reward: bubble.reward,
+      placement: bubble.placement,
+      source: bubble.source,
+    })), [simulationBlocked, state.rewardBubbles])
+
   const enabledFeatures = useMemo<UpgradeOverlayFeature[]>(() => [
     ...(state.flags.includes('feature:mobile') ? ['mobile' as const] : []),
     ...(state.flags.includes('feature:enterprise') ? ['enterprise' as const] : []),
@@ -1046,7 +1150,8 @@ export default function App() {
   const timelineProgress = clamp(state.day / END_DAY * 100)
   const latestNews = state.news[0]
   const tutorial = tutorialStep === null ? null : TUTORIAL_STEPS[tutorialStep]
-  const isCrisisBrief = Boolean(criticalNews && /SAFETY|ALIGNMENT|REGULATORY|MISALIGNMENT|CRITICAL|EMERGENCY/i.test(criticalNews.headline))
+  const isCrisisBrief = Boolean(criticalNews && isCrisisHeadline(criticalNews.headline))
+  const isExtinctionBrief = Boolean(criticalNews && /EXTINCTION(?: RISK)?/i.test(criticalNews.headline))
   const simulationStatus = showStartScreen
     ? '待機中 · ミッション開始待ち'
     : tutorial
@@ -1063,7 +1168,9 @@ export default function App() {
           ? '停止中 · プレイヤー操作'
           : `進行中 · ${state.speed === 8 ? '高速' : '通常'} · ${state.momentumDays > 0 ? `勢い ${state.momentumDays}日` : '勢い停止'}`
   const criticalCause = criticalNews
-    ? /SAFETY|ALIGNMENT/i.test(criticalNews.headline)
+    ? /EXTINCTION(?: RISK)?/i.test(criticalNews.headline)
+      ? `モデル能力が安全能力を上回る状態が続き、人類絶滅リスクが${extinctionRiskPct}%に達しました。安全投資で能力差を縮めるとリスクは低下します。`
+      : /SAFETY|ALIGNMENT/i.test(criticalNews.headline)
       ? `能力が安全を上回っています。現在の差: ${m.safetyGap.toFixed(1)}。`
       : /REGULATORY/i.test(criticalNews.headline)
         ? `統治不足または市場集中が規制対応を招きました。HHI: ${m.hhi.toFixed(2)}。`
@@ -1095,8 +1202,8 @@ export default function App() {
             <button
               className="sound-toggle"
               type="button"
-              aria-label={soundEnabled ? '効果音をミュート' : '効果音をオン'}
-              aria-pressed={!soundEnabled}
+              aria-label="効果音の再生"
+              aria-pressed={soundEnabled}
               title={soundEnabled ? '効果音をミュート' : '効果音をオン'}
               onClick={() => {
                 const enabled = !soundEnabled
@@ -1110,8 +1217,8 @@ export default function App() {
             <button
               className="sound-toggle music-toggle"
               type="button"
-              aria-label={musicEnabled ? 'BGMをオフ' : 'BGMをオン'}
-              aria-pressed={!musicEnabled}
+              aria-label="BGMの再生"
+              aria-pressed={musicEnabled}
               title={musicEnabled ? 'BGMをオフ' : 'BGMをオン'}
               onClick={() => {
                 const enabled = !musicEnabled
@@ -1151,13 +1258,15 @@ export default function App() {
               eventMarkers={mapMarkers}
               competitiveView={competitiveMapView}
               resetPulse={resetPulse}
+              rewardBubbles={mapRewardBubbles}
+              onRewardBubbleClick={collectBubble}
             />
             {(showStartScreen || restartConfirmOpen || tutorial || state.pendingWorldEvent || (criticalNews && !decisionKind && !state.terminal)) && <div className="game-modal-shield" aria-hidden="true" />}
             {showStartScreen && (
               <section className="start-brief" role="dialog" aria-modal="true" aria-labelledby="start-brief-title">
-                <span className="start-brief__eyebrow">AIガバナンス・シミュレーター</span>
-                <h1 id="start-brief-title">未来をつくる。</h1>
-                <p>2026年から2040年へ。安全、統治、信頼、健全な競争を守りながら、役立つAIを広げます。</p>
+                <span className="start-brief__eyebrow">YOUR ROLE // 2026</span>
+                <h1 id="start-brief-title">あなたはOpenAIのCEOです。</h1>
+                <p>Codexの能力、製品、組織、公開戦略を決めてください。安全、統治、信頼、健全な競争を守りながら、2040年まで役立つAIを世界へ広げます。</p>
                 <div className="start-brief__sources"><SourceBadge source="AI 2027" /><SourceBadge source="AI 2040" /><SourceBadge source="Your Timeline" /></div>
                 <footer>
                   <button autoFocus onClick={beginWithTutorial}>説明から始める <ChevronRight size={14} /></button>
@@ -1208,7 +1317,7 @@ export default function App() {
                 <h2 id="critical-brief-title">{criticalNews.headline}</h2>
                 <p>{criticalCause}</p>
                 <dl>
-                  <div><dt>{isCrisisBrief ? '信頼' : '信頼見通し'}</dt><dd>{state.trust.toFixed(0)} → 目標 {trustCausality.target.toFixed(0)}</dd></div>
+                  <div><dt>{isExtinctionBrief ? '人類絶滅リスク' : isCrisisBrief ? '信頼' : '信頼見通し'}</dt><dd>{isExtinctionBrief ? `${extinctionRiskPct}% · 100%で即時終了` : `${state.trust.toFixed(0)} → 目標 ${trustCausality.target.toFixed(0)}`}</dd></div>
                   <div><dt>最大リスク</dt><dd>{riskRadar.primary.label} · {riskRadar.pressure}%</dd></div>
                 </dl>
                 <button autoFocus onClick={() => { setCriticalNews(null); playSound('tap') }}>確認して{state.speed === 8 ? '高速' : '通常'}再開</button>
@@ -1245,7 +1354,29 @@ export default function App() {
 
         <aside className="strategy-rail">
           <div className="section-label"><Cpu size={13} /> 戦略</div>
-          <div className="compute-counter"><span>利用可能な計算資源</span><strong>{fmt(state.compute, 1)} <small>PF</small></strong><small className={state.momentumDays > 0 ? 'is-active' : 'is-stalled'}><OverflowTicker text={state.momentumDays > 0 ? `勢いあり · あと${state.momentumDays}日` : '勢い停止 · 行動して成長を再開'} /></small></div>
+          <div className="compute-counter" data-testid="compute-budget">
+            <span>計算予算</span>
+            <strong>{fmt(state.compute, 1)} <small>PF</small></strong>
+            <small className="compute-counter__currency">PF · 投資に使う唯一の資源</small>
+            <div className="compute-flow" aria-label="1日あたりの計算予算収支">
+              <span><small>収入</small><b>+{fmt(economy.income, 1)}</b></span>
+              <span><small>運用費</small><b>−{fmt(economy.runningCost, 1)}</b></span>
+              <span data-negative={economy.net < 0}><small>純増減</small><b>{economy.net >= 0 ? '+' : ''}{fmt(economy.net, 1)}/日</b></span>
+            </div>
+            <small className={state.momentumDays > 0 ? 'is-active' : 'is-stalled'}><OverflowTicker text={state.momentumDays > 0 ? `勢いあり · あと${state.momentumDays}日` : '勢い停止 · 行動して成長を再開'} /></small>
+            {state.compute < 45 && !state.flags.includes('lifeline:used') && (
+              <button
+                className="compute-lifeline"
+                data-testid="compute-recovery"
+                aria-label={`1回限りの緊急計算協定を実行、${constants.lifelineCompute} PFを獲得、信頼マイナス8、導入地域のCODEXシェアを0.9倍`}
+                onClick={activateComputeLifeline}
+              >
+                <span><b>緊急計算協定 · 1回限り</b><small>+{constants.lifelineCompute} PF / 信頼 −8 / 地域シェア ×0.90</small></span>
+                <ChevronRight size={13} />
+              </button>
+            )}
+            {state.compute < 45 && state.flags.includes('lifeline:used') && <small className="compute-lifeline__used">緊急計算協定は使用済み</small>}
+          </div>
           <button className="strategy-axis" onClick={() => openStrategy('model')}>
             <span><BrainCircuit size={16} /><b>モデル</b><small>能力</small></span><strong>K{state.capability.toFixed(1)}</strong><ChevronRight size={14} />
           </button>
@@ -1289,10 +1420,10 @@ export default function App() {
             <div className="telemetry-card__split"><span><small>AI利用者シェア</small><b>{pct(m.codexShare)}</b></span><span><small>世界アクセス</small><b>{pct(m.worldAdoption)}</b></span></div>
           </article>
 
-          <article className="telemetry-card telemetry-card--mission">
-            <header><span>ミッション得点</span><small>総合</small></header>
-            <strong>{score.rank} <i>/</i> {Math.round(score.score * 100)}</strong>
-            <div className="mission-breakdown" aria-label="ミッション得点の内訳">
+          <article className="telemetry-card telemetry-card--mission" aria-label="アバンダンススコア" data-testid="abundance-score">
+            <header><span>アバンダンススコア</span><small>総合</small></header>
+            <strong>{Math.round(score.score * 100)} <i>/ 100 · {score.rank}</i></strong>
+            <div className="mission-breakdown" aria-label="アバンダンススコアの内訳">
               <span><small>アクセス</small><b>{Math.round(score.access * 100)}</b></span>
               <span><small>地域</small><b>{Math.round(score.coverage * 100)}</b></span>
               <span><small>競争</small><b>{Math.round(score.competition * 100)}</b></span>
@@ -1309,11 +1440,21 @@ export default function App() {
             </div>
           </article>
 
-          <article className="telemetry-card telemetry-card--pressure" data-danger={riskRadar.pressure >= 80}>
-            <header><span>制御圧力</span><strong>{riskRadar.pressure}%</strong></header>
-            <div className="telemetry-card__bar" aria-hidden="true"><i style={{ width: `${riskRadar.pressure}%` }} /></div>
-            <div className="risk-radar">
-              {riskRadar.risks.map((risk) => <p key={risk.label}><span>{risk.label}</span><b>{risk.detail}</b></p>)}
+          <article className="telemetry-card telemetry-card--pressure" data-danger={extinctionRiskPct >= 50} data-testid="extinction-risk">
+            <header><span>人類絶滅リスク</span><strong>{extinctionRiskPct}%</strong></header>
+            <div
+              className="telemetry-card__bar"
+              role="progressbar"
+              aria-label="人類絶滅リスク"
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={extinctionRiskPct}
+              aria-valuetext={`${extinctionRiskPct}% · 100%で即時ゲームオーバー`}
+            ><i style={{ width: `${extinctionRiskPct}%` }} /></div>
+            <div className="extinction-readout">
+              <b>100% = 即時ゲームオーバー</b>
+              <span data-danger={extinctionRiskRising}>{extinctionRiskRising ? `上昇中 · ${formatExtinctionRiskRate(extinctionRiskDelta, constants.misalignmentThresholdDays)}` : extinctionRiskPct > 0 ? `回復中 · ${formatExtinctionRiskRate(extinctionRiskDelta, constants.misalignmentThresholdDays)}` : '安定 · 能力と安全が均衡'}</span>
+              <small>危険日 {state.safetyGapDays} / {constants.misalignmentThresholdDays}</small>
             </div>
           </article>
 
@@ -1490,6 +1631,10 @@ export default function App() {
         localChoices={{ choice_2029: state.choice2029, choice_2035: state.choice2035 }}
         activePlaySeconds={activePlaySeconds}
         receipt={worldlineReceipt}
+        marketShares={[
+          { id: 'codex', name: 'CODEX', share: m.codexShare, baseline: INITIAL_CODEX_SHARE },
+          ...RIVAL_NAMES.map((name, index) => ({ id: name.toLowerCase(), name, share: state.rivalShares[index], baseline: INITIAL_RIVAL_SHARES[index] })),
+        ]}
         onClose={() => setEndingVisible(false)}
         onRestart={resetGameToStart}
       />

@@ -166,6 +166,22 @@ export type LocalWorldlineChoices = {
   choice_2035: WorldlineChoice2035 | null
 }
 
+export type MarketShareOutcome = {
+  id: string
+  name: string
+  share: number
+  baseline: number
+}
+
+export const marketShareOutcomeRows = (outcomes: readonly MarketShareOutcome[]) => outcomes
+  .map((outcome) => ({
+    ...outcome,
+    share: Math.max(0, Math.min(1, Number.isFinite(outcome.share) ? outcome.share : 0)),
+    baseline: Math.max(0, Math.min(1, Number.isFinite(outcome.baseline) ? outcome.baseline : 0)),
+  }))
+  .map((outcome) => ({ ...outcome, delta: outcome.share - outcome.baseline }))
+  .sort((left, right) => right.share - left.share)
+
 const CHOICE_2029_LABELS: Record<WorldlineChoice2029, { en: string; ja: string }> = {
   race: { en: 'Race ahead', ja: '競争続行' },
   slowdown: { en: 'Temporary slowdown', ja: '一時減速' },
@@ -269,6 +285,7 @@ export type EndingOverlayProps = {
   localChoices?: LocalWorldlineChoices
   activePlaySeconds?: number | null
   receipt?: AnonymousWorldlineReceipt | null
+  marketShares?: readonly MarketShareOutcome[]
   publicOrigin?: string
   lesson?: string
   onRestart?: () => void
@@ -296,6 +313,7 @@ export function EndingOverlay({
   localChoices = { choice_2029: null, choice_2035: null },
   activePlaySeconds,
   receipt,
+  marketShares = [],
   publicOrigin,
   lesson,
   onRestart,
@@ -320,6 +338,7 @@ export function EndingOverlay({
   const stored = Boolean(receipt)
   const hasAggregateComparison = aggregateTotal > 0
   const distributionRows = useMemo(() => endingDistributionRows(aggregate?.ending_distribution ?? null), [aggregate?.ending_distribution])
+  const marketRows = useMemo(() => marketShareOutcomeRows(marketShares), [marketShares])
   const shareUrl = useMemo(() => resolvePublicShareUrl(window.location.origin, publicOrigin), [publicOrigin])
   const shareText = useMemo(() => buildWorldlineShareText({
     rank: resolvedRank,
@@ -524,6 +543,29 @@ export function EndingOverlay({
             </span>
           </div>
         </section>
+
+        {marketRows.length > 0 && (
+          <section className="ending-market" aria-labelledby={`${titleId}-market`}>
+            <div className="ending-market__heading">
+              <div>
+                <span>COMPETITIVE OUTCOME / 競争の結果</span>
+                <h3 id={`${titleId}-market`}>2040年、誰が世界を動かしたか</h3>
+              </div>
+              <p>開始時からの市場シェア変化。CODEXと競合の伸びを同じ尺度で比較します。</p>
+            </div>
+            <div className="ending-market__rows">
+              {marketRows.map((row, index) => (
+                <div className={row.id === 'codex' ? 'is-codex' : ''} key={row.id}>
+                  <p><b>{index + 1}</b><strong>{row.name}</strong><span>{Math.round(row.share * 100)}%</span></p>
+                  <i aria-hidden="true"><span style={{ width: `${row.share * 100}%` }} /></i>
+                  <small className={row.delta > .0005 ? 'is-up' : row.delta < -.0005 ? 'is-down' : ''}>
+                    {row.delta > .0005 ? '▲' : row.delta < -.0005 ? '▼' : '—'} {Math.abs(row.delta * 100).toFixed(1)}pt
+                  </small>
+                </div>
+              ))}
+            </div>
+          </section>
+        )}
 
         <section className="ending-review" aria-labelledby={`${titleId}-review`}>
           <div className="ending-review__intro">

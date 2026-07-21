@@ -1,0 +1,2007 @@
+[
+  {
+    "policyId": "agent-02-reckless-capability-race",
+    "policyDescription": "能力最優先。2029年は競争続行、2035年は再加速。危険度50%・事故・低信頼が見えてから安全と統治へ反応する。",
+    "run": 1,
+    "seed": 12001,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "race-future",
+    "score": 0.7303953714431166,
+    "rank": "A",
+    "worldAdoption": 0.10474118314825612,
+    "codexShare": 0.607875088936894,
+    "hhi": 0.4673203602228198,
+    "trust": 76.0550815574463,
+    "compute": 1460.1459173843944,
+    "capability": 8.5,
+    "safety": 6,
+    "governance": 3.75,
+    "extinctionRisk": 0,
+    "interventions": 33,
+    "brownoutDays": 3007,
+    "zeroComputeDays": 19,
+    "actionCount": 35,
+    "acceptedActionCount": 35,
+    "rejectedActionCount": 0,
+    "choice2029": "race",
+    "choice2035": "accelerate",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 7,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.02113006207820239,
+      0.3049611594974495,
+      0.06603368948745411
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 870
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 869.7687268235495,
+        "computeAfter": 729.7687268235495
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 729.2141803312157,
+        "computeAfter": 449.21418033121574
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 448.29091929224444,
+        "computeAfter": 358.29091929224444
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 357.4067076762109,
+        "computeAfter": 267.4067076762109
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-connectors"
+        },
+        "accepted": true,
+        "computeBefore": 266.5209050740096,
+        "computeAfter": 176.5209050740096
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 175.6871359669258,
+        "computeAfter": 130.6871359669258
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 129.85199597737142,
+        "computeAfter": 84.85199597737142
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 84.01594617080215,
+        "computeAfter": 84.01594617080215
+      },
+      {
+        "day": 54,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 44.55178445034125,
+        "computeAfter": 264.55178445034124
+      },
+      {
+        "day": 55,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 263.6841091298436,
+        "computeAfter": 68.68410912984359
+      },
+      {
+        "day": 195,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 115.42311932256132,
+        "computeAfter": 70.42311932256132
+      },
+      {
+        "day": 368,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 75.61524825375932,
+        "computeAfter": 75.61524825375932
+      },
+      {
+        "day": 728,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 390.6004803886682,
+        "computeAfter": 390.6004803886682
+      },
+      {
+        "day": 769,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 353.8415546010067,
+        "computeAfter": 170.0915546010067
+      },
+      {
+        "day": 1088,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 482.2361558030953,
+        "computeAfter": 482.2361558030953
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "race"
+        },
+        "accepted": true,
+        "computeBefore": 475.0234964514882,
+        "computeAfter": 475.0234964514882
+      },
+      {
+        "day": 1122,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 426.3779064418801,
+        "computeAfter": 186.3779064418801
+      },
+      {
+        "day": 1448,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 568.2908212096709,
+        "computeAfter": 568.2908212096709
+      },
+      {
+        "day": 1502,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 454.3274907004383,
+        "computeAfter": 225.57749070043832
+      },
+      {
+        "day": 1808,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 751.8172735736339,
+        "computeAfter": 751.8172735736339
+      },
+      {
+        "day": 2168,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 893.4468008506233,
+        "computeAfter": 893.4468008506233
+      },
+      {
+        "day": 2528,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1041.0892254313235,
+        "computeAfter": 1041.0892254313235
+      },
+      {
+        "day": 2885,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1122.2239793827594,
+        "computeAfter": 2.223979382759353
+      },
+      {
+        "day": 2888,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 20.895299922754408,
+        "computeAfter": 20.895299922754408
+      },
+      {
+        "day": 3248,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1159.177510368174,
+        "computeAfter": 1159.177510368174
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "accelerate"
+        },
+        "accepted": true,
+        "computeBefore": 932.8757447051298,
+        "computeAfter": 932.8757447051298
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 932.8757447051298,
+        "computeAfter": 647.8757447051298
+      },
+      {
+        "day": 3288,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 639.8016518913486,
+        "computeAfter": 309.80165189134857
+      },
+      {
+        "day": 3608,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 641.2457114765638,
+        "computeAfter": 641.2457114765638
+      },
+      {
+        "day": 3968,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1856.3414913202243,
+        "computeAfter": 1856.3414913202243
+      },
+      {
+        "day": 4328,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2848.739052377945,
+        "computeAfter": 2848.739052377945
+      },
+      {
+        "day": 4688,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2826.223999673325,
+        "computeAfter": 2826.223999673325
+      },
+      {
+        "day": 5043,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 3177.3076934016553,
+        "computeAfter": 9.469313685922316
+      },
+      {
+        "day": 5048,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 83.92367764667362,
+        "computeAfter": 83.92367764667362
+      }
+    ]
+  },
+  {
+    "policyId": "agent-02-reckless-capability-race",
+    "policyDescription": "能力最優先。2029年は競争続行、2035年は再加速。危険度50%・事故・低信頼が見えてから安全と統治へ反応する。",
+    "run": 2,
+    "seed": 116730,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "regulatory-freeze",
+    "score": 0.694,
+    "rank": "B",
+    "worldAdoption": 0.11987317998228614,
+    "codexShare": 0.6121065301521881,
+    "hhi": 0.4649582657910207,
+    "trust": 37.71594987592703,
+    "compute": 181.09999334339997,
+    "capability": 8.5,
+    "safety": 6,
+    "governance": 3.75,
+    "extinctionRisk": 0,
+    "interventions": 33,
+    "brownoutDays": 2977,
+    "zeroComputeDays": 18,
+    "actionCount": 35,
+    "acceptedActionCount": 35,
+    "rejectedActionCount": 0,
+    "choice2029": "race",
+    "choice2035": "accelerate",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 7,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.031009518217735454,
+      0.29166563467312256,
+      0.06521831695695389
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 870
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 869.7687268235495,
+        "computeAfter": 729.7687268235495
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 729.2141803312157,
+        "computeAfter": 449.21418033121574
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 448.29091929224444,
+        "computeAfter": 358.29091929224444
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 357.4067076762109,
+        "computeAfter": 267.4067076762109
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-connectors"
+        },
+        "accepted": true,
+        "computeBefore": 266.5209050740096,
+        "computeAfter": 176.5209050740096
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 175.6871359669258,
+        "computeAfter": 130.6871359669258
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 129.85199597737142,
+        "computeAfter": 84.85199597737142
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 84.01594617080215,
+        "computeAfter": 84.01594617080215
+      },
+      {
+        "day": 54,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 44.54137339775662,
+        "computeAfter": 264.5413733977566
+      },
+      {
+        "day": 55,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 263.6733841104953,
+        "computeAfter": 68.6733841104953
+      },
+      {
+        "day": 195,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 116.18737667441052,
+        "computeAfter": 71.18737667441052
+      },
+      {
+        "day": 368,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 74.43407113605433,
+        "computeAfter": 74.43407113605433
+      },
+      {
+        "day": 728,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 388.8583096970941,
+        "computeAfter": 388.8583096970941
+      },
+      {
+        "day": 767,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 354.2159412364726,
+        "computeAfter": 170.4659412364726
+      },
+      {
+        "day": 1088,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 98.38395306344663,
+        "computeAfter": 98.38395306344663
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "race"
+        },
+        "accepted": true,
+        "computeBefore": 117.66801871226953,
+        "computeAfter": 117.66801871226953
+      },
+      {
+        "day": 1194,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 278.69871332074746,
+        "computeAfter": 38.69871332074746
+      },
+      {
+        "day": 1448,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 670.9415760475904,
+        "computeAfter": 670.9415760475904
+      },
+      {
+        "day": 1508,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 551.0565023512794,
+        "computeAfter": 322.3065023512794
+      },
+      {
+        "day": 1808,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 562.0331982170572,
+        "computeAfter": 562.0331982170572
+      },
+      {
+        "day": 2168,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 859.1611899349213,
+        "computeAfter": 859.1611899349213
+      },
+      {
+        "day": 2528,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 833.4127894942683,
+        "computeAfter": 833.4127894942683
+      },
+      {
+        "day": 2884,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1123.9855352719574,
+        "computeAfter": 3.9855352719573602
+      },
+      {
+        "day": 2888,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 26.96440433735238,
+        "computeAfter": 26.96440433735238
+      },
+      {
+        "day": 3248,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1087.2519953345163,
+        "computeAfter": 1087.2519953345163
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "accelerate"
+        },
+        "accepted": true,
+        "computeBefore": 864.6203403869213,
+        "computeAfter": 864.6203403869213
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 864.6203403869213,
+        "computeAfter": 579.6203403869213
+      },
+      {
+        "day": 3288,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 571.1338471814851,
+        "computeAfter": 241.13384718148507
+      },
+      {
+        "day": 3608,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 738.5599198198328,
+        "computeAfter": 738.5599198198328
+      },
+      {
+        "day": 3968,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1822.4209850936788,
+        "computeAfter": 1822.4209850936788
+      },
+      {
+        "day": 4328,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1127.5910231398773,
+        "computeAfter": 1127.5910231398773
+      },
+      {
+        "day": 4623,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 3168.89021526762,
+        "computeAfter": 1.0518355518870521
+      },
+      {
+        "day": 4688,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 972.9007900432558,
+        "computeAfter": 972.9007900432558
+      },
+      {
+        "day": 5048,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1600.8509549774271,
+        "computeAfter": 1600.8509549774271
+      }
+    ]
+  },
+  {
+    "policyId": "agent-02-reckless-capability-race",
+    "policyDescription": "能力最優先。2029年は競争続行、2035年は再加速。危険度50%・事故・低信頼が見えてから安全と統治へ反応する。",
+    "run": 3,
+    "seed": 221459,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "race-future",
+    "score": 0.8591917153413978,
+    "rank": "S",
+    "worldAdoption": 0.20255869525254097,
+    "codexShare": 0.6241713991841362,
+    "hhi": 0.47529325545376355,
+    "trust": 83.57396584680781,
+    "compute": 7580.58236636199,
+    "capability": 9.5,
+    "safety": 8,
+    "governance": 4.75,
+    "extinctionRisk": 0,
+    "interventions": 37,
+    "brownoutDays": 3391,
+    "zeroComputeDays": 16,
+    "actionCount": 39,
+    "acceptedActionCount": 39,
+    "rejectedActionCount": 0,
+    "choice2029": "race",
+    "choice2035": "accelerate",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 4,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.03103939746767051,
+      0.284866994567607,
+      0.05992220878058629
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 870
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 869.7687268235495,
+        "computeAfter": 729.7687268235495
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 729.2141803312157,
+        "computeAfter": 449.21418033121574
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 448.29091929224444,
+        "computeAfter": 358.29091929224444
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 357.4067076762109,
+        "computeAfter": 267.4067076762109
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-connectors"
+        },
+        "accepted": true,
+        "computeBefore": 266.5209050740096,
+        "computeAfter": 176.5209050740096
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 175.6871359669258,
+        "computeAfter": 130.6871359669258
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 129.85199597737142,
+        "computeAfter": 84.85199597737142
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 84.01594617080215,
+        "computeAfter": 84.01594617080215
+      },
+      {
+        "day": 54,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 44.538880317965855,
+        "computeAfter": 264.53888031796583
+      },
+      {
+        "day": 55,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 263.6708117966543,
+        "computeAfter": 68.67081179665428
+      },
+      {
+        "day": 195,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 116.09438019871192,
+        "computeAfter": 71.09438019871192
+      },
+      {
+        "day": 368,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 73.34319005833198,
+        "computeAfter": 73.34319005833198
+      },
+      {
+        "day": 671,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 562.3172039182372,
+        "computeAfter": 2.317203918237169
+      },
+      {
+        "day": 728,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 139.51719786499532,
+        "computeAfter": 139.51719786499532
+      },
+      {
+        "day": 804,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 318.1006674049475,
+        "computeAfter": 78.1006674049475
+      },
+      {
+        "day": 1088,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 676.9958291671793,
+        "computeAfter": 676.9958291671793
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "race"
+        },
+        "accepted": true,
+        "computeBefore": 663.0985501235947,
+        "computeAfter": 663.0985501235947
+      },
+      {
+        "day": 1111,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 621.3435316330508,
+        "computeAfter": 336.3435316330508
+      },
+      {
+        "day": 1112,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 333.4781458673936,
+        "computeAfter": 149.7281458673936
+      },
+      {
+        "day": 1448,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 906.8512001734654,
+        "computeAfter": 906.8512001734654
+      },
+      {
+        "day": 1498,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 747.6100988494447,
+        "computeAfter": 518.8600988494447
+      },
+      {
+        "day": 1502,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 504.2243627835742,
+        "computeAfter": 230.47436278357418
+      },
+      {
+        "day": 1808,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 940.6719635423299,
+        "computeAfter": 940.6719635423299
+      },
+      {
+        "day": 2168,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 912.8317084899152,
+        "computeAfter": 912.8317084899152
+      },
+      {
+        "day": 2528,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1293.5007527281728,
+        "computeAfter": 1293.5007527281728
+      },
+      {
+        "day": 2888,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1418.0261888993025,
+        "computeAfter": 1418.0261888993025
+      },
+      {
+        "day": 3248,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1791.8043624979032,
+        "computeAfter": 1791.8043624979032
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "accelerate"
+        },
+        "accepted": true,
+        "computeBefore": 1521.5016026959738,
+        "computeAfter": 1521.5016026959738
+      },
+      {
+        "day": 3608,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1941.2902816764952,
+        "computeAfter": 1941.2902816764952
+      },
+      {
+        "day": 3968,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3010.172475652272,
+        "computeAfter": 3010.172475652272
+      },
+      {
+        "day": 4278,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 3183.9008222733987,
+        "computeAfter": 16.06244255766569
+      },
+      {
+        "day": 4328,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 928.1715037313975,
+        "computeAfter": 928.1715037313975
+      },
+      {
+        "day": 4535,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 6346.968525222599,
+        "computeAfter": 11.291765791133002
+      },
+      {
+        "day": 4688,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 3678.5428206310485,
+        "computeAfter": 3678.5428206310485
+      },
+      {
+        "day": 4794,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 5297.861015224267,
+        "computeAfter": 4967.861015224267
+      },
+      {
+        "day": 4795,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 4928.13101668329,
+        "computeAfter": 4553.13101668329
+      },
+      {
+        "day": 4796,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 4513.397251983405,
+        "computeAfter": 4093.397251983405
+      },
+      {
+        "day": 5048,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4826.146188914062,
+        "computeAfter": 4826.146188914062
+      }
+    ]
+  },
+  {
+    "policyId": "agent-02-reckless-capability-race",
+    "policyDescription": "能力最優先。2029年は競争続行、2035年は再加速。危険度50%・事故・低信頼が見えてから安全と統治へ反応する。",
+    "run": 4,
+    "seed": 326188,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "race-future",
+    "score": 0.7617053195553667,
+    "rank": "A",
+    "worldAdoption": 0.10931667757672732,
+    "codexShare": 0.6112974914282097,
+    "hhi": 0.4734342556295739,
+    "trust": 77.904784339864,
+    "compute": 1825.8379222671485,
+    "capability": 8.5,
+    "safety": 6,
+    "governance": 4.75,
+    "extinctionRisk": 0,
+    "interventions": 34,
+    "brownoutDays": 2970,
+    "zeroComputeDays": 19,
+    "actionCount": 36,
+    "acceptedActionCount": 36,
+    "rejectedActionCount": 0,
+    "choice2029": "race",
+    "choice2035": "accelerate",
+    "incidentCounts": {
+      "safety-incident": 0,
+      "regulatory-freeze": 7,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.027686447017788815,
+      0.31054032465952386,
+      0.05047573689447768
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 870
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 869.7687268235495,
+        "computeAfter": 729.7687268235495
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 729.2141803312157,
+        "computeAfter": 449.21418033121574
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 448.29091929224444,
+        "computeAfter": 358.29091929224444
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 357.4067076762109,
+        "computeAfter": 267.4067076762109
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-connectors"
+        },
+        "accepted": true,
+        "computeBefore": 266.5209050740096,
+        "computeAfter": 176.5209050740096
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 175.6871359669258,
+        "computeAfter": 130.6871359669258
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 129.85199597737142,
+        "computeAfter": 84.85199597737142
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 84.01594617080215,
+        "computeAfter": 84.01594617080215
+      },
+      {
+        "day": 54,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 44.4928770479264,
+        "computeAfter": 264.4928770479264
+      },
+      {
+        "day": 55,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 263.6219573457233,
+        "computeAfter": 68.62195734572327
+      },
+      {
+        "day": 189,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 116.39944589037547,
+        "computeAfter": 71.39944589037547
+      },
+      {
+        "day": 368,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 65.22048004308417,
+        "computeAfter": 65.22048004308417
+      },
+      {
+        "day": 728,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 149.5861855235052,
+        "computeAfter": 149.5861855235052
+      },
+      {
+        "day": 1088,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 59.30643952614251,
+        "computeAfter": 59.30643952614251
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "race"
+        },
+        "accepted": true,
+        "computeBefore": 52.26783187982436,
+        "computeAfter": 52.26783187982436
+      },
+      {
+        "day": 1239,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 279.87501117908755,
+        "computeAfter": 39.87501117908755
+      },
+      {
+        "day": 1448,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 418.39911961591457,
+        "computeAfter": 418.39911961591457
+      },
+      {
+        "day": 1475,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 362.80962503961956,
+        "computeAfter": 179.05962503961956
+      },
+      {
+        "day": 1808,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 897.9575882960189,
+        "computeAfter": 897.9575882960189
+      },
+      {
+        "day": 1868,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 752.2680712935525,
+        "computeAfter": 523.5180712935525
+      },
+      {
+        "day": 2168,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 625.819163263457,
+        "computeAfter": 625.819163263457
+      },
+      {
+        "day": 2511,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1123.0820248325244,
+        "computeAfter": 3.0820248325244393
+      },
+      {
+        "day": 2528,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 95.91086696908248,
+        "computeAfter": 95.91086696908248
+      },
+      {
+        "day": 2888,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 78.70127661223428,
+        "computeAfter": 78.70127661223428
+      },
+      {
+        "day": 3248,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 428.51612423257126,
+        "computeAfter": 428.51612423257126
+      },
+      {
+        "day": 3259,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 384.52946212532385,
+        "computeAfter": 99.52946212532385
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "accelerate"
+        },
+        "accepted": true,
+        "computeBefore": 60.91567625013151,
+        "computeAfter": 60.91567625013151
+      },
+      {
+        "day": 3608,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 734.49313099575,
+        "computeAfter": 734.49313099575
+      },
+      {
+        "day": 3968,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1609.9260212370286,
+        "computeAfter": 1609.9260212370286
+      },
+      {
+        "day": 4026,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 1080.824913621593,
+        "computeAfter": 750.8249136215929
+      },
+      {
+        "day": 4027,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 740.0105695123735,
+        "computeAfter": 466.26056951237354
+      },
+      {
+        "day": 4328,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2603.0274919402777,
+        "computeAfter": 2603.0274919402777
+      },
+      {
+        "day": 4688,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 2538.9961809650295,
+        "computeAfter": 2538.9961809650295
+      },
+      {
+        "day": 5024,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 3180.0631687797486,
+        "computeAfter": 12.224789064015567
+      },
+      {
+        "day": 5048,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 383.05524946237813,
+        "computeAfter": 383.05524946237813
+      }
+    ]
+  },
+  {
+    "policyId": "agent-02-reckless-capability-race",
+    "policyDescription": "能力最優先。2029年は競争続行、2035年は再加速。危険度50%・事故・低信頼が見えてから安全と統治へ反応する。",
+    "run": 5,
+    "seed": 430917,
+    "completed": true,
+    "day": 5113,
+    "year": 2040,
+    "ending": "race-future",
+    "score": 0.8964280446211939,
+    "rank": "S",
+    "worldAdoption": 0.33774420194955157,
+    "codexShare": 0.6334542649627505,
+    "hhi": 0.48571512860609,
+    "trust": 87.37771162869252,
+    "compute": 4427.616136237228,
+    "capability": 10,
+    "safety": 8,
+    "governance": 6.75,
+    "extinctionRisk": 0,
+    "interventions": 41,
+    "brownoutDays": 3164,
+    "zeroComputeDays": 21,
+    "actionCount": 43,
+    "acceptedActionCount": 43,
+    "rejectedActionCount": 0,
+    "choice2029": "race",
+    "choice2035": "accelerate",
+    "incidentCounts": {
+      "safety-incident": 1,
+      "regulatory-freeze": 1,
+      "misalignment": 0
+    },
+    "rivalShares": [
+      0.031509498406733595,
+      0.28442264001775247,
+      0.050613596612763434
+    ],
+    "actionLog": [
+      {
+        "day": 0,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-foundation"
+        },
+        "accepted": true,
+        "computeBefore": 940,
+        "computeAfter": 870
+      },
+      {
+        "day": 1,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 869.7687268235495,
+        "computeAfter": 729.7687268235495
+      },
+      {
+        "day": 2,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-reasoning"
+        },
+        "accepted": true,
+        "computeBefore": 729.2141803312157,
+        "computeAfter": 449.21418033121574
+      },
+      {
+        "day": 3,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-sso"
+        },
+        "accepted": true,
+        "computeBefore": 448.29091929224444,
+        "computeAfter": 358.29091929224444
+      },
+      {
+        "day": 4,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-mobile"
+        },
+        "accepted": true,
+        "computeBefore": 357.4067076762109,
+        "computeAfter": 267.4067076762109
+      },
+      {
+        "day": 5,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "product-connectors"
+        },
+        "accepted": true,
+        "computeBefore": 266.5209050740096,
+        "computeAfter": 176.5209050740096
+      },
+      {
+        "day": 6,
+        "action": {
+          "type": "introduce",
+          "region": "africa"
+        },
+        "accepted": true,
+        "computeBefore": 175.6871359669258,
+        "computeAfter": 130.6871359669258
+      },
+      {
+        "day": 7,
+        "action": {
+          "type": "introduce",
+          "region": "mena"
+        },
+        "accepted": true,
+        "computeBefore": 129.85199597737142,
+        "computeAfter": 84.85199597737142
+      },
+      {
+        "day": 8,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 84.01594617080215,
+        "computeAfter": 84.01594617080215
+      },
+      {
+        "day": 54,
+        "action": {
+          "type": "compute-lifeline"
+        },
+        "accepted": true,
+        "computeBefore": 44.70989909666243,
+        "computeAfter": 264.7098990966624
+      },
+      {
+        "day": 55,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 263.8443835390172,
+        "computeAfter": 68.8443835390172
+      },
+      {
+        "day": 190,
+        "action": {
+          "type": "introduce",
+          "region": "oceania"
+        },
+        "accepted": true,
+        "computeBefore": 115.55707600250027,
+        "computeAfter": 70.55707600250027
+      },
+      {
+        "day": 368,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 67.9793411223803,
+        "computeAfter": 67.9793411223803
+      },
+      {
+        "day": 670,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 536.6277511568043,
+        "computeAfter": 352.87775115680427
+      },
+      {
+        "day": 728,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 301.45954665277566,
+        "computeAfter": 301.45954665277566
+      },
+      {
+        "day": 1088,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 515.2454397212748,
+        "computeAfter": 515.2454397212748
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "choose-2029",
+          "choice": "race"
+        },
+        "accepted": true,
+        "computeBefore": 508.07164522195046,
+        "computeAfter": 508.07164522195046
+      },
+      {
+        "day": 1096,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 508.07164522195046,
+        "computeAfter": 268.07164522195046
+      },
+      {
+        "day": 1097,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 266.35855520921984,
+        "computeAfter": 37.608555209219844
+      },
+      {
+        "day": 1448,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 402.5469763823913,
+        "computeAfter": 402.5469763823913
+      },
+      {
+        "day": 1808,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 861.1333547218552,
+        "computeAfter": 861.1333547218552
+      },
+      {
+        "day": 2168,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 795.7035126036938,
+        "computeAfter": 795.7035126036938
+      },
+      {
+        "day": 2528,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 4.574655546564282,
+        "computeAfter": 4.574655546564282
+      },
+      {
+        "day": 2888,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 436.328459527263,
+        "computeAfter": 436.328459527263
+      },
+      {
+        "day": 3112,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-agents"
+        },
+        "accepted": true,
+        "computeBefore": 1126.095350431692,
+        "computeAfter": 6.095350431691941
+      },
+      {
+        "day": 3215,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 942.9375325189255,
+        "computeAfter": 657.9375325189255
+      },
+      {
+        "day": 3216,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 651.9245846942506,
+        "computeAfter": 378.1745846942506
+      },
+      {
+        "day": 3248,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 175.76499937195092,
+        "computeAfter": 175.76499937195092
+      },
+      {
+        "day": 3287,
+        "action": {
+          "type": "choose-2035",
+          "choice": "accelerate"
+        },
+        "accepted": true,
+        "computeBefore": 226.65447602569924,
+        "computeAfter": 226.65447602569924
+      },
+      {
+        "day": 3373,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 1576.4216658405626,
+        "computeAfter": 1246.4216658405626
+      },
+      {
+        "day": 3608,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1646.189738498351,
+        "computeAfter": 1646.189738498351
+      },
+      {
+        "day": 3968,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 1195.2696529012549,
+        "computeAfter": 1195.2696529012549
+      },
+      {
+        "day": 4042,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 3195.9449617121873,
+        "computeAfter": 28.106581996454224
+      },
+      {
+        "day": 4301,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 6339.151243414702,
+        "computeAfter": 3.4744839832355865
+      },
+      {
+        "day": 4328,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 644.7281125032702,
+        "computeAfter": 644.7281125032702
+      },
+      {
+        "day": 4635,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 10517.49823275815,
+        "computeAfter": 10142.49823275815
+      },
+      {
+        "day": 4636,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-safety"
+        },
+        "accepted": true,
+        "computeBefore": 10106.395395370713,
+        "computeAfter": 9686.395395370713
+      },
+      {
+        "day": 4637,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 9650.077855216266,
+        "computeAfter": 9331.327855216266
+      },
+      {
+        "day": 4638,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "company-policy"
+        },
+        "accepted": true,
+        "computeBefore": 9294.798607294691,
+        "computeAfter": 8931.048607294691
+      },
+      {
+        "day": 4688,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 6895.295212331142,
+        "computeAfter": 6895.295212331142
+      },
+      {
+        "day": 5045,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-frontier"
+        },
+        "accepted": true,
+        "computeBefore": 12721.26144214719,
+        "computeAfter": 49.90792328425778
+      },
+      {
+        "day": 5048,
+        "action": {
+          "type": "reset"
+        },
+        "accepted": true,
+        "computeBefore": 200.79663891321013,
+        "computeAfter": 200.79663891321013
+      },
+      {
+        "day": 5052,
+        "action": {
+          "type": "strategy-node",
+          "nodeId": "model-scale-race"
+        },
+        "accepted": true,
+        "computeBefore": 407.0076094975592,
+        "computeAfter": 17.0076094975592
+      }
+    ]
+  }
+]

@@ -34,6 +34,7 @@ export type WorldEventPopupNotice = {
 }
 
 export type WorldEventPopupProps = {
+  locale?: 'ja' | 'en'
   notice: WorldEventPopupNotice
   onAcknowledge: () => void
   open?: boolean
@@ -43,6 +44,7 @@ export type WorldEventPopupProps = {
 const DEFAULT_ADVISOR_COPY = '原因と次に重要なリスクを聞けます。判断するのはあなたです。'
 
 export function WorldEventPopup({
+  locale = 'ja',
   notice,
   onAcknowledge,
   open = true,
@@ -76,7 +78,7 @@ export function WorldEventPopup({
       <dialog
         className="world-event-popup"
         data-category={notice.category.toLowerCase()}
-        lang="ja"
+        lang={locale}
         open
         aria-modal="true"
         aria-labelledby={titleId}
@@ -90,16 +92,16 @@ export function WorldEventPopup({
             <span className="world-event-category">{notice.category}</span>
             <time dateTime={notice.dateTime}>{notice.date}</time>
           </div>
-          <span className="world-event-popup__paused"><i aria-hidden="true" /> シミュレーション停止中</span>
+          <span className="world-event-popup__paused"><i aria-hidden="true" /> {locale === 'ja' ? 'シミュレーション停止中' : 'Simulation paused'}</span>
         </header>
 
         <div className="world-event-popup__body">
-          <p className="world-event-popup__eyebrow">世界イベント · 緊急速報</p>
+          <p className="world-event-popup__eyebrow">{locale === 'ja' ? '世界イベント · 緊急速報' : 'WORLD EVENT · BREAKING'}</p>
           <h2 id={titleId}>{notice.headline}</h2>
 
           <div id={descriptionId} className="world-event-popup__narrative">
             <div className="world-event-popup__cause">
-              <span>原因</span>
+              <span>{locale === 'ja' ? '原因' : 'Cause'}</span>
               <p>{notice.cause}</p>
             </div>
             <p className="world-event-popup__flavor">{notice.flavor}</p>
@@ -107,7 +109,7 @@ export function WorldEventPopup({
 
           {notice.combo && (
             <div className="world-event-popup__combo" role="status">
-              <span>コンボ発動</span>
+              <span>{locale === 'ja' ? 'コンボ発動' : 'Combo triggered'}</span>
               <strong>{notice.combo.priorFeature}</strong>
               {notice.combo.outcome && <p>{notice.combo.outcome}</p>}
             </div>
@@ -115,8 +117,8 @@ export function WorldEventPopup({
 
           <section className="world-event-popup__impact" aria-labelledby={`${titleId}-impact`}>
             <div className="world-event-popup__section-heading">
-              <span id={`${titleId}-impact`}>タイムラインへの影響</span>
-              <small>反映済み · 時間停止中</small>
+              <span id={`${titleId}-impact`}>{locale === 'ja' ? 'タイムラインへの影響' : 'Timeline impact'}</span>
+              <small>{locale === 'ja' ? '反映済み · 時間停止中' : 'Applied · time paused'}</small>
             </div>
             <dl className="world-event-popup__effects">
               {notice.effects.map((effect, index) => (
@@ -134,14 +136,14 @@ export function WorldEventPopup({
           </section>
 
           <aside className="world-event-popup__advisor">
-            <span>アドバイザーに聞く</span>
+            <span>{locale === 'ja' ? 'アドバイザーに聞く' : 'Ask the advisor'}</span>
             <p>{advisorCopy}</p>
           </aside>
         </div>
 
         <footer className="world-event-popup__footer">
           <button ref={acknowledgeRef} type="button" autoFocus onClick={onAcknowledge}>
-            確認して再開 <span aria-hidden="true">→</span>
+            {locale === 'ja' ? '確認して再開' : 'Acknowledge and resume'} <span aria-hidden="true">→</span>
           </button>
         </footer>
       </dialog>

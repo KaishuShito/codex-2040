@@ -272,6 +272,7 @@ export const endingDistributionRows = (distribution: AnonymousWorldlineAggregate
 }
 
 export type EndingOverlayProps = {
+  locale?: 'ja' | 'en'
   open: boolean
   rank: EndingRank
   ending: EndingId | EndingName
@@ -299,7 +300,26 @@ const rankLabels: Record<EndingRank, string> = {
   C: 'システム評価 · 危機的',
 }
 
+const rankLabelsEn: Record<EndingRank, string> = {
+  S: 'System assessment · Exceptional',
+  A: 'System assessment · Resilient',
+  B: 'System assessment · Unbalanced',
+  C: 'System assessment · Critical',
+}
+
+const endingLessonsEn: Record<EndingId, string> = {
+  'beneficial-abundance': 'You did not conquer the world. You helped it learn.',
+  'managed-transition': 'Stability is an achievement, but it is not shared abundance.',
+  'fragile-abundance': "Today's high marks can conceal tomorrow's fracture.",
+  'race-future': 'Moving first is not the same as choosing where the race ends.',
+  'regulatory-freeze': 'Governance that arrives too late becomes a wall, not a bridge.',
+  'safety-incident': 'Safety debt compounds fastest when growth becomes hardest to stop.',
+  misalignment: 'Some failures cannot be repaired after the line is crossed.',
+  'pyrrhic-monopoly': 'You reached the world. The question is what the world lost along the way.',
+}
+
 export function EndingOverlay({
+  locale = 'ja',
   open,
   rank,
   ending,
@@ -327,6 +347,7 @@ export function EndingOverlay({
   const enginePresentation = getEndingPresentation(ending)
   const receiptRun = receipt?.run
   const presentation = receiptRun ? ENDING_PRESENTATIONS[receiptRun.ending] : enginePresentation
+  const endingName = locale === 'ja' ? presentation.name : presentation.nameEn
   const resolvedRank = receiptRun?.rank ?? rank
   const resolvedScore = clampScore(receiptRun?.final_score ?? scoreOutOf100)
   const resolvedChoices: LocalWorldlineChoices = receiptRun
@@ -339,7 +360,8 @@ export function EndingOverlay({
   const hasAggregateComparison = aggregateTotal > 0
   const distributionRows = useMemo(() => endingDistributionRows(aggregate?.ending_distribution ?? null), [aggregate?.ending_distribution])
   const marketRows = useMemo(() => marketShareOutcomeRows(marketShares), [marketShares])
-  const shareUrl = useMemo(() => resolvePublicShareUrl(window.location.origin, publicOrigin), [publicOrigin])
+  const browserOrigin = typeof window === 'undefined' ? '' : window.location.origin
+  const shareUrl = useMemo(() => resolvePublicShareUrl(browserOrigin, publicOrigin), [browserOrigin, publicOrigin])
   const shareText = useMemo(() => buildWorldlineShareText({
     rank: resolvedRank,
     scoreOutOf100: resolvedScore,
@@ -434,20 +456,20 @@ export function EndingOverlay({
       >
         <div className="scenario-dialog__signal" aria-hidden="true" />
         <header className="ending-hero">
-          <div className="ending-rank" aria-label={`${resolvedRank}ランク / rank ${resolvedRank}`}>
-            <small>最終ランク / FINAL RANK</small>
+          <div className="ending-rank" aria-label={locale === 'ja' ? `${resolvedRank}ランク` : `rank ${resolvedRank}`}>
+            <small>{locale === 'ja' ? '最終ランク' : 'FINAL RANK'}</small>
             <strong>{resolvedRank}</strong>
             <span>{resolvedScore} / 100</span>
           </div>
           <div className="ending-heading">
             <div className="scenario-kicker">
-              <span>{completionDate} · シミュレーション {completionStatus === 'terminated' ? '強制終了' : '完了'}</span>
-              <span>{presentation.kicker}</span>
+              <span>{completionDate} · {locale === 'ja' ? `シミュレーション ${completionStatus === 'terminated' ? '強制終了' : '完了'}` : `SIMULATION ${completionStatus === 'terminated' ? 'TERMINATED' : 'COMPLETE'}`}</span>
+              <span>{locale === 'ja' ? presentation.kicker : presentation.tone.toUpperCase()}</span>
             </div>
-            <p className="ending-label">{rankLabels[resolvedRank]}</p>
-            <h2 id={titleId}>{presentation.name}</h2>
-            <p className="ending-name-en" lang="en">{presentation.nameEn}</p>
-            <p id={descriptionId} className="ending-summary">{presentation.summary}</p>
+            <p className="ending-label">{locale === 'ja' ? rankLabels[resolvedRank] : rankLabelsEn[resolvedRank]}</p>
+            <h2 id={titleId}>{endingName}</h2>
+            {locale === 'ja' && <p className="ending-name-en" lang="en">{presentation.nameEn}</p>}
+            <p id={descriptionId} className="ending-summary">{summary ?? presentation.summary}</p>
             {summary && summary !== presentation.summary && <p className="ending-context">{summary}</p>}
           </div>
         </header>
@@ -456,34 +478,38 @@ export function EndingOverlay({
           <div className="worldline-receipt__heading">
             <div>
               <span>ANONYMOUS WORLDLINE RECEIPT</span>
-              <h3 id={`${titleId}-receipt`}>匿名世界線レシート</h3>
+              <h3 id={`${titleId}-receipt`}>{locale === 'ja' ? '匿名世界線レシート' : 'Anonymous worldline receipt'}</h3>
             </div>
             <strong className={hasAggregateComparison ? 'is-networked' : 'is-local'}>
               <i aria-hidden="true" />
-              {hasAggregateComparison ? 'STORED · AGGREGATE / 保存済み・集計あり' : stored ? 'STORED · PRIVATE COHORT / 保存済み・少人数非表示' : 'LOCAL · SYNC PENDING / ローカル・同期待ち'}
+              {hasAggregateComparison
+                ? (locale === 'ja' ? '保存済み · 集計あり' : 'STORED · AGGREGATE')
+                : stored
+                  ? (locale === 'ja' ? '保存済み · 少人数非表示' : 'STORED · PRIVATE COHORT')
+                  : (locale === 'ja' ? 'ローカル · 同期待ち' : 'LOCAL · SYNC PENDING')}
             </strong>
           </div>
 
           <dl className="worldline-receipt__facts">
             <div>
-              <dt>SCORE / スコア</dt>
+              <dt>{locale === 'ja' ? 'スコア' : 'SCORE'}</dt>
               <dd>{resolvedScore}<small>/100 · RANK {resolvedRank}</small></dd>
             </div>
             <div>
-              <dt>ENDING / 結末</dt>
-              <dd><span lang="en">{presentation.nameEn}</span><small>{presentation.name}</small></dd>
+              <dt>{locale === 'ja' ? '結末' : 'ENDING'}</dt>
+              <dd><span>{endingName}</span></dd>
             </div>
             <div>
-              <dt>2029 CHOICE / 2029年の選択</dt>
-              <dd><span lang="en">{choice2029Label.en}</span><small>{choice2029Label.ja}</small></dd>
+              <dt>{locale === 'ja' ? '2029年の選択' : '2029 CHOICE'}</dt>
+              <dd><span>{choice2029Label[locale]}</span></dd>
             </div>
             <div>
-              <dt>2035 CHOICE / 2035年の選択</dt>
-              <dd><span lang="en">{choice2035Label.en}</span><small>{choice2035Label.ja}</small></dd>
+              <dt>{locale === 'ja' ? '2035年の選択' : '2035 CHOICE'}</dt>
+              <dd><span>{choice2035Label[locale]}</span></dd>
             </div>
             <div>
-              <dt>ACTIVE PLAY / 実プレイ時間</dt>
-              <dd>{formatActivePlayTime(resolvedActivePlaySeconds)}<small>{resolvedActivePlaySeconds == null ? 'NOT RECORDED / 未記録' : 'HH:MM:SS / 時:分:秒'}</small></dd>
+              <dt>{locale === 'ja' ? '実プレイ時間' : 'ACTIVE PLAY'}</dt>
+              <dd>{formatActivePlayTime(resolvedActivePlaySeconds)}<small>{resolvedActivePlaySeconds == null ? (locale === 'ja' ? '未記録' : 'NOT RECORDED') : (locale === 'ja' ? '時:分:秒' : 'HH:MM:SS')}</small></dd>
             </div>
           </dl>
 
@@ -491,23 +517,23 @@ export function EndingOverlay({
             <div className="worldline-aggregate">
               <div className="worldline-aggregate__summary">
                 <div>
-                  <span>COMMUNITY COMPARISON / 全体比較</span>
-                  <strong>{aggregateTotal.toLocaleString()}<small> completed worldlines / 完了した世界線</small></strong>
+                  <span>{locale === 'ja' ? '全体比較' : 'COMMUNITY COMPARISON'}</span>
+                  <strong>{aggregateTotal.toLocaleString()}<small>{locale === 'ja' ? ' 完了した世界線' : ' completed worldlines'}</small></strong>
                 </div>
                 {aggregate.percentile !== null && Number.isFinite(aggregate.percentile) && (
                   <div>
-                    <span>SCORE POSITION / スコア位置</span>
-                    <strong>P{Math.max(0, Math.min(100, Math.round(aggregate.percentile)))}<small>percentile / パーセンタイル</small></strong>
+                    <span>{locale === 'ja' ? 'スコア位置' : 'SCORE POSITION'}</span>
+                    <strong>P{Math.max(0, Math.min(100, Math.round(aggregate.percentile)))}<small>{locale === 'ja' ? 'パーセンタイル' : 'percentile'}</small></strong>
                   </div>
                 )}
               </div>
               {distributionRows.length > 0 && (
-                <div className="worldline-distribution" aria-label="Ending distribution / 結末分布">
-                  <span>ENDING DISTRIBUTION / 結末分布</span>
+                <div className="worldline-distribution" aria-label={locale === 'ja' ? '結末分布' : 'Ending distribution'}>
+                  <span>{locale === 'ja' ? '結末分布' : 'ENDING DISTRIBUTION'}</span>
                   <div>
                     {distributionRows.map((row) => (
                       <div className={row.id === presentation.id ? 'is-current' : ''} key={row.id}>
-                        <p><b>{row.presentation.nameEn}</b><small>{row.presentation.name}</small></p>
+                        <p><b>{locale === 'ja' ? row.presentation.name : row.presentation.nameEn}</b>{locale === 'ja' && <small>{row.presentation.nameEn}</small>}</p>
                         <i aria-hidden="true"><span style={{ width: `${row.percent}%` }} /></i>
                         <strong>{Math.round(row.percent)}%</strong>
                       </div>
@@ -519,27 +545,27 @@ export function EndingOverlay({
           ) : (
             <p className="worldline-receipt__fallback">
               {stored
-                ? <>This result is stored. Community comparison stays hidden until the privacy threshold is met.<br />保存済みです。プライバシー基準を満たすまで全体比較は表示しません。</>
-                : <>Sync is pending or unavailable; gameplay and sharing still work locally.<br />同期待ち、または保存先に接続できません。ゲームと共有はローカル結果で続けられます。</>}
+                ? (locale === 'ja' ? '保存済みです。プライバシー基準を満たすまで全体比較は表示しません。' : 'This result is stored. Community comparison stays hidden until the privacy threshold is met.')
+                : (locale === 'ja' ? '同期待ち、または保存先に接続できません。ゲームと共有はローカル結果で続けられます。' : 'Sync is pending or unavailable; gameplay and sharing still work locally.')}
             </p>
           )}
 
           <div className="worldline-share">
             <p>
-              <span>SHARE THIS WORLDLINE / この世界線を共有</span>
-              {shareUrl ? 'The current public Sites URL will be included. / 現在の公開Sites URLを含めます。' : 'Local URL omitted for safety. / ローカルURLは安全のため含めません。'}
+              <span>{locale === 'ja' ? 'この世界線を共有' : 'SHARE THIS WORLDLINE'}</span>
+              {shareUrl ? (locale === 'ja' ? '現在の公開Sites URLを含めます。' : 'The current public Sites URL will be included.') : (locale === 'ja' ? 'ローカルURLは安全のため含めません。' : 'Local URL omitted for safety.')}
               {shareUrl && <a href={shareUrl}>{shareUrl}</a>}
             </p>
             <div>
               <button type="button" className="worldline-copy-action" onClick={copyReceipt}>
-                {copyStatus === 'copied' ? 'COPIED / コピー済み' : copyStatus === 'failed' ? 'COPY FAILED / コピー失敗' : 'COPY RESULT / 結果をコピー'}
+                {copyStatus === 'copied' ? (locale === 'ja' ? 'コピー済み' : 'COPIED') : copyStatus === 'failed' ? (locale === 'ja' ? 'コピー失敗' : 'COPY FAILED') : (locale === 'ja' ? '結果をコピー' : 'COPY RESULT')}
               </button>
               <a className="worldline-x-action" href={xIntentHref} target="_blank" rel="noopener noreferrer">
-                SHARE ON X / Xで共有 <span aria-hidden="true">↗</span>
+                {locale === 'ja' ? 'Xで共有' : 'SHARE ON X'} <span aria-hidden="true">↗</span>
               </a>
             </div>
             <span className="worldline-share__status" aria-live="polite">
-              {copyStatus === 'copied' ? 'Result copied to clipboard. / 結果をクリップボードにコピーしました。' : copyStatus === 'failed' ? 'Clipboard unavailable. Use Share on X. / クリップボードを利用できません。X共有をお使いください。' : ''}
+              {copyStatus === 'copied' ? (locale === 'ja' ? '結果をクリップボードにコピーしました。' : 'Result copied to clipboard.') : copyStatus === 'failed' ? (locale === 'ja' ? 'クリップボードを利用できません。X共有をお使いください。' : 'Clipboard unavailable. Use Share on X.') : ''}
             </span>
           </div>
         </section>
@@ -548,10 +574,10 @@ export function EndingOverlay({
           <section className="ending-market" aria-labelledby={`${titleId}-market`}>
             <div className="ending-market__heading">
               <div>
-                <span>COMPETITIVE OUTCOME / 競争の結果</span>
-                <h3 id={`${titleId}-market`}>2040年、誰が世界を動かしたか</h3>
+                <span>{locale === 'ja' ? '競争の結果' : 'COMPETITIVE OUTCOME'}</span>
+                <h3 id={`${titleId}-market`}>{locale === 'ja' ? '2040年、誰が世界を動かしたか' : 'Who shaped the world in 2040?'}</h3>
               </div>
-              <p>開始時からの市場シェア変化。CODEXと競合の伸びを同じ尺度で比較します。</p>
+              <p>{locale === 'ja' ? '開始時からの市場シェア変化。CODEXと競合の伸びを同じ尺度で比較します。' : 'Market-share change since the start, comparing CODEX and rivals on one scale.'}</p>
             </div>
             <div className="ending-market__rows">
               {marketRows.map((row, index) => (
@@ -570,56 +596,56 @@ export function EndingOverlay({
         <section className="ending-review" aria-labelledby={`${titleId}-review`}>
           <div className="ending-review__intro">
             <div>
-              <span>基準シナリオ</span>
+              <span>{locale === 'ja' ? '基準シナリオ' : 'Reference scenario'}</span>
               <p>{referenceSummary}</p>
             </div>
-            <i aria-hidden="true">対</i>
+            <i aria-hidden="true">{locale === 'ja' ? '対' : 'VS'}</i>
             <div>
-              <span>あなたのタイムライン</span>
+              <span>{locale === 'ja' ? 'あなたのタイムライン' : 'Your timeline'}</span>
               <p>{timelineSummary}</p>
             </div>
           </div>
 
           <div className="ending-review__title">
             <div>
-              <span>判断レビュー</span>
-              <h3 id={`${titleId}-review`}>未来を分けた判断</h3>
+              <span>{locale === 'ja' ? '判断レビュー' : 'Decision review'}</span>
+              <h3 id={`${titleId}-review`}>{locale === 'ja' ? '未来を分けた判断' : 'Decisions that changed the future'}</h3>
             </div>
-            <small>{divergences.length}件の判断を追跡</small>
+            <small>{locale === 'ja' ? `${divergences.length}件の判断を追跡` : `${divergences.length} decisions tracked`}</small>
           </div>
 
-          <div className="ending-comparison" role="table" aria-label="基準シナリオとあなたのタイムラインの比較">
+          <div className="ending-comparison" role="table" aria-label={locale === 'ja' ? '基準シナリオとあなたのタイムラインの比較' : 'Reference scenario and your timeline comparison'}>
             <div className="ending-comparison__header" role="row">
-              <span role="columnheader">判断</span>
-              <span role="columnheader">基準シナリオ</span>
-              <span role="columnheader">あなたのタイムライン</span>
-              <span role="columnheader">なぜ重要だったか</span>
+              <span role="columnheader">{locale === 'ja' ? '判断' : 'Decision'}</span>
+              <span role="columnheader">{locale === 'ja' ? '基準シナリオ' : 'Reference'}</span>
+              <span role="columnheader">{locale === 'ja' ? 'あなたのタイムライン' : 'Your timeline'}</span>
+              <span role="columnheader">{locale === 'ja' ? 'なぜ重要だったか' : 'Why it mattered'}</span>
             </div>
             {divergences.map((divergence, index) => (
               <div className="ending-comparison__row" role="row" key={`${divergence.year}-${divergence.decision}`} style={{ animationDelay: `${120 + index * 55}ms` }}>
-                <div className="ending-comparison__decision" role="cell" data-label="判断">
+                <div className="ending-comparison__decision" role="cell" data-label={locale === 'ja' ? '判断' : 'Decision'}>
                   <span>{divergence.year}</span>
                   <strong>{divergence.decision}</strong>
                 </div>
-                <p role="cell" data-label="基準シナリオ">{divergence.referenceScenario}</p>
-                <p className="is-yours" role="cell" data-label="あなたのタイムライン">{divergence.yourTimeline}</p>
-                <p role="cell" data-label="なぜ重要だったか">{divergence.whyItMattered}</p>
+                <p role="cell" data-label={locale === 'ja' ? '基準シナリオ' : 'Reference'}>{divergence.referenceScenario}</p>
+                <p className="is-yours" role="cell" data-label={locale === 'ja' ? 'あなたのタイムライン' : 'Your timeline'}>{divergence.yourTimeline}</p>
+                <p role="cell" data-label={locale === 'ja' ? 'なぜ重要だったか' : 'Why it mattered'}>{divergence.whyItMattered}</p>
               </div>
             ))}
           </div>
         </section>
 
         <footer className="ending-footer">
-          <blockquote>“{lesson ?? presentation.lesson}”</blockquote>
+          <blockquote>“{lesson ?? (locale === 'ja' ? presentation.lesson : endingLessonsEn[presentation.id])}”</blockquote>
           <div>
             {onClose && (
               <button type="button" className="scenario-secondary-action" onClick={onClose}>
-                マップへ戻る
+                {locale === 'ja' ? 'マップへ戻る' : 'Return to map'}
               </button>
             )}
             {onRestart && (
               <button ref={primaryActionRef} type="button" className="scenario-primary-action" onClick={onRestart}>
-                別のタイムラインを試す <span aria-hidden="true">↻</span>
+                {locale === 'ja' ? '別のタイムラインを試す' : 'Try another timeline'} <span aria-hidden="true">↻</span>
               </button>
             )}
           </div>

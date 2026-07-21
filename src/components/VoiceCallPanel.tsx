@@ -8,23 +8,18 @@ export type VoiceSubtitle = {
   text: string
 }
 
-const statusLabel: Record<VoiceConnectionStatus, string> = {
-  idle: '待機中',
-  connecting: '接続中',
-  connected: 'リアルタイム接続済み',
-  fallback: '台本モード',
-  ended: '通話終了',
+const statusLabel: Record<VoiceConnectionStatus, { ja: string; en: string }> = {
+  idle: { ja: '待機中', en: 'Idle' }, connecting: { ja: '接続中', en: 'Connecting' },
+  connected: { ja: 'リアルタイム接続済み', en: 'Realtime connected' }, fallback: { ja: '台本モード', en: 'Scripted mode' }, ended: { ja: '通話終了', en: 'Call ended' },
 }
 
-const micLabel: Record<MicPermissionStatus, string> = {
-  unknown: 'マイク未要求',
-  requesting: 'マイク許可を確認中',
-  granted: 'マイク許可済み',
-  denied: 'マイク拒否',
-  unavailable: 'マイク利用不可',
+const micLabel: Record<MicPermissionStatus, { ja: string; en: string }> = {
+  unknown: { ja: 'マイク未要求', en: 'Microphone not requested' }, requesting: { ja: 'マイク許可を確認中', en: 'Requesting microphone' },
+  granted: { ja: 'マイク許可済み', en: 'Microphone granted' }, denied: { ja: 'マイク拒否', en: 'Microphone denied' }, unavailable: { ja: 'マイク利用不可', en: 'Microphone unavailable' },
 }
 
 type VoiceCallPanelProps = {
+  locale?: 'ja' | 'en'
   open: boolean
   status: VoiceConnectionStatus
   micPermission: MicPermissionStatus
@@ -44,6 +39,7 @@ type VoiceCallPanelProps = {
 }
 
 export default function VoiceCallPanel({
+  locale = 'ja',
   open,
   status,
   micPermission,
@@ -67,28 +63,28 @@ export default function VoiceCallPanel({
   return (
     <aside className="voice-call" role="dialog" aria-modal="false" aria-labelledby="voice-call-title">
       <header>
-        <div><span className="voice-call__avatar"><Radio size={17} /></span><span><b id="voice-call-title">TIBO — ボイス・オペレーター</b><small>架空のデモオペレーター · 汎用合成音声</small></span></div>
-        <button className="voice-call__close" onClick={onClose} aria-label="音声通話パネルを閉じる"><X size={16} /></button>
+        <div><span className="voice-call__avatar"><Radio size={17} /></span><span><b id="voice-call-title">TIBO — {locale === 'ja' ? 'ボイス・オペレーター' : 'Voice Operator'}</b><small>{locale === 'ja' ? '架空のデモオペレーター · 汎用合成音声' : 'Fictional demo operator · generic synthetic voice'}</small></span></div>
+        <button className="voice-call__close" onClick={onClose} aria-label={locale === 'ja' ? '音声通話パネルを閉じる' : 'Close voice call panel'}><X size={16} /></button>
       </header>
 
       <div className="voice-call__status" data-status={status} aria-live="polite">
-        <span><i /> {statusLabel[status]}</span><span>{micLabel[micPermission]}{muted ? ' · ミュート中' : ''}</span>
+        <span><i /> {statusLabel[status][locale]}</span><span>{micLabel[micPermission][locale]}{muted ? ` · ${locale === 'ja' ? 'ミュート中' : 'Muted'}` : ''}</span>
       </div>
 
       <div className="voice-call__scope">
-        ゲーム内限定：Codex 2040のTiboトークンだけをリセットします。OpenAIアカウント、請求、API上限、権限は変更できません。
+        {locale === 'ja' ? 'ゲーム内限定：Codex 2040のTIBOトークンだけをリセットします。OpenAIアカウント、請求、API上限、権限は変更できません。' : 'In-game only: resets only Codex 2040 TIBO tokens. It cannot change your OpenAI account, billing, API limits, or permissions.'}
       </div>
 
-      <div className="voice-call__transcript" aria-label="音声通話の字幕" aria-live="polite">
-        {subtitles.length === 0 && <p className="voice-call__empty">通話を開始して「リミットをリセットして」と話してください。</p>}
+      <div className="voice-call__transcript" aria-label={locale === 'ja' ? '音声通話の字幕' : 'Voice call transcript'} aria-live="polite">
+        {subtitles.length === 0 && <p className="voice-call__empty">{locale === 'ja' ? '通話を開始して「リミットをリセットして」と話してください。' : 'Start the call and ask to reset the limit.'}</p>}
         {subtitles.map((subtitle, index) => (
-          <p key={`${subtitle.id}-${index}`} data-speaker={subtitle.speaker}><b>{subtitle.speaker === 'player' ? 'あなた' : subtitle.speaker === 'operator' ? 'TIBO — ボイス・オペレーター' : 'システム'}</b><span>{subtitle.text}</span></p>
+          <p key={`${subtitle.id}-${index}`} data-speaker={subtitle.speaker}><b>{subtitle.speaker === 'player' ? (locale === 'ja' ? 'あなた' : 'You') : subtitle.speaker === 'operator' ? `TIBO — ${locale === 'ja' ? 'ボイス・オペレーター' : 'Voice Operator'}` : (locale === 'ja' ? 'システム' : 'System')}</b><span>{subtitle.text}</span></p>
         ))}
-        {operatorDraft && <p data-speaker="operator"><b>TIBO — ボイス・オペレーター</b><span>{operatorDraft}</span></p>}
+        {operatorDraft && <p data-speaker="operator"><b>TIBO — {locale === 'ja' ? 'ボイス・オペレーター' : 'Voice Operator'}</b><span>{operatorDraft}</span></p>}
       </div>
 
       {status === 'fallback' && !pendingReset && (
-        <div className="voice-call__scripts" aria-label="台本の言語を選択">
+        <div className="voice-call__scripts" aria-label={locale === 'ja' ? '台本の言語を選択' : 'Choose scripted-request language'}>
           <button className="voice-call__script" onClick={() => onScriptedRequest('ja')}>日本語で依頼</button>
           <button className="voice-call__script" lang="en" onClick={() => onScriptedRequest('en')}>Request in English</button>
         </div>
@@ -116,10 +112,10 @@ export default function VoiceCallPanel({
       <p className="voice-call__notice" aria-live="polite">{resetNotice}</p>
 
       <footer>
-        {!active && <button className="voice-call__primary" onClick={onStart}><Phone size={15} /> 通話を開始</button>}
-        {active && <button className="voice-call__hangup" onClick={onEnd}><PhoneOff size={15} /> 通話を終了</button>}
-        {status === 'connected' && <button aria-pressed={muted} onClick={onToggleMute}>{muted ? <MicOff size={15} /> : <Mic size={15} />}{muted ? 'ミュート解除' : 'ミュート'}</button>}
-        <small>⌥V 開く・開始 · ⌥M ミュート · ⌥↵ 承認 · Esc 終了</small>
+        {!active && <button className="voice-call__primary" onClick={onStart}><Phone size={15} /> {locale === 'ja' ? '通話を開始' : 'Start call'}</button>}
+        {active && <button className="voice-call__hangup" onClick={onEnd}><PhoneOff size={15} /> {locale === 'ja' ? '通話を終了' : 'End call'}</button>}
+        {status === 'connected' && <button aria-pressed={muted} onClick={onToggleMute}>{muted ? <MicOff size={15} /> : <Mic size={15} />}{muted ? (locale === 'ja' ? 'ミュート解除' : 'Unmute') : (locale === 'ja' ? 'ミュート' : 'Mute')}</button>}
+        <small>{locale === 'ja' ? '⌥V 開く・開始 · ⌥M ミュート · ⌥↵ 承認 · Esc 終了' : '⌥V open/start · ⌥M mute · ⌥↵ approve · Esc end'}</small>
       </footer>
     </aside>
   )

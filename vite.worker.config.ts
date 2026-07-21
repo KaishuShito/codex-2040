@@ -1,9 +1,9 @@
 import { defineConfig } from 'vite'
-import { sites } from './build/sites-vite-plugin'
+import { embeddedSiteAssets, sites } from './build/sites-vite-plugin'
 
 export default defineConfig({
   publicDir: false,
-  plugins: [sites()],
+  plugins: [embeddedSiteAssets(), sites()],
   build: {
     emptyOutDir: false,
     outDir: 'dist/server',

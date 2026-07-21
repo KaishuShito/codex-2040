@@ -38,8 +38,9 @@ Status: implementation, browser verification, and fresh-context independent re-a
 ## Automated verification
 
 - `npm run check`: 41 test files / 296 tests, TypeScript checks, client production build, and Worker production build passed. Only the existing non-fatal client chunk-size warning remains.
+- Frozen-HEAD note: two initial full-suite attempts timed out only the two pre-existing humanized determinism cases at their 5-second wall while the evidence server was active. Those cases passed unchanged when isolated (2 files / 7 tests); after stopping the server, the exact full gate passed unchanged. No timeout, threshold, or assertion was weakened.
 - Pill engine/events/upgrades/authored-worldline focused suites: 46 tests passed.
-- TIBO-focused regression: `src/voiceReset.test.ts`, `src/voiceAgentClient.test.ts`, `src/components/VoiceCallPanel.test.tsx`, and `src/voiceAgent.test.ts` — 4 files / 34 tests passed. `rg -n -i 'kibo|キボ|createKibo'` returned zero matches outside generated/vendor directories.
+- TIBO-focused regression: `src/voiceReset.test.ts`, `src/voiceAgentClient.test.ts`, `src/components/VoiceCallPanel.test.tsx`, and `src/voiceAgent.test.ts` — 4 files / 34 tests passed. The requested case-insensitive legacy-brand and constructor scan returned zero matches outside generated/vendor directories.
 - `git diff --check`: passed before documentation freeze; repeated on final HEAD below.
 
 ## Real-browser evidence

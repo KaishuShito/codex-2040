@@ -109,7 +109,7 @@ export type AgiPillEventDefinition = Readonly<{
  */
 export type AgiPillEventEligibilityState = Readonly<{
   day: number
-  phase: AgiPillPhase
+  phase: AgiPillPhase | 'post-dyson'
   flags?: readonly string[]
 }> & Readonly<Record<AgiPillMetric, number>>
 
@@ -144,6 +144,7 @@ export const isAgiPillEventEligible = (
   options: AgiPillEventEligibilityOptions = {},
 ): boolean => {
   const phaseOrder: Readonly<Record<AgiPillPhase, number>> = { 'year-1-3': 0, 'year-3-5': 1, 'year-5-10': 2 }
+  if (state.phase === 'post-dyson') return false
   if (phaseOrder[state.phase] < phaseOrder[event.phase]) return false
   if (state.day < (options.earliestDay ?? 0)) return false
 

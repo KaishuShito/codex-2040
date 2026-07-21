@@ -63,6 +63,11 @@ export const decodeAgiPillState = (value: unknown): AgiPillState | null => {
     || !Array.isArray(value.milestones)
     || (value.warning !== null && (!isObject(value.warning)
       || !PILL_WARNINGS.has(value.warning.kind as string)
+      || typeof value.warning.startedDay !== 'number'
+      || !Number.isFinite(value.warning.startedDay)
+      || typeof value.warning.countdownDays !== 'number'
+      || !Number.isFinite(value.warning.countdownDays)
+      || value.warning.countdownDays <= 0
       || !Array.isArray(value.warning.recoveryPolicies)
       || !value.warning.recoveryPolicies.every((policy) => PILL_POLICIES.has(policy as AgiPillPolicy))))) return null
   return enforceAgiPillInvariants(value as AgiPillState)

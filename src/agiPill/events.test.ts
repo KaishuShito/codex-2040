@@ -155,6 +155,10 @@ describe('AGI Pill event catalog', () => {
     }
   })
 
+  it('explicitly closes the authored Earth-era deck after Dyson ignition', () => {
+    expect(isAgiPillEventEligible(AGI_PILL_EVENTS[0]!, { ...eligibilityState(), phase: 'post-dyson' })).toBe(false)
+  })
+
   it('covers every critical branch in the playable event deck', () => {
     const coveredTags = new Set(AGI_PILL_EVENTS.flatMap((event) => event.tags))
     for (const tag of AGI_PILL_EVENT_TAGS) expect(coveredTags, tag).toContain(tag)

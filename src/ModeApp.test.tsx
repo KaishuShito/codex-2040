@@ -27,5 +27,6 @@ describe('mode routing', () => {
     expect(decodeAgiPillState(state)?.runSeed).toBe(42)
     expect(decodeAgiPillState({ ...state, policy: 'evil' })).toBeNull()
     expect(decodeAgiPillState({ ...state, warning: { kind: 'unknown', startedDay: 0, countdownDays: 1, recoveryPolicies: [] } })).toBeNull()
+    expect(decodeAgiPillState({ ...state, warning: { kind: 'resource-lock', startedDay: 'never', countdownDays: Number.NaN, recoveryPolicies: ['resource-recovery'] } })).toBeNull()
   })
 })

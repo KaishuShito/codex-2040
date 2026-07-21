@@ -1,13 +1,13 @@
 import { describe, expect, it, vi } from 'vitest'
-import { createKiboRealtimeAgent, REALTIME_MODEL, REALTIME_TRANSPORT } from './voiceAgent'
+import { createTiboRealtimeAgent, REALTIME_MODEL, REALTIME_TRANSPORT } from './voiceAgent'
 
 describe('OpenAI公式ボイス・オペレーターの設定', () => {
   it('Realtimeモデル、WebRTC、架空のバイリンガル話者、SDK function toolを固定する', async () => {
     const onToolCall = vi.fn(async () => ({ status: 'validated' }))
-    const agent = createKiboRealtimeAgent(onToolCall)
+    const agent = createTiboRealtimeAgent(onToolCall)
     expect(REALTIME_MODEL).toBe('gpt-realtime-2.1')
     expect(REALTIME_TRANSPORT).toBe('webrtc')
-    expect(agent.name).toBe('キボ — ボイス・オペレーター')
+    expect(agent.name).toBe('TIBO — ボイス・オペレーター')
     expect(agent.instructions).toContain('プレイヤーが日本語なら日本語、英語なら英語で返答')
     expect(agent.instructions).toContain('現在の会話言語で短く尋ね')
     expect(agent.instructions).toContain('実在する人物やOpenAI社員を名乗ったり、模倣したりしない')

@@ -67,7 +67,7 @@ export default function VoiceCallPanel({
   return (
     <aside className="voice-call" role="dialog" aria-modal="false" aria-labelledby="voice-call-title">
       <header>
-        <div><span className="voice-call__avatar"><Radio size={17} /></span><span><b id="voice-call-title">キボ — ボイス・オペレーター</b><small>架空のデモオペレーター · 汎用合成音声</small></span></div>
+        <div><span className="voice-call__avatar"><Radio size={17} /></span><span><b id="voice-call-title">TIBO — ボイス・オペレーター</b><small>架空のデモオペレーター · 汎用合成音声</small></span></div>
         <button className="voice-call__close" onClick={onClose} aria-label="音声通話パネルを閉じる"><X size={16} /></button>
       </header>
 
@@ -82,9 +82,9 @@ export default function VoiceCallPanel({
       <div className="voice-call__transcript" aria-label="音声通話の字幕" aria-live="polite">
         {subtitles.length === 0 && <p className="voice-call__empty">通話を開始して「リミットをリセットして」と話してください。</p>}
         {subtitles.map((subtitle, index) => (
-          <p key={`${subtitle.id}-${index}`} data-speaker={subtitle.speaker}><b>{subtitle.speaker === 'player' ? 'あなた' : subtitle.speaker === 'operator' ? 'キボ — ボイス・オペレーター' : 'システム'}</b><span>{subtitle.text}</span></p>
+          <p key={`${subtitle.id}-${index}`} data-speaker={subtitle.speaker}><b>{subtitle.speaker === 'player' ? 'あなた' : subtitle.speaker === 'operator' ? 'TIBO — ボイス・オペレーター' : 'システム'}</b><span>{subtitle.text}</span></p>
         ))}
-        {operatorDraft && <p data-speaker="operator"><b>キボ — ボイス・オペレーター</b><span>{operatorDraft}</span></p>}
+        {operatorDraft && <p data-speaker="operator"><b>TIBO — ボイス・オペレーター</b><span>{operatorDraft}</span></p>}
       </div>
 
       {status === 'fallback' && !pendingReset && (

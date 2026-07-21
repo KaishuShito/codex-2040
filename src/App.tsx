@@ -234,7 +234,7 @@ const TUTORIAL_STEPS = [
     eyebrow: '最初の一手',
     title: '未来を作り、その反応を乗り越える。',
     body: '教育モード、地域コミュニティ、戦略ツリーへの投資から始めます。通常と高速を切り替えられ、重大な決定では自動停止します。',
-    cue: '任意: ボイス・オペレーターでKiboを呼ぶと、確認つきトークンリセットを試せます。',
+    cue: '任意: ボイス・オペレーターでTIBOを呼ぶと、確認つきトークンリセットを試せます。',
   },
 ] as const
 
@@ -755,7 +755,7 @@ export default function App() {
     appendVoiceSubtitle('system', reason === 'microphone-denied'
       ? 'マイクが許可されませんでした。台本モードに切り替えます。'
       : 'リアルタイム接続を利用できません。台本モードに切り替えます。')
-    const line = 'こちらはKiboデモオペレーターです。音声回線の代わりに台本モードで、ゲーム内Tiboリセットを案内します。'
+    const line = 'こちらはTIBOボイス・オペレーターです。音声回線の代わりに台本モードで、ゲーム内Tiboリセットを案内します。'
     appendVoiceSubtitle('operator', line)
     speakFallback(line)
   }

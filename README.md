@@ -50,7 +50,7 @@ The integrated browser experience includes:
 - Subtle, optional CC0 interaction audio for navigation, actions, time controls, world briefs, and critical alerts, with an always-visible mute control.
 - A Momentum loop: player interventions unlock bounded growth windows; waiting stalls access while operating costs and competitors continue.
 - Automatic pause-and-brief behavior for critical events, with visible Trust causes and every major game-over route.
-- An official OpenAI Voice Agent (`RealtimeAgent` + `RealtimeSession`) over browser WebRTC for **Kibo — Demo Operator**, explicitly identified as a fictionalized operator using a generic synthetic voice.
+- An official OpenAI Voice Agent (`RealtimeAgent` + `RealtimeSession`) over browser WebRTC for **TIBO — Voice Operator**, explicitly identified as a fictionalized operator using a generic synthetic voice.
 - A two-call `trigger_token_reset` function-tool contract: the first call creates a visible pending request, and a second call can invoke the existing in-game reset only after a separate explicit spoken confirmation.
 - A same-UI scripted voice fallback for missing credentials, microphone denial, or Realtime failure.
 - Automated tests covering the engine, 100-event catalog, deterministic scheduling, popup integration, the dormant bridge contract, scenario data, branches, and endings.

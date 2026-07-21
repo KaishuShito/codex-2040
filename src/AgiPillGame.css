@@ -1,0 +1,154 @@
+.pill-game,
+.pill-intro { min-height: 100vh; background: #050911; color: #eaf7ff; }
+.pill-game { padding-top: 98px; }
+.pill-intro { display: grid; place-items: center; position: relative; overflow: hidden; background: radial-gradient(circle at 50% 45%, #48204d 0, #101324 38%, #04070c 74%); }
+.pill-intro__grid { position: absolute; inset: 0; opacity: .25; background: linear-gradient(#7ad8ff22 1px, transparent 1px), linear-gradient(90deg, #7ad8ff22 1px, transparent 1px); background-size: 48px 48px; transform: perspective(480px) rotateX(55deg) scale(1.4) translateY(25%); }
+.pill-intro > section { width: min(760px, calc(100% - 40px)); position: relative; text-align: center; }
+.pill-intro span,
+.pill-game__topbar,
+.pill-event > span,
+.pill-programs header span,
+.pill-sources header span,
+.pill-ending > span { font: 800 10px/1.2 ui-monospace, monospace; letter-spacing: .16em; color: #ff9bf1; }
+.pill-intro h1 { margin: 15px 0; font-size: clamp(44px, 9vw, 100px); line-height: .9; letter-spacing: -.08em; }
+.pill-intro p { color: #b8c6d2; font-size: 16px; line-height: 1.7; }
+.pill-intro__loop { margin: 30px 0; display: flex; justify-content: center; align-items: center; gap: 15px; font: 800 clamp(16px, 3vw, 30px)/1 ui-monospace, monospace; color: #8ee8ff; }
+.pill-intro__loop i { color: #ff89ed; }
+.pill-intro__warning { border-left: 2px solid #ffcc67; padding: 12px 16px; background: #171621; text-align: left; font-size: 13px !important; }
+.pill-intro__restore { color: #8fffc1 !important; }
+.pill-intro__actions { display: flex; justify-content: center; gap: 10px; }
+.pill-intro button,
+.pill-game button { font: 700 11px/1.2 ui-monospace, monospace; cursor: pointer; }
+.pill-intro button { border: 1px solid #af5eb0; background: #4b234b; color: #fff; padding: 14px 20px; }
+.pill-intro button + button { background: #101a25; border-color: #36566b; }
+
+.pill-game__topbar { position: fixed; z-index: 900; inset: 0 0 auto; min-height: 45px; padding: 8px 18px; box-sizing: border-box; display: flex; justify-content: space-between; align-items: center; gap: 20px; background: rgba(4, 9, 16, .94); border-bottom: 1px solid #273a4b; }
+.pill-game__topbar > div { display: flex; align-items: center; gap: 15px; }
+.pill-game__topbar b { color: #ff9bf1; font-size: 12px; }
+.pill-game__topbar span { color: #d8edf7; }
+.pill-game__topbar em { color: #7892a5; font-style: normal; }
+.pill-game__topbar nav { display: flex; gap: 5px; }
+.pill-game__topbar button,
+.pill-game__controls button { border: 1px solid #294557; background: #0e1a24; color: #aec9d8; padding: 7px 9px; }
+
+.pill-game__controls { position: fixed; z-index: 850; inset: 45px 0 auto; min-height: 53px; box-sizing: border-box; padding: 8px 18px; display: grid; grid-template-columns: auto 1fr auto; gap: 10px; align-items: center; background: rgba(6, 12, 20, .95); border-bottom: 1px solid #1c3545; }
+.pill-speed,
+.pill-policies { display: flex; gap: 5px; overflow-x: auto; }
+.pill-game__controls button.is-active { color: #fff; border-color: #a76fae; background: #3b213e; }
+.pill-programs-button { color: #ffe29b !important; border-color: #6a5734 !important; }
+
+.pill-warning { margin: 10px 18px; border: 1px solid #d05b67; background: linear-gradient(90deg, #38151c, #150d15); padding: 15px 18px; display: grid; grid-template-columns: 1fr auto auto; gap: 18px; align-items: center; }
+.pill-warning span { color: #ff8e98; font: 800 10px/1 ui-monospace, monospace; letter-spacing: .16em; }
+.pill-warning h2 { margin: 6px 0 2px; font-size: 19px; }
+.pill-warning p { margin: 0; color: #cdaeb3; }
+.pill-warning > div:nth-child(2) { text-align: center; }
+.pill-warning > div:nth-child(2) b { display: block; font-size: 23px; color: #ffadb4; }
+.pill-warning small { color: #85f5bc; }
+.pill-warning nav { display: flex; gap: 5px; flex-wrap: wrap; }
+.pill-warning button { border: 1px solid #7c4b54; background: #351c22; color: #fff; padding: 7px; }
+
+.pill-game__ledger { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding: 0 18px 22px; }
+.pill-game__ledger article { border: 1px solid #203848; background: #08111a; padding: 13px; }
+.pill-game__ledger article > span { color: #7698ab; font: 800 10px/1 ui-monospace, monospace; letter-spacing: .14em; }
+.pill-game__ledger p { display: grid; grid-template-columns: minmax(120px, 1fr) repeat(3, auto); gap: 12px; margin: 10px 0 0; padding-top: 8px; border-top: 1px solid #172b38; font: 11px/1.2 ui-monospace, monospace; color: #8fafc1; }
+.pill-game__ledger i { font-style: normal; }
+
+.pill-modal { position: fixed; z-index: 1200; inset: 0; background: rgba(1, 4, 8, .86); display: grid; grid-template-columns: minmax(0, 1fr); place-items: center; padding: 20px; box-sizing: border-box; backdrop-filter: blur(8px); }
+.pill-event,
+.pill-programs,
+.pill-sources,
+.pill-ending { width: 100%; max-width: 1000px; min-width: 0; max-height: calc(100vh - 40px); overflow: auto; overflow-wrap: anywhere; box-sizing: border-box; border: 1px solid #714f75; background: linear-gradient(145deg, #1f1327, #09121c 65%); padding: clamp(22px, 5vw, 48px); box-shadow: 0 0 80px #b14db52a; }
+.pill-event h2,
+.pill-programs h2,
+.pill-sources h2,
+.pill-ending h2 { margin: 8px 0 12px; font-size: clamp(28px, 5vw, 52px); letter-spacing: -.045em; }
+.pill-event > p,
+.pill-programs > p,
+.pill-sources > p,
+.pill-ending > p { color: #b5c7d1; line-height: 1.65; }
+.pill-event blockquote { margin: 20px 0; border-left: 2px solid #ffb4f3; padding: 10px 16px; background: #1b1724; color: #f4d9ef; }
+.pill-event > div { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.pill-event > div button { border: 1px solid #476478; background: #0d1a24; color: #dff7ff; padding: 16px; text-align: left; display: grid; gap: 8px; }
+.pill-event > div button:hover { border-color: #ff91ec; background: #2f1932; }
+.pill-event button b { font-size: 15px; }
+.pill-event button span { color: #9db8c8; line-height: 1.5; }
+.pill-event button small { color: #82dcae; line-height: 1.45; }
+
+.pill-programs header,
+.pill-sources header { display: flex; justify-content: space-between; align-items: flex-start; }
+.pill-programs header > button,
+.pill-sources header > button { border: 0; background: transparent; color: #fff; font-size: 30px; }
+.pill-programs > div,
+.pill-sources > div { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 9px; }
+.pill-programs article,
+.pill-sources article { border: 1px solid #273f4d; background: #09141d; padding: 14px; display: flex; flex-direction: column; min-height: 220px; }
+.pill-programs article > span,
+.pill-sources article > span { color: #81d9e9; font: 800 9px/1.2 ui-monospace, monospace; letter-spacing: .12em; text-transform: uppercase; }
+.pill-programs h3,
+.pill-sources h3 { margin: 9px 0 5px; }
+.pill-programs p,
+.pill-sources p { color: #9eb4c0; font-size: 12px; line-height: 1.45; }
+.pill-programs small { color: #d8aeb4; line-height: 1.4; }
+.pill-programs article button { margin-top: auto; border: 1px solid #46687b; background: #112a38; color: #fff; padding: 8px; }
+.pill-programs article button:disabled { opacity: .45; cursor: not-allowed; }
+.pill-sources article a { margin-top: auto; color: #8de6ff; }
+.pill-sources article small { margin-top: auto; color: #6f8290; }
+.pill-sources .pill-source__caveat { border-left: 2px solid #ae7f50; padding-left: 8px; color: #cdbda8; }
+.pill-sources .pill-source__caveat b { color: #e7c588; }
+
+.pill-modal--ending { background: radial-gradient(circle, #3b1e4be8, #020509f5 65%); }
+.pill-ending { text-align: center; }
+.pill-ending > div { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; margin: 22px 0; }
+.pill-ending > div b { border: 1px solid #3a596d; padding: 9px; color: #a8e7f5; }
+.pill-ending__actions { display: flex; justify-content: center; flex-wrap: wrap; gap: 10px; }
+.pill-ending__actions button { border: 1px solid #bd72b9; background: #462443; color: #fff; padding: 13px 20px; }
+.pill-ending__actions button:last-child { background: transparent; border-color: #4e7389; }
+.pill-source-link { margin-top: 12px; border: 1px solid #43697d; background: #102330; color: #bfeaff; padding: 9px 13px; }
+.pill-recovery { margin: 0 22px 12px; border: 1px solid #4f8c72; background: #081c1a; padding: 12px; }
+.pill-recovery > span { color: #78e4b4; font: 800 10px/1.2 ui-monospace, monospace; letter-spacing: .16em; }
+.pill-recovery article { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-top: 1px solid #224a3c; margin-top: 9px; padding-top: 9px; }
+.pill-recovery p { margin: 4px 0; color: #b9d2ca; }
+.pill-recovery small { color: #78e4b4; }
+.pill-recovery button, .pill-horizon-review > button { flex: 0 0 auto; border: 1px solid #65b894; background: #173f32; color: #fff; padding: 10px 14px; }
+.pill-horizon-review__metrics { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
+.pill-horizon-review__metrics b { border: 1px solid #3a596d; padding: 8px; color: #a8e7f5; }
+
+@media (max-width: 760px) {
+  .pill-game { padding-top: 142px; }
+  .pill-game__topbar { align-items: flex-start; }
+  .pill-game__topbar > div { flex-wrap: wrap; gap: 6px 10px; }
+  .pill-game__topbar nav { max-width: 45%; flex-wrap: wrap; justify-content: flex-end; }
+  .pill-game__controls { top: 72px; grid-template-columns: 1fr auto; }
+  .pill-policies { grid-column: 1 / -1; }
+  .pill-warning { grid-template-columns: 1fr auto; }
+  .pill-warning nav { grid-column: 1 / -1; }
+  .pill-game__ledger { grid-template-columns: 1fr; }
+  .pill-event > div,
+  .pill-programs > div,
+  .pill-sources > div { grid-template-columns: 1fr; }
+}
+
+@media (max-height: 520px) and (orientation: landscape) {
+  .pill-game { padding-top: 86px; }
+  .pill-game__topbar { min-height: 37px; padding: 4px 10px; }
+  .pill-game__controls { top: 37px; min-height: 49px; padding: 5px 10px; }
+  .pill-warning { margin: 5px 10px; padding: 7px 10px; }
+  .pill-warning h2 { font-size: 14px; }
+  .pill-warning p { font-size: 11px; }
+  .pill-game__ledger { padding: 0 10px 10px; }
+  .pill-event,
+  .pill-programs,
+  .pill-sources,
+  .pill-ending { padding: 18px 22px; max-height: calc(100vh - 16px); }
+  .pill-event h2,
+  .pill-programs h2,
+  .pill-sources h2,
+  .pill-ending h2 { font-size: 25px; margin: 4px 0; }
+  .pill-recovery { margin: 0 8px 8px; padding: 9px; }
+  .pill-recovery article { align-items: flex-start; }
+  .pill-recovery p { display: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pill-game *, .pill-intro * { animation: none !important; transition: none !important; }
+}

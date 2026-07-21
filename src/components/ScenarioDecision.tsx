@@ -23,6 +23,7 @@ export type ScenarioDecisionOptions = readonly [
 ]
 
 export type ScenarioDecisionProps = {
+  locale?: 'ja' | 'en'
   open: boolean
   milestone: 'choose-path-2029' | 'hold-the-line-2035'
   source: ScenarioSource
@@ -40,17 +41,18 @@ export type ScenarioDecisionProps = {
 const milestoneCopy = {
   'choose-path-2029': {
     year: '2029',
-    eyebrow: '進路選択',
-    prompt: '能力開発競争のルールを決めてください。',
+    eyebrow: { ja: '進路選択', en: 'Choose a path' },
+    prompt: { ja: '能力開発競争のルールを決めてください。', en: 'Choose the rules for the capability race.' },
   },
   'hold-the-line-2035': {
     year: '2035',
-    eyebrow: '方針を堅持',
-    prompt: '競争圧力の中でも、計画的な停止を維持するか決めてください。',
+    eyebrow: { ja: '方針を堅持', en: 'Hold the line' },
+    prompt: { ja: '競争圧力の中でも、計画的な停止を維持するか決めてください。', en: 'Decide whether to maintain the deliberate pause under competitive pressure.' },
   },
 } as const
 
 export function ScenarioDecision({
+  locale = 'ja',
   open,
   milestone,
   source,
@@ -61,7 +63,7 @@ export function ScenarioDecision({
   whyThisMatters,
   onSelect,
   onConfirm,
-  confirmLabel = '決定して再開',
+  confirmLabel,
   isSubmitting = false,
 }: ScenarioDecisionProps) {
   const titleId = useId()
@@ -138,14 +140,14 @@ export function ScenarioDecision({
       >
         <div className="scenario-dialog__signal" aria-hidden="true" />
         <header className="scenario-decision__header">
-          <div className="scenario-year" aria-label={`${copy.year}年`}>
+          <div className="scenario-year" aria-label={locale === 'ja' ? `${copy.year}年` : `Year ${copy.year}`}>
             <span>{copy.year}</span>
-            <small>{copy.eyebrow}</small>
+            <small>{copy.eyebrow[locale]}</small>
           </div>
           <div className="scenario-decision__heading">
             <div className="scenario-kicker">
-              <span className="scenario-pause"><i /> シミュレーション一時停止</span>
-              <span className="scenario-source">出典 · {source.label}</span>
+              <span className="scenario-pause"><i /> {locale === 'ja' ? 'シミュレーション一時停止' : 'Simulation paused'}</span>
+              <span className="scenario-source">{locale === 'ja' ? '出典' : 'Source'} · {source.label}</span>
             </div>
             <h2 id={titleId}>{title}</h2>
             <p id={descriptionId}>{context}</p>
@@ -153,11 +155,11 @@ export function ScenarioDecision({
         </header>
 
         <div className="scenario-decision__prompt">
-          <span>判断が必要</span>
-          <strong>{copy.prompt}</strong>
+          <span>{locale === 'ja' ? '判断が必要' : 'Decision required'}</span>
+          <strong>{copy.prompt[locale]}</strong>
         </div>
 
-        <div className="scenario-options" role="radiogroup" aria-label={`${copy.year}年の選択肢`}>
+        <div className="scenario-options" role="radiogroup" aria-label={locale === 'ja' ? `${copy.year}年の選択肢` : `${copy.year} options`}>
           {options.map((option, index) => {
             const selected = option.id === selectedOptionId
             return (
@@ -176,7 +178,7 @@ export function ScenarioDecision({
                 <span className="scenario-option__copy">
                   <strong>{option.title}</strong>
                   <span>{option.summary}</span>
-                  <small><b>影響</b>{option.consequence}</small>
+                  <small><b>{locale === 'ja' ? '影響' : 'Impact'}</b>{option.consequence}</small>
                 </span>
               </button>
             )
@@ -185,17 +187,17 @@ export function ScenarioDecision({
 
         <div className="scenario-learning">
           <details>
-            <summary>なぜ重要か <span aria-hidden="true">+</span></summary>
+            <summary>{locale === 'ja' ? 'なぜ重要か' : 'Why this matters'} <span aria-hidden="true">+</span></summary>
             <p>{whyThisMatters}</p>
           </details>
           <a href={source.href} target="_blank" rel="noreferrer">
-            {source.linkLabel ?? `${source.label} の出典を開く`} <span aria-hidden="true">↗</span>
+            {source.linkLabel ?? (locale === 'ja' ? `${source.label} の出典を開く` : `Open ${source.label} source`)} <span aria-hidden="true">↗</span>
           </a>
         </div>
 
         <footer className="scenario-decision__footer">
           <p aria-live="polite">
-            {selectedOption ? <><span>選択中</span>{selectedOption.title}</> : '選択肢を選ぶとシミュレーションを再開できます。'}
+            {selectedOption ? <><span>{locale === 'ja' ? '選択中' : 'Selected'}</span>{selectedOption.title}</> : (locale === 'ja' ? '選択肢を選ぶとシミュレーションを再開できます。' : 'Choose an option to resume the simulation.')}
           </p>
           <button
             type="button"
@@ -203,7 +205,7 @@ export function ScenarioDecision({
             disabled={!selectedOption || isSubmitting}
             onClick={() => selectedOption && onConfirm(selectedOption.id)}
           >
-            {isSubmitting ? '反映中…' : confirmLabel}<span aria-hidden="true">→</span>
+            {isSubmitting ? (locale === 'ja' ? '反映中…' : 'Applying…') : (confirmLabel ?? (locale === 'ja' ? '決定して再開' : 'Confirm and resume'))}<span aria-hidden="true">→</span>
           </button>
         </footer>
       </div>

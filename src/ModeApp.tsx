@@ -37,7 +37,7 @@ export default function ModeApp() {
           <span><b>STANDARD</b> // {locale === 'ja' ? '優等生版' : 'Governed takeoff'}</span>
           <button type="button" onClick={chooseAnother}>{locale === 'ja' ? 'モード選択' : 'Choose mode'}</button>
         </header>
-        <App />
+        <App locale={locale} />
       </div>
     )
   }

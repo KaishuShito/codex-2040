@@ -82,6 +82,7 @@ type RewardBurst = {
 }
 
 export type WorldMapProps = {
+  locale?: 'ja' | 'en'
   regions: Readonly<Partial<Record<WorldMapRegionId, WorldMapRegionIntensity>>>
   selectedRegion?: WorldMapRegionId | null
   onRegionClick: (regionId: WorldMapRegionId) => void
@@ -270,6 +271,7 @@ const buildMarketDots = (
 }
 
 export default function WorldMap({
+  locale = 'ja',
   regions,
   selectedRegion = null,
   onRegionClick,
@@ -281,7 +283,7 @@ export default function WorldMap({
   rewardBubbles = [],
   onRewardBubbleClick,
   className = '',
-  ariaLabel = '世界のAI利用と教育ネットワークの操作マップ',
+  ariaLabel = locale === 'ja' ? '世界のAI利用と教育ネットワークの操作マップ' : 'Interactive map of global AI use and education networks',
 }: WorldMapProps) {
   const rawId = useId().replaceAll(':', '')
   const glowId = `world-map-glow-${rawId}`
@@ -340,7 +342,7 @@ export default function WorldMap({
   return (
     <figure
       className={`world-map${competitiveView ? ' is-competitive' : ''} ${className}`.trim()}
-      aria-label={competitiveView ? `${ariaLabel}。${competitiveView.label}の推定市場分布。` : ariaLabel}
+      aria-label={competitiveView ? (locale === 'ja' ? `${ariaLabel}。${competitiveView.label}の推定市場分布。` : `${ariaLabel}. Estimated ${competitiveView.label} market distribution.`) : ariaLabel}
       style={competitiveView ? { '--rival-color': competitiveView.color.join(', ') } as CSSProperties : undefined}
     >
       <svg
@@ -393,8 +395,8 @@ export default function WorldMap({
               '--rival-share': rivalShare.toFixed(3),
             } as CSSProperties
             const marketLabel = competitiveView
-              ? `${competitiveView.label}の推定シェア ${percent(rivalShare)}`
-              : `Codexシェア ${percent(codexShare)}`
+              ? (locale === 'ja' ? `${competitiveView.label}の推定シェア ${percent(rivalShare)}` : `${competitiveView.label} estimated share ${percent(rivalShare)}`)
+              : (locale === 'ja' ? `Codexシェア ${percent(codexShare)}` : `Codex share ${percent(codexShare)}`)
 
             return (
               <path
@@ -405,11 +407,11 @@ export default function WorldMap({
                 role="button"
                 tabIndex={0}
                 aria-pressed={isSelected}
-                aria-label={`${label}。AI利用率 ${percent(adoption)}。${marketLabel}。`}
+                aria-label={locale === 'ja' ? `${label}。AI利用率 ${percent(adoption)}。${marketLabel}。` : `${label}. AI adoption ${percent(adoption)}. ${marketLabel}.`}
                 onClick={() => onRegionClick(regionId)}
                 onKeyDown={(event) => keyboardActivate(event, () => onRegionClick(regionId))}
               >
-                <title>{label}: AI利用率 {percent(adoption)}、{marketLabel}</title>
+                <title>{`${label}: ${locale === 'ja' ? 'AI利用率' : 'AI adoption'} ${percent(adoption)}, ${marketLabel}`}</title>
               </path>
             )
           })}
@@ -460,7 +462,7 @@ export default function WorldMap({
                 style={{ opacity: fade }}
                 role="button"
                 tabIndex={0}
-                aria-label={`計算資源を回収、プラス${bubble.reward} PF。Collect plus ${bubble.reward} PF near ${city}.`}
+                aria-label={locale === 'ja' ? `計算資源を回収、プラス${bubble.reward} PF。Collect plus ${bubble.reward} PF near ${city}.` : `Collect ${bubble.reward} PF near ${city}.`}
                 onClick={(event) => { event.stopPropagation(); collect() }}
                 onKeyDown={(event) => {
                   if (event.key !== 'Enter' && event.key !== ' ') return
@@ -468,7 +470,7 @@ export default function WorldMap({
                   keyboardActivate(event, collect)
                 }}
               >
-                <title>計算資源 +{bubble.reward} PF / Collect +{bubble.reward} PF — {city}</title>
+                <title>{`${locale === 'ja' ? '計算資源' : 'Compute'} +${bubble.reward} PF — ${city}`}</title>
                 <circle className="world-map__reward-bubble-wave" r="11" />
                 <circle className="world-map__reward-bubble-core" r="7" />
                 <text y="2.4">+{bubble.reward}</text>
@@ -528,7 +530,7 @@ export default function WorldMap({
               if (marker.regionId) onRegionClick(marker.regionId)
             }
             const actionable = Boolean(onMarkerClick || marker.regionId)
-            const source = marker.sourceLabel ? ` 出典: ${marker.sourceLabel}。` : ''
+            const source = marker.sourceLabel ? ` ${locale === 'ja' ? '出典' : 'Source'}: ${marker.sourceLabel}.` : ''
             return (
               <g
                 key={marker.id}
@@ -541,7 +543,7 @@ export default function WorldMap({
                 onClick={actionable ? activate : undefined}
                 onKeyDown={actionable ? (event) => keyboardActivate(event, activate) : undefined}
               >
-                <title>{marker.label}{marker.sourceLabel ? ` — ${marker.sourceLabel}` : ''}</title>
+                <title>{`${marker.label}${marker.sourceLabel ? ` — ${marker.sourceLabel}` : ''}`}</title>
                 <circle className="world-map__marker-ring" r="9" />
                 <path className="world-map__marker-diamond" d="M0-4 4 0 0 4-4 0Z" />
                 <line x1="0" y1="11" x2="0" y2="19" />
@@ -559,11 +561,11 @@ export default function WorldMap({
       </svg>
 
       <figcaption className="world-map__legend">
-        <span><i className="world-map__legend-users" /> {competitiveView ? `${competitiveView.label} 利用者` : 'CODEX利用者'}</span>
-        <span><i className="world-map__legend-access" /> AIアクセス</span>
-        <span><i className="world-map__legend-event" /> シナリオイベント</span>
+        <span><i className="world-map__legend-users" /> {competitiveView ? `${competitiveView.label} ${locale === 'ja' ? '利用者' : 'users'}` : (locale === 'ja' ? 'CODEX利用者' : 'CODEX users')}</span>
+        <span><i className="world-map__legend-access" /> {locale === 'ja' ? 'AIアクセス' : 'AI access'}</span>
+        <span><i className="world-map__legend-event" /> {locale === 'ja' ? 'シナリオイベント' : 'Scenario event'}</span>
       </figcaption>
-      <span className="world-map__coordinate" aria-hidden="true">{competitiveView ? `${competitiveView.label} 市場分析` : '世界アクセス網 · 110M'}</span>
+      <span className="world-map__coordinate" aria-hidden="true">{competitiveView ? `${competitiveView.label} ${locale === 'ja' ? '市場分析' : 'market analysis'}` : (locale === 'ja' ? '世界アクセス網 · 110M' : 'GLOBAL ACCESS NETWORK · 110M')}</span>
     </figure>
   )
 }

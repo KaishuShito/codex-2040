@@ -84,7 +84,7 @@ Switch to Fast Forward. The Build Week Tokyo World Brief stops the clock on 2026
 Show the three active source badges. Ask the Advisor about the current tradeoff, then execute the recommended deterministic action yourself.
 
 **1:45–2:35 — Call the OpenAI Voice Agent**
-Open Voice Operator and ask Kibo to reset the in-game Tibo token limit. Show the agent's spoken confirmation request, give a short explicit approval, then show the function tool execute once and pulse the map.
+Open Voice Operator and ask TIBO to reset the in-game Tibo token limit. Show the agent's spoken confirmation request, give a short explicit approval, then show the function tool execute once and pulse the map.
 
 **2:35–2:55 — Show verification and the safety boundary**
 Show the test result and briefly name the replay, clamp, retry, bridge, branch, and ending coverage.

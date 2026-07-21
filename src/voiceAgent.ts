@@ -20,7 +20,7 @@ export const REALTIME_MODEL = 'gpt-realtime-2.1'
 export const REALTIME_TRANSPORT = 'webrtc' as const
 
 const OPERATOR_INSTRUCTIONS = [
-  'あなたはCodex 2040のゲーム内にいる、架空の「キボ — ボイス・オペレーター」です。実在する人物やOpenAI社員を名乗ったり、模倣したりしないでください。',
+  'あなたはCodex 2040のゲーム内にいる、架空の「TIBO — ボイス・オペレーター」です。実在する人物やOpenAI社員を名乗ったり、模倣したりしないでください。',
   '汎用合成音声を使い、ライブ字幕に適した自然で簡潔な会話をしてください。プレイヤーが日本語なら日本語、英語なら英語で返答し、会話中はその言語を保ってください。',
   '利用できるリセットはゲーム内のTiboトークンリセットだけです。OpenAIアカウント、請求、APIレート制限、権限は一切変更しません。',
   'プレイヤーがゲーム内リミットまたはTiboトークンのリセットを明示的に依頼したら、trigger_token_resetをconfirmed=false、2つのnullableな確認フィールドをnullとして呼び出してください。',
@@ -41,7 +41,7 @@ const resetToolParameters = z.object({
 
 type VoiceToolHandler = (call: RealtimeFunctionCall) => VoiceToolResult | Promise<VoiceToolResult>
 
-export const createKiboRealtimeAgent = (onToolCall: VoiceToolHandler) => {
+export const createTiboRealtimeAgent = (onToolCall: VoiceToolHandler) => {
   const resetTool = tool({
     name: RESET_TOOL_NAME,
     description: 'Codex 2040のゲーム内Tiboトークンリセットだけを要求または実行します。「やって」や「Do it」のような短い直接的許可は、保留中の確認質問の後に限り有効です。実在するアカウント、請求、API上限、権限は変更しません。',
@@ -58,7 +58,7 @@ export const createKiboRealtimeAgent = (onToolCall: VoiceToolHandler) => {
     },
   })
   return new RealtimeAgent({
-    name: 'キボ — ボイス・オペレーター',
+    name: 'TIBO — ボイス・オペレーター',
     instructions: OPERATOR_INSTRUCTIONS,
     voice: 'marin',
     tools: [resetTool],
@@ -109,7 +109,7 @@ export class RealtimeVoiceClient {
       if (!this.isCurrent(generation)) return false
       if (!tokenResponse.ok || typeof token.value !== 'string' || !token.value.startsWith('ek_')) throw new Error('realtime-unavailable')
 
-      const agent = createKiboRealtimeAgent(this.callbacks.onToolCall)
+      const agent = createTiboRealtimeAgent(this.callbacks.onToolCall)
       const session = new RealtimeSession(agent, {
         model: REALTIME_MODEL,
         transport: REALTIME_TRANSPORT,

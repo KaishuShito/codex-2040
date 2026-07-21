@@ -1,3 +1,4 @@
+import { readFileSync } from 'node:fs'
 import { describe, expect, it } from 'vitest'
 import {
   buildWorldlineShareText,
@@ -9,6 +10,16 @@ import {
 } from './EndingOverlay'
 
 describe('anonymous worldline receipt helpers', () => {
+  it('keeps the Standard ending reachable on compact landscape phones', () => {
+    const css = readFileSync(new URL('./ScenarioUI.css', import.meta.url), 'utf8')
+    const landscapeEndingRules = css.slice(css.indexOf('/* Standard ending: compact landscape phones'))
+
+    expect(landscapeEndingRules).toContain('(min-width: 721px) and (max-width: 900px) and (max-height: 520px)')
+    expect(landscapeEndingRules).toContain('.scenario-overlay--ending .ending-market__rows { grid-template-columns: repeat(2, minmax(0, 1fr)); }')
+    expect(landscapeEndingRules).toContain('.scenario-overlay--ending .ending-comparison__row { grid-template-columns: minmax(96px, .7fr) repeat(3, minmax(0, 1fr)); }')
+    expect(landscapeEndingRules).toContain('.scenario-overlay--ending .ending-footer > div { flex: 0 1 auto; flex-wrap: wrap; justify-content: flex-end; }')
+  })
+
   it('formats active play time without inventing a value for local-only results', () => {
     expect(formatActivePlayTime(null)).toBe('—')
     expect(formatActivePlayTime(65)).toBe('1:05')

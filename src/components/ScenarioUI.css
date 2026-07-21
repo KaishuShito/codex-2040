@@ -1220,6 +1220,48 @@
   .scenario-primary-action { min-height: 34px; }
 }
 
+/* Standard ending: compact landscape phones sit above the stacked-phone breakpoint. */
+@media (orientation: landscape) and (min-width: 721px) and (max-width: 900px) and (max-height: 520px) {
+  .scenario-overlay--ending .ending-dialog { overflow-x: hidden; }
+
+  .scenario-overlay--ending .ending-hero { grid-template-columns: 132px minmax(0, 1fr); }
+  .scenario-overlay--ending .ending-rank { min-height: 142px; }
+  .scenario-overlay--ending .ending-rank strong { font-size: 62px; }
+  .scenario-overlay--ending .ending-heading { min-width: 0; padding: 14px 18px; }
+  .scenario-overlay--ending .ending-label { margin-top: 10px; }
+  .scenario-overlay--ending .ending-heading h2 { margin-block: 10px 5px; font-size: 25px; }
+  .scenario-overlay--ending .ending-summary { font-size: 11px; line-height: 1.4; }
+
+  .scenario-overlay--ending .worldline-receipt,
+  .scenario-overlay--ending .ending-market { padding-inline: 16px; }
+  .scenario-overlay--ending .worldline-receipt__facts { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .scenario-overlay--ending .worldline-receipt__facts > div { min-width: 0; padding: 10px; border-bottom: 1px solid #1d3027; }
+  .scenario-overlay--ending .worldline-receipt__facts dd { overflow-wrap: anywhere; }
+  .scenario-overlay--ending .worldline-share { flex-wrap: wrap; }
+  .scenario-overlay--ending .worldline-share > div { flex-wrap: wrap; }
+
+  .scenario-overlay--ending .ending-market__heading { align-items: flex-start; gap: 12px; }
+  .scenario-overlay--ending .ending-market__heading > * { min-width: 0; flex: 1; }
+  .scenario-overlay--ending .ending-market__heading p { max-width: none; overflow-wrap: anywhere; text-align: left; }
+  .scenario-overlay--ending .ending-market__rows { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .scenario-overlay--ending .ending-market__rows > div { min-width: 0; }
+
+  .scenario-overlay--ending .ending-review { padding-inline: 16px; }
+  .scenario-overlay--ending .ending-review__intro { grid-template-columns: minmax(0, 1fr) 26px minmax(0, 1fr); gap: 10px; padding-block: 14px; }
+  .scenario-overlay--ending .ending-review__intro div:last-child { min-width: 0; padding-left: 12px; }
+  .scenario-overlay--ending .ending-review__intro p { overflow-wrap: anywhere; }
+  .scenario-overlay--ending .ending-comparison__header,
+  .scenario-overlay--ending .ending-comparison__row { grid-template-columns: minmax(96px, .7fr) repeat(3, minmax(0, 1fr)); }
+  .scenario-overlay--ending .ending-comparison__header span,
+  .scenario-overlay--ending .ending-comparison__row > * { min-width: 0; padding: 9px; overflow-wrap: anywhere; }
+
+  .scenario-overlay--ending .ending-footer { gap: 12px; padding: 12px 16px 16px; }
+  .scenario-overlay--ending .ending-footer blockquote { min-width: 0; flex: 1; font-size: 11px; }
+  .scenario-overlay--ending .ending-footer > div { flex: 0 1 auto; flex-wrap: wrap; justify-content: flex-end; }
+  .scenario-overlay--ending .ending-footer .scenario-primary-action,
+  .scenario-overlay--ending .ending-footer .scenario-secondary-action { max-width: 100%; min-height: 34px; padding-inline: 12px; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .scenario-overlay,
   .scenario-dialog,

@@ -1,7 +1,27 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import App from './App'
-import { STANDARD_COPY, STANDARD_TUTORIAL_STEPS } from './standardI18n'
+import {
+  addFeature,
+  buyUpgrade,
+  choose2029,
+  choose2035,
+  createInitialState,
+  introduceRegion,
+  openEcosystem,
+  requestComputeLifeline,
+  triggerReset,
+  type NewsItem,
+} from './engine'
+import { WORLD_EVENTS } from './worldEvents/catalog'
+import {
+  STANDARD_COPY,
+  STANDARD_TUTORIAL_STEPS,
+  getStandardWorldEventCopy,
+  localizeStandardNewsHeadline,
+} from './standardI18n'
+
+const japaneseText = /[ぁ-んァ-ヶ一-龠]/u
 
 describe('Standard locale contract', () => {
   it('renders the English Standard start and representative runtime surfaces without Japanese chrome', () => {
@@ -20,6 +40,10 @@ describe('Standard locale contract', () => {
     expect(html).not.toContain('計算予算')
     expect(html).not.toContain('世界テレメトリ')
     expect(html).not.toContain('人類絶滅リスク')
+    expect(html).toContain('CODEX expansion protocol begins')
+    expect(html).toContain('Development agents reach a new reliability threshold')
+    expect(html).not.toContain('CODEX拡大プロトコルが始動')
+    expect(html).not.toContain('開発エージェントが新たな信頼性水準へ')
   })
 
   it('preserves Japanese as the default and explicit locale', () => {
@@ -45,5 +69,45 @@ describe('Standard locale contract', () => {
         expect(value.en.trim()).not.toBe('')
       }
     }
+  })
+
+  it('provides deterministic English copy for every authored world event and combo', () => {
+    for (const definition of WORLD_EVENTS) {
+      const base = getStandardWorldEventCopy('en', definition)
+      expect(base.headline, definition.id).not.toMatch(japaneseText)
+      expect(base.cause, definition.id).not.toMatch(japaneseText)
+      expect(base.flavor, definition.id).not.toMatch(japaneseText)
+      expect(base.headline.trim(), definition.id).not.toBe('')
+      for (const combo of definition.combos ?? []) {
+        const copy = getStandardWorldEventCopy('en', definition, combo)
+        expect(copy.headline, combo.id).not.toMatch(japaneseText)
+        expect(copy.comboLabel, combo.id).not.toMatch(japaneseText)
+        if (copy.comboHeadline) expect(copy.comboHeadline, combo.id).not.toMatch(japaneseText)
+      }
+      expect(getStandardWorldEventCopy('ja', definition).headline).toBe(definition.headline)
+    }
+  })
+
+  it('localizes deterministic and player-action news while marking external GM copy explicitly', () => {
+    const initial = createInitialState()
+    const actionStates = [
+      introduceRegion(initial, 'africa'),
+      triggerReset(initial),
+      openEcosystem(initial),
+      requestComputeLifeline({ ...initial, compute: 0 }),
+      buyUpgrade(initial, 'safety'),
+      addFeature(initial, 'mobile access'),
+      choose2029(initial, 'verified-slowdown'),
+      choose2035(initial, 'hold-the-line'),
+    ]
+    const items = [...initial.news, ...actionStates.map((state) => state.news[0])]
+    for (const item of items) {
+      expect(localizeStandardNewsHeadline('en', item), item.headline).not.toMatch(japaneseText)
+      expect(localizeStandardNewsHeadline('ja', item)).toBe(item.headline)
+    }
+
+    const gm: NewsItem = { id: 999, date: '2030-01-01', tone: 'neutral', headline: '外部から届いた速報', source: 'Live GM' }
+    expect(localizeStandardNewsHeadline('en', gm)).toBe('LIVE GM // External briefing is available only in its source language')
+    expect(localizeStandardNewsHeadline('en', gm)).not.toMatch(japaneseText)
   })
 })

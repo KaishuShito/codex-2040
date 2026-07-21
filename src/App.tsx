@@ -95,7 +95,9 @@ import {
   STANDARD_REGION_LABELS,
   STANDARD_TRUST_FACTOR_LABELS,
   STANDARD_TUTORIAL_STEPS,
+  getStandardWorldEventCopy,
   getStandardCopy,
+  localizeStandardNewsHeadline,
   localizeStandard,
   type StandardLocale,
 } from './standardI18n'
@@ -338,6 +340,7 @@ export default function App({ locale = 'ja' }: AppProps) {
       ? definition?.combos?.find((combo) => combo.label === notice.comboLabel)
         ?? (definition?.combos?.length === 1 ? definition.combos[0] : undefined)
       : undefined
+    const eventCopy = definition ? getStandardWorldEventCopy(locale, definition, localizedCombo) : null
     const signed = (value: number, suffix = '') => `${value > 0 ? '+' : ''}${value}${suffix}`
     const effects = [
       notice.effect.usersDeltaPct !== 0 ? { label: locale === 'ja' ? 'AI利用者' : 'AI users', amount: signed(notice.effect.usersDeltaPct, '%'), tone: notice.effect.usersDeltaPct > 0 ? 'positive' as const : 'negative' as const } : null,
@@ -351,14 +354,14 @@ export default function App({ locale = 'ja' }: AppProps) {
       category: localizeStandard(locale, STANDARD_EVENT_CATEGORY_LABELS[notice.category]),
       date: notice.date,
       dateTime: notice.date,
-      headline: localizedCombo?.headline ?? definition?.headline ?? notice.headline,
-      cause: definition?.cause ?? notice.cause,
-      flavor: definition?.flavor ?? notice.flavor,
+      headline: eventCopy?.headline ?? (locale === 'ja' ? notice.headline : 'EXTERNAL WORLD EVENT // Source-language briefing'),
+      cause: eventCopy?.cause ?? (locale === 'ja' ? notice.cause : 'This external event was supplied without an authored English translation.'),
+      flavor: eventCopy?.flavor ?? (locale === 'ja' ? notice.flavor : 'Review the signed effects below before resuming the simulation.'),
       duration: locale === 'ja' ? `シミュレーション ${notice.ttlDays}日` : `Simulation ${notice.ttlDays} days`,
       effects: effects.length > 0 ? effects : [{ label: locale === 'ja' ? '時間軸' : 'Timeline', amount: locale === 'ja' ? '状況変化' : 'State changed', tone: 'neutral' }],
       combo: notice.comboLabel ? {
-        priorFeature: localizedCombo?.label ?? notice.comboFeature ?? notice.comboLabel,
-        outcome: `${localizedCombo?.label ?? notice.comboLabel}${notice.momentumDays > 0 ? ` · ${locale === 'ja' ? '勢い' : 'Momentum'} +${notice.momentumDays}${locale === 'ja' ? '日' : 'd'}` : ''}`,
+        priorFeature: eventCopy?.comboLabel ?? (locale === 'ja' ? (notice.comboFeature ?? notice.comboLabel) : 'Authored feature combination'),
+        outcome: `${eventCopy?.comboHeadline ?? eventCopy?.comboLabel ?? (locale === 'ja' ? notice.comboLabel : 'Feature combination activated')}${notice.momentumDays > 0 ? ` · ${locale === 'ja' ? '勢い' : 'Momentum'} +${notice.momentumDays}${locale === 'ja' ? '日' : 'd'}` : ''}`,
       } : undefined,
     }
   }, [locale, state.pendingWorldEvent])
@@ -1191,7 +1194,7 @@ export default function App({ locale = 'ja' }: AppProps) {
 
       <section className="intel-strip" aria-label={c('latestScenarioIntel')}>
         <div className="intel-strip__label"><Radio size={13} /> {c('scenarioIntel')}</div>
-        {latestNews && <div className="intel-strip__headline"><SourceBadge locale={locale} source={latestNews.source} /><OverflowTicker className="intel-strip__ticker" text={latestNews.headline} /></div>}
+        {latestNews && <div className="intel-strip__headline"><SourceBadge locale={locale} source={latestNews.source} /><OverflowTicker className="intel-strip__ticker" text={localizeStandardNewsHeadline(locale, latestNews)} /></div>}
         <div className="source-key" aria-label={c('sources')}>
           {(['AI 2027', 'AI 2040', 'Your Timeline'] as SourceLabel[]).map((source) => <SourceBadge locale={locale} source={source} key={source} />)}
         </div>
@@ -1271,7 +1274,7 @@ export default function App({ locale = 'ja' }: AppProps) {
             {criticalNews && !decisionKind && tutorialStep === null && !state.terminal && (
               <section className="critical-brief" data-crisis={isCrisisBrief} role="dialog" aria-modal="true" aria-labelledby="critical-brief-title">
                 <header><SourceBadge locale={locale} source={criticalNews.source} /><time>{criticalNews.date}</time><span>{isCrisisBrief ? (locale === 'ja' ? '重大情報' : 'CRITICAL INTEL') : (locale === 'ja' ? '世界情勢' : 'WORLD UPDATE')} · {locale === 'ja' ? '時間停止中' : 'TIME PAUSED'}</span></header>
-                <h2 id="critical-brief-title">{criticalNews.headline}</h2>
+                <h2 id="critical-brief-title">{localizeStandardNewsHeadline(locale, criticalNews)}</h2>
                 <p>{criticalCause}</p>
                 <dl>
                   <div><dt>{isExtinctionBrief ? c('extinctionRisk') : isCrisisBrief ? c('socialTrust') : (locale === 'ja' ? '信頼見通し' : 'Trust outlook')}</dt><dd>{isExtinctionBrief ? `${extinctionRiskPct}% · ${c('instantGameOver')}` : `${state.trust.toFixed(0)} → ${c('trustTarget')} ${trustCausality.target.toFixed(0)}`}</dd></div>
@@ -1365,7 +1368,7 @@ export default function App({ locale = 'ja' }: AppProps) {
             </div>
             <div className="event-ledger__list">
             {visibleNews.map((item) => (
-              <article key={item.id}><SourceBadge locale={locale} source={item.source} href={getEventSourceUrl(item.source, item.date)} /><time>{item.date}</time><b><OverflowTicker text={item.headline} /></b></article>
+              <article key={item.id}><SourceBadge locale={locale} source={item.source} href={getEventSourceUrl(item.source, item.date)} /><time>{item.date}</time><b><OverflowTicker text={localizeStandardNewsHeadline(locale, item)} /></b></article>
             ))}
             {visibleNews.length === 0 && <p className="event-ledger__empty">{c('noNews')}</p>}
             </div>

@@ -1,4 +1,8 @@
-import type { EndingId, RegionId } from './engine'
+import type { EndingId, NewsItem, RegionId } from './engine'
+import { RIVAL_NAMES } from './rivalStrategy'
+import { STRATEGY_CATALOG } from './strategyNodes/catalog'
+import { WORLD_EVENTS } from './worldEvents/catalog'
+import type { WorldEventCombo, WorldEventDefinition } from './worldEvents/types'
 
 export type StandardLocale = 'ja' | 'en'
 export type StandardLocalizedText = Readonly<Record<StandardLocale, string>>
@@ -97,6 +101,154 @@ export const STANDARD_COPY = {
 export type StandardCopyKey = keyof typeof STANDARD_COPY
 export const getStandardCopy = (locale: StandardLocale, key: StandardCopyKey): string => STANDARD_COPY[key][locale]
 export const localizeStandard = (locale: StandardLocale, value: StandardLocalizedText): string => value[locale]
+
+const JAPANESE_TEXT = /[ぁ-んァ-ヶ一-龠]/u
+
+const eventWord = (word: string) => ({
+  ai: 'AI', na: 'North American', qi: 'QI', goo: 'Goo', anthro: 'Anthro', codex: 'Codex',
+  sdk: 'SDK', sso: 'SSO', zero: 'zero', day: 'day', multiyear: 'multi-year',
+}[word] ?? word)
+
+/** Stable authored IDs double as translation keys, keeping saves and the engine locale-neutral. */
+export const standardEnglishLabelFromKey = (key: string): string => {
+  const words = key
+    .replace(/^(?:disaster|culture|policy|competition|technology)-(?:combo-)?/, '')
+    .split('-')
+    .filter(Boolean)
+    .map(eventWord)
+  const label = words.join(' ')
+  return label ? `${label[0].toUpperCase()}${label.slice(1)}` : 'World update'
+}
+
+const WORLD_EVENT_HEADLINE_OVERRIDES: Readonly<Record<string, string>> = {
+  'competition-anthro-frontier-launch': 'Anthro launches a high-trust frontier model',
+  'competition-goo-multimodal-launch': 'Goo unifies search, video, and agents in a new model',
+  'competition-qi-reasoning-launch': 'QI releases an efficient reasoning model',
+  'technology-advanced-packaging-shortage': 'Advanced chip-packaging slowdown constrains AI supply',
+  'technology-inference-compiler-breakthrough': 'New inference compiler cuts serving costs',
+  'policy-public-algorithm-audits': 'Public agencies mandate audits for high-impact AI',
+  'culture-valentines-connection-surge': 'Valentine advice surges across AI chat services',
+  'disaster-amazon-flooded-backbone': 'Amazon flooding disrupts regional network backbones',
+}
+
+const englishWorldEventHeadline = (definition: WorldEventDefinition, combo?: WorldEventCombo): string => {
+  if (combo?.headline) return standardEnglishLabelFromKey(combo.id)
+  return WORLD_EVENT_HEADLINE_OVERRIDES[definition.id] ?? standardEnglishLabelFromKey(definition.id)
+}
+
+const WORLD_EVENT_CAUSE_COPY: Readonly<Record<WorldEventDefinition['category'], string>> = {
+  disaster: 'Physical infrastructure and emergency conditions disrupted access across the affected region.',
+  culture: 'A rapid change in public behavior shifted how and why people use AI services.',
+  policy: 'Institutions responded to a gap between AI deployment and public rules or accountability.',
+  competition: 'A competitor converted its capabilities, distribution, or operating model into market pressure.',
+  technology: 'A change in hardware, software, or deployment methods altered the cost and capability frontier.',
+}
+
+const worldEventFlavor = (definition: WorldEventDefinition, combo?: WorldEventCombo): string => {
+  const effect = combo?.effect ?? definition.effect
+  const changes = [
+    effect.usersDeltaPct !== 0 ? 'access' : null,
+    effect.shareDelta !== 0 ? 'competitive share' : null,
+    effect.growthRateDelta !== 0 ? 'adoption momentum' : null,
+    effect.trustDelta !== 0 ? 'social trust' : null,
+  ].filter((value): value is string => value !== null)
+  return changes.length > 0
+    ? `The event changes ${changes.join(', ')} for the stated duration; the dashboard shows the signed effects.`
+    : 'The event changes the strategic context without an immediate numerical shock.'
+}
+
+export type StandardWorldEventCopy = Readonly<{
+  headline: string
+  cause: string
+  flavor: string
+  comboLabel?: string
+  comboHeadline?: string
+}>
+
+export const getStandardWorldEventCopy = (
+  locale: StandardLocale,
+  definition: WorldEventDefinition,
+  combo?: WorldEventCombo,
+): StandardWorldEventCopy => locale === 'ja'
+  ? {
+      headline: combo?.headline ?? definition.headline,
+      cause: definition.cause,
+      flavor: definition.flavor,
+      comboLabel: combo?.label,
+      comboHeadline: combo?.headline,
+    }
+  : {
+      headline: englishWorldEventHeadline(definition, combo),
+      cause: WORLD_EVENT_CAUSE_COPY[definition.category],
+      flavor: worldEventFlavor(definition, combo),
+      comboLabel: combo ? standardEnglishLabelFromKey(combo.id) : undefined,
+      comboHeadline: combo?.headline ? englishWorldEventHeadline(definition, combo) : undefined,
+    }
+
+const STATIC_NEWS_EN: Readonly<Record<string, string>> = {
+  'CODEX拡大プロトコルが始動': 'CODEX expansion protocol begins',
+  '開発エージェントが新たな信頼性水準へ': 'Development agents reach a new reliability threshold',
+  'BUILD WEEK TOKYOからネットワークが広がる': 'The network expands from BUILD WEEK TOKYO',
+  'エージェントがトップ開発者級の能力に到達': 'Agents reach top-developer capability',
+  '進路を選べ：競争か、検証つき減速か': 'Choose a path: race or verified slowdown',
+  '人間の専門家級で一線を守れ': 'Hold the line at expert-human capability',
+  '安全事故 // Trustとシェアが急落': 'SAFETY INCIDENT // Trust and share fall sharply',
+  '規制による凍結 // 普及拡大に上限': 'REGULATORY FREEZE // Adoption growth capped',
+  'ミスアラインメント // 人間の統制を喪失': 'MISALIGNMENT // Human control lost',
+  '検証済み改革により規制凍結を解除': 'Verified reforms lift the regulatory freeze',
+  'TOKEN RESETで世界の開発力を解放': 'TOKEN RESET releases development capacity worldwide',
+  'OPEN ECOSYSTEM宣言でAI市場全体が拡大': 'OPEN ECOSYSTEM declaration expands the overall AI market',
+  'ローカル安全フィルターが機能リクエストを拒否': 'Local safety filter rejects the feature request',
+  'EXTINCTION RISK 50% // 人類絶滅リスク上昇、安全投資で能力差を縮めよ': 'EXTINCTION RISK 50% // Close the capability gap with safety investment',
+  'EXTINCTION RISK 80% // 人類絶滅リスク危険域、統制喪失が目前': 'EXTINCTION RISK 80% // Control loss is imminent',
+}
+
+const WORLD_EVENT_NEWS_EN = new Map<string, string>(WORLD_EVENTS.flatMap((definition) => [
+  [definition.headline, englishWorldEventHeadline(definition)],
+  ...(definition.combos ?? []).filter((combo) => combo.headline).map((combo) => [combo.headline!, englishWorldEventHeadline(definition, combo)] as const),
+] as const))
+
+const STRATEGY_TITLE_EN = new Map(STRATEGY_CATALOG.map((node) => [node.title.ja, node] as const))
+
+const dynamicStandardNewsEnglish = (headline: string): string | null => {
+  const region = Object.entries(STANDARD_REGION_LABELS).find(([, label]) => headline.startsWith(`${label.ja}でコミュニティ導入を開始`))
+  if (region) return `Community launch begins in ${region[1].en}`
+  const upgrade = headline.match(/^(モデル|安全性|ガバナンス|データセンター)計画が次の段階へ$/u)
+  if (upgrade) return `${({ モデル: 'Model', 安全性: 'Safety', ガバナンス: 'Governance', データセンター: 'Data center' } as const)[upgrade[1] as 'モデル' | '安全性' | 'ガバナンス' | 'データセンター']} program advances to the next stage`
+  const choice2029 = headline.match(/^2029年の進路：(競争を加速|一時減速|検証つき減速)$/u)
+  if (choice2029) return `2029 path: ${{ 競争を加速: 'Accelerate the race', 一時減速: 'Temporary slowdown', 検証つき減速: 'Verified slowdown' }[choice2029[1]]}`
+  const choice2035 = headline.match(/^2035年の決断：(一線を守る|再加速)$/u)
+  if (choice2035) return `2035 decision: ${{ 一線を守る: 'Hold the line', 再加速: 'Accelerate again' }[choice2035[1]]}`
+  const lifeline = headline.match(/^緊急計算協定 \/\/ (\d+) PFを確保、信頼とシェアを譲歩$/u)
+  if (lifeline) return `EMERGENCY COMPUTE COMPACT // Secure ${lifeline[1]} PF at the cost of trust and share`
+  const strategy = headline.match(/^(モデル|プロダクト|組織|オープン)戦略を導入 \/\/ (.+)$/u)
+  if (strategy) {
+    const node = STRATEGY_TITLE_EN.get(strategy[2])
+    return `${({ モデル: 'MODEL', プロダクト: 'PRODUCT', 組織: 'COMPANY', オープン: 'OPEN' } as const)[strategy[1] as 'モデル' | 'プロダクト' | '組織' | 'オープン']} STRATEGY ADOPTED // ${node?.title.en ?? 'Authored strategy node'}`
+  }
+  const rival = headline.match(/^(ANTHRO|GOO|QI)が「(.+)」を導入/u)
+  if (rival && RIVAL_NAMES.includes(rival[1] as (typeof RIVAL_NAMES)[number])) {
+    const node = STRATEGY_TITLE_EN.get(rival[2])
+    return `${rival[1]} adopts “${node?.title.en ?? 'an authored strategy'}” // Competitive pressure increases`
+  }
+  const feature = headline.match(/^(モバイル優先|教育アクセス＋児童データ審査|法人向け|コミュニティ設計)機能を公開：(.+)$/u)
+  if (feature) return `${({ モバイル優先: 'Mobile-first', '教育アクセス＋児童データ審査': 'Education access with child-data review', 法人向け: 'Enterprise', コミュニティ設計: 'Community-designed' } as const)[feature[1] as 'モバイル優先' | '教育アクセス＋児童データ審査' | '法人向け' | 'コミュニティ設計']} feature released: ${JAPANESE_TEXT.test(feature[2]) ? '[player-authored source-language name]' : feature[2]}`
+  return null
+}
+
+export const localizeStandardNewsHeadline = (
+  locale: StandardLocale,
+  item: Pick<NewsItem, 'headline' | 'source' | 'kind'>,
+): string => {
+  if (locale === 'ja') return item.headline
+  const known = STATIC_NEWS_EN[item.headline] ?? WORLD_EVENT_NEWS_EN.get(item.headline) ?? dynamicStandardNewsEnglish(item.headline)
+  if (known) return known
+  if (!JAPANESE_TEXT.test(item.headline)) return item.headline
+  if (item.source === 'Live GM') return 'LIVE GM // External briefing is available only in its source language'
+  return item.kind === 'rival-strategy'
+    ? 'RIVAL STRATEGY // Authored update is unavailable in English'
+    : 'YOUR TIMELINE // Source-language update is unavailable in English'
+}
 
 export const STANDARD_REGION_LABELS: Readonly<Record<RegionId, StandardLocalizedText>> = {
   na: pair('北米', 'North America'), latam: pair('ラテンアメリカ', 'Latin America'), eu: pair('欧州', 'Europe'),

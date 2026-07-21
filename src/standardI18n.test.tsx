@@ -109,5 +109,15 @@ describe('Standard locale contract', () => {
     const gm: NewsItem = { id: 999, date: '2030-01-01', tone: 'neutral', headline: '外部から届いた速報', source: 'Live GM' }
     expect(localizeStandardNewsHeadline('en', gm)).toBe('LIVE GM // External briefing is available only in its source language')
     expect(localizeStandardNewsHeadline('en', gm)).not.toMatch(japaneseText)
+
+    const unknownTimeline: NewsItem = { ...gm, id: 1000, source: 'Your Timeline', headline: '未登録のプレイヤー生成イベント' }
+    const unknownRival: NewsItem = { ...unknownTimeline, id: 1001, kind: 'rival-strategy' }
+    expect(localizeStandardNewsHeadline('en', unknownTimeline)).toBe('YOUR TIMELINE // Source-language update is unavailable in English')
+    expect(localizeStandardNewsHeadline('en', unknownRival)).toBe('RIVAL STRATEGY // Authored update is unavailable in English')
+    expect(localizeStandardNewsHeadline('en', unknownTimeline)).not.toMatch(japaneseText)
+    expect(localizeStandardNewsHeadline('en', unknownRival)).not.toMatch(japaneseText)
+
+    const englishExternal = { ...gm, id: 1002, headline: 'External operator update' }
+    expect(localizeStandardNewsHeadline('en', englishExternal)).toBe(englishExternal.headline)
   })
 })

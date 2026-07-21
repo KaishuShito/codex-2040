@@ -40,6 +40,7 @@ import './AgiPillGame.css'
 
 export const AGI_PILL_RULESET_VERSION = 'agi-pill-v1'
 type Speed = 1 | 8
+export const shouldPauseForAgiPillWarning = (warning: AgiPillState['warning']) => warning !== null
 
 const isObject = (value: unknown): value is Record<string, unknown> => Boolean(value) && typeof value === 'object'
 const PILL_POLICIES = new Set<AgiPillPolicy>(['observe', 'balanced', 'accelerate', 'safety-first', 'governance-first', 'industrialize', 'resource-recovery', 'cooperate', 'expand-orbit', 'build-dyson', 'post-dyson'])
@@ -215,6 +216,13 @@ export default function AgiPillGame({ locale, onLocaleChange, onChooseMode }: {
   useEffect(() => {
     if (state.outcome !== 'active') setPaused(true)
   }, [state.outcome])
+
+  // A visible point-of-no-return warning is a decision boundary, not a
+  // reaction-time test. Pause once when a new countdown appears; the player
+  // may deliberately resume after choosing a countermeasure or accepting risk.
+  useEffect(() => {
+    if (shouldPauseForAgiPillWarning(state.warning)) setPaused(true)
+  }, [state.warning?.kind, state.warning?.startedDay])
 
   useEffect(() => {
     if (state.day < 10 * 365 || state.outcome !== 'active' || pendingEvent || state.flags.includes('pill:review:t10')) return

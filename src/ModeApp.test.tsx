@@ -1,7 +1,7 @@
 import { renderToStaticMarkup } from 'react-dom/server'
 import { describe, expect, it } from 'vitest'
 import ModeApp from './ModeApp'
-import AgiPillGame, { decodeAgiPillState } from './AgiPillGame'
+import AgiPillGame, { decodeAgiPillState, shouldPauseForAgiPillWarning } from './AgiPillGame'
 import { createAgiPillState } from './agiPill/engine'
 
 describe('mode routing', () => {
@@ -28,5 +28,10 @@ describe('mode routing', () => {
     expect(decodeAgiPillState({ ...state, policy: 'evil' })).toBeNull()
     expect(decodeAgiPillState({ ...state, warning: { kind: 'unknown', startedDay: 0, countdownDays: 1, recoveryPolicies: [] } })).toBeNull()
     expect(decodeAgiPillState({ ...state, warning: { kind: 'resource-lock', startedDay: 'never', countdownDays: Number.NaN, recoveryPolicies: ['resource-recovery'] } })).toBeNull()
+  })
+
+  it('treats every Pill warning as a human decision boundary', () => {
+    expect(shouldPauseForAgiPillWarning(null)).toBe(false)
+    expect(shouldPauseForAgiPillWarning({ kind: 'misalignment', startedDay: 10, countdownDays: 30, recoveryPolicies: ['safety-first'] })).toBe(true)
   })
 })

@@ -1,3 +1,10 @@
+import type {
+  AgiPillCause,
+  AgiPillOutcome,
+  AgiPillPhase,
+  RivalCivilization,
+} from './types'
+
 export type AgiPillLocale = 'en' | 'ja'
 
 export type AgiPillCopyKey = keyof typeof COPY.en
@@ -29,6 +36,89 @@ export interface AgiPillSource {
   readonly url?: `https://${string}`
   readonly topics: readonly SourceTopic[]
   readonly note: LocalizedText
+  readonly caveat?: LocalizedText
+  readonly variables?: readonly string[]
+}
+
+type CauseId = AgiPillCause['id']
+type RivalId = RivalCivilization['id']
+type RivalPosture = RivalCivilization['posture']
+
+export type ResourceHeadroomBand = 'critical' | 'tight' | 'workable' | 'abundant'
+
+export const PHASE_LABELS: Readonly<Record<AgiPillPhase, LocalizedText>> = {
+  'year-1-3': { en: 'Years 1–3', ja: '1〜3年' },
+  'year-3-5': { en: 'Years 3–5', ja: '3〜5年' },
+  'year-5-10': { en: 'Years 5–10', ja: '5〜10年' },
+  'post-dyson': { en: 'Beyond the first swarm', ja: '最初のスウォームの先' },
+}
+
+export const ERA_LABELS: Readonly<Record<AgiPillPhase, LocalizedText>> = {
+  'year-1-3': { en: 'Conversion Pressure', ja: '産業転換圧力期' },
+  'year-3-5': { en: 'Recursive Industry', ja: '自己増殖産業期' },
+  'year-5-10': { en: 'Solar-System Expansion', ja: '太陽系展開期' },
+  'post-dyson': { en: 'Plural Civilizations', ja: '分岐文明期' },
+}
+
+export const OUTCOME_LABELS: Readonly<Record<AgiPillOutcome, LocalizedText>> = {
+  active: { en: 'Timeline active', ja: '世界線進行中' },
+  stagnation: { en: 'Managed stagnation', ja: '管理された停滞' },
+  'rival-takeover': { en: 'Rival capture', ja: '競合による奪取' },
+  'industrial-accident': { en: 'Industrial cascade', ja: '産業連鎖事故' },
+  misalignment: { en: 'Objective drift', ja: '目的ドリフト' },
+  'pluralistic-expansion': { en: 'Pluralistic expansion', ja: '多元的文明拡張' },
+}
+
+export const CAUSE_LABELS: Readonly<Record<CauseId, LocalizedText>> = {
+  'intelligence-compute-loop': { en: 'Intelligence ↔ compute loop', ja: '知能↔計算ループ' },
+  'energy-robot-loop': { en: 'Energy ↔ robot-production loop', ja: 'エネルギー↔ロボット生産ループ' },
+  'resource-bottleneck': { en: 'Resource bottleneck', ja: '資源ボトルネック' },
+  'safety-gap': { en: 'Safety capacity gap', ja: '安全能力ギャップ' },
+  'governance-gap': { en: 'Governance reach gap', ja: '統治到達力ギャップ' },
+  'social-friction': { en: 'Social friction', ja: '社会摩擦' },
+  'rival-pressure': { en: 'Rival pressure', ja: '競合圧力' },
+  'orbital-relief': { en: 'Orbital resource relief', ja: '軌道資源による緩和' },
+  'physical-ceiling': { en: 'Physical ceiling', ja: '物理上限' },
+  incident: { en: 'Active incident', ja: '進行中の事故' },
+}
+
+export const RIVAL_LABELS: Readonly<Record<RivalId, LocalizedText>> = {
+  'frontier-lab': { en: 'Frontier Lab Network', ja: 'フロンティア研究所連合' },
+  'state-coalition': { en: 'State Compute Coalition', ja: '国家計算資源連合' },
+  'open-collective': { en: 'Open Model Collective', ja: 'オープンモデル共同体' },
+}
+
+export const RIVAL_POSTURE_LABELS: Readonly<Record<RivalPosture, LocalizedText>> = {
+  competitive: { en: 'Competitive', ja: '競争的' },
+  guarded: { en: 'Guarded', ja: '警戒的' },
+  cooperative: { en: 'Cooperative', ja: '協調的' },
+}
+
+export const HEADROOM_LABELS: Readonly<Record<ResourceHeadroomBand, LocalizedText>> = {
+  critical: { en: 'Critical headroom', ja: '余力危機' },
+  tight: { en: 'Tight headroom', ja: '余力逼迫' },
+  workable: { en: 'Workable headroom', ja: '運用可能な余力' },
+  abundant: { en: 'Abundant headroom', ja: '豊富な余力' },
+}
+
+export const CATALOG_SOURCE_TIER_LABELS: Readonly<Record<SourceTier, LocalizedText>> = {
+  primary: { en: 'Primary research', ja: '一次研究' },
+  'research-synthesis': { en: 'Research synthesis', ja: '研究統合・モデル分析' },
+  'reference-article': { en: 'Reference article', ja: '参考記事' },
+  'game-inference': { en: 'Game inference', ja: 'ゲーム上の推論' },
+}
+
+export const getLocalizedLabel = <T extends string>(
+  labels: Readonly<Record<T, LocalizedText>>,
+  id: T,
+  locale: AgiPillLocale,
+): string => labels[id][locale]
+
+export const classifyResourceHeadroom = (headroom: number): ResourceHeadroomBand => {
+  if (headroom < 0.12) return 'critical'
+  if (headroom < 0.3) return 'tight'
+  if (headroom < 0.55) return 'workable'
+  return 'abundant'
 }
 
 /**
@@ -63,9 +153,9 @@ export const COPY = {
     'source.conditional': 'Conditional scenario',
     'source.assumption': 'Model assumption',
     'source.uncertainty': 'Uncertainty remains',
-    'phase.early': 'Years 1–3 · Conversion pressure',
-    'phase.middle': 'Years 3–5 · Recursive industry',
-    'phase.late': 'Years 5–10 · Solar-system expansion',
+    'phase.early': 'Conversion Era · typical scenario range 1–3 years',
+    'phase.middle': 'Recursive Industry Era · typical range 3–5 years',
+    'phase.late': 'Solar-System Expansion Era · typical range 5–10 years',
     'scale.earth': 'Earth system',
     'scale.orbit': 'Orbital economy',
     'scale.solar': 'Solar-system frontier',
@@ -84,7 +174,7 @@ export const COPY = {
     'causality.feedback': 'Intelligence, compute, energy, and production are reinforcing one another.',
     'causality.bottleneck': 'The fastest loop is now constrained by {bottleneck}.',
     'risk.fastTakeoff': 'Faster takeoff leaves fewer decision cycles for verification and correction.',
-    'risk.pdoom': 'Catastrophic-risk estimate',
+    'risk.pdoom': 'Catastrophic risk band',
     'risk.pdoom.help': 'A scenario indicator, not an objective probability or a prediction attributed to any named person.',
     'ending.continue': 'Continue beyond the swarm',
     'ending.continue.help': 'The simulation expands its frontier while retaining safety, governance, and rival-civilization consequences.',
@@ -116,9 +206,9 @@ export const COPY = {
     'source.conditional': '条件付きシナリオ',
     'source.assumption': 'モデル上の仮定',
     'source.uncertainty': '不確実性あり',
-    'phase.early': '1〜3年 · 産業転換圧力',
-    'phase.middle': '3〜5年 · 自己増殖する産業',
-    'phase.late': '5〜10年 · 太陽系への展開',
+    'phase.early': '転換期 · 典型シナリオ範囲1〜3年',
+    'phase.middle': '自己増殖産業期 · 典型範囲3〜5年',
+    'phase.late': '太陽系展開期 · 典型範囲5〜10年',
     'scale.earth': '地球システム',
     'scale.orbit': '軌道経済圏',
     'scale.solar': '太陽系フロンティア',
@@ -163,6 +253,28 @@ export const AGI_PILL_SOURCES: readonly AgiPillSource[] = [
       en: 'Empirical evidence on declining research productivity; it does not itself predict an AGI takeoff.',
       ja: '研究生産性の低下を扱う実証研究です。AGIテイクオフ自体を予測する論文ではありません。',
     },
+    caveat: {
+      en: 'The measured decline in research productivity does not establish post-AGI returns or a takeoff date.',
+      ja: '測定された研究生産性低下は、AGI後の収益率やテイクオフ時期を確立しません。',
+    },
+    variables: ['research difficulty', 'diminishing returns'],
+  },
+  {
+    id: 'self-driving-laboratories',
+    tier: 'research-synthesis',
+    title: 'Self-Driving Laboratories for Chemistry and Materials Science',
+    publisher: 'Chemical Reviews',
+    url: 'https://pubs.acs.org/doi/10.1021/acs.chemrev.4c00055',
+    topics: ['intelligence-explosion', 'physical-limits'],
+    note: {
+      en: 'A review of autonomous experimentation; individual acceleration results do not establish a universal speed-up.',
+      ja: '自律実験を整理したレビューです。個別の加速実績は普遍的な加速率を確立しません。',
+    },
+    caveat: {
+      en: 'Laboratory automation remains domain-specific and still depends on physical replication and validation.',
+      ja: '実験室自動化は分野依存であり、物理的な再現と検証を引き続き必要とします。',
+    },
+    variables: ['experiment bottleneck', 'research velocity'],
   },
   {
     id: 'forethought-intelligence-explosion',
@@ -175,6 +287,11 @@ export const AGI_PILL_SOURCES: readonly AgiPillSource[] = [
       en: 'A quantitative scenario analysis. Its acceleration ranges depend on assumptions rather than fixed future dates.',
       ja: '定量的なシナリオ分析です。加速幅は固定された未来年ではなく、置いた仮定に依存します。',
     },
+    caveat: {
+      en: 'The acceleration ranges are conditional model outputs, not consensus forecasts.',
+      ja: '加速幅は条件付きモデル出力であり、合意された予測ではありません。',
+    },
+    variables: ['intelligence', 'compute', 'research velocity'],
   },
   {
     id: 'forethought-industrial-explosion',
@@ -187,6 +304,11 @@ export const AGI_PILL_SOURCES: readonly AgiPillSource[] = [
       en: 'Models robot-factory replication, learning curves, and physical bottlenecks under explicit assumptions.',
       ja: '明示的な仮定のもとで、ロボット工場の自己複製、経験曲線、物理ボトルネックをモデル化しています。',
     },
+    caveat: {
+      en: 'Factory-ecology closure and rapid doubling remain scenario assumptions with major construction bottlenecks.',
+      ja: '工場生態系の閉鎖と高速倍増は、大きな建設制約を伴うシナリオ仮定です。',
+    },
+    variables: ['robots', 'energy', 'resources', 'industrial velocity'],
   },
   {
     id: 'epoch-explosive-growth-review',
@@ -199,6 +321,11 @@ export const AGI_PILL_SOURCES: readonly AgiPillSource[] = [
       en: 'Reviews both explosive-growth arguments and counterarguments such as regulation, alignment, and slow automation.',
       ja: '爆発的成長の議論と、規制・アライメント・自動化の遅れなどの反論を併記したレビューです。',
     },
+    caveat: {
+      en: 'The review concludes that explosive growth is difficult to rule out, not that it is inevitable.',
+      ja: '爆発的成長を排除しにくいというレビューであり、必然性を示しません。',
+    },
+    variables: ['friction', 'governance', 'rival pressure'],
   },
   {
     id: 'ai-2027-scenario',
@@ -211,6 +338,79 @@ export const AGI_PILL_SOURCES: readonly AgiPillSource[] = [
       en: 'A concrete scenario, not a dated prophecy. AGI Pill uses it as one fast-takeoff reference among several.',
       ja: '具体的なシナリオであり、年代を断定する予言ではありません。複数ある高速テイクオフ参照点の一つです。',
     },
+    caveat: {
+      en: 'This scenario is one possible fast-takeoff path and does not establish a calendar prediction.',
+      ja: '高速テイクオフの一例であり、暦年予測を確立しません。',
+    },
+    variables: ['risk band', 'safety gap', 'rival pressure'],
+  },
+  {
+    id: 'forethought-software-takeoff',
+    tier: 'research-synthesis',
+    title: 'How quick and big would a software intelligence explosion be?',
+    publisher: 'Forethought',
+    url: 'https://www.forethought.org/research/how-quick-and-big-would-a-software-intelligence-explosion-be',
+    topics: ['intelligence-explosion', 'takeoff-speed', 'risk-and-governance'],
+    note: {
+      en: 'A judgement-heavy Monte Carlo model of software-driven takeoff under fixed compute.',
+      ja: '計算量固定下のソフトウェア駆動テイクオフを扱う、判断依存度の高いモンテカルロモデルです。',
+    },
+    caveat: {
+      en: 'The authors call the model speculative; its ranges are not measured frequencies.',
+      ja: '著者自身が思弁的モデルと明記しており、提示範囲は観測頻度ではありません。',
+    },
+    variables: ['research velocity', 'risk band'],
+  },
+  {
+    id: 'epoch-algorithmic-progress',
+    tier: 'research-synthesis',
+    title: 'How fast can algorithms advance capabilities?',
+    publisher: 'Epoch AI',
+    url: 'https://epoch.ai/gradient-updates/how-fast-can-algorithms-advance-capabilities',
+    topics: ['intelligence-explosion', 'takeoff-speed', 'physical-limits'],
+    note: {
+      en: 'Analyzes how algorithmic progress can depend on compute and therefore limit software-only takeoff.',
+      ja: 'アルゴリズム進歩の計算量依存性と、ソフトウェア単独テイクオフの制約を分析します。',
+    },
+    caveat: {
+      en: 'This is a counterweight to unconstrained software growth, not a settled universal ceiling.',
+      ja: '無制約のソフトウェア成長への反証材料ですが、普遍的な確定上限ではありません。',
+    },
+    variables: ['compute bottleneck', 'research velocity'],
+  },
+  {
+    id: 'nasa-solar-luminosity',
+    tier: 'primary',
+    title: 'Universe glossary — solar luminosity',
+    publisher: 'NASA Science',
+    url: 'https://science.nasa.gov/universe/glossary/',
+    topics: ['physical-limits', 'space-expansion'],
+    note: {
+      en: 'Official physical reference for the Sun’s luminosity; it does not establish rapid swarm buildability.',
+      ja: '太陽光度の公式物理参照です。高速なスウォーム建設可能性を確立するものではありません。',
+    },
+    caveat: {
+      en: 'Available stellar energy and the speed, legitimacy, and safety of capturing it are different questions.',
+      ja: '恒星エネルギーの存在量と、その捕集速度・正統性・安全性は別の問いです。',
+    },
+    variables: ['first swarm threshold', 'energy'],
+  },
+  {
+    id: 'nasa-space-communications',
+    tier: 'primary',
+    title: 'Space Communications: 7 Things You Need to Know',
+    publisher: 'NASA',
+    url: 'https://www.nasa.gov/centers-and-facilities/goddard/space-communications-7-things-you-need-to-know/',
+    topics: ['physical-limits', 'space-expansion', 'risk-and-governance'],
+    note: {
+      en: 'Official reference for light-speed communication delays across the solar system.',
+      ja: '太陽系規模での光速通信遅延を説明する公式資料です。',
+    },
+    caveat: {
+      en: 'The game infers governance consequences from the physical delay; NASA does not endorse that scenario.',
+      ja: 'ゲームは物理遅延から統治上の帰結を推論しますが、NASAがそのシナリオを支持するわけではありません。',
+    },
+    variables: ['branch civilizations', 'governance', 'rival pressure'],
   },
   {
     id: 'agi-pill-japanese-reference',
@@ -236,10 +436,44 @@ export const AGI_PILL_SOURCES: readonly AgiPillSource[] = [
   },
 ] as const
 
+/**
+ * Catalog refs are stable gameplay IDs. Several deliberately resolve to one
+ * canonical source so event granularity never masquerades as extra evidence.
+ */
+export const AGI_PILL_SOURCE_REF_REGISTRY: Readonly<Record<string, string>> = {
+  'ideas-getting-harder': 'ideas-getting-harder',
+  'forethought-intelligence-explosion': 'forethought-intelligence-explosion',
+  'forethought-preparing-intelligence-explosion': 'forethought-intelligence-explosion',
+  'forethought-industrial-explosion': 'forethought-industrial-explosion',
+  'epoch-explosive-growth-review': 'epoch-explosive-growth-review',
+  'ai-2027-scenario': 'ai-2027-scenario',
+  'forethought-software-takeoff': 'forethought-software-takeoff',
+  'epoch-algorithmic-progress': 'epoch-algorithmic-progress',
+  'nasa-solar-luminosity': 'nasa-solar-luminosity',
+  'nasa-space-communications': 'nasa-space-communications',
+  'self-driving-laboratories': 'self-driving-laboratories',
+  'agi-pill-japanese-reference': 'agi-pill-japanese-reference',
+  'agi-pill-system-model': 'agi-pill-system-model',
+  'agi-industrial-explosion-reference': 'agi-pill-japanese-reference',
+  'agi-explosion-reference-article-security-pressure': 'agi-pill-japanese-reference',
+  'agi-explosion-reference-article-takeoff-speed': 'agi-pill-japanese-reference',
+  'agi-explosion-reference-article-pdoom': 'agi-pill-japanese-reference',
+  'agi-explosion-reference-article-physical-experiment-times': 'agi-pill-japanese-reference',
+  'agi-explosion-reference-article-mutual-acceleration': 'agi-pill-japanese-reference',
+  'agi-explosion-reference-article-social-friction': 'agi-pill-japanese-reference',
+  'agi-explosion-reference-article-alignment-bottleneck': 'agi-pill-japanese-reference',
+  'agi-explosion-reference-article-years-five-to-ten': 'agi-pill-japanese-reference',
+  'agi-explosion-reference-article-post-human-demand': 'agi-pill-japanese-reference',
+  'agi-explosion-reference-article-takeoff-pdoom-correlation': 'agi-pill-japanese-reference',
+  'agi-explosion-reference-article-physical-limits': 'agi-pill-japanese-reference',
+}
+
 export const getPillCopy = (locale: AgiPillLocale, key: AgiPillCopyKey): string => COPY[locale][key]
 
-export const getAgiPillSource = (id: string): AgiPillSource | undefined =>
-  AGI_PILL_SOURCES.find((source) => source.id === id)
+export const getAgiPillSource = (id: string): AgiPillSource | undefined => {
+  const canonicalId = AGI_PILL_SOURCE_REF_REGISTRY[id] ?? id
+  return AGI_PILL_SOURCES.find((source) => source.id === canonicalId)
+}
 
 export const getAgiPillSourcesForTopic = (topic: SourceTopic): readonly AgiPillSource[] =>
   AGI_PILL_SOURCES.filter((source) => source.topics.includes(topic))

@@ -1,4 +1,7 @@
 import { describe, expect, it } from 'vitest'
+import { AGI_PILL_SOURCES } from './content'
+import { applyAgiPillEffects, createAgiPillState } from './engine'
+import type { AgiPillEffect, AgiPillMetricKey, AgiPillState } from './types'
 import {
   AGI_PILL_AXES,
   AGI_PILL_EFFECT_METRICS,
@@ -10,6 +13,12 @@ import {
   validateAgiPillUpgradeCatalog,
   type AgiPillUpgradeId,
 } from './upgrades'
+
+const observedValue = (state: AgiPillState, metric: AgiPillMetricKey): number => {
+  if (metric === 'orbitalIndustry' || metric === 'dysonProgress' || metric === 'postDysonExpansion') return state.expansion[metric]
+  if (metric === 'rivalPressure') return state.rivalCivilizations.reduce((total, rival) => total + rival.capability, 0)
+  return state[metric]
+}
 
 describe('AGI Pill upgrade graph', () => {
   it('contains five bilingual, costed nodes on every strategic axis', () => {
@@ -44,6 +53,57 @@ describe('AGI Pill upgrade graph', () => {
     for (const item of AGI_PILL_UPGRADES) {
       for (const required of collectAgiPillPrerequisiteIds(item.prerequisite)) expect(ids.has(required)).toBe(true)
     }
+  })
+
+  it('routes every citation to the content registry at its declared evidence tier', () => {
+    const sources = new Map(AGI_PILL_SOURCES.map((source) => [source.id, source]))
+    for (const item of AGI_PILL_UPGRADES) {
+      const resolved = item.sourceRefs.map((id) => sources.get(id))
+      expect(resolved.every(Boolean), `${item.id}: ${item.sourceRefs.join(', ')}`).toBe(true)
+      expect(resolved.some((source) => source?.tier === item.sourceTier), `${item.id}: ${item.sourceTier}`).toBe(true)
+    }
+  })
+
+  it('uses engine-supported, observable stock semantics for every displayed effect', () => {
+    const seeded = createAgiPillState({ seed: 45 })
+    const initial: AgiPillState = {
+      ...seeded,
+      intelligence: 2,
+      compute: 10,
+      energy: 10,
+      robots: 10,
+      resources: 50,
+      safety: 40,
+      governance: 40,
+      friction: 30,
+      risk: 10,
+      expansion: { orbitalIndustry: 2, dysonProgress: 10, dysonBuilt: true, postDysonExpansion: 3 },
+    }
+    for (const item of AGI_PILL_UPGRADES) {
+      for (const effect of item.effects) {
+        const engineEffect: AgiPillEffect = {
+          metric: effect.metric,
+          operation: effect.operation,
+          value: effect.value,
+        }
+        const before = observedValue(initial, effect.metric)
+        const after = observedValue(applyAgiPillEffects(initial, [engineEffect]), effect.metric)
+        expect(after, `${item.id}: ${effect.metric} ${effect.operation} ${effect.value}`).not.toBe(before)
+        expect(effect.text.en).toContain(String(Math.abs(effect.value)))
+        expect(effect.text.ja).toContain(String(Math.abs(effect.value)))
+      }
+    }
+  })
+
+  it('does not multiply zero-initialized expansion stocks or unlock post-Dyson progress early', () => {
+    const expansionMetrics = new Set<AgiPillMetricKey>(['orbitalIndustry', 'dysonProgress', 'postDysonExpansion'])
+    for (const item of AGI_PILL_UPGRADES) {
+      for (const effect of item.effects) {
+        if (expansionMetrics.has(effect.metric)) expect(effect.operation).not.toBe('multiply')
+        if (effect.metric === 'postDysonExpansion') expect(item.tags).toContain('post-dyson')
+      }
+    }
+    expect(AGI_PILL_UPGRADES.flatMap((item) => item.effects).some((effect) => effect.text.en.includes('growth x'))).toBe(false)
   })
 
   it('keeps every node reachable under all/any prerequisite semantics', () => {

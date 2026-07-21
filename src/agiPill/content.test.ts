@@ -1,13 +1,25 @@
 import { describe, expect, it } from 'vitest'
 import {
   AGI_PILL_SOURCES,
+  AGI_PILL_SOURCE_REF_REGISTRY,
+  CATALOG_SOURCE_TIER_LABELS,
+  CAUSE_LABELS,
   COPY,
+  ERA_LABELS,
+  HEADROOM_LABELS,
+  OUTCOME_LABELS,
+  PHASE_LABELS,
+  RIVAL_LABELS,
+  RIVAL_POSTURE_LABELS,
   SOURCE_TIER_LABEL_KEYS,
+  classifyResourceHeadroom,
   getAgiPillSource,
   getAgiPillSourcesForTopic,
   getPillCopy,
   type SourceTier,
 } from './content'
+import { AGI_PILL_EVENTS } from './events'
+import { AGI_PILL_UPGRADES } from './upgrades'
 
 describe('AGI Pill localized content', () => {
   it('keeps exact English/Japanese key parity', () => {
@@ -39,6 +51,18 @@ describe('AGI Pill citation registry', () => {
     for (const key of Object.values(SOURCE_TIER_LABEL_KEYS)) {
       expect(getPillCopy('en', key)).toBeTruthy()
       expect(getPillCopy('ja', key)).toBeTruthy()
+    }
+  })
+
+  it('resolves every sourceRef used by the event and upgrade catalogs', () => {
+    const refs = new Set([
+      ...AGI_PILL_EVENTS.flatMap((event) => event.sourceRefs),
+      ...AGI_PILL_UPGRADES.flatMap((upgrade) => upgrade.sourceRefs),
+    ])
+
+    for (const ref of refs) {
+      expect(AGI_PILL_SOURCE_REF_REGISTRY[ref], `normalized ref: ${ref}`).toBeTruthy()
+      expect(getAgiPillSource(ref), `resolved source: ${ref}`).toBeTruthy()
     }
   })
 
@@ -80,5 +104,35 @@ describe('AGI Pill citation registry', () => {
       expect(sources.length).toBeGreaterThan(0)
       expect(sources.some((source) => source.tier !== 'game-inference')).toBe(true)
     }
+  })
+})
+
+describe('AGI Pill system labels', () => {
+  const expectLocalized = (labels: Readonly<Record<string, { en: string; ja: string }>>) => {
+    for (const label of Object.values(labels)) {
+      expect(label.en.trim()).not.toBe('')
+      expect(label.ja.trim()).not.toBe('')
+    }
+  }
+
+  it('covers all engine phases, outcomes, causes, rivals, postures, and source tiers', () => {
+    expect(Object.keys(PHASE_LABELS).sort()).toEqual(['post-dyson', 'year-1-3', 'year-3-5', 'year-5-10'])
+    expect(Object.keys(ERA_LABELS).sort()).toEqual(Object.keys(PHASE_LABELS).sort())
+    expect(Object.keys(OUTCOME_LABELS).sort()).toEqual(['active', 'industrial-accident', 'misalignment', 'pluralistic-expansion', 'rival-takeover', 'stagnation'])
+    expect(Object.keys(CAUSE_LABELS)).toHaveLength(10)
+    expect(Object.keys(RIVAL_LABELS).sort()).toEqual(['frontier-lab', 'open-collective', 'state-coalition'])
+    expect(Object.keys(RIVAL_POSTURE_LABELS).sort()).toEqual(['competitive', 'cooperative', 'guarded'])
+    expect(Object.keys(CATALOG_SOURCE_TIER_LABELS).sort()).toEqual(['game-inference', 'primary', 'reference-article', 'research-synthesis'])
+
+    ;[PHASE_LABELS, ERA_LABELS, OUTCOME_LABELS, CAUSE_LABELS, RIVAL_LABELS, RIVAL_POSTURE_LABELS, CATALOG_SOURCE_TIER_LABELS]
+      .forEach(expectLocalized)
+  })
+
+  it('classifies resource headroom at stable UI boundaries', () => {
+    expect(classifyResourceHeadroom(0)).toBe('critical')
+    expect(classifyResourceHeadroom(0.12)).toBe('tight')
+    expect(classifyResourceHeadroom(0.3)).toBe('workable')
+    expect(classifyResourceHeadroom(0.55)).toBe('abundant')
+    expectLocalized(HEADROOM_LABELS)
   })
 })

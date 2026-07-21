@@ -139,7 +139,7 @@ For a live OpenAI Realtime Voice Agent demo, use the local development server wi
 
 1. Complete the four-step tutorial and begin the Normal simulation.
 2. Open **VOICE OPERATOR**, then select **START CALL**. The browser asks for microphone access only after this explicit action.
-3. Ask: **「ゲーム内Tiboトークンのリミットをリセットして」**.
+3. Ask: **「ゲーム内TIBOトークンのリミットをリセットして」**.
 4. The Voice Agent calls `trigger_token_reset` with `confirmed: false`; the game shows the pending tool request but does not execute it.
 5. The agent asks for confirmation aloud. A short direct reply such as **「やって！」**, **「お願い」**, **“Do it!”**, or **“Go ahead”** is enough. It then makes a second tool call with the matching approval ID and spoken confirmation; the existing engine reset runs once and the map emits its global pulse. No UI confirmation is required on this normal path.
 6. Use **MUTE**, **END CALL**, or the keyboard controls shown in the panel as needed. If the key, microphone, or Realtime connection is unavailable, the same panel clearly switches to scripted SpeechSynthesis backup, where visible buttons provide the explicit confirmation.

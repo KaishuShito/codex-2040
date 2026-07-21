@@ -14,7 +14,7 @@ describe('VoiceCallPanel approval language', () => {
       pendingReset={{
         id: 'fallback-en',
         callId: 'fallback-en',
-        playerRequest: 'Please reset my in-game Tibo token limit.',
+        playerRequest: 'Please reset my in-game TIBO token limit.',
         source: 'scripted-fallback',
         language: 'en',
       }}

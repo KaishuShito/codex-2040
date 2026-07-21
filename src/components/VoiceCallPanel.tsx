@@ -76,7 +76,7 @@ export default function VoiceCallPanel({
       </div>
 
       <div className="voice-call__scope">
-        ゲーム内限定：Codex 2040のTiboトークンだけをリセットします。OpenAIアカウント、請求、API上限、権限は変更できません。
+        ゲーム内限定：Codex 2040のTIBOトークンだけをリセットします。OpenAIアカウント、請求、API上限、権限は変更できません。
       </div>
 
       <div className="voice-call__transcript" aria-label="音声通話の字幕" aria-live="polite">
@@ -100,8 +100,8 @@ export default function VoiceCallPanel({
           <b>trigger_token_reset</b>
           <p>“{pendingReset.playerRequest}”</p>
           <strong>{approvalInEnglish
-            ? (pendingReset.source === 'realtime' ? 'Say “Do it” or another explicit approval. You can also use the buttons.' : 'Approval runs the existing in-game Tibo reset exactly once.')
-            : (pendingReset.source === 'realtime' ? '「やって！」「お願い」など、実行の意思を声で伝えてください。ボタンでも操作できます。' : '承認すると、既存のゲーム内Tiboリセットを1回だけ実行します。')}</strong>
+            ? (pendingReset.source === 'realtime' ? 'Say “Do it” or another explicit approval. You can also use the buttons.' : 'Approval runs the existing in-game TIBO reset exactly once.')
+            : (pendingReset.source === 'realtime' ? '「やって！」「お願い」など、実行の意思を声で伝えてください。ボタンでも操作できます。' : '承認すると、既存のゲーム内TIBOリセットを1回だけ実行します。')}</strong>
           <div>
             <button onClick={onRejectReset}><X size={14} /> {approvalInEnglish ? 'Reject' : '拒否'}</button>
             <button className="is-confirm" onClick={onApproveReset} disabled={resetCooldownSeconds > 0}>

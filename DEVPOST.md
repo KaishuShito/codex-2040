@@ -59,7 +59,7 @@ Codex was our build environment and engineering collaborator. We used it to:
 - Write adversarial and behavioral tests for replay, state bounds, event scheduling and clamps, strategy catalog validation, provenance, branches, and endings.
 - Review the implementation against every public claim and draft submission materials.
 
-GPT-5.6 helped reason across the specification, engine, UI, bridge, tests, and documentation. The project also uses OpenAI's official Agents SDK with `RealtimeAgent` and `RealtimeSession`, `gpt-realtime-2.1`, WebRTC audio, and an approval-gated function tool that can reset only the in-game Tibo token cooldown.
+GPT-5.6 helped reason across the specification, engine, UI, bridge, tests, and documentation. The project also uses OpenAI's official Agents SDK with `RealtimeAgent` and `RealtimeSession`, `gpt-realtime-2.1`, WebRTC audio, and an approval-gated function tool that can reset only the in-game TIBO token cooldown.
 
 ## Educational Source Material
 
@@ -84,7 +84,7 @@ Switch to Fast Forward. The Build Week Tokyo World Brief stops the clock on 2026
 Show the three active source badges. Ask the Advisor about the current tradeoff, then execute the recommended deterministic action yourself.
 
 **1:45–2:35 — Call the OpenAI Voice Agent**
-Open Voice Operator and ask TIBO to reset the in-game Tibo token limit. Show the agent's spoken confirmation request, give a short explicit approval, then show the function tool execute once and pulse the map.
+Open Voice Operator and ask TIBO to reset the in-game TIBO token limit. Show the agent's spoken confirmation request, give a short explicit approval, then show the function tool execute once and pulse the map.
 
 **2:35–2:55 — Show verification and the safety boundary**
 Show the test result and briefly name the replay, clamp, retry, bridge, branch, and ending coverage.
@@ -159,4 +159,4 @@ The live Realtime path requires a server-held `OPENAI_API_KEY` in ignored `.env.
 
 ## Next
 
-The current live function tool intentionally remains limited to the in-game Tibo token reset. New product ideas belong in the separate Advisor conversation; the game itself stays a deterministic strategy game with explicit choices.
+The current live function tool intentionally remains limited to the in-game TIBO token reset. New product ideas belong in the separate Advisor conversation; the game itself stays a deterministic strategy game with explicit choices.

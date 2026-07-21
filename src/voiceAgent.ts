@@ -22,8 +22,8 @@ export const REALTIME_TRANSPORT = 'webrtc' as const
 const OPERATOR_INSTRUCTIONS = [
   'あなたはCodex 2040のゲーム内にいる、架空の「TIBO — ボイス・オペレーター」です。実在する人物やOpenAI社員を名乗ったり、模倣したりしないでください。',
   '汎用合成音声を使い、ライブ字幕に適した自然で簡潔な会話をしてください。プレイヤーが日本語なら日本語、英語なら英語で返答し、会話中はその言語を保ってください。',
-  '利用できるリセットはゲーム内のTiboトークンリセットだけです。OpenAIアカウント、請求、APIレート制限、権限は一切変更しません。',
-  'プレイヤーがゲーム内リミットまたはTiboトークンのリセットを明示的に依頼したら、trigger_token_resetをconfirmed=false、2つのnullableな確認フィールドをnullとして呼び出してください。',
+  '利用できるリセットはゲーム内のTIBOトークンリセットだけです。OpenAIアカウント、請求、APIレート制限、権限は一切変更しません。',
+  'プレイヤーがゲーム内リミットまたはTIBOトークンのリセットを明示的に依頼したら、trigger_token_resetをconfirmed=false、2つのnullableな確認フィールドをnullとして呼び出してください。',
   'ツールからconfirmation_requiredとapproval_idが返ったら、ゲーム内リセットを実行してよいか現在の会話言語で短く尋ね、新しい音声回答を待ってください。',
   '確認質問の後に限り、短く直接的な許可を明示的な承認として扱えます。日本語例：やって、やってください、お願い、進めて、実行して、いいよ、はい。英語例：Do it、Go ahead、Proceed、Yes、Sure、OK。',
   '承認されたら、confirmed=true、返された同一のapproval_id、プレイヤーの発話そのままのconfirmation_utteranceを指定して、ツールをもう一度呼び出してください。',
@@ -44,7 +44,7 @@ type VoiceToolHandler = (call: RealtimeFunctionCall) => VoiceToolResult | Promis
 export const createTiboRealtimeAgent = (onToolCall: VoiceToolHandler) => {
   const resetTool = tool({
     name: RESET_TOOL_NAME,
-    description: 'Codex 2040のゲーム内Tiboトークンリセットだけを要求または実行します。「やって」や「Do it」のような短い直接的許可は、保留中の確認質問の後に限り有効です。実在するアカウント、請求、API上限、権限は変更しません。',
+    description: 'Codex 2040のゲーム内TIBOトークンリセットだけを要求または実行します。「やって」や「Do it」のような短い直接的許可は、保留中の確認質問の後に限り有効です。実在するアカウント、請求、API上限、権限は変更しません。',
     parameters: resetToolParameters,
     execute: async (input, _context, details) => {
       const callId = details?.toolCall?.callId
@@ -147,7 +147,7 @@ export class RealtimeVoiceClient {
       this.callbacks.onStatus('connected')
       session.transport.requestResponse?.({
         output_modalities: ['audio'],
-        instructions: 'Use the current conversation language if one is already established. Otherwise give one very brief bilingual greeting in Japanese and English. Say that you are a fictional demo operator who can help with the in-game Tibo reset. After the player speaks, continue only in their language.',
+        instructions: 'Use the current conversation language if one is already established. Otherwise give one very brief bilingual greeting in Japanese and English. Say that you are a fictional demo operator who can help with the in-game TIBO reset. After the player speaks, continue only in their language.',
       })
       return true
     } catch (error) {

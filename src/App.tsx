@@ -755,7 +755,7 @@ export default function App() {
     appendVoiceSubtitle('system', reason === 'microphone-denied'
       ? 'マイクが許可されませんでした。台本モードに切り替えます。'
       : 'リアルタイム接続を利用できません。台本モードに切り替えます。')
-    const line = 'こちらはTIBOボイス・オペレーターです。音声回線の代わりに台本モードで、ゲーム内Tiboリセットを案内します。'
+    const line = 'こちらはTIBOボイス・オペレーターです。音声回線の代わりに台本モードで、ゲーム内TIBOリセットを案内します。'
     appendVoiceSubtitle('operator', line)
     speakFallback(line)
   }
@@ -768,8 +768,8 @@ export default function App() {
     setResetPulse((value) => value + 1)
     playSound('confirm')
     appendVoiceSubtitle('system', language === 'en'
-      ? 'Confirmed: the in-game Tibo reset ran once.'
-      : '確認済み: ゲーム内Tiboリセットを1回実行しました。')
+      ? 'Confirmed: the in-game TIBO reset ran once.'
+      : '確認済み: ゲーム内TIBOリセットを1回実行しました。')
     return true
   }
 
@@ -816,7 +816,7 @@ export default function App() {
           return {
             status: 'executed',
             scope: 'codex-2040-game-only',
-            message: `The in-game Tibo reset ran exactly once and the global map pulse activated. Briefly tell the player in ${language === 'en' ? 'English' : 'Japanese'}; do not switch languages.`,
+            message: `The in-game TIBO reset ran exactly once and the global map pulse activated. Briefly tell the player in ${language === 'en' ? 'English' : 'Japanese'}; do not switch languages.`,
           }
         }
         if (result.outcome === 'cooldown') {
@@ -898,8 +898,8 @@ export default function App() {
     runConfirmedGameReset(language)
     if (result.request?.source === 'scripted-fallback') {
       speakFallback(language === 'en'
-        ? 'Confirmed. The in-game Tibo reset ran once.'
-        : '確認しました。ゲーム内Tiboリセットを1回実行しました。', language)
+        ? 'Confirmed. The in-game TIBO reset ran once.'
+        : '確認しました。ゲーム内TIBOリセットを1回実行しました。', language)
     }
   }
 

@@ -161,8 +161,8 @@ export const handleRealtimeResetToolCall = (
       pending: null,
       completedCallIds: [...state.completedCallIds, pending.callId, parsed.callId],
       notice: pending.language === 'en'
-        ? 'Voice approval accepted. The in-game Tibo reset ran once.'
-        : '音声での承認を受け付け、ゲーム内Tiboリセットを1回実行しました。',
+        ? 'Voice approval accepted. The in-game TIBO reset ran once.'
+        : '音声での承認を受け付け、ゲーム内TIBOリセットを1回実行しました。',
     },
     outcome: 'executed', request: pending, replyCallId: parsed.callId, shouldExecute: true,
   }
@@ -179,8 +179,8 @@ export const requestFallbackReset = (state: VoiceResetState, id: string, languag
       id: callId,
       callId,
       playerRequest: language === 'en'
-        ? 'Please reset my in-game Tibo token limit.'
-        : 'ゲーム内Tiboトークンのリミットをリセットして',
+        ? 'Please reset my in-game TIBO token limit.'
+        : 'ゲーム内TIBOトークンのリミットをリセットして',
       source: 'scripted-fallback',
       language,
     },
@@ -230,8 +230,8 @@ export const resolveVoiceReset = (
       pending: null,
       completedCallIds: [...state.completedCallIds, request.callId],
       notice: request.language === 'en'
-        ? 'The player approved and the in-game Tibo reset ran once.'
-        : 'プレイヤーが承認し、ゲーム内Tiboリセットを1回実行しました。',
+        ? 'The player approved and the in-game TIBO reset ran once.'
+        : 'プレイヤーが承認し、ゲーム内TIBOリセットを1回実行しました。',
     },
     outcome: 'executed',
     request,

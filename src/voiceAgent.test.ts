@@ -20,10 +20,10 @@ describe('OpenAI公式ボイス・オペレーターの設定', () => {
     const resetTool = agent.tools.find((candidate) => candidate.type === 'function' && candidate.name === 'trigger_token_reset')
     expect(resetTool).toMatchObject({ type: 'function', name: 'trigger_token_reset', strict: true })
     if (!resetTool || resetTool.type !== 'function') throw new Error('missing SDK reset tool')
-    expect(resetTool.description).toContain('ゲーム内Tiboトークンリセットだけ')
+    expect(resetTool.description).toContain('ゲーム内TIBOトークンリセットだけ')
     expect(resetTool.description).toContain('「Do it」')
     const result = await resetTool.invoke({} as never, JSON.stringify({
-      player_request: 'ゲーム内Tiboトークンをリセットして',
+      player_request: 'ゲーム内TIBOトークンをリセットして',
       confirmed: false,
       approval_id: null,
       confirmation_utterance: null,

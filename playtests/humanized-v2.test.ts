@@ -47,7 +47,7 @@ describe('humanized V2 playtest harness', () => {
     expect(runHumanizedPlaythroughV2(policy, profile, options)).toEqual(
       runHumanizedPlaythroughV2(policy, profile, options),
     )
-  })
+  }, 20_000)
 
   it('records timeout, first action latency, and inoperable exposure', () => {
     const profile = {

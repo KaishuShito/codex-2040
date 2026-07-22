@@ -26,8 +26,11 @@ const definition = (overrides: Partial<WorldEventDefinition> = {}): WorldEventDe
   presentation: 'popup',
   source: 'Your Timeline',
   headline: 'Open model festival draws a global crowd',
+  headlineEn: 'Open model festival draws a global crowd',
   cause: 'Communities can build on accessible model infrastructure.',
+  causeEn: 'Communities can build on accessible model infrastructure.',
   flavor: 'Public demonstrations turn technical access into a visible social movement.',
+  flavorEn: 'Public demonstrations turn technical access into a visible social movement.',
   effect: {
     usersDeltaPct: 8,
     shareDelta: 0.02,
@@ -128,11 +131,13 @@ describe('world-event scheduler', () => {
         {
           id: 'trusted-education',
           label: 'Trusted education network',
+          labelEn: 'Trusted education network',
           requires: { minTrust: 60, featureTermsAny: ['education'] },
           effect: { usersDeltaPct: 12, shareDelta: 0.03, growthRateDelta: 0.08, trustDelta: 3 },
           ttlDays: 20,
           momentumDays: 30,
           headline: 'Education network compounds trust',
+          headlineEn: 'Education network compounds trust',
         },
       ],
     })
@@ -197,6 +202,7 @@ describe('world-event definition validation', () => {
       combos: [{
         id: 'too-long',
         label: 'Too long',
+        labelEn: 'Too long',
         requires: {},
         effect: { usersDeltaPct: 0, shareDelta: 0, growthRateDelta: 0, trustDelta: 0 },
         momentumDays: 31,

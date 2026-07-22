@@ -5,6 +5,7 @@ import VoiceCallPanel from './VoiceCallPanel'
 describe('VoiceCallPanel approval language', () => {
   it('renders an English fallback request and controls entirely in English', () => {
     const html = renderToStaticMarkup(<VoiceCallPanel
+      locale="en"
       open
       status="fallback"
       micPermission="unavailable"
@@ -14,7 +15,7 @@ describe('VoiceCallPanel approval language', () => {
       pendingReset={{
         id: 'fallback-en',
         callId: 'fallback-en',
-        playerRequest: 'Please reset my in-game Tibo token limit.',
+        playerRequest: 'Please reset my in-game TIBO token limit.',
         source: 'scripted-fallback',
         language: 'en',
       }}
@@ -34,5 +35,6 @@ describe('VoiceCallPanel approval language', () => {
     expect(html).toContain('Approve in-game reset')
     expect(html).toContain('Reject')
     expect(html).not.toContain('ゲーム内リセットを承認')
+    expect(html).not.toContain('日本語で依頼')
   })
 })

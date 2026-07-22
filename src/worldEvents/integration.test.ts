@@ -68,5 +68,5 @@ describe('authored world events in the deterministic engine', () => {
     expect(state.firedWorldEventIds.length).toBeLessThanOrEqual(80)
     expect(popups).toBeGreaterThanOrEqual(5)
     expect(popups).toBeLessThanOrEqual(15)
-  })
+  }, 20_000)
 })

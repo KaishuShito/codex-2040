@@ -85,8 +85,9 @@ export default function VoiceCallPanel({
 
       {status === 'fallback' && !pendingReset && (
         <div className="voice-call__scripts" aria-label={locale === 'ja' ? '台本の言語を選択' : 'Choose scripted-request language'}>
-          <button className="voice-call__script" onClick={() => onScriptedRequest('ja')}>日本語で依頼</button>
-          <button className="voice-call__script" lang="en" onClick={() => onScriptedRequest('en')}>Request in English</button>
+          <button className="voice-call__script" onClick={() => onScriptedRequest(locale)}>
+            {locale === 'ja' ? '日本語で依頼' : 'Request in English'}
+          </button>
         </div>
       )}
 
@@ -96,8 +97,8 @@ export default function VoiceCallPanel({
           <b>trigger_token_reset</b>
           <p>“{pendingReset.playerRequest}”</p>
           <strong>{approvalInEnglish
-            ? (pendingReset.source === 'realtime' ? 'Say “Do it” or another explicit approval. You can also use the buttons.' : 'Approval runs the existing in-game Tibo reset exactly once.')
-            : (pendingReset.source === 'realtime' ? '「やって！」「お願い」など、実行の意思を声で伝えてください。ボタンでも操作できます。' : '承認すると、既存のゲーム内Tiboリセットを1回だけ実行します。')}</strong>
+            ? (pendingReset.source === 'realtime' ? 'Say “Do it” or another explicit approval. You can also use the buttons.' : 'Approval runs the existing in-game TIBO reset exactly once.')
+            : (pendingReset.source === 'realtime' ? '「やって！」「お願い」など、実行の意思を声で伝えてください。ボタンでも操作できます。' : '承認すると、既存のゲーム内TIBOリセットを1回だけ実行します。')}</strong>
           <div>
             <button onClick={onRejectReset}><X size={14} /> {approvalInEnglish ? 'Reject' : '拒否'}</button>
             <button className="is-confirm" onClick={onApproveReset} disabled={resetCooldownSeconds > 0}>

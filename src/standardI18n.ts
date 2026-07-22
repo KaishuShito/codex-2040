@@ -120,41 +120,9 @@ export const standardEnglishLabelFromKey = (key: string): string => {
   return label ? `${label[0].toUpperCase()}${label.slice(1)}` : 'World update'
 }
 
-const WORLD_EVENT_HEADLINE_OVERRIDES: Readonly<Record<string, string>> = {
-  'competition-anthro-frontier-launch': 'Anthro launches a high-trust frontier model',
-  'competition-goo-multimodal-launch': 'Goo unifies search, video, and agents in a new model',
-  'competition-qi-reasoning-launch': 'QI releases an efficient reasoning model',
-  'technology-advanced-packaging-shortage': 'Advanced chip-packaging slowdown constrains AI supply',
-  'technology-inference-compiler-breakthrough': 'New inference compiler cuts serving costs',
-  'policy-public-algorithm-audits': 'Public agencies mandate audits for high-impact AI',
-  'culture-valentines-connection-surge': 'Valentine advice surges across AI chat services',
-  'disaster-amazon-flooded-backbone': 'Amazon flooding disrupts regional network backbones',
-}
-
 const englishWorldEventHeadline = (definition: WorldEventDefinition, combo?: WorldEventCombo): string => {
-  if (combo?.headline) return standardEnglishLabelFromKey(combo.id)
-  return WORLD_EVENT_HEADLINE_OVERRIDES[definition.id] ?? standardEnglishLabelFromKey(definition.id)
-}
-
-const WORLD_EVENT_CAUSE_COPY: Readonly<Record<WorldEventDefinition['category'], string>> = {
-  disaster: 'Physical infrastructure and emergency conditions disrupted access across the affected region.',
-  culture: 'A rapid change in public behavior shifted how and why people use AI services.',
-  policy: 'Institutions responded to a gap between AI deployment and public rules or accountability.',
-  competition: 'A competitor converted its capabilities, distribution, or operating model into market pressure.',
-  technology: 'A change in hardware, software, or deployment methods altered the cost and capability frontier.',
-}
-
-const worldEventFlavor = (definition: WorldEventDefinition, combo?: WorldEventCombo): string => {
-  const effect = combo?.effect ?? definition.effect
-  const changes = [
-    effect.usersDeltaPct !== 0 ? 'access' : null,
-    effect.shareDelta !== 0 ? 'competitive share' : null,
-    effect.growthRateDelta !== 0 ? 'adoption momentum' : null,
-    effect.trustDelta !== 0 ? 'social trust' : null,
-  ].filter((value): value is string => value !== null)
-  return changes.length > 0
-    ? `The event changes ${changes.join(', ')} for the stated duration; the dashboard shows the signed effects.`
-    : 'The event changes the strategic context without an immediate numerical shock.'
+  if (combo?.headline) return combo.headlineEn ?? standardEnglishLabelFromKey(combo.id)
+  return definition.headlineEn
 }
 
 export type StandardWorldEventCopy = Readonly<{
@@ -179,9 +147,9 @@ export const getStandardWorldEventCopy = (
     }
   : {
       headline: englishWorldEventHeadline(definition, combo),
-      cause: WORLD_EVENT_CAUSE_COPY[definition.category],
-      flavor: worldEventFlavor(definition, combo),
-      comboLabel: combo ? standardEnglishLabelFromKey(combo.id) : undefined,
+      cause: definition.causeEn,
+      flavor: definition.flavorEn,
+      comboLabel: combo?.labelEn,
       comboHeadline: combo?.headline ? englishWorldEventHeadline(definition, combo) : undefined,
     }
 

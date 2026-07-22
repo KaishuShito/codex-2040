@@ -111,6 +111,7 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
 }
 
 .command-header__center { display: flex; align-items: center; gap: 6px; }
+.locale-launcher,
 .tutorial-launcher,
 .new-game-launcher {
   display: inline-flex;
@@ -128,8 +129,9 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
   letter-spacing: .08em;
   cursor: pointer;
 }
+.locale-launcher { padding-inline: 10px; color: #b8d8ff; background: rgba(17, 35, 53, .72); }
 .new-game-launcher { padding-inline: 10px; color: var(--muted); background: rgba(7, 18, 14, .72); }
-.tutorial-launcher:hover, .tutorial-launcher[aria-expanded="true"], .new-game-launcher:hover { border-color: var(--green); background: rgba(19, 62, 42, .82); }
+.locale-launcher:hover, .tutorial-launcher:hover, .tutorial-launcher[aria-expanded="true"], .new-game-launcher:hover { border-color: var(--green); background: rgba(19, 62, 42, .82); }
 .new-game-launcher:disabled { cursor: default; opacity: .3; }
 
 .simulation-clock { align-items: flex-end; flex-direction: column; }
@@ -381,6 +383,19 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
   box-shadow: 0 28px 90px rgba(0, 0, 0, .8), inset 0 0 45px rgba(103, 246, 174, .04);
   transform: translate(-50%, -50%);
 }
+.start-brief__locale {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  padding: 5px 9px;
+  color: #b8d8ff;
+  border: 1px solid rgba(128, 174, 220, .42);
+  background: rgba(17, 35, 53, .72);
+  font: 9px var(--mono);
+  letter-spacing: .08em;
+  cursor: pointer;
+}
+.start-brief__locale:hover { border-color: var(--green); background: rgba(19, 62, 42, .82); }
 .start-brief__eyebrow { color: var(--green); font-family: var(--mono); font-size: 8px; letter-spacing: .17em; }
 .start-brief h1 { max-width: 460px; margin: 15px 0 11px; color: var(--green-bright); font-family: var(--mono); font-size: clamp(24px, 3vw, 35px); line-height: 1.12; letter-spacing: .015em; }
 .start-brief > p { max-width: 440px; margin: 0; color: #a8bcb1; font-size: 12px; line-height: 1.65; }
@@ -901,7 +916,7 @@ button:focus-visible, input:focus-visible { outline: 1px solid var(--green-brigh
   .command-brand b { font-size: 11px; }
   .command-brand small, .simulation-clock > span { display: none; }
   .command-header__center { gap: 4px; }
-  .tutorial-launcher, .new-game-launcher { min-height: 29px; padding-inline: 8px; font-size: 7px; }
+  .locale-launcher, .tutorial-launcher, .new-game-launcher { min-height: 29px; padding-inline: 8px; font-size: 7px; }
   .tutorial-launcher { grid-column: auto; grid-row: auto; margin-bottom: 0; }
   .simulation-clock { grid-column: auto; grid-row: auto; }
   .simulation-clock__actions { gap: 4px; margin-bottom: 0; }

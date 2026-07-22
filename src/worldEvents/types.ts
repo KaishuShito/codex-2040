@@ -63,11 +63,13 @@ export type WorldEventRequirements = {
 export type WorldEventCombo = {
   id: string
   label: string
+  labelEn: string
   requires: WorldEventRequirements
   effect: WorldEventEffect
   ttlDays?: number
   momentumDays?: number
   headline?: string
+  headlineEn?: string
 }
 
 export type WorldEventDefinition = {
@@ -80,8 +82,11 @@ export type WorldEventDefinition = {
   presentation: WorldEventPresentation
   source: ScenarioSource
   headline: string
+  headlineEn: string
   cause: string
+  causeEn: string
   flavor: string
+  flavorEn: string
   effect: WorldEventEffect
   ttlDays: number
   requires?: WorldEventRequirements
@@ -238,7 +243,7 @@ export const validateWorldEventDefinition = (value: unknown): WorldEventValidati
     issues.push({ path: 'presentation', message: 'must be ticker or popup' })
   }
   if (!isOneOf(value.source, WORLD_EVENT_SOURCES)) issues.push({ path: 'source', message: 'must be a canonical source' })
-  for (const key of ['headline', 'cause', 'flavor'] as const) {
+  for (const key of ['headline', 'headlineEn', 'cause', 'causeEn', 'flavor', 'flavorEn'] as const) {
     if (!isNonEmptyString(value[key])) issues.push({ path: key, message: 'must be a non-empty string' })
   }
 
@@ -261,6 +266,7 @@ export const validateWorldEventDefinition = (value: unknown): WorldEventValidati
         else if (comboIds.has(combo.id)) issues.push({ path: `${path}.id`, message: 'must be unique within the event' })
         else comboIds.add(combo.id)
         if (!isNonEmptyString(combo.label)) issues.push({ path: `${path}.label`, message: 'must be a non-empty string' })
+        if (!isNonEmptyString(combo.labelEn)) issues.push({ path: `${path}.labelEn`, message: 'must be a non-empty string' })
         validateRequirements(combo.requires, `${path}.requires`, issues)
         validateEffect(combo.effect, `${path}.effect`, issues)
         if (combo.ttlDays !== undefined) {
@@ -277,6 +283,9 @@ export const validateWorldEventDefinition = (value: unknown): WorldEventValidati
         }
         if (combo.headline !== undefined && !isNonEmptyString(combo.headline)) {
           issues.push({ path: `${path}.headline`, message: 'must be a non-empty string' })
+        }
+        if (combo.headline !== undefined && !isNonEmptyString(combo.headlineEn)) {
+          issues.push({ path: `${path}.headlineEn`, message: 'must accompany headline as a non-empty string' })
         }
       })
     }

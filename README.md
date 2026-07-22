@@ -1,181 +1,152 @@
 # Codex 2040
 
-**Codex 2040 is an educational AI-governance simulation about expanding access without outrunning safety, governance, or healthy competition.**
+<p align="center">
+  <strong>A playable AI-governance simulation where access, capability, safety, trust, and competition shape the future.</strong>
+</p>
 
-The product thesis is simple: Codex helps build a game about its own spread, then becomes the player's strategy advisor. In the Codex app experience, the left surface explains tradeoffs while the right in-app browser runs the deterministic simulation. The player is the only operator. The goal is not to own the world, but to help it adopt useful AI while preserving trust and a plural ecosystem.
+<p align="center">
+  <a href="README.ja.md">日本語</a> ·
+  <a href="https://codex-2040.kai-postv.chatgpt.site/">Play the latest English build</a> ·
+  <a href="https://youtu.be/G1lsFJ5DhCE">Watch the demo</a> ·
+  <a href="https://devpost.com/software/codex-2040-td74xu">Devpost project</a>
+</p>
+
+> 🥉 **3rd Place — OpenAI Build Week Tokyo community event (2026).** This local Tokyo recognition is separate from the global Devpost competition. [Event page](https://luma.com/9ksxm746)
+
+[![Codex 2040: Build the Future](public/og.png)](https://codex-2040.kai-postv.chatgpt.site/)
+
+| Timeline | World | Strategy | Pressure | Outcomes |
+| --- | --- | --- | --- | --- |
+| **2026 → 2040** | **8 regions** | **50 nodes** | **100 events** | **8 endings** |
+
+You run Codex from 2026 to 2040. Expanding useful AI access is necessary, but it is not enough: capability can outrun safety, regulation can freeze deployment, rivals keep moving while you wait, and a monopoly can turn apparent success into failure.
 
 > You did not own the world. You helped it learn.
 
-## Demo
+## See the tradeoffs
 
-[![Codex 2040 running inside the Codex app](docs/assets/codex-2040-demo-poster.jpg)](docs/assets/codex-2040-demo.mp4)
+<p align="center">
+  <img src="docs/assets/open-ecosystem-strategy.jpg" width="49%" alt="Open ecosystem strategy showing the Open the API tradeoff">
+  <img src="docs/assets/product-strategy-tree.jpg" width="49%" alt="Product strategy tree showing the Mobile SDK path">
+</p>
 
-**[▶ Watch the 12-second Codex 2040 demo](docs/assets/codex-2040-demo.mp4)** — the Codex advisor and browser simulation running together during Build Week Tokyo.
+<p align="center"><sub>Selected frames from the supplied Build Week recordings. The hosted build is the source of truth for the current interface.</sub></p>
 
-## Why Education
+The strategy surface makes prerequisites, costs, effects, and irreversible exclusions visible before a choice is made. The catalog contains **12 Model**, **16 Product**, **12 Company**, and **10 Open Ecosystem** nodes.
 
-Long-form AI scenarios ask readers to mentally connect capability progress, access, safety, regulation, trust, and concentration. Codex 2040 turns those relationships into actions with visible consequences:
+## The game loop
 
-- Invest in capability, then watch safety and governance gaps widen if the organization does not keep up.
-- Ship features and expand communities while tracking who receives access.
-- Choose between racing, slowing down, and verifiable coordination at pivotal moments.
-- Open the ecosystem to give up share, reduce concentration, and rebuild trust.
-- Reach 2040 and review how the player's timeline diverged from the reference scenarios.
+1. **Invest** limited Compute in capability, products, organizational control, or an open ecosystem.
+2. **Advance time** at Normal or Fast speed while autonomous rivals invest and operating costs continue.
+3. **Respond** to authored world events and pivotal 2029 / 2035 decisions; major events pause the clock.
+4. **Review your timeline** through access, Trust, market health, safety, governance, and one of eight endings.
 
-The score rewards coverage, beneficial access, healthy competition, and safety equally. High adoption through monopoly or unsafe acceleration is therefore not the best ending.
+| Your move | Visible consequence | If neglected |
+| --- | --- | --- |
+| Grow capability | More powerful products and faster reach | Capability–Safety or Capability–Governance gaps can trigger incidents, Misalignment, or Regulatory Freeze |
+| Expand regions and products | More people gain useful AI access; Momentum restarts | Compute drains and rivals can capture underserved regions |
+| Open the ecosystem | Codex share falls while Trust and market health can improve | Concentration can end in Pyrrhic Monopoly |
+| Strengthen safety and governance | Control pressure falls and resilience rises | You may lose tempo in the capability race |
 
-## What Is Implemented
+The score weights coverage, beneficial access, healthy competition, and safety. Maximizing one number is deliberately not a winning strategy.
 
-The integrated browser experience includes:
+## What makes Codex 2040 different
 
-- An interactive geographic world map with eight simulation regions and event markers.
-- A competitor territory view: selecting ANTHRO, GOO, or QI recolors the map by estimated regional share and opens a strategy dossier.
-- A deterministic seeded engine using fixed one-day steps with a Plague Inc.-style Normal / Fast Forward control (1 or 8 substeps per frame).
-- Logistic adoption, competitor dynamics, regulation, incidents, brownout recovery, and bounded invariants.
-- Model, Product, Safety Team, Policy, and Data Center investments funded by Compute.
-- Curated product actions and a strategy tree; arbitrary feature text is not accepted inside the game.
-- Community deployments, an eight-second Token Reset boost, and an Open Ecosystem action.
-- A deterministic catalog of 100 authored world events: 20 each for disasters, culture, policy, competition, and technology.
-- Weighted date-key scheduling with global/category cooldowns, one-time event history, and an independent random stream that cannot perturb incidents.
-- Twenty-five major popup candidates, automatically rate-limited and downgraded to the news ticker when another interruption would be too frequent.
-- Feature/event combos that recognize prior player actions, add bounded secondary effects, and can award at most 30 days of Momentum.
-- Three active provenance labels rendered from engine metadata: **AI 2027**, **AI 2040**, and **Your Timeline**.
-- A read-only Codex Advisor Skill that translates freeform intentions into available game actions without clicking, injecting events, or running a heartbeat.
-- Autonomous rivals that continue investing and competing while the player waits, creating a credible passive-loss path rather than guaranteed growth.
-- An exact bilingual 50-node strategy catalog (12 Model, 16 Product, 12 Company, and 10 Open Ecosystem nodes), with prerequisites, exclusions, costs, effects, and catalog validation. Its full engine/UI integration is still being verified on this development branch and should not be presented as submission-complete until `npm run check` is green.
-- Required 2029 and 2035 decisions whose choices change engine state and endings.
-- Eight resolved outcomes: Beneficial Abundance, Managed Transition, Fragile Abundance, Race Future, Regulatory Freeze, Safety Incident, Misalignment, and Pyrrhic Monopoly.
-- A three-decision ending review comparing the reference scenarios with the player's timeline.
-- A first-run mission screen and four-step playable tutorial. Returning sessions resume from browser autosave without replaying either screen.
-- Subtle, optional CC0 interaction audio for navigation, actions, time controls, world briefs, and critical alerts, with an always-visible mute control.
-- A Momentum loop: player interventions unlock bounded growth windows; waiting stalls access while operating costs and competitors continue.
-- Automatic pause-and-brief behavior for critical events, with visible Trust causes and every major game-over route.
-- An official OpenAI Voice Agent (`RealtimeAgent` + `RealtimeSession`) over browser WebRTC for **TIBO — Voice Operator**, explicitly identified as a fictionalized operator using a generic synthetic voice.
-- A two-call `trigger_token_reset` function-tool contract: the first call creates a visible pending request, and a second call can invoke the existing in-game reset only after a separate explicit spoken confirmation.
-- A same-UI scripted voice fallback for missing credentials, microphone denial, or Realtime failure.
-- Automated tests covering the engine, 100-event catalog, deterministic scheduling, popup integration, the dormant bridge contract, scenario data, branches, and endings.
+### Deterministic simulation, readable causality
 
-## Architecture and Advisor Boundary
+The seeded TypeScript engine owns every number, risk transition, and ending. It runs fixed one-day steps, autonomous competitor strategies, bounded invariants, autosave, and replayable outcomes. The event system contains 20 authored events in each of five categories—disaster, culture, policy, competition, and technology—with provenance, cooldowns, and feature combos.
 
-- `src/engine.ts` owns state, fixed-step transitions, action effects, incidents, invariants, provenance-bearing news, scoring, and ending evaluation.
-- `src/worldEvents/` owns the five-category catalog, schema validation, eligibility rules, combos, and the date-key deterministic scheduler.
-- `.agents/skills/codex-2040-advisor/SKILL.md` defines the consultation-only contract and maps freeform product intentions to player-executed UI actions.
-- `src/strategyNodes/` defines and validates the bilingual 50-node catalog while `src/components/UpgradeOverlay.tsx` renders the strategy surface.
-- `src/gm.ts`, `src/gmBridgeClient.ts`, and `server/gmBridgePlugin.js` preserve the earlier bounded bridge experiment for tests and reference, but normal gameplay does not start its heartbeat, polling loop, fallback deck, or action transport.
-- `server/realtimePlugin.js` uses the standard OpenAI API key only on the Vite server to mint a 120-second Realtime client secret. Upstream failures collapse to a non-sensitive fallback response.
-- `src/voiceAgent.ts` constructs the official OpenAI Agents SDK `RealtimeAgent` and `RealtimeSession`, pins `gpt-realtime-2.1` with the `webrtc` transport, and owns audio, subtitles, mute, lifecycle, and the function tool.
-- `src/voiceReset.ts` validates both `trigger_token_reset` calls, owns the visible approval state, rejects mismatched or duplicate confirmations, and respects the engine cooldown before allowing one game action.
-- `src/components/VoiceCallPanel.tsx` renders the operator identity, game-only scope, call state, microphone state, subtitles, fallback, keyboard hints, and approval controls.
-- `src/scenario.ts` is the canonical source for provenance metadata, milestones, 2029/2035 choices, and core outcome definitions.
-- `src/App.tsx` coordinates the browser runtime, tutorial, local actions, Momentum feedback, authored-event pauses, decisions, and ending review.
-- `src/components/` contains the map, strategy tree, decision, and ending interfaces.
+### A read-only Codex Strategy Advisor
 
-### Advisor and world-event flow
+The game is designed to sit beside Codex: the browser runs the simulation while a dedicated Advisor Skill explains a choice, maps a natural-language intention to an available node, and returns control. The Advisor never clicks, injects an event, edits a save, or plays for the user.
 
-1. The player may tell the Codex Advisor what they want to build or protect.
-2. The Advisor consults its Skill, names an available action, explains cost/effect/tradeoff, and returns control. It never clicks or modifies state.
-3. The player performs the action in the browser. Local effects apply immediately through the deterministic engine.
-4. Independently, the engine checks the authored event catalog using the run seed and simulated date. Eligible events respect date windows, requirements, and cooldowns.
-5. Events apply only bounded user/share/growth/Trust effects. They cannot write Compute, Capability, Safety, Governance, decisions, incidents, or endings.
-6. Major events pause the browser simulation until acknowledgement; smaller events enter the ticker and Event Ledger without interruption.
+### Approval-gated Realtime voice
 
-The authority boundary is strict: the engine owns every number, risk transition, and ending; the player owns every action; the Advisor owns explanation only. Freeform feature creation has deliberately been removed from the browser game. Players discuss an idea with the Advisor, then choose one of the deterministic actions that the game exposes.
+**TIBO — Voice Operator** uses the official OpenAI Agents SDK, `RealtimeAgent`, `RealtimeSession`, `gpt-realtime-2.1`, WebRTC, and a two-call approval contract. It can perform exactly one bounded action: request and, after explicit spoken confirmation, execute one in-game TIBO Token Reset. It cannot modify an OpenAI account, billing, API limits, or permissions.
 
-## Run Locally
+```mermaid
+flowchart LR
+    Player["Player"] --> UI["React control room"]
+    UI --> Engine["Deterministic engine"]
+    Engine --> Events["100 authored events"]
+    Engine --> Rivals["Autonomous rivals"]
+    Engine --> Endings["8 endings"]
+    Player --> Advisor["Codex Strategy Advisor"]
+    Advisor -. "advice only" .-> Player
+    Voice["TIBO Voice Operator"] --> Gate["Two-step approval gate"]
+    Gate --> Reset["In-game Token Reset"]
+    Reset --> Engine
+```
 
-Requirements:
+## Play it
 
-- Node.js `^20.19.0` or `>=22.12.0`
-- npm
+The latest hosted build is available at **[codex-2040.kai-postv.chatgpt.site](https://codex-2040.kai-postv.chatgpt.site/)**. No account is required. The four-step tutorial explains the mission and loss conditions, and browser autosave preserves returning sessions.
 
-Install the locked dependency set and start the Vite development server:
+The hosted build includes the complete deterministic game, strategy tree, autonomous rivals, world events, decisions, telemetry, and endings. Voice behavior differs by environment:
+
+| Environment | Game | TIBO voice |
+| --- | --- | --- |
+| Hosted OpenAI Sites build | Full deterministic simulation | Clearly labelled scripted fallback |
+| Local Vite server with `OPENAI_API_KEY` | Full deterministic simulation | Live Realtime WebRTC session with approval-gated tool |
+
+The standard API key remains server-side and is never placed in the static client bundle.
+
+## Run locally
+
+Requirements: Node.js `^20.19.0` or `>=22.12.0`, plus npm.
 
 ```bash
 npm ci
 npm run dev
 ```
 
-Open `http://127.0.0.1:5173` in the Codex app browser.
+Open `http://127.0.0.1:5173`. To enable live Realtime voice, place `OPENAI_API_KEY` in the ignored `.env.local`; without it, the game automatically uses the scripted fallback.
 
-For live Realtime voice, place `OPENAI_API_KEY` in the ignored local `.env.local`. Vite loads it only into the server configuration; it is not exposed through `import.meta.env` or the client bundle. If the key is absent, invalid, or lacks Realtime access, the call panel automatically uses scripted voice fallback.
-
-When exposing the development server through a public HTTPS tunnel, also set `PUBLIC_DEMO_ORIGIN` to that tunnel's exact origin. The Realtime client-secret endpoint continues to reject every other non-loopback origin.
-
-Run verification with:
+Run the complete automated verification pipeline with:
 
 ```bash
 npm run check
 ```
 
-Or run the stages separately:
+`npm run check` runs the Vitest suite, TypeScript checks, the Vite client build, and the Worker build. Browser E2E remains a separate release gate.
 
-```bash
-npm test
-npm run build
-```
+## Architecture
 
-Do not treat a passing test stage as a complete release check: `npm run check` must finish both Vitest and the TypeScript/Vite production build. The current 50-node integration passes 140 tests and the production build; browser E2E remains a separate release gate.
+- `src/engine.ts` — fixed-step state transitions, action effects, incidents, invariants, scoring, and endings.
+- `src/strategyNodes/` — the validated bilingual 50-node catalog, prerequisites, exclusions, costs, and effects.
+- `src/worldEvents/` — the five-category event catalog, eligibility rules, combos, and deterministic scheduler.
+- `src/rivalStrategy.ts` — autonomous competitor strategy and visible rival pressure.
+- `src/components/` — world map, strategy tree, decisions, voice, event, and ending interfaces.
+- `.agents/skills/codex-2040-advisor/` — the consultation-only Advisor contract.
+- `server/realtimePlugin.js` and `src/voiceAgent.ts` — short-lived Realtime client secrets and the browser voice session.
+- `worker/`, `server/runsApi.ts`, and `db/` — hosted runtime, run telemetry, and D1 persistence.
 
-## Static Hosting and OpenAI Sites
+The earlier GM file bridge remains in the repository as a dormant experiment and test reference. Normal gameplay does not start its heartbeat, polling loop, fallback deck, or action transport.
 
-The deterministic game is a Vite single-page application and can be published as a static site. OpenAI Sites is the recommended judging URL because it is stable and does not depend on a laptop or temporary tunnel. A site has **not** been created yet, so this README intentionally contains no public deployment URL.
+## Built with Codex and GPT-5.6
 
-A static deployment includes the complete game, tutorial, autosave, strategy controls, autonomous rivals, authored events, decisions, and endings. It does not include Vite development-server routes:
+Codex was both the development surface and an engineering collaborator. It helped turn the learning thesis into a deterministic state machine, split research and implementation into parallel lanes, build the React control room and voice flow, generate adversarial replay and balance tests, localize the experience, and audit public claims against source and browser evidence.
 
-- `/api/realtime/client-secret` is local-server-only, so a static site uses the clearly labelled scripted voice fallback rather than claiming a live Realtime connection.
-- The dormant GM file bridge is also development-server-only and is not required for normal play.
+GPT-5.6 was used throughout the core build—not only for brainstorming—to reason across the specification, engine, UI, tests, playtest evidence, and documentation.
 
-Build and inspect the static artifact locally before publishing:
+## Educational grounding
 
-```bash
-npm ci
-npm run build
-npm run preview
-```
+Each scenario item carries explicit provenance:
 
-For a live OpenAI Realtime Voice Agent demo, use the local development server with a server-held `OPENAI_API_KEY`, or add an equivalent trusted backend before claiming Realtime support on a hosted origin. Never place the standard API key in the static bundle.
+- **AI 2027** — adapted capability, race, and slowdown dynamics.
+- **AI 2040** — adapted governance and coordination ideas from Plan A.
+- **Your Timeline** — consequences generated by the player's own choices.
 
-## Realtime Voice Demo
-
-1. Complete the four-step tutorial and begin the Normal simulation.
-2. Open **VOICE OPERATOR**, then select **START CALL**. The browser asks for microphone access only after this explicit action.
-3. Ask: **「ゲーム内Tiboトークンのリミットをリセットして」**.
-4. The Voice Agent calls `trigger_token_reset` with `confirmed: false`; the game shows the pending tool request but does not execute it.
-5. The agent asks for confirmation aloud. A short direct reply such as **「やって！」**, **「お願い」**, **“Do it!”**, or **“Go ahead”** is enough. It then makes a second tool call with the matching approval ID and spoken confirmation; the existing engine reset runs once and the map emits its global pulse. No UI confirmation is required on this normal path.
-6. Use **MUTE**, **END CALL**, or the keyboard controls shown in the panel as needed. If the key, microphone, or Realtime connection is unavailable, the same panel clearly switches to scripted SpeechSynthesis backup, where visible buttons provide the explicit confirmation.
-
-The primary implementation follows the official [Voice agents](https://developers.openai.com/api/docs/guides/voice-agents), [Realtime WebRTC](https://developers.openai.com/api/docs/guides/realtime-webrtc), and [Realtime tools](https://developers.openai.com/api/docs/guides/realtime-mcp) flows. Scripted SpeechSynthesis is only the failure backup and is never treated as a live Voice Agent connection.
-
-## Tutorial and Normal Play
-
-Codex 2040 now has one real ruleset. The former automatic presentation mode has been removed. A four-step tutorial pauses the clock, explains the mission and loss conditions, then hands control to the player.
-
-After **BEGIN SIMULATION**, passive waiting produces only residual adoption and cannot earn an S rank. Ship a feature, open a region, invest in the strategy tree, use Token Reset, or open the ecosystem to activate a limited Momentum window. Critical news and the 2029/2035 choices stop time until the player has read and acknowledged them. The speed selector reports its actual rate as days per second.
-
-Keep Codex visible on the left as the Advisor while the browser runs on the right. Ask it about a tradeoff or a desired capability, then execute the recommended deterministic action yourself. The Advisor responds when asked; no background heartbeat, browser-driving loop, or free-text game input is required.
-
-## Canonical Sources and Endings
-
-Every news item carries an explicit source field; the UI does not infer provenance from its headline.
-
-- **AI 2027** — adapted reference-scenario capability, race, and slowdown dynamics.
-- **AI 2040** — adapted reference-scenario governance and coordination ideas from Plan A.
-- **Your Timeline** — consequences of player choices, not claims made by either source.
-
-The engine and ending UI share the eight ending IDs listed above. Beneficial Abundance requires an S score, the verified 2029 slowdown, the deliberate 2035 pause, sufficient control capacity and trust, viable competitors, and non-monopolistic concentration.
-
-Codex 2040 is an independent educational adaptation inspired by [AI 2027](https://ai-2027.com/) and [AI 2040: Plan A](https://ai-2040.com/), both from the AI Futures Project. It does not reproduce those works or present their scenarios as predictions. The simulation simplifies and recombines ideas for learning; it is not affiliated with or endorsed by the scenario authors.
-
-## Built With Codex
-
-Codex was the development surface and engineering collaborator for the Build Week project. The team used it to refine the learning thesis, establish the engine/GM contract, implement the TypeScript engine and React interface, test deterministic and adversarial cases, integrate the file bridge and scenario experience, and audit submission claims against the code. GPT-5.6 helped reason across the specification, implementation, tests, and documentation.
+Codex 2040 is an independent educational adaptation inspired by [AI 2027](https://ai-2027.com/) and [AI 2040: Plan A](https://ai-2040.com/) from the AI Futures Project. It simplifies and recombines ideas for learning, does not present either scenario as a prediction, and is not affiliated with or endorsed by the scenario authors.
 
 ## Limitations
 
-- The older GM file bridge remains in the repository as a dormant experiment; it is not part of normal gameplay.
-- The Realtime client-secret route is also Vite-development-only. A deployed build needs a trusted server endpoint with equivalent key isolation and origin controls.
-- Static hosting therefore uses the scripted voice fallback unless such a trusted endpoint is added; it must not be described as a live Realtime connection.
-- The bilingual 50-node catalog is integrated with the deterministic engine and strategy UI; browser E2E and final submission packaging remain release gates.
-- A successful bridge heartbeat proves that the local transport accepted a snapshot, not that an external producer consumed it or returned an event.
-- There is no presentation-safe ruleset: the tutorial leads into Normal mode, where critical incidents and terminal Misalignment remain possible.
-- The scenario is an educational simplification, not a forecast or policy recommendation.
+- The hosted static build uses scripted voice fallback unless an equivalent trusted Realtime backend is available.
+- Browser E2E, real-microphone rehearsal, and exact public-origin checks are release checks separate from unit/build success.
+- The simulation is an educational simplification, not a forecast or policy recommendation.
+
+## Earlier Build Week capture
+
+[![Earlier Codex 2040 control-room prototype beside Codex during Build Week Tokyo](docs/assets/control-room-world-map.jpg)](docs/assets/codex-2040-demo.mp4)
+
+**[▶ Watch the original 12-second prototype capture](docs/assets/codex-2040-demo.mp4)** or **[watch the current narrated demo on YouTube](https://youtu.be/G1lsFJ5DhCE)**.

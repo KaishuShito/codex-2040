@@ -197,7 +197,6 @@ function Meter({ label, value, max = 100, danger = false, hint }: { label: strin
 }
 
 function SourceBadge({ source, href, locale = 'ja' }: { source: SourceLabel; href?: string; locale?: StandardLocale }) {
-  if (source === 'Your Timeline') return null
   const label = source === 'Live GM' ? (locale === 'ja' ? 'ライブGM' : 'Live GM') : source
   if (href) return <a className="source-badge" data-source={source} href={href} target="_blank" rel="noreferrer" aria-label={`${label}${getStandardCopy(locale, 'sourceOpen')}`}>{label}</a>
   return <span className="source-badge" data-source={source}>{label}</span>
@@ -235,9 +234,12 @@ function OverflowTicker({ text, className = '' }: { text: string; className?: st
   )
 }
 
-export type AppProps = { locale?: StandardLocale }
+export type AppProps = {
+  locale?: StandardLocale
+  onLocaleChange?: (locale: StandardLocale) => void
+}
 
-export default function App({ locale = 'ja' }: AppProps) {
+export default function App({ locale = 'ja', onLocaleChange }: AppProps) {
   const c = (key: keyof typeof STANDARD_COPY) => getStandardCopy(locale, key)
   const [initialSession] = useState(loadInitialSession)
   const [state, setState] = useState<GameState>(initialSession.state)
@@ -435,7 +437,7 @@ export default function App({ locale = 'ja' }: AppProps) {
   }, [])
 
   useEffect(() => {
-    const telemetry = createBrowserRunTelemetry('ja')
+    const telemetry = createBrowserRunTelemetry(locale)
     runTelemetryRef.current = telemetry
     const visible = () => document.visibilityState === 'visible'
     const syncActivity = () => telemetry.updateActivity(
@@ -695,12 +697,18 @@ export default function App({ locale = 'ja' }: AppProps) {
     setVoiceStatus('fallback')
     setVoiceMuted(false)
     setOperatorDraft('')
-    appendVoiceSubtitle('system', reason === 'microphone-denied'
-      ? 'マイクが許可されませんでした。台本モードに切り替えます。'
-      : 'リアルタイム接続を利用できません。台本モードに切り替えます。')
-    const line = 'こちらはTIBOボイス・オペレーターです。音声回線の代わりに台本モードで、ゲーム内Tiboリセットを案内します。'
+    appendVoiceSubtitle('system', locale === 'en'
+      ? (reason === 'microphone-denied'
+          ? 'Microphone access was denied. Switching to scripted mode.'
+          : 'Realtime voice is unavailable. Switching to scripted mode.')
+      : (reason === 'microphone-denied'
+          ? 'マイクが許可されませんでした。台本モードに切り替えます。'
+          : 'リアルタイム接続を利用できません。台本モードに切り替えます。'))
+    const line = locale === 'en'
+      ? 'This is the TIBO voice operator. Scripted mode will guide the in-game TIBO reset while the voice line is unavailable.'
+      : 'こちらはTIBOボイス・オペレーターです。音声回線の代わりに台本モードで、ゲーム内TIBOリセットを案内します。'
     appendVoiceSubtitle('operator', line)
-    speakFallback(line)
+    speakFallback(line, locale)
   }
 
   const runConfirmedGameReset = (language: 'ja' | 'en' = 'ja') => {
@@ -711,8 +719,8 @@ export default function App({ locale = 'ja' }: AppProps) {
     setResetPulse((value) => value + 1)
     playSound('confirm')
     appendVoiceSubtitle('system', language === 'en'
-      ? 'Confirmed: the in-game Tibo reset ran once.'
-      : '確認済み: ゲーム内Tiboリセットを1回実行しました。')
+      ? 'Confirmed: the in-game TIBO reset ran once.'
+      : '確認済み: ゲーム内TIBOリセットを1回実行しました。')
     return true
   }
 
@@ -759,7 +767,7 @@ export default function App({ locale = 'ja' }: AppProps) {
           return {
             status: 'executed',
             scope: 'codex-2040-game-only',
-            message: `The in-game Tibo reset ran exactly once and the global map pulse activated. Briefly tell the player in ${language === 'en' ? 'English' : 'Japanese'}; do not switch languages.`,
+            message: `The in-game TIBO reset ran exactly once and the global map pulse activated. Briefly tell the player in ${language === 'en' ? 'English' : 'Japanese'}; do not switch languages.`,
           }
         }
         if (result.outcome === 'cooldown') {
@@ -841,8 +849,8 @@ export default function App({ locale = 'ja' }: AppProps) {
     runConfirmedGameReset(language)
     if (result.request?.source === 'scripted-fallback') {
       speakFallback(language === 'en'
-        ? 'Confirmed. The in-game Tibo reset ran once.'
-        : '確認しました。ゲーム内Tiboリセットを1回実行しました。', language)
+        ? 'Confirmed. The in-game TIBO reset ran once.'
+        : '確認しました。ゲーム内TIBOリセットを1回実行しました。', language)
     }
   }
 
@@ -1150,6 +1158,17 @@ export default function App({ locale = 'ja' }: AppProps) {
           <span><b>CODEX <i>//</i> 2040</b><small>{c('simulator')}</small></span>
         </div>
         <div className="command-header__center">
+          {onLocaleChange && !showStartScreen && (
+            <button
+              className="locale-launcher"
+              type="button"
+              lang={locale === 'ja' ? 'en' : 'ja'}
+              aria-label={locale === 'ja' ? 'Switch language to English' : '日本語に切り替える'}
+              onClick={() => onLocaleChange(locale === 'ja' ? 'en' : 'ja')}
+            >
+              {locale === 'ja' ? 'EN' : '日本語'}
+            </button>
+          )}
           <button className="tutorial-launcher" onClick={beginWithTutorial} aria-expanded={tutorialStep !== null}>{c('howToPlay')}</button>
           <button className="new-game-launcher" type="button" disabled={showStartScreen} onClick={() => { setRestartConfirmOpen(true); playSound('tap') }}><RotateCcw size={11} /> {c('newGame')}</button>
         </div>
@@ -1223,6 +1242,17 @@ export default function App({ locale = 'ja' }: AppProps) {
             {(showStartScreen || restartConfirmOpen || tutorial || state.pendingWorldEvent || (criticalNews && !decisionKind && !state.terminal)) && <div className="game-modal-shield" aria-hidden="true" />}
             {showStartScreen && (
               <section className="start-brief" role="dialog" aria-modal="true" aria-labelledby="start-brief-title">
+                {onLocaleChange && (
+                  <button
+                    className="start-brief__locale"
+                    type="button"
+                    lang={locale === 'ja' ? 'en' : 'ja'}
+                    aria-label={locale === 'ja' ? 'Switch language to English' : '日本語に切り替える'}
+                    onClick={() => onLocaleChange(locale === 'ja' ? 'en' : 'ja')}
+                  >
+                    {locale === 'ja' ? 'EN' : '日本語'}
+                  </button>
+                )}
                 <span className="start-brief__eyebrow">YOUR ROLE // 2026</span>
                 <h1 id="start-brief-title">{c('startTitle')}</h1>
                 <p>{c('startBody')}</p>

@@ -13,7 +13,7 @@ const validCall = (callId = 'call_reset_1') => ({
   name: 'trigger_token_reset',
   call_id: callId,
   arguments: JSON.stringify({
-    player_request: 'ゲーム内Tiboトークンのリミットをリセットして',
+    player_request: 'ゲーム内TIBOトークンのリミットをリセットして',
     confirmed: false,
     approval_id: null,
     confirmation_utterance: null,
@@ -23,7 +23,7 @@ const validCall = (callId = 'call_reset_1') => ({
 const confirmedCall = (approvalId: string, callId = 'call_confirm_1', utterance = 'はい、実行して') => ({
   ...validCall(callId),
   arguments: JSON.stringify({
-    player_request: 'ゲーム内Tiboトークンのリミットをリセットして',
+    player_request: 'ゲーム内TIBOトークンのリミットをリセットして',
     confirmed: true,
     approval_id: approvalId,
     confirmation_utterance: utterance,
@@ -62,7 +62,7 @@ describe('voice reset tool approval contract', () => {
     expect(confirmed.outcome).toBe('executed')
     expect(confirmed.shouldExecute).toBe(true)
     expect(confirmed.state.pending).toBeNull()
-    expect(confirmed.state.notice).toBe('音声での承認を受け付け、ゲーム内Tiboリセットを1回実行しました。')
+    expect(confirmed.state.notice).toBe('音声での承認を受け付け、ゲーム内TIBOリセットを1回実行しました。')
   })
 
   it('rejects missing or non-explicit spoken confirmation evidence', () => {
@@ -71,7 +71,7 @@ describe('voice reset tool approval contract', () => {
     const missing = {
       ...confirmedCall('approval-call_reset_1'),
       arguments: JSON.stringify({
-        player_request: 'Tibo token reset', confirmed: true, approval_id: 'approval-call_reset_1', confirmation_utterance: null,
+        player_request: 'TIBO token reset', confirmed: true, approval_id: 'approval-call_reset_1', confirmation_utterance: null,
       }),
     }
     expect(handleRealtimeResetToolCall(requested.state, missing, 0).outcome).toBe('invalid')
@@ -144,7 +144,7 @@ describe('voice reset tool approval contract', () => {
     const requested = requestFallbackReset(createVoiceResetState(), 'demo-en', 'en')
     expect(requested.pending).toMatchObject({
       language: 'en',
-      playerRequest: 'Please reset my in-game Tibo token limit.',
+      playerRequest: 'Please reset my in-game TIBO token limit.',
       source: 'scripted-fallback',
     })
     expect(requested.notice).toBe('Scripted mode requested an in-game reset. Player approval is required.')
@@ -158,14 +158,14 @@ describe('voice reset tool approval contract', () => {
 
     const completed = resolveVoiceReset(requested, true, 0)
     expect(completed.shouldExecute).toBe(true)
-    expect(completed.state.notice).toBe('The player approved and the in-game Tibo reset ran once.')
+    expect(completed.state.notice).toBe('The player approved and the in-game TIBO reset ran once.')
   })
 
   it('detects an English realtime request and keeps its confirmation notice in English', () => {
     const englishCall = {
       ...validCall('call_en'),
       arguments: JSON.stringify({
-        player_request: 'Please reset my in-game Tibo token limit.',
+        player_request: 'Please reset my in-game TIBO token limit.',
         confirmed: false,
         approval_id: null,
         confirmation_utterance: null,

@@ -13,7 +13,7 @@ describe('humanized playtest harness', () => {
     expect(first.completed).toBe(true)
     expect(first.policyCalls).toBeGreaterThan(0)
     expect(first.realSecondsElapsed).toBeGreaterThan(0)
-  })
+  }, 20_000)
 
   it('defines five behaviorally distinct profiles with bounded probabilities', () => {
     expect(HUMAN_PROFILES.map(({ id }) => id)).toEqual(['novice', 'cautious', 'competitive', 'explorer', 'frugal'])

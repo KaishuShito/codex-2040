@@ -1,4 +1,8 @@
-# Devpost Draft — Codex 2040
+# Devpost Submission-Era Record — Codex 2040
+
+> This document preserves the submitted story, demo plan, and post-submission verification notes. The Devpost submission is complete; this is not a live submission checklist. For the current product surface, use the [public OpenAI Sites build](https://codex-2040.kai-postv.chatgpt.site/), [GitHub repository](https://github.com/KaishuShito/codex-2040), and [Devpost project](https://devpost.com/software/codex-2040-td74xu).
+
+> 🥉 Codex 2040 received **3rd Place at the OpenAI Build Week Tokyo community event**. That local Tokyo recognition is separate from the global Devpost competition; this document makes no claim about global judging results.
 
 ## Title
 
@@ -12,9 +16,9 @@ Play the tradeoffs shaping AI's future: access, capability, safety, governance, 
 
 **Education**
 
-## Official Submission Frame
+## Submission Frame (Archived)
 
-The official review snapshot sets the deadline at **July 22, 2026, 09:00 JST**. Submissions are judged equally on **Technological Implementation**, **Design**, **Potential Impact**, and **Quality of the Idea**. The entry needs an English description, a working project, a repository that satisfies the access/license rules, a public or unlisted YouTube demo under three minutes with audio, a clear account of how Codex and GPT-5.6 were used, real `/feedback` session IDs, and a final **Submitted** state. Recheck the [Build Week page](https://openai.devpost.com/) and [official rules](https://openai.devpost.com/rules) immediately before submission.
+The submission deadline was **July 22, 2026, 09:00 JST**. The entry was prepared around the four published criteria: **Technological Implementation**, **Design**, **Potential Impact**, and **Quality of the Idea**. The project is now submitted and publicly visible on [Devpost](https://devpost.com/software/codex-2040-td74xu); this archived frame should not be read as a claim about the still-separate global judging outcome.
 
 ## The Problem
 
@@ -45,7 +49,7 @@ The React interface renders a geographic world map, live adoption and market tel
 
 Freeform product ideas are handled outside the game by a read-only Codex Advisor Skill. The Advisor maps an intention to an existing action and explains its cost, prerequisite, effect, and tradeoff. It does not click, inject an event, run a heartbeat, or mutate a save. This keeps Codex useful as a teacher and strategist without making the simulation dependent on model latency.
 
-The current development branch also defines an exact bilingual 50-node catalog: 12 Model, 16 Product, 12 Company, and 10 Open Ecosystem choices. The catalog includes prerequisites, exclusions, costs, deterministic effects, and validation. Full engine/UI integration is still being verified, so the final submission and video must not claim the complete 50-node experience until `npm run check` passes.
+The current Standard implementation includes an exact bilingual 50-node catalog: 12 Model, 16 Product, 12 Company, and 10 Open Ecosystem choices. The catalog, engine, and UI share prerequisites, exclusions, costs, deterministic effects, and validation. The automated suite currently contains **225 tests**; `npm run check` remains the release gate for the exact commit being published.
 
 The earlier local GM file bridge remains in the repository as a dormant, bounded experiment. Normal gameplay does not start its heartbeat, polling loop, fallback deck, or action transport. The deterministic engine, authored event system, autonomous rivals, and endings are the shipped gameplay path.
 
@@ -57,9 +61,9 @@ Codex was our build environment and engineering collaborator. We used it to:
 - Translate the specification into a deterministic TypeScript state machine.
 - Build and integrate the map, strategy tree, autonomous competition, 100-event catalog, scenario decisions, Advisor contract, voice flow, and ending review.
 - Write adversarial and behavioral tests for replay, state bounds, event scheduling and clamps, strategy catalog validation, provenance, branches, and endings.
-- Review the implementation against every public claim and draft submission materials.
+- Review the implementation against every public claim and prepare the submitted materials.
 
-GPT-5.6 helped reason across the specification, engine, UI, bridge, tests, and documentation. The project also uses OpenAI's official Agents SDK with `RealtimeAgent` and `RealtimeSession`, `gpt-realtime-2.1`, WebRTC audio, and an approval-gated function tool that can reset only the in-game Tibo token cooldown.
+GPT-5.6 helped reason across the specification, engine, UI, bridge, tests, and documentation. The project also uses OpenAI's official Agents SDK with `RealtimeAgent` and `RealtimeSession`, `gpt-realtime-2.1`, WebRTC audio, and an approval-gated function tool that can reset only the in-game TIBO token cooldown.
 
 ## Educational Source Material
 
@@ -84,7 +88,7 @@ Switch to Fast Forward. The Build Week Tokyo World Brief stops the clock on 2026
 Show the three active source badges. Ask the Advisor about the current tradeoff, then execute the recommended deterministic action yourself.
 
 **1:45–2:35 — Call the OpenAI Voice Agent**
-Open Voice Operator and ask TIBO to reset the in-game Tibo token limit. Show the agent's spoken confirmation request, give a short explicit approval, then show the function tool execute once and pulse the map.
+Open Voice Operator and ask TIBO to reset the in-game TIBO token limit. Show the agent's spoken confirmation request, give a short explicit approval, then show the function tool execute once and pulse the map.
 
 **2:35–2:55 — Show verification and the safety boundary**
 Show the test result and briefly name the replay, clamp, retry, bridge, branch, and ending coverage.
@@ -92,9 +96,9 @@ Show the test result and briefly name the replay, clamp, retry, bridge, branch, 
 **2:55–3:00 — Close**  
 End with: “You did not own the world. You helped it learn.”
 
-## Submission Checklist
+## Submission Record
 
-- [x] Draft title, tagline, Education framing, technical explanation, and demo sequence.
+- [x] Finalize title, tagline, Education framing, technical explanation, and demo sequence.
 - [x] Add AI 2027 and AI 2040 attribution links.
 - [x] Preserve the local browser-to-filesystem GM bridge as a dormant experiment; remove it from the normal gameplay loop.
 - [x] Implement canonical source metadata, 2029/2035 decisions, eight ending presentations, and timeline review.
@@ -104,36 +108,27 @@ End with: “You did not own the world. You helped it learn.”
 - [x] Add 100 deterministic authored events and autonomous rival progression.
 - [x] Remove arbitrary feature text from the browser game and route idea consultation to the read-only Advisor.
 - [x] Define and validate the bilingual 50-node strategy catalog.
-- [x] Integrate the 50-node engine/UI path and make `npm run check` fully green (140 tests plus production build).
-- [ ] Complete the final in-app Browser E2E on the English, Japanese, and static-hosting builds.
-- [ ] Rehearse the complete three-minute flow in the Codex app browser on the presentation machine.
-- [ ] Verify the actual projector/display layout and local Realtime setup.
-- [ ] Capture final screenshots.
-- [ ] Record and upload the demo video; add the real video URL only after upload.
-- [ ] Add an appropriate repository license, or explicitly share a private repository with the Devpost reviewers as required by the official rules. This legal/repository choice is still open.
-- [ ] Push the submission commit to the repository used in Devpost; the current `origin/main` does not yet contain the latest gameplay work.
-- [ ] Publish a stable static build to OpenAI Sites and add the real URL only after deployment. No Codex 2040 Site exists yet.
-- [ ] E2E-test that exact hosted URL. Static Sites should run the deterministic game with scripted voice fallback; it must not claim a live Realtime connection.
-- [ ] Complete any required Devpost team, participant, consent, and category fields.
-- [ ] Complete the event's `/feedback` step if required and record the real result; no session has been claimed here.
-- [ ] Recheck every implementation claim against the submitted commit.
-- [ ] Submit on Devpost and confirm the submitted entry is visible.
+- [x] Integrate the bilingual 50-node engine/UI path; the current automated suite contains 225 tests plus the production build gate.
+- [x] Record and publish the narrated demo: [YouTube](https://youtu.be/G1lsFJ5DhCE).
+- [x] Publish the repository used for the project: [KaishuShito/codex-2040](https://github.com/KaishuShito/codex-2040).
+- [x] Publish the stable OpenAI Sites build: [codex-2040.kai-postv.chatgpt.site](https://codex-2040.kai-postv.chatgpt.site/).
+- [x] Submit on Devpost and confirm the public project is visible: [Codex 2040](https://devpost.com/software/codex-2040-td74xu).
+- [ ] Treat `npm run check` and Browser E2E on the exact deployed commit as recurring release gates for post-submission updates.
+- [ ] Repository licensing remains an explicit follow-up; no license file is present in this snapshot.
 
-## Hosting Plan
+## Hosting Record
 
-Use OpenAI Sites for the stable Devpost judging URL. The Vite production build is a static single-page app, so the game, tutorial, autosave, autonomous rivals, events, decisions, and endings can run without Kai's laptop or a temporary tunnel.
+The stable public build is hosted on OpenAI Sites at [codex-2040.kai-postv.chatgpt.site](https://codex-2040.kai-postv.chatgpt.site/). The Vite production build is a static single-page app, so the game, tutorial, autosave, autonomous rivals, events, decisions, and endings can run without Kai's laptop or a temporary tunnel.
 
 The static build cannot mint Realtime client secrets because `/api/realtime/client-secret` is a Vite development-server route. On Sites, the Voice Operator must visibly use scripted fallback. Keep the live OpenAI Realtime Voice Agent as a local-machine demo and video proof unless a trusted server endpoint with equivalent key isolation and origin controls is deployed. Never put `OPENAI_API_KEY` in the client bundle.
 
-## Official Submission Blockers
+## Post-Submission Release Gates
 
-- Create the Devpost project draft and select **Education**; no draft was found during the official review.
-- Record an English, public or unlisted YouTube demo under three minutes with audio, showing what was built and how Codex/GPT-5.6 were used. The repository MP4 is supporting media, not a substitute for this requirement.
-- Supply the final repository URL and satisfy the official access/license requirement.
-- Publish and E2E-test the stable judging URL; do not invent it in this draft.
-- Complete `/feedback` and add the real session IDs; none are claimed here.
-- Re-run `npm ci && npm run check` on the exact submitted commit.
-- Move the project to Devpost's final **Submitted** state and verify that the submitted entry is visible.
+- Run `npm ci && npm run check` on every exact public commit.
+- Browser-test the root Sites URL in English, switch to Japanese, and verify both languages expose the same Standard features.
+- Keep the hosted scripted voice fallback distinct from the local Realtime path.
+- Keep Tokyo 3rd Place wording separate from any global Devpost result.
+- Resolve repository licensing separately; submission completion does not itself settle that legal choice.
 
 ## Local Verification Commands
 
@@ -148,7 +143,7 @@ For local browser play and the live Realtime Voice Agent:
 npm run dev
 ```
 
-For the static artifact intended for Sites:
+For the static artifact deployed to Sites:
 
 ```bash
 npm run build
@@ -157,6 +152,6 @@ npm run preview
 
 The live Realtime path requires a server-held `OPENAI_API_KEY` in ignored `.env.local`. The static artifact does not.
 
-## Next
+## Current Boundary
 
-The current live function tool intentionally remains limited to the in-game Tibo token reset. New product ideas belong in the separate Advisor conversation; the game itself stays a deterministic strategy game with explicit choices.
+The live function tool intentionally remains limited to the in-game TIBO token reset. New product ideas belong in the separate Advisor conversation; the game itself stays a deterministic strategy game with explicit choices. AGI Pill mode is outside this submission-era Standard record.
